@@ -11,6 +11,8 @@ const kBackgroundPageColor = Color(0xfff4f7f2);
 
 const kMargin = 10.0;
 
+const k20Margin = 20.0;
+
 const kProfileSize = 180.0;
 
 const kPhotoSize = 110.0;
@@ -93,8 +95,8 @@ const kTextFieldDecoration = InputDecoration(
   hintStyle: TextStyle(color: kHintColor),
   filled: true,
   fillColor: Colors.white,
-  floatingLabelBehavior: FloatingLabelBehavior.always,
-  labelText: 'Value',
+// floatingLabelBehavior: FloatingLabelBehavior.always,
+//  labelText: 'Value',
   labelStyle: TextStyle(color: kBaseColor),
   contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 40.0),
   border: OutlineInputBorder(

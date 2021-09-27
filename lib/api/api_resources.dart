@@ -1,10 +1,12 @@
 class APIResources {
   static final String BASE_URL = "https://lotussoft.in/nikahjodi/api/";
 
-  static final String GET_COUNTRIES = "getCountries";
-  static final String GET_CITIES = "getCities";
-  static final String GET_STATES = "getStates";
-  static final String GET_MEMBERS = "getMembers";
+  // static final String GET_COUNTRIES = BASE_URL+ "getCountries";
+  // static final String GET_CITIES = BASE_URL+ "getCities";
+  // static final String GET_STATES =BASE_URL+  "getStates";
+  // static final String GET_MEMBERS =BASE_URL+  "getMembers";
+
+  static final String ADD_PLAYER = BASE_URL + "addPlayer";
 
   // static final String ALL_PUBLIC_PROFILE =
   //     BASE_URL + "user/allUserProfileWithoutToken";

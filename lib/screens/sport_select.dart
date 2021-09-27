@@ -1,27 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
-import 'package:player/constant/utility.dart';
-import 'package:player/screens/add_details.dart';
 import 'package:player/screens/home.dart';
 
-class OTPScreen extends StatefulWidget {
-  String phoneNumber;
-  String sentOTP;
-
-  OTPScreen({required this.sentOTP, required this.phoneNumber});
+class SportSelect extends StatefulWidget {
+  const SportSelect({Key? key}) : super(key: key);
 
   @override
-  _OTPScreenState createState() => _OTPScreenState();
+  _SportSelectState createState() => _SportSelectState();
 }
 
-class _OTPScreenState extends State<OTPScreen> {
-  String enteredOTP = "";
+class _SportSelectState extends State<SportSelect> {
+  bool? checked = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("OTP Screen"),
+        title: Text("SPORT SELECT"),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "Home",
+              backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "Home",
+              backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "Home",
+              backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "Home",
+              backgroundColor: Colors.blue)
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -30,19 +45,10 @@ class _OTPScreenState extends State<OTPScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                height: 150.0,
-              ),
-              Image(
-                image: AssetImage(
-                  'assets/images/player_logo.png',
-                ),
-                width: MediaQuery.of(context).size.width,
-              ),
-              SizedBox(
-                height: kMargin,
+                height: k20Margin,
               ),
               Text(
-                "ENTER OTP to VERIFY",
+                "SELECT YOUR FAVORITE SPORTS",
                 style: const TextStyle(
                   color: const Color(0xff000000),
                   fontWeight: FontWeight.w600,
@@ -61,26 +67,33 @@ class _OTPScreenState extends State<OTPScreen> {
                   children: [
                     TextField(
                       keyboardType: TextInputType.number,
-                      onChanged: (value) {
-                        enteredOTP = value;
-                      },
+                      onChanged: (value) {},
                       style: TextStyle(
                         color: Colors.black,
                       ),
-                      decoration: kTextFieldDecoration.copyWith(
-                          hintText: 'ENTER OTP', labelText: 'OTP'),
+                      decoration:
+                          kTextFieldDecoration.copyWith(hintText: 'Search'),
                       cursorColor: kBaseColor,
                     ),
-                    SizedBox(height: 30.0),
+                    SizedBox(
+                      height: k20Margin,
+                    ),
+                    CheckboxListTile(
+                      value: checked,
+                      title: Text("Cricket"),
+                      onChanged: (value) {
+                        setState(() {
+                          checked = value;
+                        });
+                      },
+                    ),
                     RoundedButton(
-                      title: "Verify",
+                      title: "CONTINUE",
                       color: kBaseColor,
                       txtColor: Colors.white,
                       minWidth: MediaQuery.of(context).size.width,
                       onPressed: () async {
-                        // print("clicked" + phoneNumber);
-                        // sendOTP(phoneNumber);
-                        checkOTP(enteredOTP);
+                        goToHome();
                       },
                     ),
                   ],
@@ -93,17 +106,8 @@ class _OTPScreenState extends State<OTPScreen> {
     );
   }
 
-  checkOTP(String otp) async {
-    if (otp == widget.sentOTP) {
-//      Utility.showToast("OTP MATCHED");
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (_) => AddDetails(
-                    phoneNumber: widget.phoneNumber,
-                  )));
-    } else {
-      Utility.showToast("NO OTP MATCHED");
-    }
+  goToHome() {
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (_) => HomeScreen()));
   }
 }

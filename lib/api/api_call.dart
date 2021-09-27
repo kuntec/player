@@ -1,14 +1,46 @@
-//import 'dart:convert';
+import 'dart:convert';
 
-// import 'package:nikahjodi/api/api_resources.dart';
-// import 'package:nikahjodi/api/http_call.dart';
-//import 'package:http/http.dart' as http;
-// import 'package:nikahjodi/models/DropdownData.dart';
-// import 'package:nikahjodi/models/LoginData.dart';
-// import 'package:nikahjodi/models/Member.dart';
-// import 'package:nikahjodi/models/all_members.dart';
+import 'package:http/http.dart' as http;
+import 'package:player/api/api_resources.dart';
+import 'package:player/api/http_call.dart';
 
 class APICall {
+  addPlayer(String name, String phoneNumber, String dob, String gender) async {
+    Uri url = Uri.parse(APIResources.ADD_PLAYER);
+    var header = new Map<String, String>();
+
+//  header['Content-Type'] = 'application/x-www-form-urlencoded';
+
+    var params = new Map<String, String>();
+    params['name'] = name;
+    params['mobile'] = phoneNumber;
+    params['dob'] = dob;
+    params['gender'] = gender;
+
+    HttpCall call = new HttpCall();
+
+    http.Response response = await call.post(url, header, params);
+
+    print("Response Body: " + response.body);
+    //  return LoginData.fromJson(jsonDecode(response.body));
+  }
+  // Future<LoginData> loginPhone(String number) async {
+  //   Uri url = Uri.parse(APIResources.LOGIN_PHONE);
+  //   var header = new Map<String, String>();
+  //
+  //   header['Content-Type'] = 'application/x-www-form-urlencoded';
+  //
+  //   var params = new Map<String, String>();
+  //   params['phone'] = number;
+  //
+  //   HttpCall call = new HttpCall();
+  //
+  //   http.Response response = await call.post(url, header, params);
+  //
+  //   print("Response Body: " + response.body);
+  //   return LoginData.fromJson(jsonDecode(response.body));
+  // }
+
   // Future<AllMembers> getMembers() async {
   //   HttpCall call = new HttpCall();
   //   Uri url = Uri.parse(APIResources.GET_MEMBERS);
