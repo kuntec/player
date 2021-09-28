@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-const kBaseColor = Color(0xff3476db);
+const kAppColor = Color(0xffef225b);
+
+//const kBaseColor = Color(0xff3476db);
+const kBaseColor = Color(0xffef225b);
 
 const kGreyBorder = Color(0xff8e8a8a);
 
