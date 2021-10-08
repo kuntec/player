@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 const kAppColor = Color(0xffef225b);
 
 //const kBaseColor = Color(0xff3476db);
-const kBaseColor = Color(0xffef225b);
+const kBaseColor = Color(0xff1A4D91);
 
 const kGreyBorder = Color(0xff8e8a8a);
 
@@ -117,6 +117,21 @@ const kTextFieldDecoration = InputDecoration(
   ),
 );
 
+final kContainerChipBoxDecoration = BoxDecoration(
+  color: Colors.white,
+  borderRadius: BorderRadius.circular(10.0),
+  border: Border.all(
+    color: Colors.black,
+    width: 1.0,
+  ),
+  boxShadow: [
+    BoxShadow(
+      color: Colors.black,
+      offset: Offset(0, 2),
+      blurRadius: 6.0,
+    ),
+  ],
+);
 final kContainerBoxDecoration = BoxDecoration(
   color: Colors.white,
   borderRadius: BorderRadius.circular(15.0),

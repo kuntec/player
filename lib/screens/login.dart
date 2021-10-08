@@ -6,6 +6,7 @@ import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/screens/home.dart';
+import 'package:player/screens/main_navigation.dart';
 import 'package:player/screens/otp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -231,32 +232,32 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  sendOTP(String number) async {
-    if (Utility.checkValidation(number)) {
-      Utility.showToast("Please enter number");
-      print("Please enter number");
-      return;
-    }
-
-    // Fluttertoast.showToast(
-    //     msg: "This is Center Short Toast",
-    //     toastLength: Toast.LENGTH_SHORT,
-    //     gravity: ToastGravity.CENTER,
-    //     timeInSecForIosWeb: 1,
-    //     backgroundColor: Colors.red,
-    //     textColor: Colors.white,
-    //     fontSize: 16.0);
-
-    String sentOTP = await Utility.generateOTP();
-    print("Sent OTP: " + sentOTP);
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (_) => OTPScreen(
-                  phoneNumber: number,
-                  sentOTP: sentOTP,
-                )));
-  }
+  // sendOTP(String number) async {
+  //   if (Utility.checkValidation(number)) {
+  //     Utility.showToast("Please enter number");
+  //     print("Please enter number");
+  //     return;
+  //   }
+  //
+  //   // Fluttertoast.showToast(
+  //   //     msg: "This is Center Short Toast",
+  //   //     toastLength: Toast.LENGTH_SHORT,
+  //   //     gravity: ToastGravity.CENTER,
+  //   //     timeInSecForIosWeb: 1,
+  //   //     backgroundColor: Colors.red,
+  //   //     textColor: Colors.white,
+  //   //     fontSize: 16.0);
+  //
+  //   String sentOTP = await Utility.generateOTP();
+  //   print("Sent OTP: " + sentOTP);
+  //   Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(
+  //           builder: (_) => OTPScreen(
+  //                 phoneNumber: number,
+  //                 sentOTP: sentOTP,
+  //               )));
+  // }
 
   signInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) async {
     setState(() {
@@ -271,7 +272,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (authCredential.user != null) {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+            context, MaterialPageRoute(builder: (context) => MainNavigation()));
       }
     } on FirebaseException catch (e) {
       setState(() {
@@ -283,35 +284,35 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  loginPhone(String number) async {
-    APICall call = new APICall();
-    try {
-      // LoginData loginData = await call.loginPhone(number);
-      // print("Status " + loginData.data.registration_status);
-      // print("Token " + loginData.token);
-      // if (loginData.status) {
-      //   await addSF(loginData.token, loginData.id);
-      //   Navigator.pushReplacement(
-      //       context, MaterialPageRoute(builder: (_) => PublicProfileScreen()));
-      // }
-    } catch (e) {
-      print("Member exp " + e.toString());
-    }
-  }
-
-  addSF(String token, String loginId) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('token', token);
-    prefs.setString('loginId', loginId);
-    prefs.setBool('isLogin', true);
-  }
-
-  checkLogin() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool? isLogin = prefs.getBool('isLogin');
-    if (isLogin!) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => HomeScreen()));
-    }
-  }
+  // loginPhone(String number) async {
+  //   APICall call = new APICall();
+  //   try {
+  //     // LoginData loginData = await call.loginPhone(number);
+  //     // print("Status " + loginData.data.registration_status);
+  //     // print("Token " + loginData.token);
+  //     // if (loginData.status) {
+  //     //   await addSF(loginData.token, loginData.id);
+  //     //   Navigator.pushReplacement(
+  //     //       context, MaterialPageRoute(builder: (_) => PublicProfileScreen()));
+  //     // }
+  //   } catch (e) {
+  //     print("Member exp " + e.toString());
+  //   }
+  // }
+  //
+  // addSF(String token, String loginId) async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   prefs.setString('token', token);
+  //   prefs.setString('loginId', loginId);
+  //   prefs.setBool('isLogin', true);
+  // }
+  //
+  // checkLogin() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   bool? isLogin = prefs.getBool('isLogin');
+  //   if (isLogin!) {
+  //     Navigator.pushReplacement(
+  //         context, MaterialPageRoute(builder: (_) => HomeScreen()));
+  //   }
+  // }
 }

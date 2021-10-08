@@ -3,27 +3,24 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:player/api/api_resources.dart';
 import 'package:player/api/http_call.dart';
+import 'package:player/model/player_data.dart';
 
 class APICall {
-  addPlayer(String name, String phoneNumber, String dob, String gender) async {
+  Future<PlayerData> addPlayer(
+      String name, String phoneNumber, String dob, String gender) async {
     Uri url = Uri.parse(APIResources.ADD_PLAYER);
     var header = new Map<String, String>();
-
-//  header['Content-Type'] = 'application/x-www-form-urlencoded';
-
     var params = new Map<String, String>();
     params['name'] = name;
     params['mobile'] = phoneNumber;
     params['dob'] = dob;
     params['gender'] = gender;
-
     HttpCall call = new HttpCall();
-
     http.Response response = await call.post(url, header, params);
-
     print("Response Body: " + response.body);
-    //  return LoginData.fromJson(jsonDecode(response.body));
+    return PlayerData.fromJson(jsonDecode(response.body));
   }
+
   // Future<LoginData> loginPhone(String number) async {
   //   Uri url = Uri.parse(APIResources.LOGIN_PHONE);
   //   var header = new Map<String, String>();

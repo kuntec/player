@@ -33,6 +33,7 @@ class _VenueScreenState extends State<VenueScreen> {
               SizedBox(height: 10),
               sportBar(),
               SizedBox(height: 10),
+              venueItem(),
               activityItem(
                 "CRICKET",
                 "The Turf",
@@ -104,6 +105,126 @@ class _VenueScreenState extends State<VenueScreen> {
                 color: kAppColor,
               ),
             )
+        ],
+      ),
+    );
+  }
+
+  Widget venueItem() {
+    return Container(
+      margin: EdgeInsets.all(10.0),
+//      padding: EdgeInsets.only(bottom: 10.0),
+      decoration: kContainerBoxDecoration,
+      // height: 200,
+      child: Stack(
+        alignment: Alignment.bottomRight,
+        children: [
+          Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: EdgeInsets.all(10.0),
+                  height: 110.0,
+                  width: 110.0,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(25.0),
+                    child: Image(
+                      image: AssetImage("assets/images/ground.jpg"),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                Row(
+                    // mainAxisAlignment: MainAxisAlignment.start,
+                    // crossAxisAlignment: CrossAxisAlignment.start,
+                    // children: [
+                    //   SizedBox(width: 10.0),
+                    //   Icon(
+                    //     Icons.circle,
+                    //     color: Colors.green,
+                    //     size: 14.0,
+                    //   ),
+                    //   SizedBox(width: 10.0),
+                    //   Text(
+                    //     "2 hours ago",
+                    //     style: TextStyle(fontSize: 12.0),
+                    //   ),
+                    // ],
+                    ),
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 130.0, right: 5.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 10.0),
+                Text(
+                  "Swami Vivekananda Indoor Stadium",
+                  style: TextStyle(
+                      color: kBaseColor,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10.0),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.start,
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   children: [
+                //     SizedBox(width: 10.0),
+                //     Icon(
+                //       Icons.location_pin,
+                //       color: kBaseColor,
+                //       size: 14.0,
+                //     ),
+                //     SizedBox(width: 10.0),
+                //     Text(
+                //       "Saurashtra University, Munjka, Rajkot, Gujarat, 360005",
+                //       style: TextStyle(fontSize: 14.0),
+                //     ),
+                //   ],
+                // ),
+                Text(
+                  "Saurashtra University, Munjka, Rajkot, Gujarat, 360005",
+                  style: TextStyle(
+                    color: Colors.grey.shade900,
+                    fontSize: 14.0,
+                  ),
+                ),
+                SizedBox(height: 5.0),
+                Text(
+                  "Hours: 9am to 10pm",
+                  style: TextStyle(
+                    color: Colors.grey.shade900,
+                    fontSize: 14.0,
+                  ),
+                ),
+                SizedBox(height: 5.0),
+                Text(
+                  "Phone: 0280220000",
+                  style: TextStyle(
+                    color: Colors.grey.shade900,
+                    fontSize: 14.0,
+                  ),
+                ),
+                // Container(
+                //   decoration: BoxDecoration(
+                //       color: kBaseColor,
+                //       borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                //   width: 100,
+                //   height: 40,
+                //   child: Center(
+                //     child: Text(
+                //       "1000",
+                //       style: TextStyle(color: Colors.white, fontSize: 16.0),
+                //     ),
+                //   ),
+                // ),
+              ],
+            ),
+          ),
         ],
       ),
     );

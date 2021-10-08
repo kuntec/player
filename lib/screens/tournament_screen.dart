@@ -15,47 +15,47 @@ class _TournamentScreenState extends State<TournamentScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          currentIndex: selectedIndex,
-          selectedItemColor: kAppColor,
-//        backgroundColor: Colors.grey,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          unselectedItemColor: Colors.black38,
-          onTap: (index) {
-            setState(() {
-              selectedIndex = index;
-            });
-          },
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-                color: kAppColor,
-              ),
-              label: "",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.wine_bar),
-              backgroundColor: kAppColor,
-              label: "",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.flag),
-              backgroundColor: kAppColor,
-              label: "",
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.settings),
-                backgroundColor: kAppColor,
-                label: ""),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                backgroundColor: kAppColor,
-                label: "Home"),
-          ],
-        ),
+//         bottomNavigationBar: BottomNavigationBar(
+//           type: BottomNavigationBarType.fixed,
+//           currentIndex: selectedIndex,
+//           selectedItemColor: kAppColor,
+// //        backgroundColor: Colors.grey,
+//           showSelectedLabels: false,
+//           showUnselectedLabels: false,
+//           unselectedItemColor: Colors.black38,
+//           onTap: (index) {
+//             setState(() {
+//               selectedIndex = index;
+//             });
+//           },
+//           items: [
+//             BottomNavigationBarItem(
+//               icon: Icon(
+//                 Icons.home,
+//                 color: kAppColor,
+//               ),
+//               label: "",
+//             ),
+//             BottomNavigationBarItem(
+//               icon: Icon(Icons.wine_bar),
+//               backgroundColor: kAppColor,
+//               label: "",
+//             ),
+//             BottomNavigationBarItem(
+//               icon: Icon(Icons.flag),
+//               backgroundColor: kAppColor,
+//               label: "",
+//             ),
+//             BottomNavigationBarItem(
+//                 icon: Icon(Icons.settings),
+//                 backgroundColor: kAppColor,
+//                 label: ""),
+//             BottomNavigationBarItem(
+//                 icon: Icon(Icons.person),
+//                 backgroundColor: kAppColor,
+//                 label: "Home"),
+//           ],
+//         ),
         appBar: AppBar(
 //        leading: Icon(Icons.arrow_back),
           title: Text("TOURNAMENTS"),
@@ -93,20 +93,23 @@ class _TournamentScreenState extends State<TournamentScreen> {
               SizedBox(height: 10),
               sportBar(),
               SizedBox(height: 10),
-              activityItem(
-                "CRICKET",
-                "Player Premier League",
-                "Start Date : 20/10/2021",
-                "",
-                "Rs. 500",
-              ),
-              activityItem(
-                "FOOTBAL",
-                "Football Premier League",
-                "Start Date : 06/11/2021",
-                "End Date : 15/11/2021",
-                "Rs. 1250",
-              ),
+              tournamentItem(),
+              tournamentItem(),
+              tournamentItem(),
+              // activityItem(
+              //   "CRICKET",
+              //   "Player Premier League",
+              //   "Start Date : 20/10/2021",
+              //   "",
+              //   "Rs. 500",
+              // ),
+              // activityItem(
+              //   "FOOTBAL",
+              //   "Football Premier League",
+              //   "Start Date : 06/11/2021",
+              //   "End Date : 15/11/2021",
+              //   "Rs. 1250",
+              // ),
               // activityItem(
               //   "FOOTBALL",
               //   "Sagar Shah",
@@ -126,6 +129,82 @@ class _TournamentScreenState extends State<TournamentScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget tournamentItem() {
+    return Container(
+      margin: EdgeInsets.all(10.0),
+      decoration: kContainerBoxDecoration,
+      // height: 150,
+      child: Stack(
+        alignment: Alignment.bottomRight,
+        children: [
+          Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  child: Image(
+                    image: AssetImage("assets/images/ground.jpg"),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Container(
+                  margin: EdgeInsets.only(left: 10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Player Premier League",
+                        style: TextStyle(color: kBaseColor, fontSize: 18.0),
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        "Start Date : 12-12-2021",
+                        style: TextStyle(color: Colors.black, fontSize: 14.0),
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        "Location : Surat, Gujarat",
+                        style: TextStyle(color: Colors.black, fontSize: 14.0),
+                      ),
+                      SizedBox(height: 10),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: 50,
+            right: 20,
+            child: Container(
+              child: Text(
+                "Rs 500",
+                style: TextStyle(color: kBaseColor, fontSize: 18.0),
+              ),
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+                color: kBaseColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(15.0),
+                  bottomRight: Radius.circular(15.0),
+                )),
+            width: 100,
+            height: 40,
+            child: Center(
+              child: Text(
+                "Cricket",
+                style: TextStyle(color: Colors.white, fontSize: 16.0),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
