@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/screens/add_host_activity.dart';
 import 'package:player/screens/home.dart';
 import 'package:player/screens/location_select.dart';
 import 'package:player/screens/login.dart';
@@ -26,13 +27,13 @@ class MyApp extends StatelessWidget {
       ),
 //      home: AddDetails(phoneNumber: "9409394242"),
 //      home: HomeScreen(),
-//      home: AddHost(),
+      home: AddHost(),
 //      home: TournamentScreen(),
 //      home: VenueScreen(),
 //      home: ServiceScreen(),
 //      home: LoginScreen(),
 //      home: LocationSelectScreen(),
-      home: MainNavigation(),
+//      home: MainNavigation(),
       // routes: {
       //   "login": (_) => LoginScreen(),
       //   "home": (_) => HomeScreen(),

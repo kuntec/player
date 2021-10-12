@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:player/api/api_call.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/constant/utility.dart';
+import 'package:player/model/looking_for_data.dart';
 
 class AddHost extends StatefulWidget {
   const AddHost({Key? key}) : super(key: key);
@@ -20,6 +23,57 @@ class _AddHostState extends State<AddHost> {
   String dropdownValue = 'Select Sport';
 
   String lookingForValue = 'Looking For';
+  late LookingFor _selectedLK = new LookingFor();
+  late List<LookingFor> looks;
+
+  Future<List<LookingFor>> getLookingFor() async {
+    APICall apiCall = new APICall();
+    List<LookingFor> list = [];
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      LookingForData lookingForData = await apiCall.getLookingFor();
+      if (lookingForData.lookingFor != null) {
+        list = lookingForData.lookingFor!;
+        this._selectedLK = list[0];
+      }
+    }
+    return list;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getLookingFor();
+  }
+
+  Widget buildData(List<LookingFor> data) {
+    return DropdownButton<LookingFor>(
+      value: _selectedLK,
+      hint: Text("Select Looking For"),
+      isExpanded: true,
+      icon: const Icon(Icons.keyboard_arrow_down),
+      iconSize: 24,
+      elevation: 16,
+      style: const TextStyle(color: Colors.deepPurple),
+      underline: Container(
+        height: 2,
+        color: kAppColor,
+      ),
+      onChanged: (LookingFor? newValue) {
+        // this._selectedLK = newValue!;
+        setState(() {
+          this._selectedLK = newValue!;
+        });
+      },
+      items: data.map<DropdownMenuItem<LookingFor>>((LookingFor value) {
+        return DropdownMenuItem<LookingFor>(
+          value: value,
+          child: Text(value.lookingFor!),
+        );
+      }).toList(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +129,48 @@ class _AddHostState extends State<AddHost> {
                 padding: EdgeInsets.all(20.0),
                 child: Column(
                   children: [
+                    FutureBuilder<List<LookingFor>>(
+                        future: getLookingFor(),
+                        builder: (context, snapshot) {
+                          final data = snapshot.data;
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                              return CircularProgressIndicator();
+                            default:
+                              if (snapshot.hasError) {
+                                return Text("Some Error");
+                              } else {
+                                return buildData(data!);
+                              }
+                          }
+                          return buildData(data!);
+                        }),
+
+                    // DropdownButton<LookingFor>(
+                    //   value: selectedLK,
+                    //   isExpanded: true,
+                    //   icon: const Icon(Icons.keyboard_arrow_down),
+                    //   iconSize: 24,
+                    //   elevation: 16,
+                    //   style: const TextStyle(color: Colors.deepPurple),
+                    //   underline: Container(
+                    //     height: 2,
+                    //     color: kAppColor,
+                    //   ),
+                    //   onChanged: (LookingFor? newValue) {
+                    //     setState(() {
+                    //       selectedLK = newValue!;
+                    //     });
+                    //   },
+                    //   items: looks.map<DropdownMenuItem<LookingFor>>(
+                    //       (LookingFor value) {
+                    //     return DropdownMenuItem<LookingFor>(
+                    //       value: value,
+                    //       child: Text(value.lookingFor!),
+                    //     );
+                    //   }).toList(),
+                    // ),
+
                     DropdownButton<String>(
                       value: dropdownValue,
                       isExpanded: true,
@@ -104,6 +200,64 @@ class _AddHostState extends State<AddHost> {
                         );
                       }).toList(),
                     ),
+                    SizedBox(height: k20Margin),
+                    // FutureBuilder<List<LookingFor>>(
+                    //     future: getLookingFor(),
+                    //     builder: (context, snapshot) {
+                    //       final data = snapshot.data;
+                    //       switch (snapshot.connectionState) {
+                    //         case ConnectionState.waiting:
+                    //           return CircularProgressIndicator();
+                    //         default:
+                    //           if (snapshot.hasError) {
+                    //             return Text("Some Error");
+                    //           } else {
+                    //             return buildData(data!);
+                    //           }
+                    //       }
+                    //       return buildData(data!);
+                    //     }),
+                    // FutureBuilder<dynamic>(
+                    //     future: getLookingFor(),
+                    //     builder: (BuildContext context,
+                    //         AsyncSnapshot<dynamic> snapshot) {
+                    //       if (snapshot.hasData) {
+                    //         print(snapshot.data!.lookingFor!.length);
+                    //         return DropdownButton<dynamic>(
+                    //           value: selectedLK,
+                    //           hint: Text("Select Looking For"),
+                    //           onChanged: (value) {
+                    //             selectedLK = value;
+                    //           },
+                    //           items: snapshot.data!.lookingFor
+                    //               .map(
+                    //                 (lk) => DropdownMenuItem<dynamic>(
+                    //                   child: Text(lk.lookingFor!),
+                    //                   value: lk.lookingForValue,
+                    //                 ),
+                    //               )
+                    //               .toList(),
+                    //         );
+                    //       } else {
+                    //         return Text("No Data");
+                    //       }
+                    //     }),
+
+                    // DropdownButton(
+                    //   value: lookingForValue,
+                    //   hint: Text("Select Looking For"),
+                    //   onChanged: (value) {
+                    //     lookingForValue = value.toString();
+                    //   },
+                    //   items: looks
+                    //       .map(
+                    //         (map) => DropdownMenuItem(
+                    //           child: Text(map.lookingFor!),
+                    //           value: map.lookingForValue,
+                    //         ),
+                    //       )
+                    //       .toList(),
+                    // ),
                     SizedBox(height: k20Margin),
                     DropdownButton<String>(
                       value: lookingForValue,
@@ -179,7 +333,9 @@ class _AddHostState extends State<AddHost> {
                       color: kBaseColor,
                       txtColor: Colors.white,
                       minWidth: MediaQuery.of(context).size.width,
-                      onPressed: () async {},
+                      onPressed: () async {
+                        print(this._selectedLK.lookingForValue!);
+                      },
                     ),
                   ],
                 ),

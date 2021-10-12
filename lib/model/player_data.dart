@@ -128,12 +128,14 @@ class Player {
     String? mobile,
     String? dob,
     String? gender,
+    String? image,
     int? id,
   }) {
     _name = name;
     _mobile = mobile;
     _dob = dob;
     _gender = gender;
+    _image = image;
     _id = id;
   }
 
@@ -142,18 +144,21 @@ class Player {
     _mobile = json['mobile'];
     _dob = json['dob'];
     _gender = json['gender'];
+    _image = json['image'];
     _id = json['id'];
   }
   String? _name;
   String? _mobile;
   String? _dob;
   String? _gender;
+  String? _image;
   int? _id;
 
   String? get name => _name;
   String? get mobile => _mobile;
   String? get dob => _dob;
   String? get gender => _gender;
+  String? get image => _image;
   int? get id => _id;
 
   Map<String, dynamic> toJson() {
@@ -162,6 +167,7 @@ class Player {
     map['mobile'] = _mobile;
     map['dob'] = _dob;
     map['gender'] = _gender;
+    map['image'] = _image;
     map['id'] = _id;
     return map;
   }

@@ -1,9 +1,13 @@
 class APIResources {
   static final String BASE_URL = "https://lotussoft.in/player/api/";
+  static final String IMAGE_URL = "https://lotussoft.in/player/storage/app/";
 
   static final String GET_PLAYER = BASE_URL + "getPlayer";
   static final String ADD_PLAYER = BASE_URL + "addPlayer";
+  static final String CHECK_PLAYER = BASE_URL + "checkPlayer";
   static final String UPDATE_PLAYER = BASE_URL + "updatePlayer";
+
+  static final String UPDATE_PLAYER_IMAGE = BASE_URL + "updatePlayerImage";
 
   static final String GET_HOST_ACTIVITY = BASE_URL + "getHostActivity";
   static final String ADD_HOST_ACTIVITY = BASE_URL + "addHostActivity";

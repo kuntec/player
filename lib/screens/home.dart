@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/screens/location_select.dart';
 import 'package:player/screens/player_profile.dart';
 import 'package:player/screens/service_screen.dart';
 import 'package:player/screens/tournament_screen.dart';
@@ -66,9 +67,17 @@ class _HomeScreenState extends State<HomeScreen> {
 //         ],
 //       ),
       appBar: AppBar(
-        leading: Icon(
-          Icons.location_pin,
-          color: kBaseColor,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => LocationSelectScreen()));
+          },
+          child: Icon(
+            Icons.location_pin,
+            color: kBaseColor,
+          ),
         ),
         actions: [
           Icon(
@@ -82,9 +91,17 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SizedBox(width: 10.0),
         ],
-        title: Text(
-          "Vadodara",
-          style: TextStyle(color: kBaseColor),
+        title: GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => LocationSelectScreen()));
+          },
+          child: Text(
+            "Vadodara",
+            style: TextStyle(color: kBaseColor),
+          ),
         ),
       ),
       body: SingleChildScrollView(

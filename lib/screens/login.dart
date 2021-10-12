@@ -5,6 +5,8 @@ import 'package:player/api/api_call.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/model/player_data.dart';
+import 'package:player/screens/add_details.dart';
 import 'package:player/screens/home.dart';
 import 'package:player/screens/main_navigation.dart';
 import 'package:player/screens/otp.dart';
@@ -93,38 +95,39 @@ class _LoginScreenState extends State<LoginScreen> {
                     txtColor: Colors.white,
                     minWidth: MediaQuery.of(context).size.width,
                     onPressed: () async {
-                      setState(() {
-                        showLoading = true;
-                      });
-                      await _auth.verifyPhoneNumber(
-                        phoneNumber: phoneController.text,
-                        verificationCompleted: (phoneAuthCredential) async {
-                          setState(() {
-                            showLoading = false;
-                          });
-//                          signInWithPhoneAuthCredential(phoneAuthCredential);
-                        },
-                        verificationFailed: (verificationFailed) async {
-                          setState(() {
-                            showLoading = false;
-                          });
-                          // _scaffoldKey.currentState!.showSnackBar(
-                          //     SnackBar(content: Text("Verification Faile")));
-                        },
-                        codeSent: (verificationId, resendingToken) async {
-                          setState(() {
-                            showLoading = false;
-                            currentState =
-                                MobileVerificationState.SHOW_OTP_FORM_STATE;
-                            this.verificationId = verificationId;
-                          });
-                        },
-                        codeAutoRetrievalTimeout: (verificationId) async {
-                          setState(() {
-                            showLoading = false;
-                          });
-                        },
-                      );
+                      checkPlayer(phoneNumber);
+                      // setState(() {
+                      //   showLoading = true;
+                      // });
+//                       await _auth.verifyPhoneNumber(
+//                         phoneNumber: phoneController.text,
+//                         verificationCompleted: (phoneAuthCredential) async {
+//                           setState(() {
+//                             showLoading = false;
+//                           });
+// //                          signInWithPhoneAuthCredential(phoneAuthCredential);
+//                         },
+//                         verificationFailed: (verificationFailed) async {
+//                           setState(() {
+//                             showLoading = false;
+//                           });
+//                           // _scaffoldKey.currentState!.showSnackBar(
+//                           //     SnackBar(content: Text("Verification Faile")));
+//                         },
+//                         codeSent: (verificationId, resendingToken) async {
+//                           setState(() {
+//                             showLoading = false;
+//                             currentState =
+//                                 MobileVerificationState.SHOW_OTP_FORM_STATE;
+//                             this.verificationId = verificationId;
+//                           });
+//                         },
+//                         codeAutoRetrievalTimeout: (verificationId) async {
+//                           setState(() {
+//                             showLoading = false;
+//                           });
+//                         },
+//                       );
                     },
                   ),
                 ],
@@ -212,6 +215,14 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("Init State");
+    checkLogin();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -271,8 +282,11 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
       if (authCredential.user != null) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MainNavigation()));
+        checkPlayer(phoneNumber);
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) => AddDetails(phoneNumber: phoneNumber)));
       }
     } on FirebaseException catch (e) {
       setState(() {
@@ -284,35 +298,46 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // loginPhone(String number) async {
-  //   APICall call = new APICall();
-  //   try {
-  //     // LoginData loginData = await call.loginPhone(number);
-  //     // print("Status " + loginData.data.registration_status);
-  //     // print("Token " + loginData.token);
-  //     // if (loginData.status) {
-  //     //   await addSF(loginData.token, loginData.id);
-  //     //   Navigator.pushReplacement(
-  //     //       context, MaterialPageRoute(builder: (_) => PublicProfileScreen()));
-  //     // }
-  //   } catch (e) {
-  //     print("Member exp " + e.toString());
-  //   }
-  // }
-  //
-  // addSF(String token, String loginId) async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   prefs.setString('token', token);
-  //   prefs.setString('loginId', loginId);
-  //   prefs.setBool('isLogin', true);
-  // }
-  //
-  // checkLogin() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   bool? isLogin = prefs.getBool('isLogin');
-  //   if (isLogin!) {
-  //     Navigator.pushReplacement(
-  //         context, MaterialPageRoute(builder: (_) => HomeScreen()));
-  //   }
-  // }
+  checkPlayer(String phoneNumber) async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      print("Player " + phoneNumber);
+//      showToast("Player " + phoneNumber);
+      PlayerData playerData = await apiCall.checkPlayer(phoneNumber);
+      if (playerData.status!) {
+        print("Player Found");
+//        showToast("Player Found");
+
+        if (playerData.player != null) {
+          int? playerId = playerData.player!.id;
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setInt("playerId", playerId!);
+          prefs.setBool('isLogin', true);
+        }
+
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => MainNavigation()));
+      } else {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => AddDetails(phoneNumber: phoneNumber)));
+//        showToast(playerData.message!);
+//        print(playerData.message!);
+      }
+    } else {
+      showToast(kInternet);
+    }
+  }
+
+  checkLogin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? isLogin = prefs.getBool('isLogin');
+    print(prefs.getInt("playerId"));
+    if (isLogin!) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => MainNavigation()));
+    }
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 const kAppColor = Color(0xffef225b);
 
@@ -19,6 +20,8 @@ const k20Margin = 20.0;
 const kProfileSize = 180.0;
 
 const kPhotoSize = 110.0;
+
+const kInternet = "No Internet Connection, Please connect to Internet";
 
 const kTitleLargeWhite = TextStyle(
   color: Colors.white,
@@ -163,3 +166,12 @@ final kContainerBox = BoxDecoration(
     )
   ],
 );
+void showToast(String msg) {
+  Fluttertoast.showToast(
+    msg: msg,
+    //gravity: ToastGravity.CENTER,
+    backgroundColor: kBaseColor,
+    textColor: Colors.white,
+    toastLength: Toast.LENGTH_LONG,
+  );
+}

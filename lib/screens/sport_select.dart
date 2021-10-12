@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:player/api/api_call.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/constant/utility.dart';
+import 'package:player/model/sport_data.dart';
 import 'package:player/screens/home.dart';
+import 'package:player/screens/main_navigation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SportSelect extends StatefulWidget {
   const SportSelect({Key? key}) : super(key: key);
@@ -12,32 +17,42 @@ class SportSelect extends StatefulWidget {
 
 class _SportSelectState extends State<SportSelect> {
   bool? checked = false;
+  int? playerId;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // playerId = prefs.getInt('playerId');
+    // print("Playerid " + playerId.toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("SPORT SELECT"),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: "Home",
-              backgroundColor: Colors.blue),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: "Home",
-              backgroundColor: Colors.blue),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: "Home",
-              backgroundColor: Colors.blue),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: "Home",
-              backgroundColor: Colors.blue)
-        ],
-      ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   items: [
+      //     BottomNavigationBarItem(
+      //         icon: Icon(Icons.home),
+      //         label: "Home",
+      //         backgroundColor: Colors.blue),
+      //     BottomNavigationBarItem(
+      //         icon: Icon(Icons.home),
+      //         label: "Home",
+      //         backgroundColor: Colors.blue),
+      //     BottomNavigationBarItem(
+      //         icon: Icon(Icons.home),
+      //         label: "Home",
+      //         backgroundColor: Colors.blue),
+      //     BottomNavigationBarItem(
+      //         icon: Icon(Icons.home),
+      //         label: "Home",
+      //         backgroundColor: Colors.blue)
+      //   ],
+      // ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 0.0),
@@ -108,6 +123,14 @@ class _SportSelectState extends State<SportSelect> {
 
   goToHome() {
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (_) => HomeScreen()));
+        context, MaterialPageRoute(builder: (_) => MainNavigation()));
+  }
+
+  getSports() async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      SportData sportData = await apiCall.getSports();
+    } else {}
   }
 }

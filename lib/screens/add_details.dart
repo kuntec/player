@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/constant/utility.dart';
+import 'package:player/model/player_data.dart';
 import 'package:player/screens/sport_select.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddDetails extends StatefulWidget {
   String phoneNumber;
@@ -23,7 +26,12 @@ class _AddDetailsState extends State<AddDetails> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          leading: Icon(Icons.arrow_back),
+          leading: GestureDetector(
+            child: Icon(Icons.arrow_back),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
           title: Text("ADD DETAILS"),
         ),
         body: SingleChildScrollView(
@@ -106,14 +114,24 @@ class _AddDetailsState extends State<AddDetails> {
                           Radio(
                             value: 1,
                             groupValue: _value,
-                            onChanged: (value) {},
+                            onChanged: (value) {
+                              setState(() {
+                                _value = 1;
+                                gender = "Male";
+                              });
+                            },
                           ),
                           SizedBox(width: 10.0),
                           Text("Male"),
                           Radio(
                             value: 2,
                             groupValue: _value,
-                            onChanged: (value) {},
+                            onChanged: (value) {
+                              setState(() {
+                                _value = 2;
+                                gender = "Female";
+                              });
+                            },
                           ),
                           SizedBox(width: 10.0),
                           Text("Female"),
@@ -125,6 +143,10 @@ class _AddDetailsState extends State<AddDetails> {
                         txtColor: Colors.white,
                         minWidth: MediaQuery.of(context).size.width,
                         onPressed: () async {
+                          print(name);
+                          print(widget.phoneNumber);
+                          print(dob);
+                          print(gender);
                           await addPlayer(
                               name, widget.phoneNumber, dob, gender);
                         },
@@ -145,9 +167,114 @@ class _AddDetailsState extends State<AddDetails> {
         context, MaterialPageRoute(builder: (_) => SportSelect()));
   }
 
+//   void doRegister() async {
+//     print('Register click ');
+// //    showToast("This is Register");
+//
+//     // //test user
+//     // firstname = "Tausif";
+//     // lastname = "Saiyed";
+//     // aadhar_no = "123467891235";
+//     // gender = "Male";
+//     // address = "Vasna";
+//     // city = "Baroda";
+//     // country = "India";
+//     // postcode = "390012";
+//
+//     APICall call = new APICall();
+//
+//     if (Utility.checkValidation(firstname)) {
+//       showToast('Please enter first name');
+//       return;
+//     }
+//     if (Utility.checkValidation(lastname)) {
+//       showToast('Please enter last name');
+//       return;
+//     }
+//
+//     if (Utility.checkValidation(aadhar_no)) {
+//       showToast('Please enter Aadhar no');
+//       return;
+//     }
+//
+//     bool connectivityStatus = await Utility.checkConnectivity();
+//     if (connectivityStatus) {
+//       User user = new User();
+//       user.firstname = firstname;
+//       user.lastname = lastname;
+//       user.aadhar_no = aadhar_no;
+//       user.gender = gender;
+//       user.mobile = widget.phonenumber;
+//       user.address = address;
+//       user.city = city;
+//       user.country = country;
+//       user.postcode = postcode;
+//       user.status = "0";
+//       user.user_roles_id = widget.userRole;
+//       user.created_at = Utility.getCurrentDate();
+//
+//       print('Register click ${user.created_at}');
+//
+//       Register register = await call.register(user);
+//
+//       if (register.status) {
+//         showToast('register Successful, ${register.data.mobile}');
+//
+//         SharedPreferences preferences = await SharedPreferences.getInstance();
+//         preferences.setBool('isLogin', true);
+//         preferences.setInt('loginId', register.data.id);
+//
+//         if (widget.userRole == "2") {
+//           Navigator.pushReplacement(
+//             context,
+//             MaterialPageRoute(
+//               builder: (_) => HomeScreen(),
+//             ),
+//           );
+//         }
+//
+//         if (widget.userRole == "3") {
+//           Navigator.pushReplacement(
+//             context,
+//             MaterialPageRoute(
+//               builder: (_) => DonorHomeScreen(),
+//             ),
+//           );
+//         }
+//       } else {
+//         showToast('register Failed, ${register.message}');
+//       }
+//     } else {
+//       showToast(kInternet);
+//     }
+//   }
+
   addPlayer(String name, String phoneNumber, String dob, String gender) async {
     APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      PlayerData playerData =
+          await apiCall.addPlayer(name, phoneNumber, dob, gender);
+      if (playerData.status!) {
+        showToast(playerData.message!);
+        // Go to Sport Selection
+        // (playerData.player != null) {
+        //   String userId = value.user!.uid;
 
-    await apiCall.addPlayer(name, phoneNumber, dob, gender);
+        if (playerData.player != null) {
+          int? playerId = playerData.player!.id;
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setInt("playerId", playerId!);
+          prefs.setBool('isLogin', true);
+        }
+
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => SportSelect()));
+      } else {
+        showToast(playerData.message!);
+      }
+    } else {
+      showToast(kInternet);
+    }
   }
 }

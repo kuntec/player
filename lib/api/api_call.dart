@@ -3,9 +3,22 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:player/api/api_resources.dart';
 import 'package:player/api/http_call.dart';
+import 'package:player/model/looking_for_data.dart';
 import 'package:player/model/player_data.dart';
+import 'package:player/model/sport_data.dart';
 
 class APICall {
+  Future<PlayerData> checkPlayer(String phoneNumber) async {
+    Uri url = Uri.parse(APIResources.CHECK_PLAYER);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['mobile'] = phoneNumber;
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return PlayerData.fromJson(jsonDecode(response.body));
+  }
+
   Future<PlayerData> addPlayer(
       String name, String phoneNumber, String dob, String gender) async {
     Uri url = Uri.parse(APIResources.ADD_PLAYER);
@@ -19,6 +32,22 @@ class APICall {
     http.Response response = await call.post(url, header, params);
     print("Response Body: " + response.body);
     return PlayerData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<SportData> getSports() async {
+    Uri url = Uri.parse(APIResources.ADD_PLAYER);
+    HttpCall call = new HttpCall();
+    http.Response response = await call.get(url);
+    print("Response Body: " + response.body);
+    return SportData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<LookingForData> getLookingFor() async {
+    Uri url = Uri.parse(APIResources.GET_LOOKING_FOR);
+    HttpCall call = new HttpCall();
+    http.Response response = await call.get(url);
+    print("Response Body: " + response.body);
+    return LookingForData.fromJson(jsonDecode(response.body));
   }
 
   // Future<LoginData> loginPhone(String number) async {
