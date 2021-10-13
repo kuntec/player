@@ -135,6 +135,30 @@ final kContainerChipBoxDecoration = BoxDecoration(
     ),
   ],
 );
+
+final kContainerTabLeftDecoration = BoxDecoration(
+  color: Colors.white,
+  borderRadius: BorderRadius.only(
+    topLeft: Radius.circular(10.0),
+    bottomLeft: Radius.circular(10.0),
+  ),
+  border: Border.all(
+    color: Colors.grey,
+    width: 1.0,
+  ),
+);
+
+final kContainerTabRightDecoration = BoxDecoration(
+  color: Colors.white,
+  borderRadius: BorderRadius.only(
+    topRight: Radius.circular(10.0),
+    bottomRight: Radius.circular(10.0),
+  ),
+  border: Border.all(
+    color: Colors.grey,
+    width: 1.0,
+  ),
+);
 final kContainerBoxDecoration = BoxDecoration(
   color: Colors.white,
   borderRadius: BorderRadius.circular(15.0),

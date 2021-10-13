@@ -31,7 +31,7 @@ class _MainNavigationState extends State<MainNavigation> {
 //        backgroundColor: Colors.grey,
         showSelectedLabels: false,
         showUnselectedLabels: false,
-        selectedItemColor: kAppColor,
+        selectedItemColor: kBaseColor,
         currentIndex: selectedIndex,
         onTap: (index) {
           setState(() {
@@ -47,20 +47,20 @@ class _MainNavigationState extends State<MainNavigation> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.wine_bar),
-            backgroundColor: kAppColor,
+            backgroundColor: kBaseColor,
             label: "Tournament",
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.flag),
-              backgroundColor: kAppColor,
+              backgroundColor: kBaseColor,
               label: "Venue"),
           BottomNavigationBarItem(
               icon: Icon(Icons.settings),
-              backgroundColor: kAppColor,
+              backgroundColor: kBaseColor,
               label: "Service"),
           BottomNavigationBarItem(
               icon: Icon(Icons.person),
-              backgroundColor: kAppColor,
+              backgroundColor: kBaseColor,
               label: "Profile"),
         ],
       ),

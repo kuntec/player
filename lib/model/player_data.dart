@@ -8,7 +8,7 @@ class PlayerData {
     bool? status,
     String? message,
     Player? player,
-    List<Players>? players,
+    List<Player>? players,
   }) {
     _status = status;
     _message = message;
@@ -23,19 +23,19 @@ class PlayerData {
     if (json['players'] != null) {
       _players = [];
       json['players'].forEach((v) {
-        _players?.add(Players.fromJson(v));
+        _players?.add(Player.fromJson(v));
       });
     }
   }
   bool? _status;
   String? _message;
   Player? _player;
-  List<Players>? _players;
+  List<Player>? _players;
 
   bool? get status => _status;
   String? get message => _message;
   Player? get player => _player;
-  List<Players>? get players => _players;
+  List<Player>? get players => _players;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -59,62 +59,62 @@ class PlayerData {
 /// created_at : "0000-00-00"
 /// mobile : "9409394242"
 
-class Players {
-  Players({
-    int? id,
-    String? name,
-    String? dob,
-    String? gender,
-    dynamic image,
-    String? createdAt,
-    String? mobile,
-  }) {
-    _id = id;
-    _name = name;
-    _dob = dob;
-    _gender = gender;
-    _image = image;
-    _createdAt = createdAt;
-    _mobile = mobile;
-  }
-
-  Players.fromJson(dynamic json) {
-    _id = json['id'];
-    _name = json['name'];
-    _dob = json['dob'];
-    _gender = json['gender'];
-    _image = json['image'];
-    _createdAt = json['created_at'];
-    _mobile = json['mobile'];
-  }
-  int? _id;
-  String? _name;
-  String? _dob;
-  String? _gender;
-  dynamic _image;
-  String? _createdAt;
-  String? _mobile;
-
-  int? get id => _id;
-  String? get name => _name;
-  String? get dob => _dob;
-  String? get gender => _gender;
-  dynamic get image => _image;
-  String? get createdAt => _createdAt;
-  String? get mobile => _mobile;
-
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['id'] = _id;
-    map['name'] = _name;
-    map['dob'] = _dob;
-    map['gender'] = _gender;
-    map['image'] = _image;
-    map['created_at'] = _createdAt;
-    map['mobile'] = _mobile;
-    return map;
-  }
-}
+// class Players {
+//   Players({
+//     int? id,
+//     String? name,
+//     String? dob,
+//     String? gender,
+//     dynamic image,
+//     String? createdAt,
+//     String? mobile,
+//   }) {
+//     _id = id;
+//     _name = name;
+//     _dob = dob;
+//     _gender = gender;
+//     _image = image;
+//     _createdAt = createdAt;
+//     _mobile = mobile;
+//   }
+//
+//   Players.fromJson(dynamic json) {
+//     _id = json['id'];
+//     _name = json['name'];
+//     _dob = json['dob'];
+//     _gender = json['gender'];
+//     _image = json['image'];
+//     _createdAt = json['created_at'];
+//     _mobile = json['mobile'];
+//   }
+//   int? _id;
+//   String? _name;
+//   String? _dob;
+//   String? _gender;
+//   dynamic _image;
+//   String? _createdAt;
+//   String? _mobile;
+//
+//   int? get id => _id;
+//   String? get name => _name;
+//   String? get dob => _dob;
+//   String? get gender => _gender;
+//   dynamic get image => _image;
+//   String? get createdAt => _createdAt;
+//   String? get mobile => _mobile;
+//
+//   Map<String, dynamic> toJson() {
+//     final map = <String, dynamic>{};
+//     map['id'] = _id;
+//     map['name'] = _name;
+//     map['dob'] = _dob;
+//     map['gender'] = _gender;
+//     map['image'] = _image;
+//     map['created_at'] = _createdAt;
+//     map['mobile'] = _mobile;
+//     return map;
+//   }
+// }
 
 /// name : "saiyed"
 /// mobile : "9409394240"
@@ -129,6 +129,8 @@ class Player {
     String? dob,
     String? gender,
     String? image,
+    String? email,
+    String? locationId,
     int? id,
   }) {
     _name = name;
@@ -136,15 +138,18 @@ class Player {
     _dob = dob;
     _gender = gender;
     _image = image;
+    _email = email;
+    _locationId = locationId;
     _id = id;
   }
-
   Player.fromJson(dynamic json) {
     _name = json['name'];
     _mobile = json['mobile'];
     _dob = json['dob'];
     _gender = json['gender'];
     _image = json['image'];
+    _email = json['email'];
+    _locationId = json['location_id'];
     _id = json['id'];
   }
   String? _name;
@@ -152,6 +157,8 @@ class Player {
   String? _dob;
   String? _gender;
   String? _image;
+  String? _email;
+  String? _locationId;
   int? _id;
 
   String? get name => _name;
@@ -160,6 +167,8 @@ class Player {
   String? get gender => _gender;
   String? get image => _image;
   int? get id => _id;
+  String? get email => _email;
+  String? get locationId => _locationId;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -168,6 +177,8 @@ class Player {
     map['dob'] = _dob;
     map['gender'] = _gender;
     map['image'] = _image;
+    map['email'] = _email;
+    map['location_id'] = _locationId;
     map['id'] = _id;
     return map;
   }

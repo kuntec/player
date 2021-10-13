@@ -278,4 +278,60 @@ class Activity {
     map['id'] = _id;
     return map;
   }
+
+  set sportName(value) {
+    _sportName = value;
+  }
+
+  set area(value) {
+    _area = value;
+  }
+
+  set sportId(value) {
+    _sportId = value;
+  }
+
+  set lookingForId(value) {
+    _lookingForId = value;
+  }
+
+  set lookingFor(value) {
+    _lookingFor = value;
+  }
+
+  set lookingForValue(value) {
+    _lookingForValue = value;
+  }
+
+  set startDate(value) {
+    _startDate = value;
+  }
+
+  set timing(value) {
+    _timing = value;
+  }
+
+  set ballType(value) {
+    _ballType = value;
+  }
+
+  set playerId(value) {
+    _playerId = value;
+  }
+
+  set playerName(value) {
+    _playerName = value;
+  }
+
+  set locationId(value) {
+    _locationId = value;
+  }
+
+  set createdAt(value) {
+    _createdAt = value;
+  }
+
+  set id(value) {
+    _id = value;
+  }
 }

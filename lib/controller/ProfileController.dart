@@ -28,9 +28,9 @@ class ProfileController extends GetxController {
           PlayerData playerData =
               PlayerData.fromJson(jsonDecode(response.toString()));
           if (playerData.player!.image != null) {
-            String? image = playerData.player!.image;
-            print("Image " + image!);
-            imageURL = APIResources.IMAGE_URL + image!;
+            String? image = playerData.player!.image!;
+//            print("Image " + image!);
+            imageURL = APIResources.IMAGE_URL + image;
           }
 
           Get.snackbar('Success', 'Image uploaded successfully',

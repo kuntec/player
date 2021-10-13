@@ -263,8 +263,15 @@ class _AddDetailsState extends State<AddDetails> {
 
         if (playerData.player != null) {
           int? playerId = playerData.player!.id;
+          String? playerName = playerData.player!.name;
+          String? locationId = playerData.player!.locationId;
+          String? playerImage = playerData.player!.image;
+
           SharedPreferences prefs = await SharedPreferences.getInstance();
           prefs.setInt("playerId", playerId!);
+          prefs.setString("playerName", playerName!);
+          prefs.setString("playerImage", playerImage!);
+          prefs.setString("locationId", locationId!);
           prefs.setBool('isLogin', true);
         }
 

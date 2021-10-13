@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:player/api/api_call.dart';
+import 'package:player/api/api_resources.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/constant/utility.dart';
+import 'package:player/model/host_activity.dart';
+import 'package:player/screens/add_host_activity.dart';
+import 'package:player/screens/choose_sport.dart';
 import 'package:player/screens/location_select.dart';
 import 'package:player/screens/player_profile.dart';
 import 'package:player/screens/service_screen.dart';
+import 'package:player/screens/sport_select.dart';
 import 'package:player/screens/tournament_screen.dart';
 import 'package:player/screens/venue_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -121,6 +129,48 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+            buttonBar(),
+
+            Container(
+              height: 700,
+              padding: EdgeInsets.all(20.0),
+              child: FutureBuilder(
+                future: getHostActivity(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.data == null) {
+                    return Container(
+                      child: Center(
+                        child: Text('Loading....'),
+                      ),
+                    );
+                  }
+                  if (snapshot.hasData) {
+                    print("Has Data ${snapshot.data.length}");
+                    // return Container(
+                    //   child: Center(
+                    //     child: Text('Yes Data ${snapshot.data}'),
+                    //   ),
+                    // );
+                    return ListView.builder(
+                      padding: EdgeInsets.only(bottom: double.infinity),
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return hostActivityItem(snapshot.data[index]);
+                      },
+                    );
+                  } else {
+                    return Container(
+                      child: Center(
+                        child: Text('No Data'),
+                      ),
+                    );
+                  }
+                },
+              ),
+            )
+
             // Container(
             //   margin: EdgeInsets.symmetric(vertical: 20.0),
             //   height: 300,
@@ -135,13 +185,13 @@ class _HomeScreenState extends State<HomeScreen> {
             //     ],
             //   ),
             // ),
-            stackExample(),
+            //stackExample(),
             // SizedBox(height: 10),
             // // buttonBar(),
             // SizedBox(height: 10),
             // sportBar(),
             // SizedBox(height: 10),
-            // hostActivityItem(),
+            //hostActivityItem(),
             // activityItem(
             //   "CRICKET",
             //   "Parth Agrawal",
@@ -206,27 +256,38 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          iconCard(Icons.add, "Host Activity"),
-          iconCard(Icons.people, "Friends"),
-          iconCard(Icons.wine_bar, "Host Tournament"),
-          iconCard(Icons.local_offer, "Offers"),
+          iconCard(Icons.add, "Host Activity", () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => AddHost()));
+          }),
+          iconCard(Icons.people, "Friends", () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => SportSelect()));
+          }),
+          iconCard(Icons.wine_bar, "Host Tournament", () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ChooseSport()));
+          }),
+          iconCard(Icons.local_offer, "Offers", () {}),
         ],
       ),
     );
   }
 
-  Widget iconCard(IconData iconData, String title) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Icon(
-            iconData,
-            color: Colors.black,
-          ),
-          SizedBox(height: 10.0),
-          Text(title)
-        ],
+  Widget iconCard(IconData iconData, String title, dynamic onPressed) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Icon(
+              iconData,
+              color: Colors.black,
+            ),
+            Text(title)
+          ],
+        ),
       ),
     );
   }
@@ -248,7 +309,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget stackExample() {
+  Widget stackExample(dynamic data) {
     return Container(
       margin: EdgeInsets.all(10.0),
       padding: EdgeInsets.only(bottom: 10.0),
@@ -363,116 +424,116 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget hostActivityItem() {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      decoration: kContainerBoxDecoration,
-      child: Stack(
-        children: [
-          Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.all(10.0),
-                      height: 85.0,
-                      width: 85.0,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(25.0),
-                        child: Image(
-                          image: AssetImage("assets/images/demo.jpg"),
-                        ),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.circle,
-                          color: Colors.green,
-                          size: 14.0,
-                        ),
-                        SizedBox(width: 10.0),
-                        Text(
-                          "2 hours ago",
-                          style: TextStyle(fontSize: 12.0),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          "Tausif Saiyed",
-                          style: TextStyle(
-                            color: kBaseColor,
-                            fontSize: 18.0,
-                          ),
-                        ),
-                        Container(
-                          height: 40.0,
-                          width: 100.0,
-                          color: kBaseColor,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10.0),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            "Looking For: A Player To Join My Team ",
-                            style: TextStyle(
-                              color: Colors.grey.shade900,
-                              fontSize: 14.0,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 5.0),
-                    Text(
-                      "Location: Vasna",
-                      style: TextStyle(
-                        color: Colors.grey.shade900,
-                        fontSize: 14.0,
-                      ),
-                    ),
-                    SizedBox(height: 5.0),
-                    Text(
-                      "Time: 6:30 PM",
-                      style: TextStyle(
-                        color: Colors.grey.shade900,
-                        fontSize: 14.0,
-                      ),
-                    ),
-                    SizedBox(height: 5.0),
-                    Text(
-                      "Date: 06-11-2021",
-                      style: TextStyle(
-                        color: Colors.grey.shade900,
-                        fontSize: 14.0,
-                      ),
-                    ),
-                    SizedBox(height: 5.0),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget hostActivityItem() {
+  //   return Container(
+  //     margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+  //     decoration: kContainerBoxDecoration,
+  //     child: Stack(
+  //       children: [
+  //         Container(
+  //           child: Row(
+  //             mainAxisAlignment: MainAxisAlignment.start,
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               Column(
+  //                 children: [
+  //                   Container(
+  //                     margin: EdgeInsets.all(10.0),
+  //                     height: 85.0,
+  //                     width: 85.0,
+  //                     child: ClipRRect(
+  //                       borderRadius: BorderRadius.circular(25.0),
+  //                       child: Image(
+  //                         image: AssetImage("assets/images/demo.jpg"),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   Row(
+  //                     mainAxisAlignment: MainAxisAlignment.center,
+  //                     crossAxisAlignment: CrossAxisAlignment.center,
+  //                     children: [
+  //                       Icon(
+  //                         Icons.circle,
+  //                         color: Colors.green,
+  //                         size: 14.0,
+  //                       ),
+  //                       SizedBox(width: 10.0),
+  //                       Text(
+  //                         "2 hours ago",
+  //                         style: TextStyle(fontSize: 12.0),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ],
+  //               ),
+  //               Column(
+  //                 mainAxisAlignment: MainAxisAlignment.start,
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   Row(
+  //                     children: [
+  //                       Text(
+  //                         "Tausif Saiyed",
+  //                         style: TextStyle(
+  //                           color: kBaseColor,
+  //                           fontSize: 18.0,
+  //                         ),
+  //                       ),
+  //                       Container(
+  //                         height: 40.0,
+  //                         width: 100.0,
+  //                         color: kBaseColor,
+  //                       ),
+  //                     ],
+  //                   ),
+  //                   SizedBox(height: 10.0),
+  //                   Row(
+  //                     children: [
+  //                       Expanded(
+  //                         child: Text(
+  //                           "Looking For: A Player To Join My Team ",
+  //                           style: TextStyle(
+  //                             color: Colors.grey.shade900,
+  //                             fontSize: 14.0,
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                   SizedBox(height: 5.0),
+  //                   Text(
+  //                     "Location: Vasna",
+  //                     style: TextStyle(
+  //                       color: Colors.grey.shade900,
+  //                       fontSize: 14.0,
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: 5.0),
+  //                   Text(
+  //                     "Time: 6:30 PM",
+  //                     style: TextStyle(
+  //                       color: Colors.grey.shade900,
+  //                       fontSize: 14.0,
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: 5.0),
+  //                   Text(
+  //                     "Date: 06-11-2021",
+  //                     style: TextStyle(
+  //                       color: Colors.grey.shade900,
+  //                       fontSize: 14.0,
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: 5.0),
+  //                 ],
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget activityItem(String sport, String name, String looking, String area,
       String date, String time) {
@@ -603,5 +664,153 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
+  }
+
+  hostActivityItem(dynamic activity) {
+    return Container(
+      margin: EdgeInsets.all(10.0),
+      decoration: kContainerBoxDecoration,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Expanded(
+                flex: 4,
+                child: Container(
+                  margin: EdgeInsets.all(10.0),
+                  height: 90.0,
+                  width: 90.0,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(25.0),
+                      child: Image.network(
+                        APIResources.IMAGE_URL + playerImage,
+                      )),
+                ),
+              ),
+              Expanded(
+                flex: 6,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10.0),
+                    Text(
+                      activity.playerName,
+                      style: TextStyle(
+                        color: kBaseColor,
+                        fontSize: 20.0,
+                      ),
+                    ),
+                    SizedBox(height: 10.0),
+                    Text(
+                      "Looking For: ${activity.lookingFor}",
+                      style: TextStyle(
+                        color: Colors.grey.shade900,
+                        fontSize: 14.0,
+                      ),
+                    ),
+                    SizedBox(height: 5.0),
+                    Text(
+                      "Location: ${activity.area}",
+                      style: TextStyle(
+                        color: Colors.grey.shade900,
+                        fontSize: 14.0,
+                      ),
+                    ),
+                    SizedBox(height: 5.0),
+                    Text(
+                      "Time: ${activity.timing}",
+                      style: TextStyle(
+                        color: Colors.grey.shade900,
+                        fontSize: 14.0,
+                      ),
+                    ),
+                    SizedBox(height: 5.0),
+                    Text(
+                      "Date: ${activity.startDate}",
+                      style: TextStyle(
+                        color: Colors.grey.shade900,
+                        fontSize: 14.0,
+                      ),
+                    ),
+                    SizedBox(height: 5.0),
+                    Text(
+                      activity.ballType != null
+                          ? "Ball Type: ${activity.ballType} "
+                          : "",
+                      style: TextStyle(
+                        color: Colors.grey.shade900,
+                        fontSize: 14.0,
+                      ),
+                    ),
+                    SizedBox(height: 5.0),
+                  ],
+                ),
+              ),
+              // Expanded(
+              //   flex: 1,
+              //   child: Container(
+              //     child: Icon(
+              //       Icons.more_horiz,
+              //       color: kBaseColor,
+              //       size: 20.0,
+              //     ),
+              //   ),
+              // ),
+            ],
+          ),
+          Container(
+            decoration: BoxDecoration(
+                color: kBaseColor,
+                borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(15.0),
+                  topLeft: Radius.circular(15.0),
+                )),
+            width: 100,
+            height: 35,
+            child: Center(
+              child: Text(
+                activity.sportName,
+                style: TextStyle(color: Colors.white, fontSize: 16.0),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  var playerId;
+  var playerImage;
+  var locationId;
+
+  List<Activites>? activities;
+
+  Future<List<Activites>?> getHostActivity() async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      playerId = prefs.get("playerId");
+      locationId = prefs.get("locationId");
+      playerImage = prefs.get("playerImage");
+      print("Player ID $playerId");
+      HostActivity hostActivity =
+          await apiCall.getHostActivity(locationId.toString());
+      if (hostActivity.activites != null) {
+        activities = hostActivity.activites!;
+        //setState(() {});
+      }
+      if (hostActivity.status!) {
+        //print(hostActivity.message!);
+        //  Navigator.pop(context);
+      } else {
+        print(hostActivity.message!);
+      }
+    }
+    return activities;
   }
 }

@@ -10,6 +10,7 @@ class APIResources {
   static final String UPDATE_PLAYER_IMAGE = BASE_URL + "updatePlayerImage";
 
   static final String GET_HOST_ACTIVITY = BASE_URL + "getHostActivity";
+  static final String GET_MY_HOST_ACTIVITY = BASE_URL + "getMyHostActivity";
   static final String ADD_HOST_ACTIVITY = BASE_URL + "addHostActivity";
   static final String UPDATE_HOST_ACTIVITY = BASE_URL + "updateHostActivity";
 

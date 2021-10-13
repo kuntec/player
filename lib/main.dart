@@ -27,11 +27,11 @@ class MyApp extends StatelessWidget {
       ),
 //      home: AddDetails(phoneNumber: "9409394242"),
 //      home: HomeScreen(),
-      home: AddHost(),
+//      home: AddHost(),
 //      home: TournamentScreen(),
 //      home: VenueScreen(),
 //      home: ServiceScreen(),
-//      home: LoginScreen(),
+      home: LoginScreen(),
 //      home: LocationSelectScreen(),
 //      home: MainNavigation(),
       // routes: {

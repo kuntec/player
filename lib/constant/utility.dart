@@ -34,6 +34,11 @@ class Utility {
     return false;
   }
 
+  static String getCurrentDate() {
+    final initialDate = DateTime.now();
+    return "${initialDate.day}-${initialDate.month}-${initialDate.year}";
+  }
+
   static void showToast(String msg) {
     Fluttertoast.showToast(
       msg: msg,
