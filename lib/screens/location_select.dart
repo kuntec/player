@@ -15,7 +15,17 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
       appBar: AppBar(
         title: Text("Select Location"),
       ),
-      body: Container(),
+      body: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text("Address"),
+            Text("Latitude"),
+            Text("Longitude"),
+            TextButton(onPressed: () {}, child: Text("Locate Me")),
+          ],
+        ),
+      ),
     ));
   }
 }

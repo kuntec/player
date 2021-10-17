@@ -10,6 +10,7 @@ import 'package:player/screens/add_details.dart';
 import 'package:player/screens/home.dart';
 import 'package:player/screens/main_navigation.dart';
 import 'package:player/screens/otp.dart';
+import 'package:player/screens/sport_select.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum MobileVerificationState {
@@ -50,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             Image(
               image: AssetImage(
-                'assets/images/player_logo.png',
+                'assets/images/login.png',
               ),
               width: MediaQuery.of(context).size.width,
             ),
@@ -58,15 +59,32 @@ class _LoginScreenState extends State<LoginScreen> {
               height: kMargin,
             ),
             Text(
-              "Log in",
+              "OTP Verification",
               style: const TextStyle(
-                color: const Color(0xff000000),
-                fontWeight: FontWeight.w600,
+                color: Colors.black,
                 fontFamily: "Roboto",
                 fontStyle: FontStyle.normal,
                 fontSize: 20.8,
               ),
               textAlign: TextAlign.left,
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 20.0, right: 20.0),
+              child: Center(
+                child: Text(
+                  "We will send you an One Time Password on this mobile number",
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontFamily: "Roboto",
+                    fontStyle: FontStyle.normal,
+                    fontSize: 14.0,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+              ),
             ),
             SizedBox(
               height: 10.0,
@@ -85,49 +103,55 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: Colors.black,
                     ),
                     decoration: kTextFieldDecoration.copyWith(
-                        hintText: 'Mobile Number', labelText: 'Phone'),
+                        hintText: 'Enter Mobile Number',
+                        labelText: 'Phone',
+                        prefixText: "+91 - "),
                     cursorColor: kBaseColor,
                   ),
                   SizedBox(height: 30.0),
                   RoundedButton(
-                    title: "SEND",
+                    title: "GET OTP",
                     color: kBaseColor,
                     txtColor: Colors.white,
                     minWidth: MediaQuery.of(context).size.width,
                     onPressed: () async {
-                      checkPlayer(phoneNumber);
-                      // setState(() {
-                      //   showLoading = true;
-                      // });
-//                       await _auth.verifyPhoneNumber(
-//                         phoneNumber: phoneController.text,
-//                         verificationCompleted: (phoneAuthCredential) async {
-//                           setState(() {
-//                             showLoading = false;
-//                           });
-// //                          signInWithPhoneAuthCredential(phoneAuthCredential);
-//                         },
-//                         verificationFailed: (verificationFailed) async {
-//                           setState(() {
-//                             showLoading = false;
-//                           });
-//                           // _scaffoldKey.currentState!.showSnackBar(
-//                           //     SnackBar(content: Text("Verification Faile")));
-//                         },
-//                         codeSent: (verificationId, resendingToken) async {
-//                           setState(() {
-//                             showLoading = false;
-//                             currentState =
-//                                 MobileVerificationState.SHOW_OTP_FORM_STATE;
-//                             this.verificationId = verificationId;
-//                           });
-//                         },
-//                         codeAutoRetrievalTimeout: (verificationId) async {
-//                           setState(() {
-//                             showLoading = false;
-//                           });
-//                         },
-//                       );
+//                      checkPlayer(phoneNumber);
+
+                      phoneNumber = "+91" + phoneController.text;
+
+                      print(phoneNumber);
+                      setState(() {
+                        showLoading = true;
+                      });
+                      await _auth.verifyPhoneNumber(
+                        phoneNumber: phoneNumber,
+                        verificationCompleted: (phoneAuthCredential) async {
+                          setState(() {
+                            showLoading = false;
+                          });
+//                          signInWithPhoneAuthCredential(phoneAuthCredential);
+                        },
+                        verificationFailed: (verificationFailed) async {
+                          setState(() {
+                            showLoading = false;
+                          });
+                          // _scaffoldKey.currentState!.showSnackBar(
+                          //     SnackBar(content: Text("Verification Faile")));
+                        },
+                        codeSent: (verificationId, resendingToken) async {
+                          setState(() {
+                            showLoading = false;
+                            currentState =
+                                MobileVerificationState.SHOW_OTP_FORM_STATE;
+                            this.verificationId = verificationId;
+                          });
+                        },
+                        codeAutoRetrievalTimeout: (verificationId) async {
+                          setState(() {
+                            showLoading = false;
+                          });
+                        },
+                      );
                     },
                   ),
                 ],
@@ -151,23 +175,40 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             Image(
               image: AssetImage(
-                'assets/images/player_logo.png',
+                'assets/images/otp.png',
               ),
               width: MediaQuery.of(context).size.width,
             ),
             SizedBox(
-              height: kMargin,
+              height: k20Margin,
             ),
             Text(
-              "Enter OTP",
+              "OTP Verification",
               style: const TextStyle(
-                color: const Color(0xff000000),
-                fontWeight: FontWeight.w600,
+                color: Colors.black,
                 fontFamily: "Roboto",
                 fontStyle: FontStyle.normal,
                 fontSize: 20.8,
               ),
               textAlign: TextAlign.left,
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 20.0, right: 20.0),
+              child: Center(
+                child: Text(
+                  "Enter the OTP sent to ${phoneNumber}",
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontFamily: "Roboto",
+                    fontStyle: FontStyle.normal,
+                    fontSize: 14.0,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+              ),
             ),
             SizedBox(
               height: 10.0,
@@ -189,9 +230,61 @@ class _LoginScreenState extends State<LoginScreen> {
                         hintText: 'OTP', labelText: 'OTP'),
                     cursorColor: kBaseColor,
                   ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Didn't receive the OTP? ",
+                        style: TextStyle(color: Colors.grey, fontSize: 12.0),
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          setState(() {
+                            showLoading = true;
+                          });
+                          await _auth.verifyPhoneNumber(
+                            phoneNumber: phoneNumber,
+                            verificationCompleted: (phoneAuthCredential) async {
+                              setState(() {
+                                showLoading = false;
+                              });
+//                          signInWithPhoneAuthCredential(phoneAuthCredential);
+                            },
+                            verificationFailed: (verificationFailed) async {
+                              setState(() {
+                                showLoading = false;
+                              });
+                              // _scaffoldKey.currentState!.showSnackBar(
+                              //     SnackBar(content: Text("Verification Faile")));
+                            },
+                            codeSent: (verificationId, resendingToken) async {
+                              setState(() {
+                                showLoading = false;
+                                currentState =
+                                    MobileVerificationState.SHOW_OTP_FORM_STATE;
+                                this.verificationId = verificationId;
+                              });
+                            },
+                            codeAutoRetrievalTimeout: (verificationId) async {
+                              setState(() {
+                                showLoading = false;
+                              });
+                            },
+                          );
+                        },
+                        child: Text(
+                          "RESEND OTP",
+                          style: TextStyle(color: kBaseColor, fontSize: 12.0),
+                        ),
+                      ),
+                    ],
+                  ),
                   SizedBox(height: 30.0),
                   RoundedButton(
-                    title: "Verify",
+                    title: "VERIFY & PROCEED",
                     color: kBaseColor,
                     txtColor: Colors.white,
                     minWidth: MediaQuery.of(context).size.width,
@@ -219,7 +312,7 @@ class _LoginScreenState extends State<LoginScreen> {
     // TODO: implement initState
     super.initState();
     print("Init State");
-    checkLogin();
+//    checkLogin();
   }
 
   @override
@@ -318,15 +411,24 @@ class _LoginScreenState extends State<LoginScreen> {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           prefs.setInt("playerId", playerId!);
           prefs.setString("playerName", playerName!);
-          prefs.setString("playerImage", playerImage!);
-          prefs.setString("locationId", locationId!);
+          // prefs.setString("playerImage", playerImage!);
+          // prefs.setString("locationId", locationId!);
           prefs.setBool('isLogin', true);
         }
+        bool sportSelect = false;
 
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => MainNavigation()));
+        if (sportSelect) {
+          // Navigator.pushReplacement(context,
+          //     MaterialPageRoute(builder: (context) => MainNavigation()));
+        } else {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      SportSelect(player: playerData.player)));
+        }
       } else {
-        Navigator.push(
+        Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) => AddDetails(phoneNumber: phoneNumber)));
@@ -338,13 +440,15 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  checkLogin() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool? isLogin = prefs.getBool('isLogin');
-    print(prefs.getInt("playerId"));
-    if (isLogin!) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => MainNavigation()));
-    }
-  }
+//   checkLogin() async {
+//     SharedPreferences prefs = await SharedPreferences.getInstance();
+// //    bool? isLogin = prefs.getBool('isLogin');
+//     int? playerId = prefs.getInt("playerId");
+//     print(prefs.getInt("playerId"));
+//     // print(prefs.getBool('isLogin'));
+//     if (playerId != null) {
+//       Navigator.pushReplacement(
+//           context, MaterialPageRoute(builder: (_) => MainNavigation()));
+//     }
+//   }
 }

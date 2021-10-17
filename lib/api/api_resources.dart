@@ -7,6 +7,8 @@ class APIResources {
   static final String CHECK_PLAYER = BASE_URL + "checkPlayer";
   static final String UPDATE_PLAYER = BASE_URL + "updatePlayer";
 
+  static final String ADD_PLAYER_SPORT = BASE_URL + "addPlayerSport";
+
   static final String UPDATE_PLAYER_IMAGE = BASE_URL + "updatePlayerImage";
 
   static final String GET_HOST_ACTIVITY = BASE_URL + "getHostActivity";

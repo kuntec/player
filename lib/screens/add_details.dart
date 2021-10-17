@@ -18,7 +18,7 @@ class AddDetails extends StatefulWidget {
 class _AddDetailsState extends State<AddDetails> {
   late String name;
   late String dob;
-  late String gender;
+  String? gender = "";
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +26,12 @@ class _AddDetailsState extends State<AddDetails> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          leading: GestureDetector(
-            child: Icon(Icons.arrow_back),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
+          // leading: GestureDetector(
+          //   child: Icon(Icons.arrow_back),
+          //   onTap: () {
+          //     Navigator.pop(context);
+          //   },
+          // ),
           title: Text("ADD DETAILS"),
         ),
         body: SingleChildScrollView(
@@ -110,31 +110,38 @@ class _AddDetailsState extends State<AddDetails> {
                         height: k20Margin,
                       ),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Radio(
-                            value: 1,
-                            groupValue: _value,
+                            value: "Male",
+                            groupValue: gender,
                             onChanged: (value) {
-                              setState(() {
-                                _value = 1;
+                              gender = value.toString();
+                              setState(() {});
+                            },
+                          ),
+                          SizedBox(width: 10.0),
+                          GestureDetector(
+                              onTap: () {
                                 gender = "Male";
-                              });
-                            },
-                          ),
-                          SizedBox(width: 10.0),
-                          Text("Male"),
+                                setState(() {});
+                              },
+                              child: Text("Male")),
                           Radio(
-                            value: 2,
-                            groupValue: _value,
+                            value: "Female",
+                            groupValue: gender,
                             onChanged: (value) {
-                              setState(() {
-                                _value = 2;
-                                gender = "Female";
-                              });
+                              gender = value.toString();
+                              setState(() {});
                             },
                           ),
                           SizedBox(width: 10.0),
-                          Text("Female"),
+                          GestureDetector(
+                              onTap: () {
+                                gender = "Female";
+                                setState(() {});
+                              },
+                              child: Text("Female")),
                         ],
                       ),
                       RoundedButton(
@@ -148,7 +155,7 @@ class _AddDetailsState extends State<AddDetails> {
                           print(dob);
                           print(gender);
                           await addPlayer(
-                              name, widget.phoneNumber, dob, gender);
+                              name, widget.phoneNumber, dob, gender!);
                         },
                       ),
                     ],
@@ -162,10 +169,10 @@ class _AddDetailsState extends State<AddDetails> {
     );
   }
 
-  goToSportSelect() {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (_) => SportSelect()));
-  }
+  // goToSportSelect() {
+  //   Navigator.pushReplacement(
+  //       context, MaterialPageRoute(builder: (_) => SportSelect()));
+  // }
 
 //   void doRegister() async {
 //     print('Register click ');
@@ -270,13 +277,16 @@ class _AddDetailsState extends State<AddDetails> {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           prefs.setInt("playerId", playerId!);
           prefs.setString("playerName", playerName!);
-          prefs.setString("playerImage", playerImage!);
-          prefs.setString("locationId", locationId!);
+          //prefs.setString("playerImage", playerImage!);
+          //prefs.setString("locationId", locationId!);
           prefs.setBool('isLogin', true);
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SportSelect(
+                        player: playerData.player,
+                      )));
         }
-
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SportSelect()));
       } else {
         showToast(playerData.message!);
       }

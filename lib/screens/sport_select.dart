@@ -3,13 +3,16 @@ import 'package:player/api/api_call.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/model/player_data.dart';
 import 'package:player/model/sport_data.dart';
 import 'package:player/screens/home.dart';
 import 'package:player/screens/main_navigation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:developer';
 
 class SportSelect extends StatefulWidget {
-  const SportSelect({Key? key}) : super(key: key);
+  dynamic player;
+  SportSelect({required this.player});
 
   @override
   _SportSelectState createState() => _SportSelectState();
@@ -31,8 +34,14 @@ class _SportSelectState extends State<SportSelect> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomSheet: GestureDetector(
-        onTap: () {
-          print(selectedList);
+        onTap: () async {
+          log(selectedList.toString());
+//          print(selectedList);
+          await this.addSport();
+          // APICall apiCall = new APICall();
+          // var response = await apiCall.addPlayerSport(
+          //     widget.player!.id, selectedList.toString());
+          // log("Response Sport Select =  $response");
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -52,14 +61,14 @@ class _SportSelectState extends State<SportSelect> {
       ),
       appBar: AppBar(
         title: Center(child: Text("Sport Selection")),
-        leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(
-              Icons.arrow_back_ios,
-              color: kBaseColor,
-            )),
+        // leading: GestureDetector(
+        //     onTap: () {
+        //       Navigator.pop(context);
+        //     },
+        //     child: Icon(
+        //       Icons.arrow_back_ios,
+        //       color: kBaseColor,
+        //     )),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -131,25 +140,14 @@ class _SportSelectState extends State<SportSelect> {
     return data;
   }
 
-  var _value = true;
   var currentSelectedSport;
   var selectedList = [];
 
   sportItem(dynamic data) {
     return GestureDetector(
       onTap: () {
-        // if (_value) {
-        //   _value = false;
-        // } else {
-        //   _value = true;
-        // }
-        //setState(() {});
         print("${data.id}");
         currentSelectedSport = data.id;
-        // var estateSelected =
-        // selectedList.firstWhere((value) => value == currentSelectedSport);
-        // selectedList.removeWhere((element) => currentSelectedSport);
-        //bool isAvailable = selectedList.any((element) => element = currentSelectedSport);
 
         for (int i = 0; i < selectedList.length; i++) {
           if (selectedList[i] == currentSelectedSport) {
@@ -160,7 +158,6 @@ class _SportSelectState extends State<SportSelect> {
           } else {}
         }
         selectedList.add(currentSelectedSport);
-        // print("Available $isAvailable");
 
         setState(() {});
       },
@@ -227,5 +224,63 @@ class _SportSelectState extends State<SportSelect> {
         ),
       ),
     );
+  }
+
+  Future addSport() async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    log("Add player sport");
+    String sport_id = "";
+    selectedList.forEach((element) {
+      sport_id += element.toString() + ",";
+    });
+    if (sport_id.length > 0) {
+      sport_id = sport_id.substring(0, sport_id.length - 1);
+    }
+
+    if (connectivityStatus) {
+      log("connection yes ${widget.player!.id}");
+      log("connection yes ${sport_id}");
+
+      PlayerData playerData =
+          await apiCall.addPlayerSport(widget.player!.id.toString(), sport_id);
+      if (playerData.status!) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => MainNavigation()));
+      }
+
+      // PlayerData playerData =
+      //     await apiCall.addPlayer(name, phoneNumber, dob, gender);
+      // if (playerData.status!) {
+      //   showToast(playerData.message!);
+      //   // Go to Sport Selection
+      //   // (playerData.player != null) {
+      //   //   String userId = value.user!.uid;
+      //
+      //   if (playerData.player != null) {
+      //     int? playerId = playerData.player!.id;
+      //     String? playerName = playerData.player!.name;
+      //     String? locationId = playerData.player!.locationId;
+      //     String? playerImage = playerData.player!.image;
+      //
+      //     SharedPreferences prefs = await SharedPreferences.getInstance();
+      //     prefs.setInt("playerId", playerId!);
+      //     prefs.setString("playerName", playerName!);
+      //     //prefs.setString("playerImage", playerImage!);
+      //     //prefs.setString("locationId", locationId!);
+      //     prefs.setBool('isLogin', true);
+      //     Navigator.pushReplacement(
+      //         context,
+      //         MaterialPageRoute(
+      //             builder: (context) => SportSelect(
+      //                   playerId: playerId.toString(),
+      //                 )));
+      //   }
+      // } else {
+      //   showToast(playerData.message!);
+      // }
+    } else {
+      showToast(kInternet);
+    }
   }
 }

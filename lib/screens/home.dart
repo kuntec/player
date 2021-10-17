@@ -260,10 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => AddHost()));
           }),
-          iconCard(Icons.people, "Friends", () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => SportSelect()));
-          }),
+          iconCard(Icons.people, "Friends", () {}),
           iconCard(Icons.wine_bar, "Host Tournament", () {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => ChooseSport()));

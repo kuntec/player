@@ -606,8 +606,8 @@ class _AddHostState extends State<AddHost> {
                                   await SharedPreferences.getInstance();
                               playerId = prefs.get("playerId");
                               playerName = prefs.get("playerName");
-                              locationId = prefs.get("locationId");
-
+                              //locationId = prefs.get("locationId");
+                              locationId = "1";
                               sportId = this.selectedSport!.id!;
                               sportName = this.selectedSport!.sportName!;
                               lookingForId = this._selectedLK!.id!;
