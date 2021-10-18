@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/screens/add_venue.dart';
 
 class VenueScreen extends StatefulWidget {
   const VenueScreen({Key? key}) : super(key: key);
@@ -16,6 +17,28 @@ class _VenueScreenState extends State<VenueScreen> {
         appBar: AppBar(
 //        leading: Icon(Icons.arrow_back),
           title: Text("VENUES"),
+          actions: [
+            Container(
+              child: Row(
+                children: [
+                  TextButton.icon(
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => AddVenue()));
+                    },
+                    icon: Icon(
+                      Icons.add,
+                      color: kBaseColor,
+                    ),
+                    label: Text(
+                      "Register",
+                      style: TextStyle(color: kBaseColor),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
         ),
         body: SingleChildScrollView(
           child: Column(

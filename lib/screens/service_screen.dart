@@ -4,6 +4,19 @@ import 'package:player/api/api_resources.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/service_data.dart';
+import 'package:player/services/academy.dart';
+import 'package:player/services/commentator.dart';
+import 'package:player/services/helper.dart';
+import 'package:player/services/item_rental.dart';
+import 'package:player/services/manufacturer.dart';
+import 'package:player/services/organiser.dart';
+import 'package:player/services/personal_coach.dart';
+import 'package:player/services/physio_fitness.dart';
+import 'package:player/services/scorer.dart';
+import 'package:player/services/sport_market.dart';
+import 'package:player/services/trophy_seller.dart';
+import 'package:player/services/tshirt_seller.dart';
+import 'package:player/services/umpire.dart';
 
 class ServiceScreen extends StatefulWidget {
   const ServiceScreen({Key? key}) : super(key: key);
@@ -13,6 +26,21 @@ class ServiceScreen extends StatefulWidget {
 }
 
 class _ServiceScreenState extends State<ServiceScreen> {
+  List serviceScreens = [
+    PersonalCoach(),
+    TrophySeller(),
+    Manufacturer(),
+    Scorer(),
+    Organiser(),
+    Academy(),
+    TshirtSeller(),
+    SportMarket(),
+    Umpire(),
+    PhysioFitness(),
+    Commentator(),
+    Helper(),
+    ItemRental(),
+  ];
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -117,61 +145,69 @@ class _ServiceScreenState extends State<ServiceScreen> {
     );
   }
 
-  Widget iconCard(IconData iconData, String title) {
-    return Container(
-      decoration: kContainerBoxDecoration,
-      height: 100,
-      width: 100,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Icon(
-            iconData,
-            color: kAppColor,
-            size: 60,
-          ),
-          Center(
-              child: Text(
-            title,
-            textAlign: TextAlign.center,
-          ))
-        ],
-      ),
-    );
-  }
+  // Widget iconCard(IconData iconData, String title) {
+  //   return Container(
+  //     decoration: kContainerBoxDecoration,
+  //     height: 100,
+  //     width: 100,
+  //     child: Column(
+  //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //       children: [
+  //         Icon(
+  //           iconData,
+  //           color: kAppColor,
+  //           size: 60,
+  //         ),
+  //         Center(
+  //             child: Text(
+  //           title,
+  //           textAlign: TextAlign.center,
+  //         ))
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget serviceCard(dynamic service) {
-    return Container(
-      decoration: kContainerBoxDecoration.copyWith(
-        color: kBaseColor,
-        borderRadius: BorderRadius.circular(5.0),
-        border: Border.all(
+    return GestureDetector(
+      onTap: () {
+        print("Service Selected ${service.id}");
+        int index = service.id - 1;
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => serviceScreens[index]));
+      },
+      child: Container(
+        decoration: kContainerBoxDecoration.copyWith(
           color: kBaseColor,
-          width: 1.0,
+          borderRadius: BorderRadius.circular(5.0),
+          border: Border.all(
+            color: kBaseColor,
+            width: 1.0,
+          ),
         ),
-      ),
-      height: 80,
-      width: 80,
-      margin: EdgeInsets.all(10.0),
-      child: Column(
-        children: [
-          Expanded(
-            flex: 1,
-            child: Center(
-              child: Text(
-                service.name,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white, fontSize: 14.0),
+        height: 80,
+        width: 80,
+        margin: EdgeInsets.all(10.0),
+        child: Column(
+          children: [
+            Expanded(
+              flex: 1,
+              child: Center(
+                child: Text(
+                  service.name,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white, fontSize: 14.0),
+                ),
               ),
             ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Image(
-              image: NetworkImage(APIResources.IMAGE_URL + service.icon),
-            ),
-          )
-        ],
+            Expanded(
+              flex: 1,
+              child: Image(
+                image: NetworkImage(APIResources.IMAGE_URL + service.icon),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

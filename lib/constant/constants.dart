@@ -21,6 +21,13 @@ const kProfileSize = 180.0;
 
 const kPhotoSize = 110.0;
 
+const startColor = Color(0xff000000);
+const hostEndColor = Color(0xff197AFF);
+const friendEndColor = Color(0xff00D7FF);
+const tournamentEndColor = Color(0xff00FF93);
+const eventEndColor = Color(0xff9001DB);
+const offerEndColor = Color(0xffEB0808);
+
 const kInternet = "No Internet Connection, Please connect to Internet";
 
 const kTitleLargeWhite = TextStyle(

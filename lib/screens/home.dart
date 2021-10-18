@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
@@ -5,6 +6,7 @@ import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/host_activity.dart';
+import 'package:player/model/my_sport.dart';
 import 'package:player/screens/add_host_activity.dart';
 import 'package:player/screens/choose_sport.dart';
 import 'package:player/screens/location_select.dart';
@@ -31,49 +33,11 @@ class _HomeScreenState extends State<HomeScreen> {
   //   ServiceScreen(),
   //   PlayerProfile()
   // ];
+  List<Sports> sports = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-//       bottomNavigationBar: BottomNavigationBar(
-//         type: BottomNavigationBarType.fixed,
-// //        backgroundColor: Colors.grey,
-//         showSelectedLabels: false,
-//         showUnselectedLabels: false,
-//         selectedItemColor: kAppColor,
-//         currentIndex: selectedIndex,
-//         onTap: (index) {
-//           setState(() {
-//             selectedIndex = index;
-//           });
-//         },
-//         items: [
-//           BottomNavigationBarItem(
-//             icon: Icon(
-//               Icons.home,
-//               color: kAppColor,
-//             ),
-//             label: "Home",
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.wine_bar),
-//             backgroundColor: kAppColor,
-//             label: "Tournament",
-//           ),
-//           BottomNavigationBarItem(
-//               icon: Icon(Icons.flag),
-//               backgroundColor: kAppColor,
-//               label: "Venue"),
-//           BottomNavigationBarItem(
-//               icon: Icon(Icons.settings),
-//               backgroundColor: kAppColor,
-//               label: "Service"),
-//           BottomNavigationBarItem(
-//               icon: Icon(Icons.person),
-//               backgroundColor: kAppColor,
-//               label: "Profile"),
-//         ],
-//       ),
       appBar: AppBar(
         leading: GestureDetector(
           onTap: () {
@@ -129,8 +93,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            buttonBar(),
-
+//            buttonBar(),
+            homeButtonBar(),
+            sportBar(),
+            //iconCard(Icons.add, "Host Activity", () {}),
             Container(
               height: 700,
               padding: EdgeInsets.all(20.0),
@@ -221,69 +187,130 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+//
+//   Widget sportBar() {
+//     return Container(
+//       margin: EdgeInsets.all(10.0),
+//       //padding: EdgeInsets.all(10.0),
+// //      height: 20.0,
+//       decoration: kContainerBoxDecoration,
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.spaceAround,
+//         children: [
+//           sportSelectBar("All", true, () {
+//             print("All selected");
+//           }),
+//           sportSelectBar("Cricket", false, () {
+//             print("Cricket selected");
+//           }),
+//           sportSelectBar("Football", false, () {
+//             print("Football selected");
+//           }),
+//           sportSelectBar("Others +", false, () {
+//             print("Other selected");
+//           }),
+//         ],
+//       ),
+//     );
+//   }
 
-  Widget sportBar() {
-    return Container(
-      margin: EdgeInsets.all(10.0),
-      //padding: EdgeInsets.all(10.0),
-//      height: 20.0,
-      decoration: kContainerBoxDecoration,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          sportSelectBar("All", true, () {
-            print("All selected");
-          }),
-          sportSelectBar("Cricket", false, () {
-            print("Cricket selected");
-          }),
-          sportSelectBar("Football", false, () {
-            print("Football selected");
-          }),
-          sportSelectBar("Others +", false, () {
-            print("Other selected");
-          }),
-        ],
-      ),
-    );
-  }
+  // Widget buttonBar() {
+  //   return Container(
+  //     margin: EdgeInsets.all(10.0),
+  //     padding: EdgeInsets.all(10.0),
+  //     decoration: kContainerBoxDecoration,
+  //     child: Row(
+  //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //       children: [
+  //         iconCard(Icons.add, "Host Activity", () {
+  //           Navigator.push(
+  //               context, MaterialPageRoute(builder: (context) => AddHost()));
+  //         }),
+  //         iconCard(Icons.people, "Friends", () {}),
+  //         iconCard(Icons.wine_bar, "Host Tournament", () {
+  //           Navigator.push(context,
+  //               MaterialPageRoute(builder: (context) => ChooseSport()));
+  //         }),
+  //         iconCard(Icons.local_offer, "Offers", () {}),
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  Widget buttonBar() {
+  Widget homeButtonBar() {
+    // return Container(
+    //   height: 150,
+    //   child: ListView.builder(
+    //     scrollDirection: Axis.horizontal,
+    //     itemCount: 5,
+    //     itemBuilder: (BuildContext context, int index) {
+    //       return iconCard(Icons.add, "Host Activity", 1, hostEndColor);
+    //     },
+    //   ),
+    // );
+
     return Container(
-      margin: EdgeInsets.all(10.0),
-      padding: EdgeInsets.all(10.0),
-      decoration: kContainerBoxDecoration,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      height: 150,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
         children: [
-          iconCard(Icons.add, "Host Activity", () {
+          iconCard(Icons.add, "Host Activity", 1, hostEndColor, () {
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => AddHost()));
           }),
-          iconCard(Icons.people, "Friends", () {}),
-          iconCard(Icons.wine_bar, "Host Tournament", () {
+          iconCard(Icons.add, "Friends", 2, friendEndColor, () {}),
+          iconCard(Icons.add, "Host Tournament", 3, tournamentEndColor, () {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => ChooseSport()));
           }),
-          iconCard(Icons.local_offer, "Offers", () {}),
+          iconCard(Icons.add, "Event", 4, eventEndColor, () {}),
+          iconCard(Icons.add, "Offers", 5, offerEndColor, () {}),
         ],
       ),
     );
   }
 
-  Widget iconCard(IconData iconData, String title, dynamic onPressed) {
+  Widget iconCard(IconData iconData, String title, int index, Color endColor,
+      dynamic onPress) {
     return GestureDetector(
-      onTap: onPressed,
+      onTap: onPress,
       child: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Icon(
-              iconData,
-              color: Colors.black,
-            ),
-            Text(title)
-          ],
+        margin: EdgeInsets.all(5.0),
+        decoration: BoxDecoration(
+          gradient: new LinearGradient(
+            colors: [startColor, endColor],
+            begin: FractionalOffset.bottomCenter,
+            end: FractionalOffset.topCenter,
+            stops: [0.0, 1.0],
+          ),
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        width: 90,
+        padding: EdgeInsets.all(15.0),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration:
+                    BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                child: Icon(
+                  iconData,
+                  color: kBaseColor,
+                  size: 30,
+                ),
+              ),
+              SizedBox(height: 10.0),
+              Center(
+                  child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: 16.0),
+              ))
+            ],
+          ),
         ),
       ),
     );
@@ -810,5 +837,179 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
     return activities;
+  }
+
+  Widget sportBar() {
+    // return Container(
+    //   height: 100,
+    //   child: ListView.builder(
+    //     scrollDirection: Axis.horizontal,
+    //     itemCount: 10,
+    //     itemBuilder: (BuildContext context, int index) => Container(
+    //       height: 50,
+    //       width: 50,
+    //       child: sportChip(sports[0]),
+    //     ),
+    //   ),
+    // );
+    return Container(
+      padding: EdgeInsets.all(5.0),
+      child: FutureBuilder(
+        future: getMySports(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.data == null) {
+            return Container(
+              child: Center(
+                child: Text('Loading....'),
+              ),
+            );
+          }
+          if (snapshot.hasData) {
+            print("Has Data ${snapshot.data.length}");
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10.0),
+                border: Border.all(
+                  width: 1.0,
+                  color: Colors.grey,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    offset: Offset(0, 2),
+                    blurRadius: 6.0,
+                  )
+                ],
+              ),
+              height: 60,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return sportChip(snapshot.data[index]);
+                },
+              ),
+            );
+            // return ListView.builder(
+            //   scrollDirection: Axis.horizontal,
+            //   itemCount: snapshot.data.length,
+            //   itemBuilder: (BuildContext context, int index) {
+            //     return sportChip(snapshot.data[index]);
+            //   },
+            // );
+          } else {
+            return Container(
+              child: Center(
+                child: Text('No Data'),
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Widget sportChip(sport) {
+    return GestureDetector(
+      onTap: () {
+        print("Selected sport ${sport.sportId} ${sport.sportName} ");
+        selectedSportId = sport.sportId.toString();
+        setState(() {});
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5.0),
+          border: Border.all(
+            width: 1.0,
+            color: sport.sportId.toString() == selectedSportId
+                ? kBaseColor
+                : Colors.white,
+          ),
+          color: sport.sportId.toString() == selectedSportId
+              ? kBaseColor
+              : Colors.white,
+        ),
+        margin: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(10.0),
+
+        child: Center(
+          child: Text(
+            sport.sportName,
+            style: TextStyle(
+                color: sport.sportId.toString() == selectedSportId
+                    ? Colors.white
+                    : Colors.black,
+                fontSize: 12.0),
+          ),
+        ),
+        // margin: EdgeInsets.all(10.0),
+        // child: Center(
+        //   child: Chip(
+        //     label: Center(
+        //       child: Text(
+        //         sport.sportName,
+        //         style: TextStyle(color: Colors.white),
+        //       ),
+        //     ),
+        //     backgroundColor: kBaseColor,
+        //     elevation: 6.0,
+        //   ),
+        // ),
+      ),
+    );
+  }
+
+  var selectedSportId = "0";
+
+  // Widget sportSelectBar(String title, bool status) {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       print("Clicked $title");
+  //       selectedSportId = "6";
+  //     },
+  //     child: Container(
+  //       child: Column(
+  //         mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //         children: [
+  //           Text(
+  //             title,
+  //           ),
+  //           if (status)
+  //             SizedBox(
+  //               height: 5.0,
+  //               child: Container(
+  //                 height: 5.0,
+  //                 width: 10.0,
+  //                 color: kAppColor,
+  //               ),
+  //             )
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  Future<List<Sports>> getMySports() async {
+    APICall apiCall = new APICall();
+    // List<Data> data = [];
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var playerId = prefs.get("playerId");
+      MySport mySport = await apiCall.getMySports(playerId.toString());
+
+      if (mySport.sports != null) {
+        Sports s = new Sports();
+        s.sportName = "All";
+        s.sportId = "0";
+        sports.clear();
+        sports.add(s);
+        sports.addAll(mySport.sports!);
+
+        print(sports);
+      }
+    } else {}
+    return sports;
   }
 }
