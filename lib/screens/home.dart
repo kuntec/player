@@ -794,6 +794,7 @@ class _HomeScreenState extends State<HomeScreen> {
       playerId = prefs.get("playerId");
       locationId = prefs.get("locationId");
       playerImage = prefs.get("playerImage");
+      //locationId = "1";
       print("Player ID $playerId");
       HostActivity hostActivity =
           await apiCall.getHostActivity(locationId.toString());

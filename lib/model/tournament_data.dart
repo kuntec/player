@@ -8,7 +8,7 @@ class TournamentData {
     bool? status,
     String? message,
     Tournament? tournament,
-    List<Tournaments>? tournaments,
+    List<Tournament>? tournaments,
   }) {
     _status = status;
     _message = message;
@@ -25,19 +25,19 @@ class TournamentData {
     if (json['tournaments'] != null) {
       _tournaments = [];
       json['tournaments'].forEach((v) {
-        _tournaments?.add(Tournaments.fromJson(v));
+        _tournaments?.add(Tournament.fromJson(v));
       });
     }
   }
   bool? _status;
   String? _message;
   Tournament? _tournament;
-  List<Tournaments>? _tournaments;
+  List<Tournament>? _tournaments;
 
   bool? get status => _status;
   String? get message => _message;
   Tournament? get tournament => _tournament;
-  List<Tournaments>? get tournaments => _tournaments;
+  List<Tournament>? get tournaments => _tournaments;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -72,128 +72,128 @@ class TournamentData {
 /// player_name : "tausif"
 /// created_at : "25/11/2020"
 
-class Tournaments {
-  Tournaments({
-    int? id,
-    String? organizerName,
-    String? organizerNumber,
-    String? tournamentName,
-    String? image,
-    String? startDate,
-    String? endDate,
-    String? entryFees,
-    String? timing,
-    String? noOfMembers,
-    String? ageLimit,
-    String? address,
-    String? prizeDetails,
-    String? otherInfo,
-    String? locationId,
-    String? playerId,
-    String? playerName,
-    String? createdAt,
-  }) {
-    _id = id;
-    _organizerName = organizerName;
-    _organizerNumber = organizerNumber;
-    _tournamentName = tournamentName;
-    _image = image;
-    _startDate = startDate;
-    _endDate = endDate;
-    _entryFees = entryFees;
-    _timing = timing;
-    _noOfMembers = noOfMembers;
-    _ageLimit = ageLimit;
-    _address = address;
-    _prizeDetails = prizeDetails;
-    _otherInfo = otherInfo;
-    _locationId = locationId;
-    _playerId = playerId;
-    _playerName = playerName;
-    _createdAt = createdAt;
-  }
-
-  Tournaments.fromJson(dynamic json) {
-    _id = json['id'];
-    _organizerName = json['organizer_name'];
-    _organizerNumber = json['organizer_number'];
-    _tournamentName = json['tournament_name'];
-    _image = json['image'];
-    _startDate = json['start_date'];
-    _endDate = json['end_date'];
-    _entryFees = json['entry_fees'];
-    _timing = json['timing'];
-    _noOfMembers = json['no_of_members'];
-    _ageLimit = json['age_limit'];
-    _address = json['address'];
-    _prizeDetails = json['prize_details'];
-    _otherInfo = json['other_info'];
-    _locationId = json['location_id'];
-    _playerId = json['player_id'];
-    _playerName = json['player_name'];
-    _createdAt = json['created_at'];
-  }
-  int? _id;
-  String? _organizerName;
-  String? _organizerNumber;
-  String? _tournamentName;
-  String? _image;
-  String? _startDate;
-  String? _endDate;
-  String? _entryFees;
-  String? _timing;
-  String? _noOfMembers;
-  String? _ageLimit;
-  String? _address;
-  String? _prizeDetails;
-  String? _otherInfo;
-  String? _locationId;
-  String? _playerId;
-  String? _playerName;
-  String? _createdAt;
-
-  int? get id => _id;
-  String? get organizerName => _organizerName;
-  String? get organizerNumber => _organizerNumber;
-  String? get tournamentName => _tournamentName;
-  String? get image => _image;
-  String? get startDate => _startDate;
-  String? get endDate => _endDate;
-  String? get entryFees => _entryFees;
-  String? get timing => _timing;
-  String? get noOfMembers => _noOfMembers;
-  String? get ageLimit => _ageLimit;
-  String? get address => _address;
-  String? get prizeDetails => _prizeDetails;
-  String? get otherInfo => _otherInfo;
-  String? get locationId => _locationId;
-  String? get playerId => _playerId;
-  String? get playerName => _playerName;
-  String? get createdAt => _createdAt;
-
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['id'] = _id;
-    map['organizer_name'] = _organizerName;
-    map['organizer_number'] = _organizerNumber;
-    map['tournament_name'] = _tournamentName;
-    map['image'] = _image;
-    map['start_date'] = _startDate;
-    map['end_date'] = _endDate;
-    map['entry_fees'] = _entryFees;
-    map['timing'] = _timing;
-    map['no_of_members'] = _noOfMembers;
-    map['age_limit'] = _ageLimit;
-    map['address'] = _address;
-    map['prize_details'] = _prizeDetails;
-    map['other_info'] = _otherInfo;
-    map['location_id'] = _locationId;
-    map['player_id'] = _playerId;
-    map['player_name'] = _playerName;
-    map['created_at'] = _createdAt;
-    return map;
-  }
-}
+// class Tournaments {
+//   Tournaments({
+//     int? id,
+//     String? organizerName,
+//     String? organizerNumber,
+//     String? tournamentName,
+//     String? image,
+//     String? startDate,
+//     String? endDate,
+//     String? entryFees,
+//     String? timing,
+//     String? noOfMembers,
+//     String? ageLimit,
+//     String? address,
+//     String? prizeDetails,
+//     String? otherInfo,
+//     String? locationId,
+//     String? playerId,
+//     String? playerName,
+//     String? createdAt,
+//   }) {
+//     _id = id;
+//     _organizerName = organizerName;
+//     _organizerNumber = organizerNumber;
+//     _tournamentName = tournamentName;
+//     _image = image;
+//     _startDate = startDate;
+//     _endDate = endDate;
+//     _entryFees = entryFees;
+//     _timing = timing;
+//     _noOfMembers = noOfMembers;
+//     _ageLimit = ageLimit;
+//     _address = address;
+//     _prizeDetails = prizeDetails;
+//     _otherInfo = otherInfo;
+//     _locationId = locationId;
+//     _playerId = playerId;
+//     _playerName = playerName;
+//     _createdAt = createdAt;
+//   }
+//
+//   Tournaments.fromJson(dynamic json) {
+//     _id = json['id'];
+//     _organizerName = json['organizer_name'];
+//     _organizerNumber = json['organizer_number'];
+//     _tournamentName = json['tournament_name'];
+//     _image = json['image'];
+//     _startDate = json['start_date'];
+//     _endDate = json['end_date'];
+//     _entryFees = json['entry_fees'];
+//     _timing = json['timing'];
+//     _noOfMembers = json['no_of_members'];
+//     _ageLimit = json['age_limit'];
+//     _address = json['address'];
+//     _prizeDetails = json['prize_details'];
+//     _otherInfo = json['other_info'];
+//     _locationId = json['location_id'];
+//     _playerId = json['player_id'];
+//     _playerName = json['player_name'];
+//     _createdAt = json['created_at'];
+//   }
+//   int? _id;
+//   String? _organizerName;
+//   String? _organizerNumber;
+//   String? _tournamentName;
+//   String? _image;
+//   String? _startDate;
+//   String? _endDate;
+//   String? _entryFees;
+//   String? _timing;
+//   String? _noOfMembers;
+//   String? _ageLimit;
+//   String? _address;
+//   String? _prizeDetails;
+//   String? _otherInfo;
+//   String? _locationId;
+//   String? _playerId;
+//   String? _playerName;
+//   String? _createdAt;
+//
+//   int? get id => _id;
+//   String? get organizerName => _organizerName;
+//   String? get organizerNumber => _organizerNumber;
+//   String? get tournamentName => _tournamentName;
+//   String? get image => _image;
+//   String? get startDate => _startDate;
+//   String? get endDate => _endDate;
+//   String? get entryFees => _entryFees;
+//   String? get timing => _timing;
+//   String? get noOfMembers => _noOfMembers;
+//   String? get ageLimit => _ageLimit;
+//   String? get address => _address;
+//   String? get prizeDetails => _prizeDetails;
+//   String? get otherInfo => _otherInfo;
+//   String? get locationId => _locationId;
+//   String? get playerId => _playerId;
+//   String? get playerName => _playerName;
+//   String? get createdAt => _createdAt;
+//
+//   Map<String, dynamic> toJson() {
+//     final map = <String, dynamic>{};
+//     map['id'] = _id;
+//     map['organizer_name'] = _organizerName;
+//     map['organizer_number'] = _organizerNumber;
+//     map['tournament_name'] = _tournamentName;
+//     map['image'] = _image;
+//     map['start_date'] = _startDate;
+//     map['end_date'] = _endDate;
+//     map['entry_fees'] = _entryFees;
+//     map['timing'] = _timing;
+//     map['no_of_members'] = _noOfMembers;
+//     map['age_limit'] = _ageLimit;
+//     map['address'] = _address;
+//     map['prize_details'] = _prizeDetails;
+//     map['other_info'] = _otherInfo;
+//     map['location_id'] = _locationId;
+//     map['player_id'] = _playerId;
+//     map['player_name'] = _playerName;
+//     map['created_at'] = _createdAt;
+//     return map;
+//   }
+// }
 
 /// organizer_name : "Parth"
 /// organizer_number : "9856321475"
@@ -231,6 +231,8 @@ class Tournament {
     String? locationId,
     String? playerId,
     String? playerName,
+    String? sportId,
+    String? SportName,
     String? createdAt,
     String? image,
     int? id,
@@ -250,6 +252,8 @@ class Tournament {
     _locationId = locationId;
     _playerId = playerId;
     _playerName = playerName;
+    _sportId = sportId;
+    _sportName = SportName;
     _createdAt = createdAt;
     _image = image;
     _id = id;
@@ -271,6 +275,8 @@ class Tournament {
     _locationId = json['location_id'];
     _playerId = json['player_id'];
     _playerName = json['player_name'];
+    _sportId = json['sport_id'];
+    _sportName = json['sport_name'];
     _createdAt = json['created_at'];
     _image = json['image'];
     _id = json['id'];
@@ -290,6 +296,8 @@ class Tournament {
   String? _locationId;
   String? _playerId;
   String? _playerName;
+  String? _sportId;
+  String? _sportName;
   String? _createdAt;
   String? _image;
   int? _id;
@@ -309,6 +317,8 @@ class Tournament {
   String? get locationId => _locationId;
   String? get playerId => _playerId;
   String? get playerName => _playerName;
+  String? get sportId => _sportId;
+  String? get sportName => _sportName;
   String? get createdAt => _createdAt;
   String? get image => _image;
   int? get id => _id;
@@ -330,9 +340,91 @@ class Tournament {
     map['location_id'] = _locationId;
     map['player_id'] = _playerId;
     map['player_name'] = _playerName;
+    map['sport_id'] = _sportId;
+    map['sport_name'] = _sportName;
     map['created_at'] = _createdAt;
     map['image'] = _image;
     map['id'] = _id;
     return map;
+  }
+
+  set sportId(String? value) {
+    _sportId = value;
+  }
+
+  set id(int? value) {
+    _id = value;
+  }
+
+  set image(String? value) {
+    _image = value;
+  }
+
+  set createdAt(String? value) {
+    _createdAt = value;
+  }
+
+  set playerName(String? value) {
+    _playerName = value;
+  }
+
+  set playerId(String? value) {
+    _playerId = value;
+  }
+
+  set locationId(String? value) {
+    _locationId = value;
+  }
+
+  set otherInfo(String? value) {
+    _otherInfo = value;
+  }
+
+  set prizeDetails(String? value) {
+    _prizeDetails = value;
+  }
+
+  set address(String? value) {
+    _address = value;
+  }
+
+  set ageLimit(String? value) {
+    _ageLimit = value;
+  }
+
+  set noOfMembers(String? value) {
+    _noOfMembers = value;
+  }
+
+  set timing(String? value) {
+    _timing = value;
+  }
+
+  set entryFees(String? value) {
+    _entryFees = value;
+  }
+
+  set endDate(String? value) {
+    _endDate = value;
+  }
+
+  set startDate(String? value) {
+    _startDate = value;
+  }
+
+  set tournamentName(String? value) {
+    _tournamentName = value;
+  }
+
+  set organizerNumber(String? value) {
+    _organizerNumber = value;
+  }
+
+  set organizerName(String? value) {
+    _organizerName = value;
+  }
+
+  set sportName(String? value) {
+    _sportName = value;
   }
 }

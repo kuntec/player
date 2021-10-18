@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:player/api/api_call.dart';
+import 'package:player/api/api_resources.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/constant/utility.dart';
+import 'package:player/model/service_data.dart';
 
 class ServiceScreen extends StatefulWidget {
   const ServiceScreen({Key? key}) : super(key: key);
@@ -20,54 +24,92 @@ class _ServiceScreenState extends State<ServiceScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 20.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  iconCard(Icons.store, "Sport Market"),
-                  iconCard(Icons.school, "Academy"),
-                ],
+              SizedBox(
+                height: k20Margin,
               ),
-              SizedBox(height: 20.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  iconCard(Icons.people, "Umpires"),
-                  iconCard(Icons.person, "Scorer"),
-                ],
+              Center(
+                child: Text(
+                  "Choose Your Service",
+                  style: const TextStyle(
+                    color: kBaseColor,
+                    fontStyle: FontStyle.normal,
+                    fontSize: 30.0,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
               ),
-              SizedBox(height: 20.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  iconCard(Icons.speaker_phone, "Commentator"),
-                  iconCard(Icons.wine_bar, "Item Rental"),
-                ],
+              SizedBox(
+                height: 10.0,
               ),
-              SizedBox(height: 20.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  iconCard(Icons.store, "Trophy Sellers"),
-                  iconCard(Icons.precision_manufacturing, "Manufacturers"),
-                ],
+              Container(
+                height: 700,
+                child: FutureBuilder<List<Services>>(
+                  future: getService(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return GridView.builder(
+                          padding: EdgeInsets.only(bottom: 200),
+                          itemCount: snapshot.data!.length,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3),
+                          itemBuilder: (context, index) {
+                            return serviceCard(snapshot.data![index]);
+                          });
+                    } else if (snapshot.hasError) {
+                      return Text("Error");
+                    }
+                    return Text("Loading...");
+                  },
+                ),
               ),
-              SizedBox(height: 20.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  iconCard(Icons.store, "T-Shirt Sellers"),
-                  iconCard(Icons.person, "Personal Coach"),
-                ],
-              ),
-              SizedBox(height: 20.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  iconCard(Icons.wine_bar, "Events"),
-                  iconCard(Icons.person, "Physio and Fitness Trainer"),
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //   children: [
+              //     iconCard(Icons.store, "Sport Market"),
+              //     iconCard(Icons.school, "Academy"),
+              //   ],
+              // ),
+              // SizedBox(height: 20.0),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //   children: [
+              //     iconCard(Icons.people, "Umpires"),
+              //     iconCard(Icons.person, "Scorer"),
+              //   ],
+              // ),
+              // SizedBox(height: 20.0),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //   children: [
+              //     iconCard(Icons.speaker_phone, "Commentator"),
+              //     iconCard(Icons.wine_bar, "Item Rental"),
+              //   ],
+              // ),
+              // SizedBox(height: 20.0),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //   children: [
+              //     iconCard(Icons.store, "Trophy Sellers"),
+              //     iconCard(Icons.precision_manufacturing, "Manufacturers"),
+              //   ],
+              // ),
+              // SizedBox(height: 20.0),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //   children: [
+              //     iconCard(Icons.store, "T-Shirt Sellers"),
+              //     iconCard(Icons.person, "Personal Coach"),
+              //   ],
+              // ),
+              // SizedBox(height: 20.0),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //   children: [
+              //     iconCard(Icons.wine_bar, "Events"),
+              //     iconCard(Icons.person, "Physio and Fitness Trainer"),
+              //   ],
+              // ),
             ],
           ),
         ),
@@ -96,5 +138,55 @@ class _ServiceScreenState extends State<ServiceScreen> {
         ],
       ),
     );
+  }
+
+  Widget serviceCard(dynamic service) {
+    return Container(
+      decoration: kContainerBoxDecoration.copyWith(
+        color: kBaseColor,
+        borderRadius: BorderRadius.circular(5.0),
+        border: Border.all(
+          color: kBaseColor,
+          width: 1.0,
+        ),
+      ),
+      height: 80,
+      width: 80,
+      margin: EdgeInsets.all(10.0),
+      child: Column(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Center(
+              child: Text(
+                service.name,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: 14.0),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Image(
+              image: NetworkImage(APIResources.IMAGE_URL + service.icon),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<List<Services>> getService() async {
+    APICall apiCall = new APICall();
+    List<Services> data = [];
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      ServiceData serviceData = await apiCall.getService();
+
+      if (serviceData.services != null) {
+        data.addAll(serviceData.services!);
+      }
+    } else {}
+    return data;
   }
 }

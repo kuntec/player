@@ -98,4 +98,28 @@ class Data {
     map['sport_category_id'] = _sportCategoryId;
     return map;
   }
+
+  set sportCategoryId(String? value) {
+    _sportCategoryId = value;
+  }
+
+  set createdAt(String? value) {
+    _createdAt = value;
+  }
+
+  set sportIcon(String? value) {
+    _sportIcon = value;
+  }
+
+  set sportDesc(String? value) {
+    _sportDesc = value;
+  }
+
+  set sportName(String? value) {
+    _sportName = value;
+  }
+
+  set id(int? value) {
+    _id = value;
+  }
 }

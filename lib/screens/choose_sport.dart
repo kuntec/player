@@ -38,8 +38,13 @@ class _ChooseSportState extends State<ChooseSport> {
           } else {
             print(currentSelectedSport);
           }
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddTournament()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AddTournament(
+                        selectedSport: currentSelectedSport,
+                        sportName: selectedSportName,
+                      )));
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -201,6 +206,7 @@ class _ChooseSportState extends State<ChooseSport> {
 
   var _value = true;
   var currentSelectedSport;
+  var selectedSportName;
 
   sportItem(dynamic data) {
     return GestureDetector(
@@ -213,6 +219,7 @@ class _ChooseSportState extends State<ChooseSport> {
         //setState(() {});
         print("${data.id}");
         currentSelectedSport = data.id;
+        selectedSportName = data.sportName;
         setState(() {});
       },
       child: Container(

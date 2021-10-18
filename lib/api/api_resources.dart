@@ -18,8 +18,12 @@ class APIResources {
 
   static final String GET_LOOKING_FOR = BASE_URL + "getLookingFor";
   static final String GET_SPORT = BASE_URL + "getSport";
+  static final String GET_PLAYER_SPORT = BASE_URL + "getPlayerSport";
 
   static final String GET_TOURNAMENT = BASE_URL + "getTournament";
   static final String ADD_TOURNAMENT = BASE_URL + "addTournament";
   static final String UPDATE_TOURNAMENT = BASE_URL + "updateTournament";
+  static final String GET_MY_TOURNAMENT = BASE_URL + "getMyTournament";
+
+  static final String GET_SERVICE = BASE_URL + "getService";
 }

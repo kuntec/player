@@ -688,7 +688,7 @@ class _AddHostState extends State<AddHost> {
     final newDate = await showDatePicker(
       context: context,
       initialDate: date ?? initialDate,
-      firstDate: DateTime(DateTime.now().year - 5),
+      firstDate: DateTime.now(),
       lastDate: DateTime(DateTime.now().year + 5),
     );
 
@@ -783,10 +783,11 @@ class _AddHostState extends State<AddHost> {
                   height: 90.0,
                   width: 90.0,
                   child: ClipRRect(
-                      borderRadius: BorderRadius.circular(25.0),
-                      child: Image.network(
-                        APIResources.IMAGE_URL + playerImage,
-                      )),
+                    borderRadius: BorderRadius.circular(25.0),
+                    child: Image.network(
+                      APIResources.IMAGE_URL + playerImage,
+                    ),
+                  ),
                 ),
               ),
               Expanded(
