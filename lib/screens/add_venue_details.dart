@@ -2,12 +2,18 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:player/api/api_call.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/constant/utility.dart';
+import 'package:player/model/venue_data.dart';
 import 'package:player/screens/add_venue_slot.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddVenueDetails extends StatefulWidget {
-  const AddVenueDetails({Key? key}) : super(key: key);
+  dynamic venueItem;
+  dynamic isEdit;
+  AddVenueDetails({this.venueItem, this.isEdit});
 
   @override
   _AddVenueDetailsState createState() => _AddVenueDetailsState();
@@ -20,6 +26,22 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
 
   var txtOpenTime = "Open Time";
   var txtCloseTime = "Close Time";
+
+  Venue? venue;
+  var name;
+  var description;
+  var facilities;
+  var address;
+  var locationLink;
+  var city;
+  var sport;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Utility.showToast("isEditMode ${widget.isEdit}");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,21 +133,6 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                       fit: BoxFit.fill,
                     )
                   : FlutterLogo(size: 100),
-              // child: ClipRRect(
-              //   borderRadius: BorderRadius.circular(10.0),
-              //   child: CachedNetworkImage(
-              //     imageUrl: imageURL,
-              //     placeholder: (context, url) => Image(
-              //       image: AssetImage('assets/images/no_user.jpg'),
-              //     ),
-              //   ),
-              //   // child: Image(
-              //   //   image: AssetImage(
-              //   //     'assets/images/banner.jpg',
-              //   //   ),
-              //   //   width: MediaQuery.of(context).size.width,
-              //   // ),
-              // ),
             ),
           ),
           GestureDetector(
@@ -145,7 +152,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
           ),
           TextField(
             onChanged: (value) {
-              // venueName = value;
+              name = value;
             },
             decoration: InputDecoration(
                 labelText: "Venue Name",
@@ -155,7 +162,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
           ),
           TextField(
             onChanged: (value) {
-              // venueDescription = value;
+              description = value;
             },
             decoration: InputDecoration(
                 labelText: "Venue Description",
@@ -163,16 +170,17 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                   color: Colors.grey,
                 )),
           ),
-          // TextField(
-          //   onChanged: (value) {
-          //     tournamentName = value;
-          //   },
-          //   decoration: InputDecoration(
-          //       labelText: "Tournament Name",
-          //       labelStyle: TextStyle(
-          //         color: Colors.grey,
-          //       )),
-          // ),
+
+          TextField(
+            onChanged: (value) {
+              facilities = value;
+            },
+            decoration: InputDecoration(
+                labelText: "Venue Facilities",
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                )),
+          ),
           SizedBox(
             height: k20Margin,
           ),
@@ -204,70 +212,14 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                   ),
                 ),
               ),
-              // Expanded(
-              //   flex: 1,
-              //   child: TextField(
-              //     onTap: () {
-              //       pickDate(context);
-              //     },
-              //     controller: txtEndDateController,
-              //     // enabled: false,
-              //     decoration: InputDecoration(
-              //         prefixIcon: Icon(Icons.calendar_today_outlined),
-              //         labelText: "End Date",
-              //         labelStyle: TextStyle(
-              //           color: Colors.grey,
-              //         )),
-              //   ),
-              // ),
             ],
           )),
-          // Container(
-          //   child: Row(
-          //     children: [
-          //       Expanded(
-          //         flex: 1,
-          //         child: TextField(
-          //           onChanged: (value) {
-          //             //entryFees = value;
-          //           },
-          //           decoration: InputDecoration(
-          //               labelText: "Venue Location",
-          //               labelStyle: TextStyle(
-          //                 color: Colors.grey,
-          //               )),
-          //         ),
-          //       ),
-          //       SizedBox(
-          //         width: 20.0,
-          //       ),
-          //       Expanded(
-          //         flex: 1,
-          //         child: GestureDetector(
-          //           onTap: () {
-          //             pickTime(context);
-          //           },
-          //           child: Text(
-          //             txtTime,
-          //           ),
-          //         ),
-          //       ),
-          //       // Expanded(
-          //       //   flex: 1,
-          //       //   child: TextField(
-          //       //     decoration: InputDecoration(
-          //       //         labelText: "Timing (From to To)",
-          //       //         labelStyle: TextStyle(
-          //       //           color: Colors.grey,
-          //       //         )),
-          //       //   ),
-          //       // ),
-          //     ],
-          //   ),
-          // ),
+          SizedBox(
+            height: k20Margin,
+          ),
           TextField(
             onChanged: (value) {
-              //noOfMembers = value;
+              address = value;
             },
             decoration: InputDecoration(
                 labelText: "Venue Location",
@@ -277,7 +229,17 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
           ),
           TextField(
             onChanged: (value) {
-              // ageLimit = value;
+              locationLink = value;
+            },
+            decoration: InputDecoration(
+                labelText: "Location Link",
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                )),
+          ),
+          TextField(
+            onChanged: (value) {
+              city = value;
             },
             decoration: InputDecoration(
                 labelText: "Venue City",
@@ -287,7 +249,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
           ),
           TextField(
             onChanged: (value) {
-              // address = value;
+              sport = value;
             },
             decoration: InputDecoration(
                 labelText: "Which Sport We can Play",
@@ -317,17 +279,69 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
           // ),
           SizedBox(height: k20Margin),
           RoundedButton(
-            title: "NEXT",
+            title: widget.isEdit ? "UPDATE" : "NEXT",
             color: kBaseColor,
             txtColor: Colors.white,
-            minWidth: 250,
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AddVenueSlot()));
+            minWidth: 150,
+            onPressed: () async {
+//              if (widget.isEdit) {}
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              var playerId = prefs.get("playerId");
+              venue = new Venue();
+
+              venue!.playerId = playerId!.toString();
+              venue!.name = name.toString();
+              venue!.description = description.toString();
+              venue!.facilities = facilities.toString();
+              venue!.openTime = txtOpenTime;
+              venue!.closeTime = txtCloseTime;
+              venue!.address = address.toString();
+              venue!.locationLink = locationLink;
+              venue!.locationId = "1";
+              venue!.city = city.toString();
+              venue!.sport = sport.toString();
+              venue!.createdAt = Utility.getCurrentDate();
+
+              // Utility.showToast("Create Venue");
+              if (this.image != null) {
+                addVenue(this.image!.path, venue!);
+                // Utility.showToast("File Selected Image");
+              } else {
+                Utility.showToast("Please Select Image");
+              }
+              //  print("Create Tournament");
             },
           ),
         ],
       ),
     );
+  }
+
+  addVenue(String filePath, Venue venue) async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      dynamic addedVenue = await apiCall.addVenue(filePath, venue);
+
+      if (addedVenue == null) {
+        print("Venue null");
+        Utility.showToast("Venue Null");
+      } else {
+        if (addedVenue['id'] != null) {
+          print("Venue Success");
+          Utility.showToast(
+              "Venue Created Successfully ${addedVenue['id']} ${addedVenue['name']}");
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AddVenueSlot(
+                        venue: addedVenue,
+                      )));
+        } else {
+          print("Venue Failed");
+          Utility.showToast("Venue Failed");
+        }
+      }
+    }
   }
 }

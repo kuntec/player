@@ -496,7 +496,8 @@ class _AddTournamentState extends State<AddTournament> {
         }
 
         setState(() {});
-        //     txtDate = "${date!.day}-${date!.month}-${date!.year}";
+        print("Date selected day ${startDate!.weekday}");
+        //txtDate = "${date!.day}-${date!.month}-${date!.year}";
       }
     });
   }

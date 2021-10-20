@@ -26,4 +26,16 @@ class APIResources {
   static final String GET_MY_TOURNAMENT = BASE_URL + "getMyTournament";
 
   static final String GET_SERVICE = BASE_URL + "getService";
+
+  static final String GET_VENUE = BASE_URL + "getVenue";
+  static final String GET_MY_VENUE = BASE_URL + "getMyVenue";
+  static final String ADD_VENUE = BASE_URL + "addVenue";
+
+  static final String GET_TIMESLOT = BASE_URL + "getTimeslot";
+  static final String ADD_TIMESLOT = BASE_URL + "addTimeslot";
+  static final String DELETE_TIMESLOT = BASE_URL + "deleteTimeslot";
+
+  static final String GET_VENUE_PHOTO = BASE_URL + "getVenuePhoto";
+  static final String ADD_VENUE_PHOTO = BASE_URL + "addVenuePhoto";
+  static final String DELETE_VENUE_PHOTO = BASE_URL + "deleteVenuePhoto";
 }

@@ -2,24 +2,34 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:player/api/api_call.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/constant/utility.dart';
+import 'package:player/model/timeslot_data.dart';
 import 'package:player/screens/add_venue_photos.dart';
 
 class AddVenueSlot extends StatefulWidget {
-  const AddVenueSlot({Key? key}) : super(key: key);
+  dynamic venue;
+  AddVenueSlot({this.venue});
 
   @override
   _AddVenueSlotState createState() => _AddVenueSlotState();
 }
 
 class _AddVenueSlotState extends State<AddVenueSlot> {
-  File? image;
   TimeOfDay? openTime;
   TimeOfDay? closeTime;
 
+  Timeslot? timeslot;
+
   var txtOpenTime = "Open Time";
   var txtCloseTime = "Close Time";
+  var noSlot;
+  var price;
+
+  TextEditingController slotController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -41,25 +51,28 @@ class _AddVenueSlotState extends State<AddVenueSlot> {
           child: Column(
             children: [
               addVenueForm(),
+              SizedBox(height: k20Margin),
+              myTimeslots(),
+              SizedBox(height: k20Margin),
+              RoundedButton(
+                title: "Upload Photos",
+                color: kBaseColor,
+                txtColor: Colors.white,
+                minWidth: 250,
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddVenuePhotos(
+                                venue: widget.venue,
+                              )));
+                },
+              ),
             ],
           ),
         ),
       ),
     );
-  }
-
-  Future pickImage() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (image == null) return;
-
-      final imageTemporary = File(image.path);
-      setState(() {
-        this.image = imageTemporary;
-      });
-    } on PlatformException catch (e) {
-      print("Failed to pick image : $e");
-    }
   }
 
   Future pickTime(BuildContext context, bool isOpen) async {
@@ -91,91 +104,29 @@ class _AddVenueSlotState extends State<AddVenueSlot> {
     });
   }
 
+  var selectedDay;
   Widget addVenueForm() {
     return Container(
       margin: EdgeInsets.all(10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          GestureDetector(
-            onTap: () {
-              pickImage();
+          DropdownButton<String>(
+            value: selectedDay,
+            hint: Text("Select Day"),
+            items: <String>['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                .map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              selectedDay = newValue;
+              setState(() {});
             },
-            child: Container(
-              margin: EdgeInsets.all(5.0),
-              child: image != null
-                  ? Image.file(
-                      image!,
-                      width: 280,
-                      height: 150,
-                      fit: BoxFit.fill,
-                    )
-                  : FlutterLogo(size: 100),
-              // child: ClipRRect(
-              //   borderRadius: BorderRadius.circular(10.0),
-              //   child: CachedNetworkImage(
-              //     imageUrl: imageURL,
-              //     placeholder: (context, url) => Image(
-              //       image: AssetImage('assets/images/no_user.jpg'),
-              //     ),
-              //   ),
-              //   // child: Image(
-              //   //   image: AssetImage(
-              //   //     'assets/images/banner.jpg',
-              //   //   ),
-              //   //   width: MediaQuery.of(context).size.width,
-              //   // ),
-              // ),
-            ),
           ),
-          GestureDetector(
-            onTap: () async {
-              print("Camera Clicked");
-              // pickedFile =
-              //     await ImagePicker().getImage(source: ImageSource.gallery);
-              pickImage();
-            },
-            child: Container(
-              child: Icon(
-                Icons.camera_alt_outlined,
-                size: 30,
-                color: kBaseColor,
-              ),
-            ),
-          ),
-          TextField(
-            onChanged: (value) {
-              // venueName = value;
-            },
-            decoration: InputDecoration(
-                labelText: "Venue Name",
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                )),
-          ),
-          TextField(
-            onChanged: (value) {
-              // venueDescription = value;
-            },
-            decoration: InputDecoration(
-                labelText: "Venue Description",
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                )),
-          ),
-          // TextField(
-          //   onChanged: (value) {
-          //     tournamentName = value;
-          //   },
-          //   decoration: InputDecoration(
-          //       labelText: "Tournament Name",
-          //       labelStyle: TextStyle(
-          //         color: Colors.grey,
-          //       )),
-          // ),
-          SizedBox(
-            height: k20Margin,
-          ),
+          SizedBox(height: k20Margin),
           Container(
               child: Row(
             children: [
@@ -204,38 +155,213 @@ class _AddVenueSlotState extends State<AddVenueSlot> {
                   ),
                 ),
               ),
-              // Expanded(
-              //   flex: 1,
-              //   child: TextField(
-              //     onTap: () {
-              //       pickDate(context);
-              //     },
-              //     controller: txtEndDateController,
-              //     // enabled: false,
-              //     decoration: InputDecoration(
-              //         prefixIcon: Icon(Icons.calendar_today_outlined),
-              //         labelText: "End Date",
-              //         labelStyle: TextStyle(
-              //           color: Colors.grey,
-              //         )),
-              //   ),
-              // ),
             ],
           )),
-
+          SizedBox(height: k20Margin),
+          Container(
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: slotController,
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      noSlot = value;
+                    },
+                    decoration: InputDecoration(
+                        labelText: "Slot Max Person",
+                        labelStyle: TextStyle(
+                          color: Colors.grey,
+                        )),
+                  ),
+                ),
+                SizedBox(width: k20Margin),
+                Expanded(
+                  child: TextField(
+                    controller: priceController,
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      price = value;
+                    },
+                    decoration: InputDecoration(
+                        labelText: "Price",
+                        labelStyle: TextStyle(
+                          color: Colors.grey,
+                        )),
+                  ),
+                ),
+              ],
+            ),
+          ),
           SizedBox(height: k20Margin),
           RoundedButton(
-            title: "NEXT",
+            title: "Add",
             color: kBaseColor,
             txtColor: Colors.white,
             minWidth: 250,
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AddVenuePhotos()));
+            onPressed: () async {
+              timeslot = new Timeslot();
+              timeslot!.day = selectedDay;
+              timeslot!.startTime = txtOpenTime;
+              timeslot!.endTime = txtCloseTime;
+              timeslot!.venueId = widget.venue.id.toString();
+              timeslot!.noSlot = noSlot.toString();
+              timeslot!.price = price.toString();
+
+              addTimeslot();
+              // Navigator.push(context,
+              //     MaterialPageRoute(builder: (context) => AddVenuePhotos()));
             },
           ),
         ],
       ),
     );
+  }
+
+  addTimeslot() async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      TimeslotData timeslotData = await apiCall.addTimeslot(timeslot!);
+
+      if (timeslotData == null) {
+        print("Timeslot null");
+      } else {
+        if (timeslotData.status!) {
+          print("Timeslot Success");
+          Utility.showToast("Timeslot Created Successfully");
+          slotController.text = "";
+          priceController.text = "";
+          txtOpenTime = "Open Time";
+          txtCloseTime = "Close Time";
+          setState(() {});
+//          Navigator.pop(context);
+        } else {
+          print("Timeslot Failed");
+        }
+      }
+    }
+  }
+
+  Widget myTimeslots() {
+    return Container(
+      height: 200,
+      padding: EdgeInsets.all(20.0),
+      child: FutureBuilder(
+        future: getTimeslots(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.data == null) {
+            return Container(
+              child: Center(
+                child: Text('Loading....'),
+              ),
+            );
+          }
+          if (snapshot.hasData) {
+            print("Has Data ${snapshot.data.length}");
+            if (snapshot.data.length == 0) {
+              return Container(
+                child: Center(
+                  child: Text('No Timeslots'),
+                ),
+              );
+            } else {
+              return ListView.builder(
+                padding: EdgeInsets.only(bottom: 110),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return timeslotItem(snapshot.data[index]);
+                },
+              );
+            }
+          } else {
+            return Container(
+              child: Center(
+                child: Text('No Data'),
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  List<Timeslot>? timeslots;
+
+  Future<List<Timeslot>?> getTimeslots() async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      TimeslotData timeslotData =
+          await apiCall.getTimeslot(widget.venue.id.toString());
+
+      if (timeslotData == null) {
+        print("Timeslot null");
+      } else {
+        if (timeslotData.status!) {
+          print("Timeslot Success");
+          //Utility.showToast("Timeslot Get Successfully");
+          // timeslots!.clear();
+          timeslots = timeslotData.timeslots;
+//          Navigator.pop(context);
+        } else {
+          print("Timeslot Failed");
+        }
+      }
+    }
+    return timeslots;
+  }
+
+  timeslotItem(dynamic timeslot) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 10),
+      child: Row(
+        children: [
+          Expanded(flex: 1, child: Text(timeslot.day)),
+          Expanded(flex: 1, child: Text(timeslot.startTime)),
+          Expanded(flex: 1, child: Text(timeslot.endTime)),
+          Expanded(flex: 1, child: Text(timeslot.noSlot)),
+          Expanded(flex: 1, child: Text(timeslot.price)),
+          GestureDetector(
+            onTap: () async {
+              Utility.showToast("Deleted ${timeslot.id} ${timeslot.day}");
+              await deleteTimeslot(timeslot.id.toString());
+            },
+            child: Expanded(
+              flex: 1,
+              child: Icon(
+                Icons.delete_forever,
+                color: kBaseColor,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<TimeslotData?> deleteTimeslot(String id) async {
+    APICall apiCall = new APICall();
+    TimeslotData? timeslotData;
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      timeslotData = await apiCall.deleteTimeslot(id);
+
+      if (timeslotData == null) {
+        print("Timeslot null");
+      } else {
+        if (timeslotData.status!) {
+          print("Timeslot Success");
+          Utility.showToast("Timeslot Deleted Successfully");
+          setState(() {});
+//          Navigator.pop(context);
+        } else {
+          print("Timeslot Failed");
+        }
+      }
+    }
+    return timeslotData;
   }
 }

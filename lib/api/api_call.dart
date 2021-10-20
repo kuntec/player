@@ -10,9 +10,12 @@ import 'package:player/model/my_sport.dart';
 import 'package:player/model/player_data.dart';
 import 'package:player/model/service_data.dart';
 import 'package:player/model/sport_data.dart';
+import 'package:player/model/timeslot_data.dart';
 import 'dart:developer';
 
 import 'package:player/model/tournament_data.dart';
+import 'package:player/model/venue_data.dart';
+import 'package:player/model/venue_photo.dart';
 
 class APICall {
   Future<PlayerData> checkPlayer(String phoneNumber) async {
@@ -212,5 +215,136 @@ class APICall {
     http.Response response = await call.get(url);
     print("Response Body: " + response.body);
     return ServiceData.fromJson(jsonDecode(response.body));
+  }
+
+//  Venue
+
+  Future<dynamic> addVenue(filePath, Venue venue) async {
+    print("add venue");
+    try {
+      FormData formData = new FormData.fromMap({
+        "name": venue.name,
+        "description": venue.description,
+        "open_time": venue.openTime,
+        "close_time": venue.closeTime,
+        "address": venue.address,
+        "city": venue.city,
+        "sport": venue.sport,
+        "location_id": venue.locationId,
+        "location_link": venue.locationLink,
+        "facilities": venue.facilities,
+        "player_id": venue.playerId,
+        "created_at": venue.createdAt,
+        "image": await MultipartFile.fromFile(filePath, filename: "venue")
+      });
+
+      Response response = await Dio().post(
+        APIResources.ADD_VENUE,
+        data: formData,
+      );
+      var responseBody = response.data;
+      print("Response Body ${responseBody['status']}");
+      return responseBody['venue'];
+    } on DioError catch (e) {
+      return false;
+    } catch (e) {}
+  }
+
+  Future<VenueData> getMyVenue(String playerId) async {
+    Uri url = Uri.parse(APIResources.GET_MY_VENUE);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['player_id'] = playerId;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return VenueData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<TimeslotData> addTimeslot(Timeslot timeslot) async {
+    Uri url = Uri.parse(APIResources.ADD_TIMESLOT);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['day'] = timeslot.day!;
+    params['start_time'] = timeslot.startTime!;
+    params['end_time'] = timeslot.endTime!;
+    params['venue_id'] = timeslot.venueId!;
+    params['no_slot'] = timeslot.noSlot!;
+    params['price'] = timeslot.price!;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return TimeslotData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<TimeslotData> getTimeslot(String venueId) async {
+    Uri url = Uri.parse(APIResources.GET_TIMESLOT);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['venue_id'] = venueId;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return TimeslotData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<TimeslotData> deleteTimeslot(String id) async {
+    Uri url = Uri.parse(APIResources.DELETE_TIMESLOT);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['id'] = id;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return TimeslotData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<dynamic> addVenuePhoto(filePath, String venueId) async {
+    print("add venue");
+    try {
+      FormData formData = new FormData.fromMap({
+        "venue_id": venueId,
+        "created_at": Utility.getCurrentDate(),
+        "image": await MultipartFile.fromFile(filePath, filename: "venuephoto")
+      });
+
+      Response response = await Dio().post(
+        APIResources.ADD_VENUE_PHOTO,
+        data: formData,
+      );
+      var responseBody = response.data;
+      print("Response Body ${responseBody['status']}");
+      return responseBody['status'];
+    } on DioError catch (e) {
+      return false;
+    } catch (e) {}
+  }
+
+  Future<VenuePhoto> getVenuePhoto(String venueId) async {
+    Uri url = Uri.parse(APIResources.GET_VENUE_PHOTO);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['venue_id'] = venueId;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return VenuePhoto.fromJson(jsonDecode(response.body));
+  }
+
+  Future<VenuePhoto> deleteVenuePhoto(String id) async {
+    Uri url = Uri.parse(APIResources.DELETE_VENUE_PHOTO);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['id'] = id;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return VenuePhoto.fromJson(jsonDecode(response.body));
   }
 }
