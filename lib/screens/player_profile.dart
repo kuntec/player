@@ -44,20 +44,24 @@ class _PlayerProfileState extends State<PlayerProfile> {
     final fileName = file != null ? basename(file!.path) : 'No File Selected';
     return SafeArea(
         child: Scaffold(
-      // appBar: AppBar(
-      //   title: Text("Player"),
-      // ),
-      body: Column(
-        children: [
+      appBar: AppBar(
+        title: Text("Player"),
+        actions: [
           RoundedButton(
             title: "Logout",
-            color: kAppColor,
+            color: kBaseColor,
             onPressed: () {
               logout(context);
             },
-            minWidth: 200,
+            minWidth: 100,
             txtColor: Colors.white,
           ),
+        ],
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(),
           Container(
             margin: EdgeInsets.all(20.0),
             decoration: BoxDecoration(
@@ -132,133 +136,15 @@ class _PlayerProfileState extends State<PlayerProfile> {
                         print("Player id " + playerId.toString());
                         profilerController.uploadImage(
                             ImageSource.gallery, playerId.toString());
-                        // Get.bottomSheet(Container(
-                        //   decoration: BoxDecoration(
-                        //     color: Colors.white,
-                        //     borderRadius: const BorderRadius.only(
-                        //         topLeft: Radius.circular(16.0),
-                        //         topRight: Radius.circular(16.0)),
-                        //   ),
-                        //   child: Wrap(
-                        //     alignment: WrapAlignment.end,
-                        //     crossAxisAlignment: WrapCrossAlignment.end,
-                        //     children: [
-                        //       ListTile(
-                        //         leading: Icon(Icons.camera),
-                        //         title: Text('Camera'),
-                        //         onTap: () {
-                        //           Get.back();
-                        //           profilerController
-                        //               .uploadImage(ImageSource.camera);
-                        //         },
-                        //       ),
-                        //       ListTile(
-                        //         leading: Icon(Icons.image),
-                        //         title: Text('Gallery'),
-                        //         onTap: () {
-                        //           Get.back();
-                        //           profilerController
-                        //               .uploadImage(ImageSource.gallery);
-                        //         },
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ));
                       },
                     ),
                   )
-
-                  // Positioned(
-                  //   right: -16,
-                  //   bottom: 0,
-                  //   child: SizedBox(
-                  //     height: 46,
-                  //     width: 46,
-                  //     child: FlatButton(
-                  //       shape: RoundedRectangleBorder(
-                  //         borderRadius: BorderRadius.circular(50),
-                  //         side: BorderSide(color: Colors.white),
-                  //       ),
-                  //       color: Colors.grey[200],
-                  //       onPressed: () {
-                  //         Get.bottomSheet(
-                  //           Container(
-                  //             decoration: BoxDecoration(
-                  //               color: Colors.white,
-                  //               borderRadius: const BorderRadius.only(
-                  //                   topLeft: Radius.circular(16.0),
-                  //                   topRight: Radius.circular(16.0)),
-                  //             ),
-                  //             child: Wrap(
-                  //               alignment: WrapAlignment.end,
-                  //               crossAxisAlignment: WrapCrossAlignment.end,
-                  //               children: [
-                  //                 ListTile(
-                  //                   leading: Icon(Icons.camera),
-                  //                   title: Text('Camera'),
-                  //                   onTap: () {
-                  //                     Get.back();
-                  //                     profilerController
-                  //                         .uploadImage(ImageSource.camera);
-                  //                   },
-                  //                 ),
-                  //                 ListTile(
-                  //                   leading: Icon(Icons.image),
-                  //                   title: Text('Gallery'),
-                  //                   onTap: () {
-                  //                     Get.back();
-                  //                     profilerController
-                  //                         .uploadImage(ImageSource.gallery);
-                  //                   },
-                  //                 ),
-                  //               ],
-                  //             ),
-                  //           ),
-                  //         );
-                  //       },
-                  //       child: SvgPicture.asset("assets/images/Camera Icon.svg"),
-                  //     ),
-                  //   ),
-                  // )
                 ],
               ),
             ),
           ),
         ],
       ),
-      // body: SingleChildScrollView(
-      //   child: Column(
-      //     children: [
-      //       RoundedButton(
-      //         title: "Logout",
-      //         color: kAppColor,
-      //         onPressed: () {
-      //           logout(context);
-      //         },
-      //         minWidth: 200,
-      //         txtColor: Colors.white,
-      //       ),
-      //       RoundedButton(
-      //         title: "Select File",
-      //         color: kAppColor,
-      //         onPressed: () {
-      //           selectFile();
-      //         },
-      //         minWidth: 200,
-      //         txtColor: Colors.white,
-      //       ),
-      //       SizedBox(height: k20Margin),
-      //       //Text(fileName),
-      //       SizedBox(height: k20Margin),
-      //       RoundedButton(
-      //         title: "Upload File",
-      //         color: kAppColor,
-      //         onPressed: () {},
-      //         minWidth: 200,
-      //         txtColor: Colors.white,
-      //       ),
-      //     ],
-      //   ),
     ));
   }
 

@@ -26,6 +26,8 @@ class ServiceScreen extends StatefulWidget {
 }
 
 class _ServiceScreenState extends State<ServiceScreen> {
+  String selectedServiceId = "";
+
   List serviceScreens = [
     PersonalCoach(),
     TrophySeller(),
@@ -172,9 +174,115 @@ class _ServiceScreenState extends State<ServiceScreen> {
     return GestureDetector(
       onTap: () {
         print("Service Selected ${service.id}");
-        int index = service.id - 1;
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => serviceScreens[index]));
+        int index = service.id;
+        selectedServiceId = service.id.toString();
+
+        switch (index) {
+          case 1:
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => PersonalCoach(
+                          serviceId: selectedServiceId,
+                        )));
+            break;
+          case 2:
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => TrophySeller(
+                          serviceId: selectedServiceId,
+                        )));
+            break;
+          case 3:
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Manufacturer(
+                          serviceId: selectedServiceId,
+                        )));
+            break;
+          case 4:
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Scorer(
+                          serviceId: selectedServiceId,
+                        )));
+            break;
+          case 5:
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Organiser(
+                          serviceId: selectedServiceId,
+                        )));
+            break;
+          case 6:
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Academy(
+                          serviceId: selectedServiceId,
+                        )));
+            break;
+          case 7:
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => TshirtSeller(
+                          serviceId: selectedServiceId,
+                        )));
+            break;
+          case 8:
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => SportMarket(
+                          serviceId: selectedServiceId,
+                        )));
+            break;
+          case 9:
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Umpire(
+                          serviceId: selectedServiceId,
+                        )));
+            break;
+          case 10:
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => PhysioFitness(
+                          serviceId: selectedServiceId,
+                        )));
+            break;
+          case 11:
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Commentator(
+                          serviceId: selectedServiceId,
+                        )));
+            break;
+          case 12:
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Helper(
+                          serviceId: selectedServiceId,
+                        )));
+            break;
+          case 13:
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ItemRental(
+                          serviceId: selectedServiceId,
+                        )));
+            break;
+        }
       },
       child: Container(
         decoration: kContainerBoxDecoration.copyWith(

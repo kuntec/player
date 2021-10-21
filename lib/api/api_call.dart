@@ -9,6 +9,8 @@ import 'package:player/model/looking_for_data.dart';
 import 'package:player/model/my_sport.dart';
 import 'package:player/model/player_data.dart';
 import 'package:player/model/service_data.dart';
+import 'package:player/model/service_model.dart';
+import 'package:player/model/service_photo.dart';
 import 'package:player/model/sport_data.dart';
 import 'package:player/model/timeslot_data.dart';
 import 'dart:developer';
@@ -18,6 +20,14 @@ import 'package:player/model/venue_data.dart';
 import 'package:player/model/venue_photo.dart';
 
 class APICall {
+  Future<PlayerData> getPlayers() async {
+    Uri url = Uri.parse(APIResources.GET_PLAYER);
+    HttpCall call = new HttpCall();
+    http.Response response = await call.get(url);
+    print("Response Body: " + response.body);
+    return PlayerData.fromJson(jsonDecode(response.body));
+  }
+
   Future<PlayerData> checkPlayer(String phoneNumber) async {
     Uri url = Uri.parse(APIResources.CHECK_PLAYER);
     var header = new Map<String, String>();
@@ -96,11 +106,13 @@ class APICall {
     return HostActivity.fromJson(jsonDecode(response.body));
   }
 
-  Future<HostActivity> getHostActivity(String locationId) async {
+  Future<HostActivity> getHostActivity(
+      String locationId, String sportId) async {
     Uri url = Uri.parse(APIResources.GET_HOST_ACTIVITY);
     var header = new Map<String, String>();
     var params = new Map<String, String>();
     params['location_id'] = locationId;
+    params['sport_id'] = sportId;
 
     HttpCall call = new HttpCall();
     http.Response response = await call.post(url, header, params);
@@ -346,5 +358,116 @@ class APICall {
     http.Response response = await call.post(url, header, params);
     print("Response Body: " + response.body);
     return VenuePhoto.fromJson(jsonDecode(response.body));
+  }
+
+  Future<ServiceModel> getServiceDataId(String serviceId) async {
+    Uri url = Uri.parse(APIResources.GET_SERVICEDATA_ID);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['service_id'] = serviceId;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return ServiceModel.fromJson(jsonDecode(response.body));
+  }
+
+  Future<ServiceModel> getPlayerServiceData(
+      String serviceId, String playerId) async {
+    Uri url = Uri.parse(APIResources.GET_PLAYER_SERVICEDATA);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['service_id'] = serviceId;
+    params['player_id'] = playerId;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Player Service: " + response.body);
+    return ServiceModel.fromJson(jsonDecode(response.body));
+  }
+
+  Future<dynamic> addServiceData(filePath, Service service) async {
+    print("add service data");
+    try {
+      FormData formData = new FormData.fromMap({
+        "service_id": service.serviceId,
+        "player_id": service.playerId,
+        "name": service.name,
+        "address": service.address,
+        "city": service.city,
+        "contact_name": service.contactName,
+        "contact_no": service.contactNo,
+        "secondary_no": service.secondaryNo,
+        "about": service.about,
+        "location_link": service.locationLink,
+        "monthly_fees": service.monthlyFees,
+        "coaches": service.coaches,
+        "fees_per_match": service.feesPerMatch,
+        "fees_per_day": service.feesPerDay,
+        "experience": service.experience,
+        "company_name": service.companyName,
+        "sport_id": service.sportId,
+        "sport_name": service.sportName,
+        "created_at": Utility.getCurrentDate(),
+        "image": await MultipartFile.fromFile(filePath, filename: "servicedata")
+      });
+
+      Response response = await Dio().post(
+        APIResources.ADD_SERVICEDATA,
+        data: formData,
+      );
+      var responseBody = response.data;
+      print("Response Body ${responseBody['status']}");
+      return responseBody['status'];
+    } on DioError catch (e) {
+      print("Response Body NO FOUND");
+      return false;
+    } catch (e) {}
+  }
+
+  Future<dynamic> addServicePhoto(filePath, String serviceId) async {
+    try {
+      FormData formData = new FormData.fromMap({
+        "service_id": serviceId,
+        "status": "1",
+        "created_at": Utility.getCurrentDate(),
+        "image":
+            await MultipartFile.fromFile(filePath, filename: "servicephoto")
+      });
+
+      Response response = await Dio().post(
+        APIResources.ADD_SERVICE_PHOTO,
+        data: formData,
+      );
+      var responseBody = response.data;
+      print("Response Body ${responseBody['status']}");
+      return responseBody['status'];
+    } on DioError catch (e) {
+      return false;
+    } catch (e) {}
+  }
+
+  Future<ServicePhoto> getServicePhoto(String serviceId) async {
+    Uri url = Uri.parse(APIResources.GET_SERVICE_PHOTO);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['service_id'] = serviceId;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return ServicePhoto.fromJson(jsonDecode(response.body));
+  }
+
+  Future<ServicePhoto> deleteServicePhoto(String id) async {
+    Uri url = Uri.parse(APIResources.DELETE_SERVICE_PHOTO);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['id'] = id;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return ServicePhoto.fromJson(jsonDecode(response.body));
   }
 }

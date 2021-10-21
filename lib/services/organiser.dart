@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Organiser extends StatefulWidget {
-  const Organiser({Key? key}) : super(key: key);
+  dynamic serviceId;
+
+  Organiser({this.serviceId});
 
   @override
   _OrganiserState createState() => _OrganiserState();

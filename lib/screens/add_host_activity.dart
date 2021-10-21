@@ -86,10 +86,10 @@ class _AddHostState extends State<AddHost> {
       icon: const Icon(Icons.keyboard_arrow_down),
       iconSize: 24,
       elevation: 16,
-      style: const TextStyle(color: Colors.deepPurple),
+      style: const TextStyle(color: Colors.black),
       underline: Container(
         height: 2,
-        color: kAppColor,
+        color: kBaseColor,
       ),
       onChanged: (LookingFor? newValue) {
         // this._selectedLK = newValue!;
@@ -114,10 +114,10 @@ class _AddHostState extends State<AddHost> {
       icon: const Icon(Icons.keyboard_arrow_down),
       iconSize: 24,
       elevation: 16,
-      style: const TextStyle(color: Colors.deepPurple),
+      style: const TextStyle(color: Colors.black),
       underline: Container(
         height: 2,
-        color: kAppColor,
+        color: kBaseColor,
       ),
       onChanged: (Data? newValue) {
         // this._selectedLK = newValue!;
@@ -520,9 +520,11 @@ class _AddHostState extends State<AddHost> {
                                       style: TextStyle(
                                         color: Colors.black,
                                       ),
-                                      decoration: kTextFieldDecoration.copyWith(
-                                          hintText: 'Ball Type'),
-                                      cursorColor: kBaseColor,
+                                      decoration: InputDecoration(
+                                          labelText: "Ball Type",
+                                          labelStyle: TextStyle(
+                                            color: Colors.grey,
+                                          )),
                                     )
                                   : SizedBox(width: 1.0)
                               : SizedBox(width: 1.0),
@@ -536,9 +538,11 @@ class _AddHostState extends State<AddHost> {
                             style: TextStyle(
                               color: Colors.black,
                             ),
-                            decoration:
-                                kTextFieldDecoration.copyWith(hintText: 'AREA'),
-                            cursorColor: kBaseColor,
+                            decoration: InputDecoration(
+                                labelText: "Area",
+                                labelStyle: TextStyle(
+                                  color: Colors.grey,
+                                )),
                           ),
                           SizedBox(height: k20Margin),
 
@@ -780,14 +784,16 @@ class _AddHostState extends State<AddHost> {
                 flex: 4,
                 child: Container(
                   margin: EdgeInsets.all(10.0),
-                  height: 90.0,
-                  width: 90.0,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(25.0),
-                    child: Image.network(
-                      APIResources.IMAGE_URL + playerImage,
-                    ),
-                  ),
+                  height: 65.0,
+                  width: 65.0,
+                  child: playerImage == null
+                      ? FlutterLogo()
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(25.0),
+                          child: Image.network(
+                            APIResources.IMAGE_URL + playerImage,
+                          ),
+                        ),
                 ),
               ),
               Expanded(
@@ -801,7 +807,7 @@ class _AddHostState extends State<AddHost> {
                       activity.playerName,
                       style: TextStyle(
                         color: kBaseColor,
-                        fontSize: 20.0,
+                        fontSize: 16.0,
                       ),
                     ),
                     SizedBox(height: 10.0),
@@ -809,7 +815,7 @@ class _AddHostState extends State<AddHost> {
                       "Looking For: ${activity.lookingFor}",
                       style: TextStyle(
                         color: Colors.grey.shade900,
-                        fontSize: 14.0,
+                        fontSize: 12.0,
                       ),
                     ),
                     SizedBox(height: 5.0),
@@ -817,7 +823,7 @@ class _AddHostState extends State<AddHost> {
                       "Location: ${activity.area}",
                       style: TextStyle(
                         color: Colors.grey.shade900,
-                        fontSize: 14.0,
+                        fontSize: 12.0,
                       ),
                     ),
                     SizedBox(height: 5.0),
@@ -825,7 +831,7 @@ class _AddHostState extends State<AddHost> {
                       "Time: ${activity.timing}",
                       style: TextStyle(
                         color: Colors.grey.shade900,
-                        fontSize: 14.0,
+                        fontSize: 12.0,
                       ),
                     ),
                     SizedBox(height: 5.0),
@@ -833,7 +839,7 @@ class _AddHostState extends State<AddHost> {
                       "Date: ${activity.startDate}",
                       style: TextStyle(
                         color: Colors.grey.shade900,
-                        fontSize: 14.0,
+                        fontSize: 12.0,
                       ),
                     ),
                     SizedBox(height: 5.0),
@@ -843,20 +849,43 @@ class _AddHostState extends State<AddHost> {
                           : "",
                       style: TextStyle(
                         color: Colors.grey.shade900,
-                        fontSize: 14.0,
+                        fontSize: 12.0,
                       ),
                     ),
                     SizedBox(height: 5.0),
                   ],
                 ),
               ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  child: Icon(
-                    Icons.more_horiz,
-                    color: kBaseColor,
-                    size: 20.0,
+              GestureDetector(
+                onTap: () {
+                  //Utility.showToast("Hello");
+                  //showPopup();
+                },
+                child: Expanded(
+                  flex: 1,
+                  child: Container(
+                    // child: ListTile(
+                    //   trailing: PopupMenuButton(
+                    //     itemBuilder: (context) {
+                    //       return [
+                    //         PopupMenuItem(
+                    //           value: 'edit',
+                    //           child: Text('Edit'),
+                    //         ),
+                    //         PopupMenuItem(
+                    //           value: 'delete',
+                    //           child: Text('Delete'),
+                    //         )
+                    //       ];
+                    //     },
+                    //     onSelected: (value) {},
+                    //   ),
+                    // ),
+                    child: Icon(
+                      Icons.more_horiz,
+                      color: kBaseColor,
+                      size: 20.0,
+                    ),
                   ),
                 ),
               ),
@@ -866,21 +895,34 @@ class _AddHostState extends State<AddHost> {
             decoration: BoxDecoration(
                 color: kBaseColor,
                 borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(15.0),
-                  topLeft: Radius.circular(15.0),
+                  bottomRight: Radius.circular(10.0),
+                  topLeft: Radius.circular(10.0),
                 )),
             width: 100,
             height: 35,
             child: Center(
               child: Text(
                 activity.sportName,
-                style: TextStyle(color: Colors.white, fontSize: 16.0),
+                style: TextStyle(color: Colors.white, fontSize: 14.0),
               ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  showPopup() {
+    return [
+      PopupMenuItem(
+        value: 'edit',
+        child: Text('Edit'),
+      ),
+      PopupMenuItem(
+        value: 'delete',
+        child: Text('Delete'),
+      )
+    ];
   }
 
 //   Widget stackExample() {

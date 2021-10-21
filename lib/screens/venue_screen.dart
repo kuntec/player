@@ -224,19 +224,6 @@ class _VenueScreenState extends State<VenueScreen> {
                       fontSize: 14.0,
                     ),
                   ),
-                  // Container(
-                  //   decoration: BoxDecoration(
-                  //       color: kBaseColor,
-                  //       borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                  //   width: 100,
-                  //   height: 40,
-                  //   child: Center(
-                  //     child: Text(
-                  //       "1000",
-                  //       style: TextStyle(color: Colors.white, fontSize: 16.0),
-                  //     ),
-                  //   ),
-                  // ),
                 ],
               ),
             ),

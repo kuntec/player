@@ -245,6 +245,8 @@ class _SportSelectState extends State<SportSelect> {
       PlayerData playerData =
           await apiCall.addPlayerSport(widget.player!.id.toString(), sport_id);
       if (playerData.status!) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setBool("sportSelection", true);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => MainNavigation()));
       }

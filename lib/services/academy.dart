@@ -4,7 +4,9 @@ import 'package:player/constant/constants.dart';
 import 'package:player/services/academy_register.dart';
 
 class Academy extends StatefulWidget {
-  const Academy({Key? key}) : super(key: key);
+  dynamic serviceId;
+
+  Academy({this.serviceId});
 
   @override
   _AcademyState createState() => _AcademyState();

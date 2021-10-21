@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ItemRental extends StatefulWidget {
-  const ItemRental({Key? key}) : super(key: key);
+  dynamic serviceId;
+
+  ItemRental({this.serviceId});
 
   @override
   _ItemRentalState createState() => _ItemRentalState();

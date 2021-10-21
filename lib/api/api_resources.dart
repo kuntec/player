@@ -38,4 +38,14 @@ class APIResources {
   static final String GET_VENUE_PHOTO = BASE_URL + "getVenuePhoto";
   static final String ADD_VENUE_PHOTO = BASE_URL + "addVenuePhoto";
   static final String DELETE_VENUE_PHOTO = BASE_URL + "deleteVenuePhoto";
+
+  static final String GET_SERVICEDATA_ID = BASE_URL + "getServiceById";
+  static final String GET_PLAYER_SERVICEDATA =
+      BASE_URL + "getServiceByPlayerId";
+  static final String ADD_SERVICEDATA = BASE_URL + "addServiceData";
+  static final String GET_SERVICEDATA = BASE_URL + "getServiceData";
+
+  static final String GET_SERVICE_PHOTO = BASE_URL + "getServicePhoto";
+  static final String ADD_SERVICE_PHOTO = BASE_URL + "addServicePhoto";
+  static final String DELETE_SERVICE_PHOTO = BASE_URL + "deleteServicePhoto";
 }
