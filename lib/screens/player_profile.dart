@@ -154,4 +154,6 @@ class _PlayerProfileState extends State<PlayerProfile> {
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (_) => LoginScreen()));
   }
+
+  getMyProfile() {}
 }

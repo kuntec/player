@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:player/api/api_resources.dart';
 import 'package:player/api/http_call.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/model/dayslot_data.dart';
 import 'package:player/model/host_activity.dart';
 import 'package:player/model/looking_for_data.dart';
 import 'package:player/model/my_sport.dart';
@@ -469,5 +470,52 @@ class APICall {
     http.Response response = await call.post(url, header, params);
     print("Response Body: " + response.body);
     return ServicePhoto.fromJson(jsonDecode(response.body));
+  }
+
+  Future<DayslotData> addDaySlot(DaySlot daySlot) async {
+    Uri url = Uri.parse(APIResources.ADD_DAY_SLOT);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['venue_id'] = daySlot.venueId!;
+    params['day'] = daySlot.day!;
+    params['open'] = daySlot.open!;
+    params['close'] = daySlot.close!;
+    params['status'] = daySlot.status!;
+    params['created_at'] = daySlot.createdAt!;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return DayslotData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<DayslotData> updateDaySlot(DaySlot daySlot) async {
+    Uri url = Uri.parse(APIResources.UPDATE_DAY_SLOT);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['id'] = daySlot.id!.toString();
+    params['venue_id'] = daySlot.venueId!;
+    params['day'] = daySlot.day!;
+    params['open'] = daySlot.open!;
+    params['close'] = daySlot.close!;
+    params['status'] = daySlot.status!;
+    params['created_at'] = Utility.getCurrentDate();
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return DayslotData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<DayslotData> getDaySlot(String venueId) async {
+    Uri url = Uri.parse(APIResources.GET_DAY_SLOT);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['venue_id'] = venueId;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return DayslotData.fromJson(jsonDecode(response.body));
   }
 }

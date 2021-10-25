@@ -25,7 +25,11 @@ class ServiceScreen extends StatefulWidget {
   _ServiceScreenState createState() => _ServiceScreenState();
 }
 
-class _ServiceScreenState extends State<ServiceScreen> {
+class _ServiceScreenState extends State<ServiceScreen>
+    with AutomaticKeepAliveClientMixin<ServiceScreen> {
+  @override
+  bool get wantKeepAlive => true;
+
   String selectedServiceId = "";
 
   List serviceScreens = [
@@ -45,6 +49,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
   ];
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(

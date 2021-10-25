@@ -43,6 +43,7 @@ dependencies:
   get_storage:
   cached_network_image:
   image_picker:
+  provider:
 #  geolocator:
 #  geocoding:
 

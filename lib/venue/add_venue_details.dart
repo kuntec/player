@@ -7,7 +7,9 @@ import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/venue_data.dart';
-import 'package:player/screens/add_venue_slot.dart';
+import 'package:player/venue/add_venue_slot.dart';
+import 'package:player/venue/choose_sport.dart';
+import 'package:player/venue/venue_facilities.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddVenueDetails extends StatefulWidget {
@@ -36,11 +38,17 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
   var city;
   var sport;
 
+  List selectedFacilities = [];
+  var selectedSport;
+
+  TextEditingController textFacilityController = new TextEditingController();
+  TextEditingController textSportController = new TextEditingController();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Utility.showToast("isEditMode ${widget.isEdit}");
+    // Utility.showToast("isEditMode ${widget.isEdit}");
   }
 
   @override
@@ -172,8 +180,27 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
           ),
 
           TextField(
-            onChanged: (value) {
-              facilities = value;
+            // onChanged: (value) {
+            //   facilities = value;
+            // },
+            controller: textFacilityController,
+            readOnly: true,
+            onTap: () async {
+              final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => VenueFacilities(
+                            selectedF: selectedFacilities,
+                          )));
+
+              //Utility.showToast("This is selected $result");
+              selectedFacilities = result;
+              String s = selectedFacilities.join(', ');
+              //print(s);
+              textFacilityController.text = s;
+              // ScaffoldMessenger.of(context)
+              //   ..removeCurrentSnackBar()
+              //   ..showSnackBar(SnackBar(content: Text('$result')));
             },
             decoration: InputDecoration(
                 labelText: "Venue Facilities",
@@ -222,7 +249,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
               address = value;
             },
             decoration: InputDecoration(
-                labelText: "Venue Location",
+                labelText: "Venue Address",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -248,8 +275,22 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              sport = value;
+            // onChanged: (value) {
+            //   sport = value;
+            // },
+            controller: textSportController,
+            readOnly: true,
+            onTap: () async {
+              final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ChooseSport(
+                            selectedSport: selectedSport,
+                          )));
+
+              // Utility.showToast("This is selected $result");
+              selectedSport = result;
+              textSportController.text = selectedSport.sportName;
             },
             decoration: InputDecoration(
                 labelText: "Which Sport We can Play",
@@ -304,8 +345,9 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
 
               // Utility.showToast("Create Venue");
               if (this.image != null) {
-                addVenue(this.image!.path, venue!);
+                // addVenue(this.image!.path, venue!);
                 // Utility.showToast("File Selected Image");
+                _onLoading();
               } else {
                 Utility.showToast("Please Select Image");
               }
@@ -317,12 +359,34 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
     );
   }
 
-  addVenue(String filePath, Venue venue) async {
+  void _onLoading() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: new Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              new CircularProgressIndicator(),
+              new Text("Loading"),
+            ],
+          ),
+        );
+      },
+    );
+    addVenue();
+    // new Future.delayed(new Duration(seconds: 3), () {
+    //   Navigator.pop(context); //pop dialog
+    // });
+  }
+
+  addVenue() async {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      dynamic addedVenue = await apiCall.addVenue(filePath, venue);
-
+      dynamic addedVenue = await apiCall.addVenue(this.image!.path, venue!);
+      Navigator.pop(context);
       if (addedVenue == null) {
         print("Venue null");
         Utility.showToast("Venue Null");

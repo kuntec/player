@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/venue_data.dart';
-import 'package:player/screens/add_venue.dart';
+import 'package:player/venue/add_venue.dart';
 import 'package:player/screens/register_ground.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -142,6 +143,14 @@ class _VenueScreenState extends State<VenueScreen> {
                     margin: EdgeInsets.all(10.0),
                     height: 110.0,
                     width: 110.0,
+                    // child: SvgPicture.network(
+                    //   "https://www.svgrepo.com/show/2046/dog.svg",
+                    //   placeholderBuilder: (context) =>
+                    //       CircularProgressIndicator(),
+                    //   height: 110.0,
+                    //   width: 110,
+                    //   fit: BoxFit.cover,
+                    // ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                       child: Image.network(

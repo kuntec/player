@@ -4,8 +4,9 @@ import 'package:player/api/api_resources.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/venue_data.dart';
-import 'package:player/screens/add_venue_details.dart';
-import 'package:player/screens/add_venue_slot.dart';
+import 'package:player/venue/add_venue_details.dart';
+import 'package:player/venue/add_venue_slot.dart';
+import 'package:player/venue/venue_day_slot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddVenue extends StatefulWidget {
@@ -31,26 +32,6 @@ class _AddVenueState extends State<AddVenue> {
               color: kBaseColor,
             )),
       ),
-      // bottomSheet: Container(
-      //   margin: EdgeInsets.all(k20Margin),
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.end,
-      //     children: [
-      //       FloatingActionButton(
-      //         backgroundColor: kBaseColor,
-      //         onPressed: () {
-      //           Navigator.push(
-      //               context,
-      //               MaterialPageRoute(
-      //                   builder: (context) => AddVenueDetails(
-      //                         isEdit: false,
-      //                       )));
-      //         },
-      //         child: Icon(Icons.add),
-      //       ),
-      //     ],
-      //   ),
-      // ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -211,7 +192,7 @@ class _AddVenueState extends State<AddVenue> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => AddVenueSlot(
+                builder: (context) => VenueDaySlot(
                       venue: venue,
                     )));
       },

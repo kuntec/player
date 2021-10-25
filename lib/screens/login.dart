@@ -312,7 +312,7 @@ class _LoginScreenState extends State<LoginScreen> {
     // TODO: implement initState
     super.initState();
     print("Init State");
-//    checkLogin();
+    checkLogin();
   }
 
   @override
@@ -415,7 +415,7 @@ class _LoginScreenState extends State<LoginScreen> {
           prefs.setBool('isLogin', true);
         }
         bool? sportSelect = prefs.getBool("sportSelect");
-
+        print("Sport select $sportSelect");
         if (sportSelect != null) {
           if (sportSelect) {
             Navigator.pushReplacement(context,
@@ -447,15 +447,16 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-//   checkLogin() async {
-//     SharedPreferences prefs = await SharedPreferences.getInstance();
-// //    bool? isLogin = prefs.getBool('isLogin');
-//     int? playerId = prefs.getInt("playerId");
-//     print(prefs.getInt("playerId"));
-//     // print(prefs.getBool('isLogin'));
-//     if (playerId != null) {
-//       Navigator.pushReplacement(
-//           context, MaterialPageRoute(builder: (_) => MainNavigation()));
-//     }
-//   }
+  checkLogin() async {
+    print("Checking Login");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+//    bool? isLogin = prefs.getBool('isLogin');
+    int? playerId = prefs.getInt("playerId");
+    print(prefs.getInt("playerId"));
+
+    if (playerId != null) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => MainNavigation()));
+    }
+  }
 }

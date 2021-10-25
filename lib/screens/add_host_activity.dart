@@ -36,6 +36,9 @@ class _AddHostState extends State<AddHost> {
 
   bool? isMyGameSelected = false;
 
+  TextEditingController txtDateController = new TextEditingController();
+  TextEditingController txtTimeController = new TextEditingController();
+
   Future<List<LookingFor>> getLookingFor() async {
     APICall apiCall = new APICall();
     List<LookingFor> list = [];
@@ -134,6 +137,34 @@ class _AddHostState extends State<AddHost> {
     );
   }
 
+  String? ballTypeValue;
+  var ballTypes = ["Tennis", "Season", "Others"];
+
+  Widget buildBallTypeData() {
+    return DropdownButton(
+      value: ballTypeValue != null ? ballTypeValue : null,
+      hint: Text("Select Ball Type"),
+      isExpanded: true,
+      icon: const Icon(Icons.keyboard_arrow_down),
+      iconSize: 24,
+      elevation: 16,
+      style: const TextStyle(color: Colors.black),
+      underline: Container(
+        height: 2,
+        color: kBaseColor,
+      ),
+      onChanged: (String? newValue) {
+        setState(() {
+          ballTypeValue = newValue!;
+          ballType = ballTypeValue;
+        });
+      },
+      items: ballTypes.map((String items) {
+        return DropdownMenuItem(value: items, child: Text(items));
+      }).toList(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -145,23 +176,7 @@ class _AddHostState extends State<AddHost> {
             },
             child: Icon(Icons.arrow_back_ios)),
         title: Center(child: Text("Host Activity")),
-        actions: [
-          // Container(
-          //   margin: EdgeInsets.all(10),
-          //   decoration: BoxDecoration(
-          //     borderRadius: BorderRadius.circular(15.0),
-          //     color: Colors.white,
-          //   ),
-          //   width: 100,
-          //   height: 300,
-          //   child: Center(
-          //     child: Text(
-          //       "My Games",
-          //       style: TextStyle(color: kAppColor, fontWeight: FontWeight.bold),
-          //     ),
-          //   ),
-          // )
-        ],
+        actions: [],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -171,35 +186,7 @@ class _AddHostState extends State<AddHost> {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: [
-              // SizedBox(height: k20Margin),
-              // Container(
-              //   decoration: kContainerBox,
-              //   height: 40,
-              //   child: Row(
-              //     children: [
-              //       Center(
-              //         child: Text(
-              //           "Create New Activity",
-              //           style: TextStyle(
-              //               color:
-              //                   isMyGameSelected! ? kBaseColor : Colors.white,
-              //               fontSize: 14.0),
-              //         ),
-              //       ),
-              //       Center(
-              //         child: Text(
-              //           "My Games",
-              //           style: TextStyle(
-              //               color:
-              //                   isMyGameSelected! ? Colors.white : kBaseColor,
-              //               fontSize: 14.0),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
               SizedBox(height: k20Margin),
-
               Container(
                 margin: EdgeInsets.only(left: 10, right: 10),
                 child: Row(
@@ -265,17 +252,6 @@ class _AddHostState extends State<AddHost> {
                   ],
                 ),
               ),
-              // Text(
-              //   "KINDLY ADD YOUR DETAILS",
-              //   style: const TextStyle(
-              //     color: const Color(0xff000000),
-              //     fontWeight: FontWeight.w600,
-              //     fontFamily: "Roboto",
-              //     fontStyle: FontStyle.normal,
-              //     fontSize: 20.8,
-              //   ),
-              //   textAlign: TextAlign.left,
-              // ),
               isMyGameSelected!
                   ? Container(
                       height: 700,
@@ -317,17 +293,6 @@ class _AddHostState extends State<AddHost> {
                         },
                       ),
                     )
-
-                  //hostActivityItem(activity)
-                  // ListView.separated(
-                  //     itemBuilder: (context, index) {
-                  //       final activity = activities![index];
-                  //       return ListTile(
-                  //         title: Text("Player Name = ${activity.playerName}"),
-                  //       );
-                  //     },
-                  //     separatorBuilder: (context, index) => Divider(),
-                  //     itemCount: activities!.length)
                   : Container(
                       decoration: kContainerBoxDecoration,
                       margin: EdgeInsets.all(20.0),
@@ -336,200 +301,35 @@ class _AddHostState extends State<AddHost> {
                         children: [
                           sports != null
                               ? buildSportData(sports!)
-                              : CircularProgressIndicator(),
+                              : Container(child: Text("Loading...")),
 
                           looks != null
                               ? buildData(looks!)
-                              : CircularProgressIndicator(),
+                              : Container(child: Text("Loading...")),
 
                           SizedBox(height: k20Margin),
-//                    looks! == null ? Text("no Data") : buildData(looks!),
-                          // FutureBuilder<List<LookingFor>>(
-                          //     future: getLookingFor(),
-                          //     builder: (context, snapshot) {
-                          //       final data = snapshot.data;
-                          //       switch (snapshot.connectionState) {
-                          //         case ConnectionState.waiting:
-                          //           return CircularProgressIndicator();
-                          //         default:
-                          //           if (snapshot.hasError) {
-                          //             return Text("Some Error");
-                          //           } else {
-                          //             return buildData(data!);
-                          //           }
-                          //       }
-                          //       return buildData(data!);
-                          //     }),
 
-                          // DropdownButton<LookingFor>(
-                          //   value: selectedLK,
-                          //   isExpanded: true,
-                          //   icon: const Icon(Icons.keyboard_arrow_down),
-                          //   iconSize: 24,
-                          //   elevation: 16,
-                          //   style: const TextStyle(color: Colors.deepPurple),
-                          //   underline: Container(
-                          //     height: 2,
-                          //     color: kAppColor,
-                          //   ),
-                          //   onChanged: (LookingFor? newValue) {
-                          //     setState(() {
-                          //       selectedLK = newValue!;
-                          //     });
-                          //   },
-                          //   items: looks.map<DropdownMenuItem<LookingFor>>(
-                          //       (LookingFor value) {
-                          //     return DropdownMenuItem<LookingFor>(
-                          //       value: value,
-                          //       child: Text(value.lookingFor!),
-                          //     );
-                          //   }).toList(),
-                          // ),
-
-                          // DropdownButton<String>(
-                          //   value: dropdownValue,
-                          //   isExpanded: true,
-                          //   icon: const Icon(Icons.keyboard_arrow_down),
-                          //   iconSize: 24,
-                          //   elevation: 16,
-                          //   style: const TextStyle(color: Colors.deepPurple),
-                          //   underline: Container(
-                          //     height: 2,
-                          //     color: kAppColor,
-                          //   ),
-                          //   onChanged: (String? newValue) {
-                          //     setState(() {
-                          //       dropdownValue = newValue!;
-                          //     });
-                          //   },
-                          //   items: <String>[
-                          //     'Select Sport',
-                          //     'Cricket',
-                          //     'Football',
-                          //     'Badminton',
-                          //     'Tennis'
-                          //   ].map<DropdownMenuItem<String>>((String value) {
-                          //     return DropdownMenuItem<String>(
-                          //       value: value,
-                          //       child: Text(value),
-                          //     );
-                          //   }).toList(),
-                          // ),
-
-                          // FutureBuilder<List<LookingFor>>(
-                          //     future: getLookingFor(),
-                          //     builder: (context, snapshot) {
-                          //       final data = snapshot.data;
-                          //       switch (snapshot.connectionState) {
-                          //         case ConnectionState.waiting:
-                          //           return CircularProgressIndicator();
-                          //         default:
-                          //           if (snapshot.hasError) {
-                          //             return Text("Some Error");
-                          //           } else {
-                          //             return buildData(data!);
-                          //           }
-                          //       }
-                          //       return buildData(data!);
-                          //     }),
-                          // FutureBuilder<dynamic>(
-                          //     future: getLookingFor(),
-                          //     builder: (BuildContext context,
-                          //         AsyncSnapshot<dynamic> snapshot) {
-                          //       if (snapshot.hasData) {
-                          //         print(snapshot.data!.lookingFor!.length);
-                          //         return DropdownButton<dynamic>(
-                          //           value: selectedLK,
-                          //           hint: Text("Select Looking For"),
-                          //           onChanged: (value) {
-                          //             selectedLK = value;
-                          //           },
-                          //           items: snapshot.data!.lookingFor
-                          //               .map(
-                          //                 (lk) => DropdownMenuItem<dynamic>(
-                          //                   child: Text(lk.lookingFor!),
-                          //                   value: lk.lookingForValue,
-                          //                 ),
-                          //               )
-                          //               .toList(),
-                          //         );
-                          //       } else {
-                          //         return Text("No Data");
-                          //       }
-                          //     }),
-
-                          // DropdownButton(
-                          //   value: lookingForValue,
-                          //   hint: Text("Select Looking For"),
-                          //   onChanged: (value) {
-                          //     lookingForValue = value.toString();
-                          //   },
-                          //   items: looks
-                          //       .map(
-                          //         (map) => DropdownMenuItem(
-                          //           child: Text(map.lookingFor!),
-                          //           value: map.lookingForValue,
-                          //         ),
-                          //       )
-                          //       .toList(),
-                          // ),
-                          // SizedBox(height: k20Margin),
-                          // DropdownButton<String>(
-                          //   value: lookingForValue,
-                          //   isExpanded: true,
-                          //   icon: const Icon(Icons.keyboard_arrow_down),
-                          //   iconSize: 24,
-                          //   elevation: 16,
-                          //   style: const TextStyle(color: Colors.deepPurple),
-                          //   underline: Container(
-                          //     height: 2,
-                          //     color: kAppColor,
-                          //   ),
-                          //   onChanged: (String? newValue) {
-                          //     setState(() {
-                          //       lookingForValue = newValue!;
-                          //     });
-                          //   },
-                          //   items: <String>[
-                          //     'Looking For',
-                          //     'Opponent To Play',
-                          //     'Team to Join',
-                          //     'Player to Join',
-                          //     'Team Player to Join'
-                          //   ].map<DropdownMenuItem<String>>((String value) {
-                          //     return DropdownMenuItem<String>(
-                          //       value: value,
-                          //       child: Text(value),
-                          //     );
-                          //   }).toList(),
-                          // ),
-                          //SizedBox(height: k20Margin),
                           this.selectedSport != null
                               ? this.selectedSport!.sportName!.toLowerCase() ==
-                                          "cricket" ||
-                                      this
-                                              .selectedSport!
-                                              .sportName!
-                                              .toLowerCase() ==
-                                          "tennis"
-                                  ? TextField(
-                                      keyboardType: TextInputType.text,
-                                      onChanged: (value) {
-                                        ballType = value;
-                                      },
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                      ),
-                                      decoration: InputDecoration(
-                                          labelText: "Ball Type",
-                                          labelStyle: TextStyle(
-                                            color: Colors.grey,
-                                          )),
-                                    )
+                                      "cricket"
+                                  ? buildBallTypeData()
+                                  // ? TextField(
+                                  //     keyboardType: TextInputType.text,
+                                  //     onChanged: (value) {
+                                  //       ballType = value;
+                                  //     },
+                                  //     style: TextStyle(
+                                  //       color: Colors.black,
+                                  //     ),
+                                  //     decoration: InputDecoration(
+                                  //         labelText: "Ball Type",
+                                  //         labelStyle: TextStyle(
+                                  //           color: Colors.grey,
+                                  //         )),
+                                  //   )
                                   : SizedBox(width: 1.0)
                               : SizedBox(width: 1.0),
 
-                          SizedBox(height: k20Margin),
                           TextField(
                             keyboardType: TextInputType.text,
                             onChanged: (value) {
@@ -544,28 +344,60 @@ class _AddHostState extends State<AddHost> {
                                   color: Colors.grey,
                                 )),
                           ),
-                          SizedBox(height: k20Margin),
-
-                          RoundedButton(
-                            title: txtDate,
-                            color: Colors.white,
-                            txtColor: kBaseColor,
-                            minWidth: MediaQuery.of(context).size.width,
-                            onPressed: () async {
+                          SizedBox(height: kMargin),
+                          TextField(
+                            controller: txtDateController,
+                            readOnly: true,
+                            keyboardType: TextInputType.text,
+                            onTap: () async {
                               pickDate(context);
                             },
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                            decoration: InputDecoration(
+                                labelText: "Select Date",
+                                labelStyle: TextStyle(
+                                  color: Colors.grey,
+                                )),
                           ),
-                          SizedBox(height: k20Margin),
-                          RoundedButton(
-                            title: txtTime,
-                            color: Colors.white,
-                            txtColor: kBaseColor,
-                            minWidth: MediaQuery.of(context).size.width,
-                            onPressed: () async {
+                          TextField(
+                            controller: txtTimeController,
+                            readOnly: true,
+                            keyboardType: TextInputType.text,
+                            onTap: () async {
                               pickTime(context);
                             },
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                            decoration: InputDecoration(
+                                labelText: "Select Time",
+                                labelStyle: TextStyle(
+                                  color: Colors.grey,
+                                )),
                           ),
                           SizedBox(height: k20Margin),
+                          // RoundedButton(
+                          //   title: txtDate,
+                          //   color: Colors.white,
+                          //   txtColor: kBaseColor,
+                          //   minWidth: MediaQuery.of(context).size.width,
+                          //   onPressed: () async {
+                          //     pickDate(context);
+                          //   },
+                          // ),
+                          // SizedBox(height: k20Margin),
+                          // RoundedButton(
+                          //   title: txtTime,
+                          //   color: Colors.white,
+                          //   txtColor: kBaseColor,
+                          //   minWidth: MediaQuery.of(context).size.width,
+                          //   onPressed: () async {
+                          //     pickTime(context);
+                          //   },
+                          // ),
+                          //
 //                     TextField(
 //                       onTap: () {
 //                         print("Date is tap");
@@ -604,8 +436,46 @@ class _AddHostState extends State<AddHost> {
                             txtColor: Colors.white,
                             minWidth: MediaQuery.of(context).size.width,
                             onPressed: () async {
-                              // print(this._selectedLK!.lookingForValue!);
-                              // print(this.selectedSport!.sportName!);
+                              if (this.selectedSport == null) {
+                                Utility.showToast("Please Select Sport");
+                                return;
+                              }
+
+                              if (this._selectedLK == null) {
+                                Utility.showToast("Please Select Looking For");
+                                return;
+                              }
+                              if (this
+                                      .selectedSport!
+                                      .sportName!
+                                      .toLowerCase() ==
+                                  "cricket") {
+                                if (ballType == null) {
+                                  Utility.showToast("Please Select Ball Type");
+                                  return;
+                                }
+                              } else {
+                                if (ballType == null) {
+                                  ballType = "";
+                                }
+                              }
+
+                              if (area == null ||
+                                  area.toString().trim() == "") {
+                                Utility.showToast("Please Select Area");
+                                return;
+                              }
+
+                              if (date == null) {
+                                Utility.showToast("Please Select Date");
+                                return;
+                              }
+                              if (time == null) {
+                                Utility.showToast("Please Select Time");
+                                return;
+                              }
+
+                              Utility.showToast("CREATE ACTIVITY");
                               SharedPreferences prefs =
                                   await SharedPreferences.getInstance();
                               playerId = prefs.get("playerId");
@@ -622,10 +492,6 @@ class _AddHostState extends State<AddHost> {
                               timing = txtTime;
                               createdAt = Utility.getCurrentDate();
 
-                              if (ballType == null) {
-                                ballType = "";
-                              }
-
                               activity = new Activity();
                               activity!.sportId = sportId.toString();
                               activity!.sportName = sportName;
@@ -640,8 +506,8 @@ class _AddHostState extends State<AddHost> {
                               activity!.playerName = playerName;
                               activity!.locationId = locationId.toString();
                               activity!.createdAt = createdAt;
-
-                              addHostActivity(activity!);
+                              _onLoading();
+                              //addHostActivity(activity!);
                             },
                           ),
                         ],
@@ -704,6 +570,7 @@ class _AddHostState extends State<AddHost> {
       } else {
         txtDate = "${date!.day}-${date!.month}-${date!.year}";
       }
+      txtDateController.text = txtDate;
     });
   }
 
@@ -724,20 +591,46 @@ class _AddHostState extends State<AddHost> {
       } else {
         txtTime = "${time!.hour}:${time!.minute}";
       }
+      txtTimeController.text = txtTime;
     });
   }
 
-  addHostActivity(Activity activity) async {
+  void _onLoading() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: new Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              new CircularProgressIndicator(),
+              new Text("Loading"),
+            ],
+          ),
+        );
+      },
+    );
+    addHostActivity();
+    // new Future.delayed(new Duration(seconds: 3), () {
+    //   Navigator.pop(context); //pop dialog
+    // });
+  }
+
+  addHostActivity() async {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      HostActivity hostActivity = await apiCall.addHostActivity(activity);
-
+      HostActivity hostActivity = await apiCall.addHostActivity(activity!);
+      Navigator.pop(context);
       if (hostActivity.status!) {
         print(hostActivity.message!);
+
+        Utility.showToast(hostActivity.message!);
         Navigator.pop(context);
       } else {
         print(hostActivity.message!);
+        Utility.showToast(hostActivity.message!);
       }
     }
   }
@@ -770,159 +663,187 @@ class _AddHostState extends State<AddHost> {
   }
 
   hostActivityItem(dynamic activity) {
-    return Container(
-      margin: EdgeInsets.all(10.0),
-      decoration: kContainerBoxDecoration,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                flex: 4,
-                child: Container(
-                  margin: EdgeInsets.all(10.0),
-                  height: 65.0,
-                  width: 65.0,
-                  child: playerImage == null
-                      ? FlutterLogo()
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(25.0),
-                          child: Image.network(
-                            APIResources.IMAGE_URL + playerImage,
-                          ),
-                        ),
+    return GestureDetector(
+      onTap: () {
+        Utility.showToast("Show Details");
+      },
+      child: Container(
+        margin: EdgeInsets.all(10.0),
+        decoration: kContainerBoxDecoration,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            GestureDetector(
+              onTap: () {
+                Utility.showToast("Show More");
+                showPopup();
+              },
+              child: Container(
+                child: Icon(
+                  Icons.more_horiz,
+                  color: kBaseColor,
+                  size: 20.0,
                 ),
-              ),
-              Expanded(
-                flex: 6,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 10.0),
-                    Text(
-                      activity.playerName,
-                      style: TextStyle(
-                        color: kBaseColor,
-                        fontSize: 16.0,
-                      ),
-                    ),
-                    SizedBox(height: 10.0),
-                    Text(
-                      "Looking For: ${activity.lookingFor}",
-                      style: TextStyle(
-                        color: Colors.grey.shade900,
-                        fontSize: 12.0,
-                      ),
-                    ),
-                    SizedBox(height: 5.0),
-                    Text(
-                      "Location: ${activity.area}",
-                      style: TextStyle(
-                        color: Colors.grey.shade900,
-                        fontSize: 12.0,
-                      ),
-                    ),
-                    SizedBox(height: 5.0),
-                    Text(
-                      "Time: ${activity.timing}",
-                      style: TextStyle(
-                        color: Colors.grey.shade900,
-                        fontSize: 12.0,
-                      ),
-                    ),
-                    SizedBox(height: 5.0),
-                    Text(
-                      "Date: ${activity.startDate}",
-                      style: TextStyle(
-                        color: Colors.grey.shade900,
-                        fontSize: 12.0,
-                      ),
-                    ),
-                    SizedBox(height: 5.0),
-                    Text(
-                      activity.ballType != null
-                          ? "Ball Type: ${activity.ballType} "
-                          : "",
-                      style: TextStyle(
-                        color: Colors.grey.shade900,
-                        fontSize: 12.0,
-                      ),
-                    ),
-                    SizedBox(height: 5.0),
-                  ],
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  //Utility.showToast("Hello");
-                  //showPopup();
-                },
-                child: Expanded(
-                  flex: 1,
-                  child: Container(
-                    // child: ListTile(
-                    //   trailing: PopupMenuButton(
-                    //     itemBuilder: (context) {
-                    //       return [
-                    //         PopupMenuItem(
-                    //           value: 'edit',
-                    //           child: Text('Edit'),
-                    //         ),
-                    //         PopupMenuItem(
-                    //           value: 'delete',
-                    //           child: Text('Delete'),
-                    //         )
-                    //       ];
-                    //     },
-                    //     onSelected: (value) {},
-                    //   ),
-                    // ),
-                    child: Icon(
-                      Icons.more_horiz,
-                      color: kBaseColor,
-                      size: 20.0,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Container(
-            decoration: BoxDecoration(
-                color: kBaseColor,
-                borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(10.0),
-                  topLeft: Radius.circular(10.0),
-                )),
-            width: 100,
-            height: 35,
-            child: Center(
-              child: Text(
-                activity.sportName,
-                style: TextStyle(color: Colors.white, fontSize: 14.0),
               ),
             ),
-          ),
-        ],
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Expanded(
+                  flex: 4,
+                  child: Container(
+                    margin: EdgeInsets.all(10.0),
+                    height: 65.0,
+                    width: 65.0,
+                    child: playerImage == null
+                        ? FlutterLogo()
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(25.0),
+                            child: Image.network(
+                              APIResources.IMAGE_URL + playerImage,
+                            ),
+                          ),
+                  ),
+                ),
+                Expanded(
+                  flex: 6,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 10.0),
+                      Text(
+                        activity.playerName,
+                        style: TextStyle(
+                          color: kBaseColor,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      SizedBox(height: 10.0),
+                      Text(
+                        "Looking For: ${activity.lookingFor}",
+                        style: TextStyle(
+                          color: Colors.grey.shade900,
+                          fontSize: 12.0,
+                        ),
+                      ),
+                      SizedBox(height: 5.0),
+                      Text(
+                        "Location: ${activity.area}",
+                        style: TextStyle(
+                          color: Colors.grey.shade900,
+                          fontSize: 12.0,
+                        ),
+                      ),
+                      SizedBox(height: 5.0),
+                      Text(
+                        "Time: ${activity.timing}",
+                        style: TextStyle(
+                          color: Colors.grey.shade900,
+                          fontSize: 12.0,
+                        ),
+                      ),
+                      SizedBox(height: 5.0),
+                      Text(
+                        "Date: ${activity.startDate}",
+                        style: TextStyle(
+                          color: Colors.grey.shade900,
+                          fontSize: 12.0,
+                        ),
+                      ),
+                      SizedBox(height: 5.0),
+                      Text(
+                        activity.ballType != null
+                            ? "Ball Type: ${activity.ballType} "
+                            : "",
+                        style: TextStyle(
+                          color: Colors.grey.shade900,
+                          fontSize: 12.0,
+                        ),
+                      ),
+                      SizedBox(height: 5.0),
+                    ],
+                  ),
+                ),
+                // GestureDetector(
+                //   onTap: () {
+                //     //Utility.showToast("Hello");
+                //     //showPopup();
+                //   },
+                //   child: Expanded(
+                //     flex: 1,
+                //     child: Container(
+                //       child: Icon(
+                //         Icons.more_horiz,
+                //         color: kBaseColor,
+                //         size: 20.0,
+                //       ),
+                //     ),
+                //   ),
+                // ),
+              ],
+            ),
+            Container(
+              decoration: BoxDecoration(
+                  color: kBaseColor,
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(10.0),
+                    topLeft: Radius.circular(10.0),
+                  )),
+              width: 100,
+              height: 35,
+              child: Center(
+                child: Text(
+                  activity.sportName,
+                  style: TextStyle(color: Colors.white, fontSize: 14.0),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   showPopup() {
-    return [
-      PopupMenuItem(
-        value: 'edit',
-        child: Text('Edit'),
-      ),
-      PopupMenuItem(
-        value: 'delete',
-        child: Text('Delete'),
-      )
-    ];
+    PopupMenuButton(
+      itemBuilder: (context) {
+        return [
+          PopupMenuItem(
+            value: 'edit',
+            child: Text('Edit'),
+          ),
+          PopupMenuItem(
+            value: 'delete',
+            child: Text('Delete'),
+          )
+        ];
+      },
+      onSelected: (String value) {
+        print('You Click on po up menu item');
+      },
+    );
+    // showDialog(
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       return SimpleDialog(
+    //         title: Text("This is title"),
+    //         children: [
+    //           Container(
+    //             width: 100,
+    //             height: 100,
+    //             color: Colors.red,
+    //             child: Center(
+    //               child: Text(
+    //                 "Dialog",
+    //                 style: TextStyle(color: Colors.white),
+    //               ),
+    //             ),
+    //           ),
+    //         ],
+    //       );
+    //     });
   }
 
 //   Widget stackExample() {

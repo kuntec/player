@@ -182,6 +182,22 @@ final kContainerBoxDecoration = BoxDecoration(
   ],
 );
 
+final kBoxDecor = BoxDecoration(
+  color: Colors.white,
+  borderRadius: BorderRadius.circular(5.0),
+  border: Border.all(
+    color: Colors.grey,
+    width: 0.5,
+  ),
+  boxShadow: [
+    BoxShadow(
+      color: Colors.black12,
+      offset: Offset(0, 2),
+      blurRadius: 6.0,
+    ),
+  ],
+);
+
 final kContainerBox = BoxDecoration(
   color: Colors.white,
   borderRadius: BorderRadius.circular(15.0),

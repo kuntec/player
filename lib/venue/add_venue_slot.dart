@@ -7,7 +7,7 @@ import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/timeslot_data.dart';
-import 'package:player/screens/add_venue_photos.dart';
+import 'package:player/venue/add_venue_photos.dart';
 
 class AddVenueSlot extends StatefulWidget {
   dynamic venue;

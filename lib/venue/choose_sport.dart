@@ -3,30 +3,35 @@ import 'package:player/api/api_call.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
-import 'package:player/model/player_data.dart';
 import 'package:player/model/sport_data.dart';
+import 'package:player/screens/add_tournament.dart';
 import 'package:player/screens/home.dart';
 import 'package:player/screens/main_navigation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:developer';
 
-// Only One Sport selection
-
-class SportSelect extends StatefulWidget {
-  dynamic player;
-  SportSelect({required this.player});
+class ChooseSport extends StatefulWidget {
+  dynamic selectedSport;
+  ChooseSport({this.selectedSport});
 
   @override
-  _SportSelectState createState() => _SportSelectState();
+  _ChooseSportState createState() => _ChooseSportState();
 }
 
-class _SportSelectState extends State<SportSelect> {
+class _ChooseSportState extends State<ChooseSport> {
   bool? checked = false;
   int? playerId;
+  var sport;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    sport = widget.selectedSport;
+    if (sport != null) {
+      currentSelectedSport = sport.id;
+      selectedSportName = sport.sportName;
+    }
+
+    setState(() {});
     // SharedPreferences prefs = await SharedPreferences.getInstance();
     // playerId = prefs.getInt('playerId');
     // print("Playerid " + playerId.toString());
@@ -36,14 +41,20 @@ class _SportSelectState extends State<SportSelect> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomSheet: GestureDetector(
-        onTap: () async {
-          log(selectedList.toString());
-//          print(selectedList);
-          await this.addSport();
-          // APICall apiCall = new APICall();
-          // var response = await apiCall.addPlayerSport(
-          //     widget.player!.id, selectedList.toString());
-          // log("Response Sport Select =  $response");
+        onTap: () {
+          if (currentSelectedSport == null) {
+            print("Not selected");
+          } else {
+            print(currentSelectedSport);
+          }
+          Navigator.pop(context, sport);
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (context) => AddTournament(
+          //               selectedSport: currentSelectedSport,
+          //               sportName: selectedSportName,
+          //             )));
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -62,15 +73,15 @@ class _SportSelectState extends State<SportSelect> {
         ),
       ),
       appBar: AppBar(
-        title: Center(child: Text("Sport Selection")),
-        // leading: GestureDetector(
-        //     onTap: () {
-        //       Navigator.pop(context);
-        //     },
-        //     child: Icon(
-        //       Icons.arrow_back_ios,
-        //       color: kBaseColor,
-        //     )),
+        title: Center(child: Text("Venue Sport")),
+        leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: kBaseColor,
+            )),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -142,25 +153,18 @@ class _SportSelectState extends State<SportSelect> {
     return data;
   }
 
+  var _value = true;
   var currentSelectedSport;
-  var selectedList = [];
+  var selectedSportName;
 
   sportItem(dynamic data) {
     return GestureDetector(
       onTap: () {
-        print("${data.id}");
+        sport = data;
+        // print("${data.id}");
+
         currentSelectedSport = data.id;
-
-        for (int i = 0; i < selectedList.length; i++) {
-          if (selectedList[i] == currentSelectedSport) {
-            print("Found double");
-            selectedList.remove(currentSelectedSport);
-            setState(() {});
-            return;
-          } else {}
-        }
-        selectedList.add(currentSelectedSport);
-
+        selectedSportName = data.sportName;
         setState(() {});
       },
       child: Container(
@@ -168,9 +172,7 @@ class _SportSelectState extends State<SportSelect> {
         width: 130,
         height: 130,
         decoration: kContainerBox.copyWith(
-            color: selectedList.any((element) => element == data.id)
-                ? kBaseColor
-                : Colors.white),
+            color: currentSelectedSport == data.id ? kBaseColor : Colors.white),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -183,7 +185,7 @@ class _SportSelectState extends State<SportSelect> {
                       shape: BoxShape.circle, color: Colors.white),
                   child: Padding(
                       padding: const EdgeInsets.all(5.0),
-                      child: selectedList.any((element) => element == data.id)
+                      child: currentSelectedSport == data.id
                           ? Icon(
                               Icons.check,
                               size: 15.0,
@@ -204,7 +206,7 @@ class _SportSelectState extends State<SportSelect> {
               child: Text(
                 data.sportName,
                 style: TextStyle(
-                    color: selectedList.any((element) => element == data.id)
+                    color: currentSelectedSport == data.id
                         ? Colors.white
                         : kBaseColor,
                     fontSize: 18.0),
@@ -217,10 +219,8 @@ class _SportSelectState extends State<SportSelect> {
                   margin: EdgeInsets.all(10.0),
                   height: 50,
                   width: 50,
-                  child: Image.network(selectedList
-                          .any((element) => element == data.id)
-                      ? "https://www.iconbunny.com/icons/media/catalog/product/cache/2/thumbnail/600x/1b89f2fc96fc819c2a7e15c7e545e8a9/3/2/320.7-cricket-bat-and-ball-icon-iconbunny.jpg"
-                      : "http://simpleicon.com/wp-content/uploads/football.png"),
+                  child: Image.network(
+                      "http://simpleicon.com/wp-content/uploads/football.png"),
                 ),
               ],
             ),
@@ -228,65 +228,5 @@ class _SportSelectState extends State<SportSelect> {
         ),
       ),
     );
-  }
-
-  Future addSport() async {
-    APICall apiCall = new APICall();
-    bool connectivityStatus = await Utility.checkConnectivity();
-    log("Add player sport");
-    String sport_id = "";
-    selectedList.forEach((element) {
-      sport_id += element.toString() + ",";
-    });
-    if (sport_id.length > 0) {
-      sport_id = sport_id.substring(0, sport_id.length - 1);
-    }
-
-    if (connectivityStatus) {
-      log("connection yes ${widget.player!.id}");
-      log("connection yes ${sport_id}");
-
-      PlayerData playerData =
-          await apiCall.addPlayerSport(widget.player!.id.toString(), sport_id);
-      if (playerData.status!) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setBool("sportSelection", true);
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => MainNavigation()));
-      }
-
-      // PlayerData playerData =
-      //     await apiCall.addPlayer(name, phoneNumber, dob, gender);
-      // if (playerData.status!) {
-      //   showToast(playerData.message!);
-      //   // Go to Sport Selection
-      //   // (playerData.player != null) {
-      //   //   String userId = value.user!.uid;
-      //
-      //   if (playerData.player != null) {
-      //     int? playerId = playerData.player!.id;
-      //     String? playerName = playerData.player!.name;
-      //     String? locationId = playerData.player!.locationId;
-      //     String? playerImage = playerData.player!.image;
-      //
-      //     SharedPreferences prefs = await SharedPreferences.getInstance();
-      //     prefs.setInt("playerId", playerId!);
-      //     prefs.setString("playerName", playerName!);
-      //     //prefs.setString("playerImage", playerImage!);
-      //     //prefs.setString("locationId", locationId!);
-      //     prefs.setBool('isLogin', true);
-      //     Navigator.pushReplacement(
-      //         context,
-      //         MaterialPageRoute(
-      //             builder: (context) => SportSelect(
-      //                   playerId: playerId.toString(),
-      //                 )));
-      //   }
-      // } else {
-      //   showToast(playerData.message!);
-      // }
-    } else {
-      showToast(kInternet);
-    }
   }
 }

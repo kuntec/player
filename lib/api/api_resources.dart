@@ -1,6 +1,8 @@
 class APIResources {
   static final String BASE_URL = "https://lotussoft.in/player/api/";
   static final String IMAGE_URL = "https://lotussoft.in/player/storage/app/";
+  static final String AVATAR_IMAGE =
+      "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png";
 
   static final String GET_PLAYER = BASE_URL + "getPlayer";
   static final String ADD_PLAYER = BASE_URL + "addPlayer";
@@ -48,4 +50,8 @@ class APIResources {
   static final String GET_SERVICE_PHOTO = BASE_URL + "getServicePhoto";
   static final String ADD_SERVICE_PHOTO = BASE_URL + "addServicePhoto";
   static final String DELETE_SERVICE_PHOTO = BASE_URL + "deleteServicePhoto";
+
+  static final String ADD_DAY_SLOT = BASE_URL + "addDaySlot";
+  static final String GET_DAY_SLOT = BASE_URL + "getDaySlot";
+  static final String UPDATE_DAY_SLOT = BASE_URL + "updateDaySlot";
 }
