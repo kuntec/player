@@ -57,4 +57,6 @@ class APIResources {
 
   static final String GET_DAY_TIME_SLOT = BASE_URL + "getDayTimeSlot";
   static final String UPDATE_DAY_TIME_SLOT = BASE_URL + "updateDayTimeSlot";
+
+  static final String ADD_DAY_TIME_SLOT = BASE_URL + "addDayTimeSlot";
 }

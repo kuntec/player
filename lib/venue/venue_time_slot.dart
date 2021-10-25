@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/model/dayslot_data.dart';
 import 'package:player/model/timeslot_data.dart';
 
 class VenueTimeSlot extends StatefulWidget {
@@ -16,11 +17,23 @@ class VenueTimeSlot extends StatefulWidget {
 
 class _VenueTimeSlotState extends State<VenueTimeSlot> {
   List<Timeslot>? timeslots;
+  List<DaySlot>? dayslots;
 
+  List<Timeslot>? selectedTimeslots = [];
+  var selectedDay;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    dayslots = widget.dayslots;
+    for (var d in dayslots!) {
+      // print("Day ${d.day} - ${d.status}");
+      if (d.status == "1") {
+        int day = int.parse(d.day.toString());
+        selectedDay = day;
+        break;
+      }
+    }
     getTimeSlots();
   }
 
@@ -35,6 +48,7 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
           GestureDetector(
             onTap: () {
               Utility.showToast("SAVE");
+              Navigator.pop(context);
               // for (var t in timeslots!) {
               //   t.price = "0";
               //   t.noSlot = "0";
@@ -56,8 +70,92 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
         child: Container(
           child: Column(
             children: [
-              timeslots != null ? buildTimeSlot2() : Container(),
+              dayslots != null ? dayBar() : SizedBox(height: 10.0),
+              selectedTimeslots != null ? buildTimeSlot2() : Container(),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  dayBar() {
+    return Container(
+      height: 40,
+      margin: EdgeInsets.all(10.0),
+      padding: EdgeInsets.all(3.0),
+      decoration: kBoxDecor,
+      child: Row(
+        children: [
+          dayslots!
+                  .any((element) => element.day == "0" && element.status == "1")
+              ? dayItem("Sun", 0)
+              : Container(),
+          dayslots!
+                  .any((element) => element.day == "1" && element.status == "1")
+              ? dayItem("Mon", 1)
+              : Container(),
+          dayslots!
+                  .any((element) => element.day == "2" && element.status == "1")
+              ? dayItem("Tue", 2)
+              : Container(),
+          dayslots!
+                  .any((element) => element.day == "3" && element.status == "1")
+              ? dayItem("Wed", 3)
+              : Container(),
+          dayslots!
+                  .any((element) => element.day == "4" && element.status == "1")
+              ? dayItem("Thu", 4)
+              : Container(),
+          dayslots!
+                  .any((element) => element.day == "5" && element.status == "1")
+              ? dayItem("Fri", 5)
+              : Container(),
+          dayslots!
+                  .any((element) => element.day == "6" && element.status == "1")
+              ? dayItem("Sat", 6)
+              : Container(),
+          // dayItem("Mon", 1),
+          // dayItem("Tue", 2),
+          // dayItem("Wed", 3),
+          // dayItem("Thu", 4),
+          // dayItem("Fri", 5),
+          // dayItem("Sat", 6),
+        ],
+      ),
+    );
+  }
+
+  dayItem(String name, int id) {
+    return Expanded(
+      flex: 1,
+      child: GestureDetector(
+        onTap: () {
+          selectedDay = id;
+          if (selectedTimeslots != null) {
+            selectedTimeslots!.clear();
+            for (var t in timeslots!) {
+              int day = int.parse(t.day.toString());
+              if (day == selectedDay) {
+                selectedTimeslots!.add(t);
+              }
+            }
+          }
+          // Utility.showToast("Selected Time slot length ${selectedTimeslots!.length}");
+          //  Utility.showToast("Selected Day $selectedDay");
+
+          setState(() {});
+        },
+        child: Container(
+          color: selectedDay == id ? kBaseColor : Colors.white,
+          padding: EdgeInsets.all(5.0),
+          child: Center(
+            child: Text(
+              name,
+              style: TextStyle(
+                  color: selectedDay == id ? Colors.white : Colors.black,
+                  fontSize: 16.0),
+            ),
           ),
         ),
       ),
@@ -68,11 +166,11 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
     return Container(
       height: MediaQuery.of(context).size.height,
       child: GridView.builder(
-          itemCount: timeslots!.length,
+          itemCount: selectedTimeslots!.length,
           gridDelegate:
               SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
           itemBuilder: (context, index) {
-            return slotItem(timeslots![index], index);
+            return slotItem(selectedTimeslots![index], index);
           }),
     );
   }
@@ -126,6 +224,19 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
               isFirstEntry = false;
             }
           }
+
+          if (selectedTimeslots != null) {
+            selectedTimeslots!.clear();
+            for (var t in timeslots!) {
+              int day = int.parse(t.day.toString());
+              if (day == selectedDay) {
+                selectedTimeslots!.add(t);
+              }
+            }
+          } else {
+            print("SELECTED Time Slot NULL");
+          }
+
           print("Time Slot ${timeslots!.length}");
         }
       }
@@ -155,14 +266,15 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
         decoration: kContainerBox.copyWith(color: Colors.white),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              margin: EdgeInsets.only(left: 10),
-              child: Text(
-                "${data.day}",
-                style: TextStyle(color: kBaseColor, fontSize: 18.0),
-              ),
-            ),
+            // Container(
+            //   margin: EdgeInsets.only(left: 10),
+            //   child: Text(
+            //     "${data.day}",
+            //     style: TextStyle(color: kBaseColor, fontSize: 18.0),
+            //   ),
+            // ),
             Container(
               margin: EdgeInsets.only(left: 10),
               child: Text(
@@ -192,12 +304,14 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
 
   void _showMaterialDialog(slot, index) async {
     bool isTextEnabled;
+    bool isStopBooking;
     if (slot.status == "1") {
       isTextEnabled = false;
+      isStopBooking = false;
     } else {
       isTextEnabled = true;
+      isStopBooking = true;
     }
-
     TextEditingController priceController = new TextEditingController();
     TextEditingController slotController = new TextEditingController();
     priceController.text = slot.price;
@@ -244,14 +358,26 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
                         ),
                       ],
                     ),
-                    CheckboxListTile(
-                        title: Text("Stop Booking"),
-                        value: isTextEnabled,
-                        onChanged: (value) {
-                          setState(() {
-                            isTextEnabled = value!;
-                          });
-                        }),
+                    !isFirstEntry
+                        ? CheckboxListTile(
+                            title: Text("Stop Booking"),
+                            value: isTextEnabled,
+                            onChanged: (value) {
+                              setState(() {
+                                isTextEnabled = value!;
+                              });
+                            })
+                        : SizedBox(height: 1.0),
+                    isTextEnabled
+                        ? CheckboxListTile(
+                            title: Text("Stop Booking For Entire Day "),
+                            value: isStopBooking,
+                            onChanged: (value) {
+                              setState(() {
+                                isStopBooking = value!;
+                              });
+                            })
+                        : SizedBox(width: 10.0),
                   ],
                 ),
               ),
@@ -263,8 +389,15 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
                     child: Text('Close')),
                 TextButton(
                   onPressed: () {
-                    // Utility.showToast(
-                    //     "Price ${priceController.text}- Slot ${slotController.text} - id ${slot.id} - ${timeslots![index].price}");
+                    Utility.showToast(
+                        "index = $index Price ${priceController.text}- Slot ${slotController.text} - id ${slot.id} - ${timeslots![index].price}");
+
+                    for (var t in timeslots!) {
+                      if (slot.id == t.id) {
+                        print("Time slot ${t.price}");
+                      }
+                    }
+
                     if (isFirstEntry) {
                       for (var t in timeslots!) {
                         t.price = priceController.text;
@@ -274,9 +407,15 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
                       }
                       isFirstEntry = false;
                     } else {
-                      timeslots![index].noSlot = slotController.text;
-                      timeslots![index].price = priceController.text;
-                      updateTimeSlots(timeslots![index]);
+                      for (var t in timeslots!) {
+                        int id = int.parse(slot.id.toString());
+                        if (id == t.id) {
+                          t.noSlot = slotController.text;
+                          t.price = priceController.text;
+                          updateTimeSlots(t);
+                          print("Time slot ${t.price}");
+                        }
+                      }
                     }
 
                     _dismissDialog();

@@ -150,8 +150,15 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
                 txtColor: Colors.white,
                 minWidth: MediaQuery.of(context).size.width,
                 onPressed: () {
-                  //_onLoading();
-                  goToTimeSlot();
+                  _onLoading();
+                  // goToTimeSlot();
+                  // if (isAvailable!) {
+                  //   print("UPDATE");
+                  //   print("DAY SLOT FOUND $isAvailable");
+                  // } else {
+                  //   print("ADD");
+                  //   print("DAY SLOT NOT  $isAvailable");
+                  // }
                 },
               ),
             ],
@@ -177,13 +184,15 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
         );
       },
     );
-    isAvailable ? updateDaySlots() : addDaySlots();
+    isAvailable! ? updateDaySlots() : addDaySlots();
     // new Future.delayed(new Duration(seconds: 3), () {
     //   Navigator.pop(context); //pop dialog
     // });
   }
 
   addDaySlots() async {
+    print("ADD Day Slot");
+    //Navigator.pop(context);
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     DayslotData? dayslotData;
@@ -193,13 +202,11 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
           dayslots![i],
         );
       }
-//      HostActivity hostActivity = await apiCall.addHostActivity(activity!);
-      Navigator.pop(context);
+
       if (dayslotData != null) {
         if (dayslotData.status!) {
-          goToTimeSlot();
-          Utility.showToast("Success");
-//        Navigator.pop(context);
+          addDayTimeSlot();
+          Utility.showToast("Successfully Added");
         } else {
           Utility.showToast("Failed");
         }
@@ -208,6 +215,8 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
   }
 
   updateDaySlots() async {
+    print("Update Day Slot");
+    // Navigator.pop(context);
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     DayslotData? dayslotData;
@@ -217,13 +226,12 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
           dayslots![i],
         );
       }
-//      HostActivity hostActivity = await apiCall.addHostActivity(activity!);
+
       Navigator.pop(context);
       if (dayslotData != null) {
         if (dayslotData.status!) {
           goToTimeSlot();
-          Utility.showToast("Success");
-//        Navigator.pop(context);
+          Utility.showToast("Successfully Updated");
         } else {
           Utility.showToast("Failed");
         }
@@ -231,8 +239,28 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
     }
   }
 
+  addDayTimeSlot() async {
+    print("Adding day time slot");
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    DayslotData? dayslotData;
+    if (connectivityStatus) {
+      dayslotData = await apiCall.addDayTimeSlot(widget.venue.id.toString());
+
+      Navigator.pop(context);
+      if (dayslotData.status!) {
+        isAvailable = true;
+        goToTimeSlot();
+        Utility.showToast("Success");
+//        Navigator.pop(context);
+      } else {
+        Utility.showToast("Failed");
+      }
+    }
+  }
+
   goToTimeSlot() {
-    Navigator.push(
+    Navigator.pushReplacement(
         context,
         MaterialPageRoute(
             builder: (context) => VenueTimeSlot(
@@ -241,7 +269,7 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
                 )));
   }
 
-  bool isAvailable = false;
+  bool? isAvailable;
   getDaySlots() async {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
@@ -252,20 +280,10 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
         if (dayslotData.status!) {
           dayslots = dayslotData.daySlots!;
           isAvailable = true;
+          print("DAY SLOT FOUND $isAvailable");
           Utility.showToast("Success");
           setState(() {});
         } else {
-          // isAvailable = false;
-          // for (int i = 0; i < 7; i++) {
-          //   DaySlot d = new DaySlot();
-          //   d.venueId = widget.venue.id.toString();
-          //   d.day = i.toString();
-          //   d.status = "1";
-          //   d.open = "00:00";
-          //   d.close = "00:00";
-          //   d.createdAt = Utility.getCurrentDate();
-          //   dayslots!.add(d);
-          // }
           Utility.showToast("Failed");
         }
       } else {
