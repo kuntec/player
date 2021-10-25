@@ -518,4 +518,31 @@ class APICall {
     print("Response Body: " + response.body);
     return DayslotData.fromJson(jsonDecode(response.body));
   }
+
+  Future<TimeslotData> getDayTimeslot(String venueId) async {
+    Uri url = Uri.parse(APIResources.GET_DAY_TIME_SLOT);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['venue_id'] = venueId;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return TimeslotData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<TimeslotData> updateDayTimeslot(Timeslot timeslot) async {
+    Uri url = Uri.parse(APIResources.UPDATE_DAY_TIME_SLOT);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['id'] = timeslot.id.toString();
+    params['no_slot'] = timeslot.noSlot.toString();
+    params['price'] = timeslot.price.toString();
+    params['status'] = timeslot.status.toString();
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return TimeslotData.fromJson(jsonDecode(response.body));
+  }
 }

@@ -150,17 +150,8 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
                 txtColor: Colors.white,
                 minWidth: MediaQuery.of(context).size.width,
                 onPressed: () {
-                  _onLoading();
-                  // String s = "14:10";
-                  // TimeOfDay _startTime = TimeOfDay(
-                  //     hour: int.parse(s.split(":")[0]),
-                  //     minute: int.parse(s.split(":")[1]));
-                  // Utility.showToast("Hour ${_startTime.hour}");
-                  // Utility.showToast("Minute ${_startTime.minute}");
-                  // for (int i = 0; i < dayslots.length; i++) {
-                  //   print(
-                  //       "Open time: ${dayslots[i].open}  Close time: ${dayslots[i].close}");
-                  // }
+                  //_onLoading();
+                  goToTimeSlot();
                 },
               ),
             ],

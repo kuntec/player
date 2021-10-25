@@ -126,86 +126,178 @@ class TimeslotData {
 /// id : 4
 
 class Timeslot {
-  Timeslot({
-    String? day,
-    String? startTime,
-    String? endTime,
-    String? venueId,
-    String? noSlot,
-    String? price,
-    int? id,
-  }) {
-    _day = day;
-    _startTime = startTime;
-    _endTime = endTime;
-    _venueId = venueId;
-    _noSlot = noSlot;
-    _price = price;
-    _id = id;
-  }
-
-  Timeslot.fromJson(dynamic json) {
-    _day = json['day'];
-    _startTime = json['start_time'];
-    _endTime = json['end_time'];
-    _venueId = json['venue_id'];
-    _noSlot = json['no_slot'];
-    _price = json['price'];
-    _id = json['id'];
-  }
+  int? _id;
   String? _day;
   String? _startTime;
   String? _endTime;
+  String? _createdAt;
   String? _venueId;
   String? _noSlot;
   String? _price;
-  int? _id;
+  String? _status;
+  String? _daySlotId;
+  String? _remainingSlot;
 
-  String? get day => _day;
-  String? get startTime => _startTime;
-  String? get endTime => _endTime;
-  String? get venueId => _venueId;
-  String? get noSlot => _noSlot;
-  String? get price => _price;
+  Timeslot(
+      {int? id,
+      String? day,
+      String? startTime,
+      String? endTime,
+      String? createdAt,
+      String? venueId,
+      String? noSlot,
+      String? price,
+      String? status,
+      String? daySlotId,
+      String? remainingSlot}) {
+    this._id = id;
+    this._day = day;
+    this._startTime = startTime;
+    this._endTime = endTime;
+    this._createdAt = createdAt;
+    this._venueId = venueId;
+    this._noSlot = noSlot;
+    this._price = price;
+    this._status = status;
+    this._daySlotId = daySlotId;
+    this._remainingSlot = remainingSlot;
+  }
+
   int? get id => _id;
+  set id(int? id) => _id = id;
+  String? get day => _day;
+  set day(String? day) => _day = day;
+  String? get startTime => _startTime;
+  set startTime(String? startTime) => _startTime = startTime;
+  String? get endTime => _endTime;
+  set endTime(String? endTime) => _endTime = endTime;
+  String? get createdAt => _createdAt;
+  set createdAt(String? createdAt) => _createdAt = createdAt;
+  String? get venueId => _venueId;
+  set venueId(String? venueId) => _venueId = venueId;
+  String? get noSlot => _noSlot;
+  set noSlot(String? noSlot) => _noSlot = noSlot;
+  String? get price => _price;
+  set price(String? price) => _price = price;
+  String? get status => _status;
+  set status(String? status) => _status = status;
+  String? get daySlotId => _daySlotId;
+  set daySlotId(String? daySlotId) => _daySlotId = daySlotId;
+  String? get remainingSlot => _remainingSlot;
+  set remainingSlot(String? remainingSlot) => _remainingSlot = remainingSlot;
+
+  Timeslot.fromJson(Map<String, dynamic> json) {
+    _id = json['id'];
+    _day = json['day'];
+    _startTime = json['start_time'];
+    _endTime = json['end_time'];
+    _createdAt = json['created_at'];
+    _venueId = json['venue_id'];
+    _noSlot = json['no_slot'];
+    _price = json['price'];
+    _status = json['status'];
+    _daySlotId = json['day_slot_id'];
+    _remainingSlot = json['remaining_slot'];
+  }
 
   Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['day'] = _day;
-    map['start_time'] = _startTime;
-    map['end_time'] = _endTime;
-    map['venue_id'] = _venueId;
-    map['no_slot'] = _noSlot;
-    map['price'] = _price;
-    map['id'] = _id;
-    return map;
-  }
-
-  set id(int? value) {
-    _id = value;
-  }
-
-  set price(String? value) {
-    _price = value;
-  }
-
-  set noSlot(String? value) {
-    _noSlot = value;
-  }
-
-  set venueId(String? value) {
-    _venueId = value;
-  }
-
-  set endTime(String? value) {
-    _endTime = value;
-  }
-
-  set startTime(String? value) {
-    _startTime = value;
-  }
-
-  set day(String? value) {
-    _day = value;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this._id;
+    data['day'] = this._day;
+    data['start_time'] = this._startTime;
+    data['end_time'] = this._endTime;
+    data['created_at'] = this._createdAt;
+    data['venue_id'] = this._venueId;
+    data['no_slot'] = this._noSlot;
+    data['price'] = this._price;
+    data['status'] = this._status;
+    data['day_slot_id'] = this._daySlotId;
+    data['remaining_slot'] = this._remainingSlot;
+    return data;
   }
 }
+
+// class Timeslot {
+//   Timeslot({
+//     String? day,
+//     String? startTime,
+//     String? endTime,
+//     String? venueId,
+//     String? noSlot,
+//     String? price,
+//     int? id,
+//   }) {
+//     _day = day;
+//     _startTime = startTime;
+//     _endTime = endTime;
+//     _venueId = venueId;
+//     _noSlot = noSlot;
+//     _price = price;
+//     _id = id;
+//   }
+//
+//   Timeslot.fromJson(dynamic json) {
+//     _day = json['day'];
+//     _startTime = json['start_time'];
+//     _endTime = json['end_time'];
+//     _venueId = json['venue_id'];
+//     _noSlot = json['no_slot'];
+//     _price = json['price'];
+//     _id = json['id'];
+//   }
+//   String? _day;
+//   String? _startTime;
+//   String? _endTime;
+//   String? _venueId;
+//   String? _noSlot;
+//   String? _price;
+//   int? _id;
+//
+//   String? get day => _day;
+//   String? get startTime => _startTime;
+//   String? get endTime => _endTime;
+//   String? get venueId => _venueId;
+//   String? get noSlot => _noSlot;
+//   String? get price => _price;
+//   int? get id => _id;
+//
+//   Map<String, dynamic> toJson() {
+//     final map = <String, dynamic>{};
+//     map['day'] = _day;
+//     map['start_time'] = _startTime;
+//     map['end_time'] = _endTime;
+//     map['venue_id'] = _venueId;
+//     map['no_slot'] = _noSlot;
+//     map['price'] = _price;
+//     map['id'] = _id;
+//     return map;
+//   }
+//
+//   set id(int? value) {
+//     _id = value;
+//   }
+//
+//   set price(String? value) {
+//     _price = value;
+//   }
+//
+//   set noSlot(String? value) {
+//     _noSlot = value;
+//   }
+//
+//   set venueId(String? value) {
+//     _venueId = value;
+//   }
+//
+//   set endTime(String? value) {
+//     _endTime = value;
+//   }
+//
+//   set startTime(String? value) {
+//     _startTime = value;
+//   }
+//
+//   set day(String? value) {
+//     _day = value;
+//   }
+// }
