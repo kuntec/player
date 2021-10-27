@@ -25,7 +25,15 @@ class APIResources {
   static final String GET_TOURNAMENT = BASE_URL + "getTournament";
   static final String ADD_TOURNAMENT = BASE_URL + "addTournament";
   static final String UPDATE_TOURNAMENT = BASE_URL + "updateTournament";
+  static final String UPDATE_TOURNAMENT_IMAGE =
+      BASE_URL + "updateTournamentImage";
   static final String GET_MY_TOURNAMENT = BASE_URL + "getMyTournament";
+
+  static final String GET_EVENT = BASE_URL + "getEvent";
+  static final String ADD_EVENT = BASE_URL + "addEvent";
+  static final String UPDATE_EVENT = BASE_URL + "updateEvent";
+  static final String UPDATE_EVENT_IMAGE = BASE_URL + "updateEventImage";
+  static final String GET_MY_EVENT = BASE_URL + "getMyEvent";
 
   static final String GET_SERVICE = BASE_URL + "getService";
 

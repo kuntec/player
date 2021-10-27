@@ -19,7 +19,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Tournament")),
+        title: Center(child: Text("Payment")),
         leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
@@ -37,7 +37,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             children: [
               Text(
                 "Fill your details",
-                style: TextStyle(color: Colors.grey, fontSize: 18.0),
+                style: TextStyle(color: Colors.black87, fontSize: 18.0),
               ),
               SizedBox(height: kMargin),
               TextField(
@@ -67,51 +67,65 @@ class _PaymentScreenState extends State<PaymentScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Radio(
-                    value: "Male",
-                    groupValue: gender,
-                    onChanged: (value) {
-                      gender = value.toString();
-                      setState(() {});
-                    },
-                  ),
-                  SizedBox(width: 10.0),
-                  GestureDetector(
-                      onTap: () {
-                        gender = "Male";
+                  Expanded(
+                    flex: 10,
+                    child: Radio(
+                      value: "Male",
+                      groupValue: gender,
+                      onChanged: (value) {
+                        gender = value.toString();
                         setState(() {});
                       },
-                      child: Text("Male")),
-                  Radio(
-                    value: "Female",
-                    groupValue: gender,
-                    onChanged: (value) {
-                      gender = value.toString();
-                      setState(() {});
-                    },
+                    ),
                   ),
-                  SizedBox(width: 10.0),
-                  GestureDetector(
+                  Expanded(
+                    flex: 10,
+                    child: GestureDetector(
+                        onTap: () {
+                          gender = "Male";
+                          setState(() {});
+                        },
+                        child: Text("Male")),
+                  ),
+                  Expanded(
+                    flex: 10,
+                    child: Radio(
+                      value: "Female",
+                      groupValue: gender,
+                      onChanged: (value) {
+                        gender = value.toString();
+                        setState(() {});
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    flex: 10,
+                    child: GestureDetector(
                       onTap: () {
                         gender = "Female";
                         setState(() {});
                       },
-                      child: Text("Female")),
+                      child: Text("Female"),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    flex: 30,
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        age = value;
+                      },
+                      decoration: InputDecoration(
+                          labelText: "Age",
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                          )),
+                    ),
+                  ),
                 ],
               ),
-              SizedBox(height: kMargin),
-              TextField(
-                keyboardType: TextInputType.number,
-                onChanged: (value) {
-                  age = value;
-                },
-                decoration: InputDecoration(
-                    labelText: "Age",
-                    labelStyle: TextStyle(
-                      color: Colors.grey,
-                    )),
-              ),
-              SizedBox(height: kMargin),
+              SizedBox(height: k20Margin),
               Container(
                 margin: EdgeInsets.only(left: k20Margin, right: k20Margin),
                 child: RoundedButton(
@@ -119,7 +133,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   color: kBaseColor,
                   txtColor: Colors.white,
                   minWidth: MediaQuery.of(context).size.width,
-                  onPressed: () async {},
+                  onPressed: () async {
+                    print(
+                        "name $name, contact $number, gender $gender, age $age");
+                  },
                 ),
               ),
             ],

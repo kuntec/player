@@ -5,6 +5,7 @@ import 'package:player/api/api_resources.dart';
 import 'package:player/api/http_call.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/dayslot_data.dart';
+import 'package:player/model/event_data.dart';
 import 'package:player/model/host_activity.dart';
 import 'package:player/model/looking_for_data.dart';
 import 'package:player/model/my_sport.dart';
@@ -150,6 +151,8 @@ class APICall {
         "tournament_name": tournament.tournamentName,
         "start_date": tournament.startDate,
         "end_date": tournament.endDate,
+        "start_time": tournament.startTime,
+        "end_time": tournament.endTime,
         "entry_fees": tournament.entryFees,
         "timing": tournament.timing,
         "no_of_members": tournament.noOfMembers,
@@ -163,6 +166,10 @@ class APICall {
         "sport_id": tournament.sportId,
         "sport_name": tournament.sportName,
         "created_at": tournament.createdAt,
+        "ball_type": tournament.ballType,
+        "tournament_category": tournament.tournamentCategory,
+        "no_of_overs": tournament.noOfOvers,
+        "location_link": tournament.locationLink,
         "image": await MultipartFile.fromFile(filePath, filename: "tournament")
       });
 
@@ -556,5 +563,82 @@ class APICall {
     http.Response response = await call.post(url, header, params);
     print("Response Body: " + response.body);
     return DayslotData.fromJson(jsonDecode(response.body));
+  }
+
+  //Event API
+
+  Future<dynamic> addEvent(filePath, Event event) async {
+    try {
+      FormData formData = new FormData.fromMap({
+        "player_id": event.playerId,
+        "name": event.name,
+        "type": event.type,
+        "description": event.description,
+        "status": event.status,
+        "start_date": event.startDate,
+        "end_date": event.endDate,
+        "start_time": event.startTime,
+        "end_time": event.endTime,
+        "entry_fees": event.entryFees,
+        "members": event.members,
+        "address": event.address,
+        "location_id": event.locationId,
+        "location_link": event.locationLink,
+        "details": event.details,
+        "organizer_name": event.organizerName,
+        "number": event.number,
+        "secondary_number": event.secondaryNumber,
+        "created_at": event.createdAt,
+        "image": await MultipartFile.fromFile(filePath, filename: "event")
+      });
+
+      Response response = await Dio().post(
+        APIResources.ADD_EVENT,
+        data: formData,
+      );
+//      return response;
+      var responseBody = response.data;
+      print("Response Body ${responseBody['status']}");
+
+      // tournamentData =
+      //     TournamentData.fromJson(jsonDecode(responseBody.toString()));
+      //print("Response Body ${tournamentData.status}");
+      return responseBody['status'];
+    } on DioError catch (e) {
+      print("add tournament3");
+      return false;
+    } catch (e) {}
+  }
+
+  Future<EventData> getMyEvent(String playerId) async {
+    Uri url = Uri.parse(APIResources.GET_MY_EVENT);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['player_id'] = playerId;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return EventData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<EventData> getEvent(String locationId) async {
+    Uri url = Uri.parse(APIResources.GET_EVENT);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['location_id'] = locationId;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return EventData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<dynamic>? updateEvent() {
+    return null;
+  }
+
+  Future<dynamic>? updateEventImage() {
+    return null;
   }
 }

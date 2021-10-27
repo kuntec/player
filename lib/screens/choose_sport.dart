@@ -10,7 +10,8 @@ import 'package:player/screens/main_navigation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChooseSport extends StatefulWidget {
-  const ChooseSport({Key? key}) : super(key: key);
+  dynamic selectedSport;
+  ChooseSport({this.selectedSport});
 
   @override
   _ChooseSportState createState() => _ChooseSportState();
@@ -19,10 +20,18 @@ class ChooseSport extends StatefulWidget {
 class _ChooseSportState extends State<ChooseSport> {
   bool? checked = false;
   int? playerId;
+  var sport;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    sport = widget.selectedSport;
+    if (sport != null) {
+      currentSelectedSport = sport.id;
+      selectedSportName = sport.sportName;
+    }
+
+    setState(() {});
     // SharedPreferences prefs = await SharedPreferences.getInstance();
     // playerId = prefs.getInt('playerId');
     // print("Playerid " + playerId.toString());
@@ -38,13 +47,14 @@ class _ChooseSportState extends State<ChooseSport> {
           } else {
             print(currentSelectedSport);
           }
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => AddTournament(
-                        selectedSport: currentSelectedSport,
-                        sportName: selectedSportName,
-                      )));
+          Navigator.pop(context, sport);
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (context) => AddTournament(
+          //               selectedSport: currentSelectedSport,
+          //               sportName: selectedSportName,
+          //             )));
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -63,7 +73,7 @@ class _ChooseSportState extends State<ChooseSport> {
         ),
       ),
       appBar: AppBar(
-        title: Center(child: Text("Host Tournament")),
+        title: Center(child: Text("Venue Sport")),
         leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
@@ -73,26 +83,6 @@ class _ChooseSportState extends State<ChooseSport> {
               color: kBaseColor,
             )),
       ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   items: [
-      //     BottomNavigationBarItem(
-      //         icon: Icon(Icons.home),
-      //         label: "Home",
-      //         backgroundColor: Colors.blue),
-      //     BottomNavigationBarItem(
-      //         icon: Icon(Icons.home),
-      //         label: "Home",
-      //         backgroundColor: Colors.blue),
-      //     BottomNavigationBarItem(
-      //         icon: Icon(Icons.home),
-      //         label: "Home",
-      //         backgroundColor: Colors.blue),
-      //     BottomNavigationBarItem(
-      //         icon: Icon(Icons.home),
-      //         label: "Home",
-      //         backgroundColor: Colors.blue)
-      //   ],
-      // ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 0.0),
@@ -137,47 +127,6 @@ class _ChooseSportState extends State<ChooseSport> {
                   },
                 ),
               ),
-
-//              sportItem(),
-
-              // Container(
-              //   padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
-              //   child: Column(
-              //     children: [
-              //       TextField(
-              //         keyboardType: TextInputType.number,
-              //         onChanged: (value) {},
-              //         style: TextStyle(
-              //           color: Colors.black,
-              //         ),
-              //         decoration:
-              //             kTextFieldDecoration.copyWith(hintText: 'Search'),
-              //         cursorColor: kBaseColor,
-              //       ),
-              //       SizedBox(
-              //         height: k20Margin,
-              //       ),
-              //       CheckboxListTile(
-              //         value: checked,
-              //         title: Text("Cricket"),
-              //         onChanged: (value) {
-              //           setState(() {
-              //             checked = value;
-              //           });
-              //         },
-              //       ),
-              //       RoundedButton(
-              //         title: "CONTINUE",
-              //         color: kBaseColor,
-              //         txtColor: Colors.white,
-              //         minWidth: MediaQuery.of(context).size.width,
-              //         onPressed: () async {
-              //           goToHome();
-              //         },
-              //       ),
-              //     ],
-              //   ),
-              // ),
             ],
           ),
         ),
@@ -211,13 +160,9 @@ class _ChooseSportState extends State<ChooseSport> {
   sportItem(dynamic data) {
     return GestureDetector(
       onTap: () {
-        // if (_value) {
-        //   _value = false;
-        // } else {
-        //   _value = true;
-        // }
-        //setState(() {});
-        print("${data.id}");
+        sport = data;
+        // print("${data.id}");
+
         currentSelectedSport = data.id;
         selectedSportName = data.sportName;
         setState(() {});

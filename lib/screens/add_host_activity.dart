@@ -302,13 +302,10 @@ class _AddHostState extends State<AddHost> {
                           sports != null
                               ? buildSportData(sports!)
                               : Container(child: Text("Loading...")),
-
                           looks != null
                               ? buildData(looks!)
                               : Container(child: Text("Loading...")),
-
                           SizedBox(height: k20Margin),
-
                           this.selectedSport != null
                               ? this.selectedSport!.sportName!.toLowerCase() ==
                                       "cricket"
@@ -329,7 +326,6 @@ class _AddHostState extends State<AddHost> {
                                   //   )
                                   : SizedBox(width: 1.0)
                               : SizedBox(width: 1.0),
-
                           TextField(
                             keyboardType: TextInputType.text,
                             onChanged: (value) {
@@ -378,58 +374,6 @@ class _AddHostState extends State<AddHost> {
                                 )),
                           ),
                           SizedBox(height: k20Margin),
-                          // RoundedButton(
-                          //   title: txtDate,
-                          //   color: Colors.white,
-                          //   txtColor: kBaseColor,
-                          //   minWidth: MediaQuery.of(context).size.width,
-                          //   onPressed: () async {
-                          //     pickDate(context);
-                          //   },
-                          // ),
-                          // SizedBox(height: k20Margin),
-                          // RoundedButton(
-                          //   title: txtTime,
-                          //   color: Colors.white,
-                          //   txtColor: kBaseColor,
-                          //   minWidth: MediaQuery.of(context).size.width,
-                          //   onPressed: () async {
-                          //     pickTime(context);
-                          //   },
-                          // ),
-                          //
-//                     TextField(
-//                       onTap: () {
-//                         print("Date is tap");
-//                         pickDate(context);
-//                       },
-//                       keyboardType: TextInputType.text,
-//                       onChanged: (value) {},
-//                       style: TextStyle(
-//                         color: Colors.black,
-//                       ),
-//                       decoration:
-//                           kTextFieldDecoration.copyWith(hintText: 'DATE'),
-//                       cursorColor: kBaseColor,
-//                     ),
-//                     SizedBox(
-//                       height: k20Margin,
-//                     ),
-//                     TextField(
-//                       keyboardType: TextInputType.text,
-//                       onChanged: (value) {},
-//                       style: TextStyle(
-//                         color: Colors.black,
-//                       ),
-//                       decoration:
-//                           kTextFieldDecoration.copyWith(hintText: 'TIME'),
-//                       cursorColor: kBaseColor,
-//                     ),
-// //                    Text("Select Gender"),
-//                     SizedBox(
-//                       height: k20Margin,
-//                     ),
-
                           RoundedButton(
                             title: "CREATE ACTIVITY",
                             color: kBaseColor,

@@ -48,13 +48,6 @@ class _ChooseSportState extends State<ChooseSport> {
             print(currentSelectedSport);
           }
           Navigator.pop(context, sport);
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) => AddTournament(
-          //               selectedSport: currentSelectedSport,
-          //               sportName: selectedSportName,
-          //             )));
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -4,11 +4,14 @@ import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/event/event_screen.dart';
 import 'package:player/friends/chat_screen.dart';
 import 'package:player/friends/friend.dart';
 import 'package:player/model/host_activity.dart';
 import 'package:player/model/my_sport.dart';
+import 'package:player/model/sport_data.dart';
 import 'package:player/screens/add_host_activity.dart';
+import 'package:player/screens/add_tournament.dart';
 import 'package:player/screens/choose_sport.dart';
 import 'package:player/screens/location_select.dart';
 import 'package:player/screens/notification_screen.dart';
@@ -23,6 +26,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<Sports> sports = [];
+  List<Data> allSports = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getSports();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     builder: (context) => LocationSelectScreen()));
           },
           child: Text(
-            "Vadodara",
+            "Vadodara1",
             style: TextStyle(color: kBaseColor),
           ),
         ),
@@ -168,9 +179,12 @@ class _HomeScreenState extends State<HomeScreen> {
           iconCard(Icons.wine_bar, "Host Tournament", 3, tournamentEndColor,
               () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => ChooseSport()));
+                MaterialPageRoute(builder: (context) => AddTournament()));
           }),
-          iconCard(Icons.star, "Event", 4, eventEndColor, () {}),
+          iconCard(Icons.star, "Event", 4, eventEndColor, () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => EventScreen()));
+          }),
           iconCard(Icons.add, "Offers", 5, offerEndColor, () {}),
         ],
       ),
@@ -580,7 +594,48 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: () {
         print("Selected sport ${sport.sportId} ${sport.sportName} ");
-        selectedSportId = sport.sportId.toString();
+        if (sport.sportId == null) {
+          Utility.showToast("Other Selected");
+          sports.removeLast();
+
+          List<Sports> tempSports = sports;
+
+          Sports temp = new Sports();
+          for (Data s in allSports) {
+            String name = s.sportName.toString();
+            String sid = s.id.toString();
+            // print("My Sport $name - $sid");
+            temp.sportName = name;
+            temp.sportId = sid;
+            tempSports.add(temp);
+            print("all Sport ${s.sportName} - ${s.id}");
+            // for (Sports s2 in sports) {
+            //   int id = int.parse(s2.sportId!);
+            //   if (id == 0) {
+            //     continue;
+            //   } else {
+            //     if (id == s.id) {
+            //       print("found Sport ${s.sportName} - ${s.id}");
+            //     } else {
+            //       // print("My Sport ${s.sportName} - ${s.id}");
+            //
+            //       // String name = s.sportName.toString();
+            //       // String sid = s.id.toString();
+            //       // print("My Sport $name - $sid");
+            //       // temp.sportName = "test";
+            //       // temp.sportId = "9";
+            //       //tempSports.add(temp);
+            //     }
+            //   }
+            // }
+          }
+          for (var s2 in tempSports) {
+            print("Updated Sport ${s2.sportName} - ${s2.sportId}");
+          }
+        } else {
+          Utility.showToast("${sport.sportName} Selected");
+        }
+        // selectedSportId = sport.sportId.toString();
         // if (selectedSportId != "-1") {
         //   setState(() {});
         // } else {
@@ -637,14 +692,29 @@ class _HomeScreenState extends State<HomeScreen> {
         sports.clear();
         sports.add(s);
         sports.addAll(mySport.sports!);
-        // Sports s2 = new Sports();
-        // s2.sportName = "Others";
-        // s2.sportId = null;
-        // sports.add(s2);
+        Sports s2 = new Sports();
+        s2.sportName = "Others";
+        s2.sportId = null;
+        sports.add(s2);
 
-        print(sports);
+        //print(sports);
       }
     } else {}
     return sports;
+  }
+
+  Future<List<Data>> getSports() async {
+    APICall apiCall = new APICall();
+    List<Data> data = [];
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      SportData sportData = await apiCall.getSports();
+
+      if (sportData.data != null) {
+        data.addAll(sportData.data!);
+        allSports = data;
+      }
+    } else {}
+    return data;
   }
 }

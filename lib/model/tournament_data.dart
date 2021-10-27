@@ -234,6 +234,12 @@ class Tournament {
     String? sportId,
     String? SportName,
     String? createdAt,
+    String? startTime,
+    String? endTime,
+    String? ballType,
+    String? tournamentCategory,
+    String? noOfOvers,
+    String? locationLink,
     String? image,
     int? id,
   }) {
@@ -255,6 +261,14 @@ class Tournament {
     _sportId = sportId;
     _sportName = SportName;
     _createdAt = createdAt;
+
+    _startTime = startTime;
+    _endTime = endTime;
+    _ballType = ballType;
+    _tournamentCategory = tournamentCategory;
+    _noOfOvers = noOfOvers;
+    _locationLink = locationLink;
+
     _image = image;
     _id = id;
   }
@@ -278,6 +292,14 @@ class Tournament {
     _sportId = json['sport_id'];
     _sportName = json['sport_name'];
     _createdAt = json['created_at'];
+
+    _startTime = json['start_time'];
+    _endTime = json['end_time'];
+    _ballType = json['ball_type'];
+    _tournamentCategory = json['tournament_category'];
+    _noOfOvers = json['no_of_overs'];
+    _locationLink = json['location_link'];
+
     _image = json['image'];
     _id = json['id'];
   }
@@ -299,6 +321,14 @@ class Tournament {
   String? _sportId;
   String? _sportName;
   String? _createdAt;
+
+  String? _startTime;
+  String? _endTime;
+  String? _ballType;
+  String? _tournamentCategory;
+  String? _noOfOvers;
+  String? _locationLink;
+
   String? _image;
   int? _id;
 
@@ -320,6 +350,14 @@ class Tournament {
   String? get sportId => _sportId;
   String? get sportName => _sportName;
   String? get createdAt => _createdAt;
+
+  String? get startTime => _startTime;
+  String? get endTime => _endTime;
+  String? get ballType => _ballType;
+  String? get tournamentCategory => _tournamentCategory;
+  String? get noOfOvers => _noOfOvers;
+  String? get locationLink => _locationLink;
+
   String? get image => _image;
   int? get id => _id;
 
@@ -343,6 +381,14 @@ class Tournament {
     map['sport_id'] = _sportId;
     map['sport_name'] = _sportName;
     map['created_at'] = _createdAt;
+
+    map['start_time'] = _startTime;
+    map['end_time'] = _endTime;
+    map['ball_type'] = _ballType;
+    map['tournament_category'] = _tournamentCategory;
+    map['no_of_overs'] = _noOfOvers;
+    map['location_link'] = _locationLink;
+
     map['image'] = _image;
     map['id'] = _id;
     return map;
@@ -426,5 +472,29 @@ class Tournament {
 
   set sportName(String? value) {
     _sportName = value;
+  }
+
+  set noOfOvers(String? value) {
+    _noOfOvers = value;
+  }
+
+  set tournamentCategory(String? value) {
+    _tournamentCategory = value;
+  }
+
+  set ballType(String? value) {
+    _ballType = value;
+  }
+
+  set endTime(String? value) {
+    _endTime = value;
+  }
+
+  set startTime(String? value) {
+    _startTime = value;
+  }
+
+  set locationLink(String? value) {
+    _locationLink = value;
   }
 }

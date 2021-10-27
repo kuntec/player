@@ -7,6 +7,7 @@ import 'package:player/constant/utility.dart';
 import 'package:player/model/venue_data.dart';
 import 'package:player/venue/add_venue.dart';
 import 'package:player/screens/register_ground.dart';
+import 'package:player/venue/venue_register.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class VenueScreen extends StatefulWidget {
@@ -30,8 +31,10 @@ class _VenueScreenState extends State<VenueScreen> {
                 children: [
                   TextButton.icon(
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => AddVenue()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => VenueRegister()));
                     },
                     icon: Icon(
                       Icons.add,

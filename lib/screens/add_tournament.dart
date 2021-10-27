@@ -11,12 +11,13 @@ import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/tournament_data.dart';
 import 'package:player/screens/tournament_participants.dart';
+import 'package:player/venue/choose_sport.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddTournament extends StatefulWidget {
-  dynamic selectedSport;
-  dynamic sportName;
-  AddTournament({this.selectedSport, this.sportName});
+  // dynamic selectedSport;
+  // dynamic sportName;
+  // AddTournament({this.selectedSport, this.sportName});
 
   @override
   _AddTournamentState createState() => _AddTournamentState();
@@ -28,9 +29,9 @@ class _AddTournamentState extends State<AddTournament> {
   DateTime? endDate;
   TimeOfDay? time;
 
-  var txtStartDate = "Select Start Date";
-  var txtEndDate = "Select End Date";
-  var txtTime = "Select Time";
+  // var txtStartDate = "Select Start Date";
+  // var txtEndDate = "Select End Date";
+  // var txtTime = "Select Time";
 
   Tournament? tournament;
 
@@ -39,13 +40,21 @@ class _AddTournamentState extends State<AddTournament> {
   var tournamentName;
   var entryFees;
   var noOfMembers;
+  var noOfOvers;
   var ageLimit;
   var address;
+  var locationLink;
   var prizeDetails;
   var otherInfo;
 
-  var pickedFile;
-  var imageURL = '';
+  TextEditingController textSportController = new TextEditingController();
+  var selectedSport;
+  bool isCricket = false;
+
+  TextEditingController textStartDateController = new TextEditingController();
+  TextEditingController textEndDateController = new TextEditingController();
+  TextEditingController textStartTimeController = new TextEditingController();
+  TextEditingController textEndTimeController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -150,6 +159,65 @@ class _AddTournamentState extends State<AddTournament> {
 
   File? image;
 
+  String? ballTypeValue;
+  var ballTypes = ["Tennis", "Season", "Others"];
+
+  Widget buildBallTypeData() {
+    return DropdownButton(
+      value: ballTypeValue != null ? ballTypeValue : null,
+      hint: Text("Select Ball Type"),
+      isExpanded: true,
+      icon: const Icon(Icons.keyboard_arrow_down),
+      iconSize: 24,
+      elevation: 16,
+      style: const TextStyle(color: Colors.black),
+      underline: Container(
+        height: 2,
+        color: kBaseColor,
+      ),
+      onChanged: (String? newValue) {
+        setState(() {
+          ballTypeValue = newValue!;
+        });
+      },
+      items: ballTypes.map((String items) {
+        return DropdownMenuItem(value: items, child: Text(items));
+      }).toList(),
+    );
+  }
+
+  String? tournamentCategoryValue;
+  var tournamentCategories = [
+    "Tennis Cricket",
+    "Box Cricket",
+    "Season Cricket",
+    "Test Cricket"
+  ];
+
+  Widget buildTournamentCategory() {
+    return DropdownButton(
+      value: tournamentCategoryValue != null ? tournamentCategoryValue : null,
+      hint: Text("Select Tournament Category"),
+      isExpanded: true,
+      icon: const Icon(Icons.keyboard_arrow_down),
+      iconSize: 24,
+      elevation: 16,
+      style: const TextStyle(color: Colors.black),
+      underline: Container(
+        height: 2,
+        color: kBaseColor,
+      ),
+      onChanged: (String? newValue) {
+        setState(() {
+          tournamentCategoryValue = newValue!;
+        });
+      },
+      items: tournamentCategories.map((String items) {
+        return DropdownMenuItem(value: items, child: Text(items));
+      }).toList(),
+    );
+  }
+
   Widget addTournamentForm() {
     return Container(
       margin: EdgeInsets.all(10.0),
@@ -170,21 +238,6 @@ class _AddTournamentState extends State<AddTournament> {
                       fit: BoxFit.fill,
                     )
                   : FlutterLogo(size: 100),
-              // child: ClipRRect(
-              //   borderRadius: BorderRadius.circular(10.0),
-              //   child: CachedNetworkImage(
-              //     imageUrl: imageURL,
-              //     placeholder: (context, url) => Image(
-              //       image: AssetImage('assets/images/no_user.jpg'),
-              //     ),
-              //   ),
-              //   // child: Image(
-              //   //   image: AssetImage(
-              //   //     'assets/images/banner.jpg',
-              //   //   ),
-              //   //   width: MediaQuery.of(context).size.width,
-              //   // ),
-              // ),
             ),
           ),
           GestureDetector(
@@ -240,45 +293,45 @@ class _AddTournamentState extends State<AddTournament> {
             children: [
               Expanded(
                 flex: 1,
-                child: GestureDetector(
+                child: TextField(
+                  readOnly: true,
                   onTap: () {
                     pickDate(context, true);
                   },
-                  child: Text(
-                    txtStartDate,
-                  ),
+                  controller: textStartDateController,
+                  decoration: InputDecoration(
+                      labelText: "Start Date",
+                      labelStyle: TextStyle(
+                        color: Colors.grey,
+                      )),
                 ),
+                // child: GestureDetector(
+                //   onTap: () {
+                //     pickDate(context, true);
+                //   },
+                //   child: Text(
+                //     txtStartDate,
+                //   ),
+                // ),
               ),
               SizedBox(
                 width: 20.0,
               ),
               Expanded(
                 flex: 1,
-                child: GestureDetector(
+                child: TextField(
+                  readOnly: true,
                   onTap: () {
                     pickDate(context, false);
                   },
-                  child: Text(
-                    txtEndDate,
-                  ),
+                  controller: textEndDateController,
+                  decoration: InputDecoration(
+                      labelText: "End Date",
+                      labelStyle: TextStyle(
+                        color: Colors.grey,
+                      )),
                 ),
               ),
-              // Expanded(
-              //   flex: 1,
-              //   child: TextField(
-              //     onTap: () {
-              //       pickDate(context);
-              //     },
-              //     controller: txtEndDateController,
-              //     // enabled: false,
-              //     decoration: InputDecoration(
-              //         prefixIcon: Icon(Icons.calendar_today_outlined),
-              //         labelText: "End Date",
-              //         labelStyle: TextStyle(
-              //           color: Colors.grey,
-              //         )),
-              //   ),
-              // ),
             ],
           )),
           Container(
@@ -302,25 +355,37 @@ class _AddTournamentState extends State<AddTournament> {
                 ),
                 Expanded(
                   flex: 1,
-                  child: GestureDetector(
+                  child: TextField(
+                    readOnly: true,
                     onTap: () {
-                      pickTime(context);
+                      pickTime(context, true);
                     },
-                    child: Text(
-                      txtTime,
-                    ),
+                    controller: textStartTimeController,
+                    decoration: InputDecoration(
+                        labelText: "Start Time",
+                        labelStyle: TextStyle(
+                          color: Colors.grey,
+                        )),
                   ),
                 ),
-                // Expanded(
-                //   flex: 1,
-                //   child: TextField(
-                //     decoration: InputDecoration(
-                //         labelText: "Timing (From to To)",
-                //         labelStyle: TextStyle(
-                //           color: Colors.grey,
-                //         )),
-                //   ),
-                // ),
+                SizedBox(
+                  width: 20.0,
+                ),
+                Expanded(
+                  flex: 1,
+                  child: TextField(
+                    readOnly: true,
+                    onTap: () {
+                      pickTime(context, false);
+                    },
+                    controller: textEndTimeController,
+                    decoration: InputDecoration(
+                        labelText: "End Time",
+                        labelStyle: TextStyle(
+                          color: Colors.grey,
+                        )),
+                  ),
+                ),
               ],
             ),
           ),
@@ -356,6 +421,16 @@ class _AddTournamentState extends State<AddTournament> {
           ),
           TextField(
             onChanged: (value) {
+              locationLink = value;
+            },
+            decoration: InputDecoration(
+                labelText: "Location Link",
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                )),
+          ),
+          TextField(
+            onChanged: (value) {
               prizeDetails = value;
             },
             decoration: InputDecoration(
@@ -374,6 +449,53 @@ class _AddTournamentState extends State<AddTournament> {
                   color: Colors.grey,
                 )),
           ),
+          TextField(
+            controller: textSportController,
+            readOnly: true,
+            onTap: () async {
+              final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ChooseSport(
+                            selectedSport: selectedSport,
+                          )));
+
+              selectedSport = result;
+
+              textSportController.text = selectedSport.sportName;
+
+              if (selectedSport.sportName.toString().toLowerCase() ==
+                  "cricket") {
+                Utility.showToast(
+                    "This is selected ${selectedSport.sportName} ${selectedSport.id}");
+                isCricket = true;
+              } else {
+                isCricket = false;
+              }
+              setState(() {});
+            },
+            decoration: InputDecoration(
+                labelText: "Select Sport",
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                )),
+          ),
+          SizedBox(height: 10.0),
+          isCricket ? buildBallTypeData() : SizedBox(height: 1.0),
+          SizedBox(height: 10.0),
+          isCricket ? buildTournamentCategory() : SizedBox(height: 1.0),
+          isCricket
+              ? TextField(
+                  onChanged: (value) {
+                    noOfOvers = value;
+                  },
+                  decoration: InputDecoration(
+                      labelText: "Number of Overs",
+                      labelStyle: TextStyle(
+                        color: Colors.grey,
+                      )),
+                )
+              : SizedBox(height: 1.0),
           SizedBox(height: k20Margin),
           RoundedButton(
             title: "Create Tournament",
@@ -383,19 +505,29 @@ class _AddTournamentState extends State<AddTournament> {
             onPressed: () async {
               SharedPreferences prefs = await SharedPreferences.getInstance();
               var playerId = prefs.get("playerId");
+              if (ballTypeValue == null) {
+                ballTypeValue = "";
+              }
+              if (tournamentCategoryValue == null) {
+                tournamentCategoryValue = "";
+              }
+              if (noOfOvers == null) {
+                noOfOvers = "";
+              }
+              if (locationLink == null) {
+                locationLink = "";
+              }
+
               tournament = new Tournament();
-              // print("Organizer Name ${organizerName.toString()}");
-              // print("Start Date ${txtStartDate.toString()}");
-              // print("end Date ${txtEndDate.toString()}");
-              // print("Time ${txtTime.toString()}");
               tournament!.playerId = playerId!.toString();
               tournament!.organizerName = organizerName.toString();
               tournament!.organizerNumber = organizerNumber.toString();
               tournament!.tournamentName = tournamentName.toString();
-              tournament!.startDate = txtStartDate;
-              tournament!.endDate = txtEndDate;
+              tournament!.startDate = textStartDateController.text;
+              tournament!.endDate = textEndDateController.text;
               tournament!.entryFees = entryFees.toString();
-              tournament!.timing = txtTime;
+              tournament!.startTime = textStartTimeController.text;
+              tournament!.endTime = textEndTimeController.text;
               tournament!.noOfMembers = noOfMembers.toString();
               tournament!.ageLimit = ageLimit.toString();
               tournament!.address = address.toString();
@@ -403,9 +535,15 @@ class _AddTournamentState extends State<AddTournament> {
               tournament!.otherInfo = otherInfo.toString();
               tournament!.playerName = prefs.getString("playerName");
               tournament!.locationId = "1";
-              tournament!.sportId = widget.selectedSport.toString();
-              tournament!.sportName = widget.sportName.toString();
+              tournament!.sportId = selectedSport.id.toString();
+              tournament!.sportName = selectedSport.sportName.toString();
               tournament!.createdAt = Utility.getCurrentDate();
+
+              tournament!.ballType = ballTypeValue.toString();
+              tournament!.tournamentCategory =
+                  tournamentCategoryValue.toString();
+              tournament!.noOfOvers = noOfOvers.toString();
+              tournament!.locationLink = locationLink.toString();
 
 //            Utility.showToast("Create Tournament");
               if (this.image != null) {
@@ -414,6 +552,7 @@ class _AddTournamentState extends State<AddTournament> {
               } else {
                 Utility.showToast("Please Select Image");
               }
+
               print("Create Tournament");
               //_load = false;
               //showLoadingIndicator("Loading....");
@@ -477,7 +616,7 @@ class _AddTournamentState extends State<AddTournament> {
     final initialDate = DateTime.now();
     final newDate = await showDatePicker(
       context: context,
-      initialDate: initialDate,
+      initialDate: startDate ?? initialDate,
       firstDate: DateTime.now(),
       lastDate: DateTime(DateTime.now().year + 5),
     );
@@ -488,10 +627,10 @@ class _AddTournamentState extends State<AddTournament> {
       if (startDate == null) {
       } else {
         if (isStart) {
-          txtStartDate =
+          textStartDateController.text =
               "${startDate!.day}-${startDate!.month}-${startDate!.year}";
         } else {
-          txtEndDate =
+          textEndDateController.text =
               "${startDate!.day}-${startDate!.month}-${startDate!.year}";
         }
 
@@ -502,7 +641,7 @@ class _AddTournamentState extends State<AddTournament> {
     });
   }
 
-  Future pickTime(BuildContext context) async {
+  Future pickTime(BuildContext context, bool isStart) async {
     final initialTime = TimeOfDay(hour: 9, minute: 0);
     final newTime = await showTimePicker(
       context: context,
@@ -511,13 +650,16 @@ class _AddTournamentState extends State<AddTournament> {
 
     if (newTime == null) return;
 
-    if (newTime == null) return;
     setState(() {
       time = newTime;
       if (time == null) {
-        txtTime = "Select Time";
+        //textStartTimeController.text = "Select Time";
       } else {
-        txtTime = "${time!.hour}:${time!.minute}";
+        if (isStart) {
+          textStartTimeController.text = "${time!.hour}:${time!.minute}";
+        } else {
+          textEndTimeController.text = "${time!.hour}:${time!.minute}";
+        }
       }
     });
   }
