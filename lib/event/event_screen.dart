@@ -20,7 +20,7 @@ class _EventScreenState extends State<EventScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getMyEvents();
+    //getMyEvents();
   }
 
   @override
@@ -83,7 +83,7 @@ class _EventScreenState extends State<EventScreen> {
       height: 700,
       padding: EdgeInsets.all(20.0),
       child: FutureBuilder(
-        future: getMyEvents(),
+        future: getEvents(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.data == null) {
             return Container(
@@ -122,7 +122,7 @@ class _EventScreenState extends State<EventScreen> {
 
   List<Event>? events;
 
-  Future<List<Event>?> getMyEvents() async {
+  Future<List<Event>?> getEvents() async {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {

@@ -688,7 +688,7 @@ class _AddTournamentState extends State<AddTournament> {
   Widget myTournament() {
     return Container(
       height: 700,
-      padding: EdgeInsets.all(20.0),
+      padding: EdgeInsets.all(5.0),
       child: FutureBuilder(
         future: getMyTournaments(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -756,93 +756,112 @@ class _AddTournamentState extends State<AddTournament> {
   Widget tournamentItem(dynamic tournament) {
     return GestureDetector(
       onTap: () {
-        //       Utility.showToast("Tournament Clicked ${tournament.prizeDetails}");
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => TournamentParticipants(
-                      tournamentId: tournament.id,
-                    )));
+                builder: (context) =>
+                    TournamentParticipants(event: tournament, type: "0")));
       },
       child: Container(
         margin: EdgeInsets.all(10.0),
-        decoration: kContainerBoxDecoration,
-        // height: 150,
+//      padding: EdgeInsets.only(bottom: 10.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10.0),
+          border: Border.all(
+            color: Colors.grey,
+            width: 0.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              offset: Offset(0, 2),
+              blurRadius: 6.0,
+            ),
+          ],
+        ),
+        // height: 200,
         child: Stack(
-          alignment: Alignment.bottomRight,
           children: [
             Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    child: Image.network(
-                      APIResources.IMAGE_URL + tournament.image,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                  SizedBox(height: 20),
                   Container(
-                    margin: EdgeInsets.only(left: 10.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          tournament.tournamentName,
-                          style: TextStyle(color: kBaseColor, fontSize: 18.0),
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          "Start Date : ${tournament.startDate}",
-                          style: TextStyle(color: Colors.black, fontSize: 14.0),
-                        ),
-                        SizedBox(height: 5),
-                        // Text(
-                        //   "End Date : ${tournament.endDate}",
-                        //   style: TextStyle(color: Colors.black, fontSize: 14.0),
-                        // ),
-                        // SizedBox(height: 5),
-                        // Text(
-                        //   "Time : ${tournament.timing}",
-                        //   style: TextStyle(color: Colors.black, fontSize: 14.0),
-                        // ),
-                        // SizedBox(height: 5),
-                        Text(
-                          "Location : ${tournament.address}",
-                          style: TextStyle(color: Colors.black, fontSize: 14.0),
-                        ),
-                        SizedBox(height: 10),
-                      ],
+                    margin: EdgeInsets.all(5.0),
+                    height: 85.0,
+                    width: 85.0,
+                    // child: SvgPicture.network(
+                    //   "https://www.svgrepo.com/show/2046/dog.svg",
+                    //   placeholderBuilder: (context) =>
+                    //       CircularProgressIndicator(),
+                    //   height: 110.0,
+                    //   width: 110,
+                    //   fit: BoxFit.cover,
+                    // ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      child: Image.network(
+                        APIResources.IMAGE_URL + tournament.image,
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-            Positioned(
-              bottom: 50,
-              right: 20,
-              child: Container(
-                child: Text(
-                  "Rs ${tournament.prizeDetails}",
-                  style: TextStyle(color: kBaseColor, fontSize: 18.0),
-                ),
-              ),
-            ),
             Container(
-              decoration: BoxDecoration(
-                  color: kBaseColor,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15.0),
-                    bottomRight: Radius.circular(15.0),
-                  )),
-              width: 100,
-              height: 40,
-              child: Center(
-                child: Text(
-                  tournament.sportName,
-                  style: TextStyle(color: Colors.white, fontSize: 16.0),
-                ),
+              margin: EdgeInsets.only(left: 110.0, right: 5.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 5.0),
+                  Text(
+                    tournament.tournamentName,
+                    style: TextStyle(
+                        color: kBaseColor,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Start Date: ${tournament.startDate}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Location: ${tournament.address}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Text(
+                    "Location: ${tournament.sportName}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Text(
+                    "\u{20B9} ${tournament.entryFees}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  // Text(
+                  //   "Time: ${tournament.startTime} to ${tournament.startTime}",
+                  //   style: TextStyle(
+                  //     color: Colors.grey.shade900,
+                  //     fontSize: 14.0,
+                  //   ),
+                  // ),
+                  // SizedBox(height: 5.0),
+                ],
               ),
             ),
           ],
@@ -851,119 +870,217 @@ class _AddTournamentState extends State<AddTournament> {
     );
   }
 
-  hostActivityItem(dynamic activity) {
-    return Container(
-      margin: EdgeInsets.all(10.0),
-      decoration: kContainerBoxDecoration,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                flex: 4,
-                child: Container(
-                  margin: EdgeInsets.all(10.0),
-                  height: 90.0,
-                  width: 90.0,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(25.0),
-                    child: Image.network(
-                      APIResources.IMAGE_URL + activity.image,
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 6,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 10.0),
-                    Text(
-                      activity.playerName,
-                      style: TextStyle(
-                        color: kBaseColor,
-                        fontSize: 20.0,
-                      ),
-                    ),
-                    SizedBox(height: 10.0),
-                    Text(
-                      "Looking For: ${activity.sportName}",
-                      style: TextStyle(
-                        color: Colors.grey.shade900,
-                        fontSize: 14.0,
-                      ),
-                    ),
-                    SizedBox(height: 5.0),
-                    Text(
-                      "Location: ${activity.address}",
-                      style: TextStyle(
-                        color: Colors.grey.shade900,
-                        fontSize: 14.0,
-                      ),
-                    ),
-                    SizedBox(height: 5.0),
-                    Text(
-                      "Time: ${activity.timing}",
-                      style: TextStyle(
-                        color: Colors.grey.shade900,
-                        fontSize: 14.0,
-                      ),
-                    ),
-                    SizedBox(height: 5.0),
-                    Text(
-                      "Date: ${activity.startDate}",
-                      style: TextStyle(
-                        color: Colors.grey.shade900,
-                        fontSize: 14.0,
-                      ),
-                    ),
-                    SizedBox(height: 5.0),
-                    Text(
-                      "Ball Type: ${activity.sportName} ",
-                      style: TextStyle(
-                        color: Colors.grey.shade900,
-                        fontSize: 14.0,
-                      ),
-                    ),
-                    SizedBox(height: 5.0),
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  child: Icon(
-                    Icons.more_horiz,
-                    color: kBaseColor,
-                    size: 20.0,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Container(
-            decoration: BoxDecoration(
-                color: kBaseColor,
-                borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(15.0),
-                  topLeft: Radius.circular(15.0),
-                )),
-            width: 100,
-            height: 35,
-            child: Center(
-              child: Text(
-                activity.sportName,
-                style: TextStyle(color: Colors.white, fontSize: 16.0),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget tournamentItem(dynamic tournament) {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       //       Utility.showToast("Tournament Clicked ${tournament.prizeDetails}");
+  //       Navigator.push(
+  //           context,
+  //           MaterialPageRoute(
+  //               builder: (context) => TournamentParticipants(
+  //                     tournamentId: tournament.id,
+  //                   )));
+  //     },
+  //     child: Container(
+  //       margin: EdgeInsets.all(10.0),
+  //       decoration: kContainerBoxDecoration,
+  //       // height: 150,
+  //       child: Stack(
+  //         alignment: Alignment.bottomRight,
+  //         children: [
+  //           Container(
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 ClipRRect(
+  //                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
+  //                   child: Image.network(
+  //                     APIResources.IMAGE_URL + tournament.image,
+  //                     fit: BoxFit.fill,
+  //                   ),
+  //                 ),
+  //                 SizedBox(height: 20),
+  //                 Container(
+  //                   margin: EdgeInsets.only(left: 10.0),
+  //                   child: Column(
+  //                     crossAxisAlignment: CrossAxisAlignment.start,
+  //                     children: [
+  //                       Text(
+  //                         tournament.tournamentName,
+  //                         style: TextStyle(color: kBaseColor, fontSize: 18.0),
+  //                       ),
+  //                       SizedBox(height: 5),
+  //                       Text(
+  //                         "Start Date : ${tournament.startDate}",
+  //                         style: TextStyle(color: Colors.black, fontSize: 14.0),
+  //                       ),
+  //                       SizedBox(height: 5),
+  //                       // Text(
+  //                       //   "End Date : ${tournament.endDate}",
+  //                       //   style: TextStyle(color: Colors.black, fontSize: 14.0),
+  //                       // ),
+  //                       // SizedBox(height: 5),
+  //                       // Text(
+  //                       //   "Time : ${tournament.timing}",
+  //                       //   style: TextStyle(color: Colors.black, fontSize: 14.0),
+  //                       // ),
+  //                       // SizedBox(height: 5),
+  //                       Text(
+  //                         "Location : ${tournament.address}",
+  //                         style: TextStyle(color: Colors.black, fontSize: 14.0),
+  //                       ),
+  //                       SizedBox(height: 10),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //           Positioned(
+  //             bottom: 50,
+  //             right: 20,
+  //             child: Container(
+  //               child: Text(
+  //                 "Rs ${tournament.prizeDetails}",
+  //                 style: TextStyle(color: kBaseColor, fontSize: 18.0),
+  //               ),
+  //             ),
+  //           ),
+  //           Container(
+  //             decoration: BoxDecoration(
+  //                 color: kBaseColor,
+  //                 borderRadius: BorderRadius.only(
+  //                   topLeft: Radius.circular(15.0),
+  //                   bottomRight: Radius.circular(15.0),
+  //                 )),
+  //             width: 100,
+  //             height: 40,
+  //             child: Center(
+  //               child: Text(
+  //                 tournament.sportName,
+  //                 style: TextStyle(color: Colors.white, fontSize: 16.0),
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  // hostActivityItem(dynamic activity) {
+  //   return Container(
+  //     margin: EdgeInsets.all(10.0),
+  //     decoration: kContainerBoxDecoration,
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.end,
+  //       children: [
+  //         Row(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //           children: [
+  //             Expanded(
+  //               flex: 4,
+  //               child: Container(
+  //                 margin: EdgeInsets.all(10.0),
+  //                 height: 90.0,
+  //                 width: 90.0,
+  //                 child: ClipRRect(
+  //                   borderRadius: BorderRadius.circular(25.0),
+  //                   child: Image.network(
+  //                     APIResources.IMAGE_URL + activity.image,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //             Expanded(
+  //               flex: 6,
+  //               child: Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 mainAxisAlignment: MainAxisAlignment.start,
+  //                 children: [
+  //                   SizedBox(height: 10.0),
+  //                   Text(
+  //                     activity.playerName,
+  //                     style: TextStyle(
+  //                       color: kBaseColor,
+  //                       fontSize: 20.0,
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: 10.0),
+  //                   Text(
+  //                     "Looking For: ${activity.sportName}",
+  //                     style: TextStyle(
+  //                       color: Colors.grey.shade900,
+  //                       fontSize: 14.0,
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: 5.0),
+  //                   Text(
+  //                     "Location: ${activity.address}",
+  //                     style: TextStyle(
+  //                       color: Colors.grey.shade900,
+  //                       fontSize: 14.0,
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: 5.0),
+  //                   Text(
+  //                     "Time: ${activity.timing}",
+  //                     style: TextStyle(
+  //                       color: Colors.grey.shade900,
+  //                       fontSize: 14.0,
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: 5.0),
+  //                   Text(
+  //                     "Date: ${activity.startDate}",
+  //                     style: TextStyle(
+  //                       color: Colors.grey.shade900,
+  //                       fontSize: 14.0,
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: 5.0),
+  //                   Text(
+  //                     "Ball Type: ${activity.sportName} ",
+  //                     style: TextStyle(
+  //                       color: Colors.grey.shade900,
+  //                       fontSize: 14.0,
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: 5.0),
+  //                 ],
+  //               ),
+  //             ),
+  //             Expanded(
+  //               flex: 1,
+  //               child: Container(
+  //                 child: Icon(
+  //                   Icons.more_horiz,
+  //                   color: kBaseColor,
+  //                   size: 20.0,
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         Container(
+  //           decoration: BoxDecoration(
+  //               color: kBaseColor,
+  //               borderRadius: BorderRadius.only(
+  //                 bottomRight: Radius.circular(15.0),
+  //                 topLeft: Radius.circular(15.0),
+  //               )),
+  //           width: 100,
+  //           height: 35,
+  //           child: Center(
+  //             child: Text(
+  //               activity.sportName,
+  //               style: TextStyle(color: Colors.white, fontSize: 16.0),
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

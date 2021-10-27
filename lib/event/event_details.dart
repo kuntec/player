@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:player/api/api_resources.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/screens/participant_summary.dart';
 import 'package:player/screens/payment_screen.dart';
 
 class EventDetails extends StatefulWidget {
@@ -132,7 +133,8 @@ class _EventDetailsState extends State<EventDetails> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => PaymentScreen()));
+                            builder: (context) => ParticipantSummary(
+                                event: widget.event, isEvent: true)));
                   },
                 ),
               ),

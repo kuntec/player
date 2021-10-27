@@ -67,4 +67,9 @@ class APIResources {
   static final String UPDATE_DAY_TIME_SLOT = BASE_URL + "updateDayTimeSlot";
 
   static final String ADD_DAY_TIME_SLOT = BASE_URL + "addDayTimeSlot";
+
+  static final String ADD_PARTICIPANT = BASE_URL + "addParticipant";
+  static final String GET_PARTICIPANT = BASE_URL + "getParticipant";
+  static final String UPDATE_PARTICIPANT = BASE_URL + "updateParticipant";
+  static final String DELETE_PARTICIPANT = BASE_URL + "deleteParticipant";
 }

@@ -1,25 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:player/api/api_call.dart';
+import 'package:player/api/api_resources.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/constant/utility.dart';
+import 'package:player/model/participant_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PaymentScreen extends StatefulWidget {
-  const PaymentScreen({Key? key}) : super(key: key);
+  dynamic participant;
+  dynamic event;
+  PaymentScreen({this.participant, this.event});
 
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-  var name;
-  var number;
-  var gender;
-  var age;
+  Participant? participant;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Payment")),
+        title: Center(
+          child: Text("Booking"),
+        ),
         leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
@@ -35,112 +41,322 @@ class _PaymentScreenState extends State<PaymentScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Fill your details",
-                style: TextStyle(color: Colors.black87, fontSize: 18.0),
-              ),
+              // Text(
+              //   widget.participant.type == "1" ? "Event" : "Tournament",
+              //   style: TextStyle(color: Colors.black87, fontSize: 18.0),
+              // ),
+              widget.participant.type == "1"
+                  ? eventItem(widget.event)
+                  : tournamentItem(widget.event),
+              participantItem(widget.participant),
               SizedBox(height: kMargin),
-              TextField(
-                onChanged: (value) {
-                  name = value;
-                },
-                decoration: InputDecoration(
-                    labelText: "Enter Your Name",
-                    labelStyle: TextStyle(
-                      color: Colors.grey,
-                    )),
-              ),
-              SizedBox(height: kMargin),
-              TextField(
-                keyboardType: TextInputType.phone,
-                onChanged: (value) {
-                  number = value;
-                },
-                decoration: InputDecoration(
-                    labelText: "Contact Number",
-                    labelStyle: TextStyle(
-                      color: Colors.grey,
-                    )),
-              ),
-              SizedBox(height: kMargin),
-              Text("Gender"),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 10,
-                    child: Radio(
-                      value: "Male",
-                      groupValue: gender,
-                      onChanged: (value) {
-                        gender = value.toString();
-                        setState(() {});
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    flex: 10,
-                    child: GestureDetector(
-                        onTap: () {
-                          gender = "Male";
-                          setState(() {});
-                        },
-                        child: Text("Male")),
-                  ),
-                  Expanded(
-                    flex: 10,
-                    child: Radio(
-                      value: "Female",
-                      groupValue: gender,
-                      onChanged: (value) {
-                        gender = value.toString();
-                        setState(() {});
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    flex: 10,
-                    child: GestureDetector(
-                      onTap: () {
-                        gender = "Female";
-                        setState(() {});
-                      },
-                      child: Text("Female"),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    flex: 30,
-                    child: TextField(
-                      keyboardType: TextInputType.number,
-                      onChanged: (value) {
-                        age = value;
-                      },
-                      decoration: InputDecoration(
-                          labelText: "Age",
-                          labelStyle: TextStyle(
-                            color: Colors.grey,
-                          )),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: k20Margin),
               Container(
                 margin: EdgeInsets.only(left: k20Margin, right: k20Margin),
                 child: RoundedButton(
-                  title: "Proceed To Payment",
+                  title: widget.participant.paymentMode == "1"
+                      ? "Proceed"
+                      : "Confirm Booking",
                   color: kBaseColor,
                   txtColor: Colors.white,
                   minWidth: MediaQuery.of(context).size.width,
                   onPressed: () async {
-                    print(
-                        "name $name, contact $number, gender $gender, age $age");
+                    widget.participant.paymentStatus = "2";
+                    addParticipant(widget.participant);
                   },
                 ),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  addParticipant(Participant participant) async {
+    APICall apiCall = new APICall();
+    print("Participant add");
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      ParticipantData participantData =
+          await apiCall.addParticipant(participant);
+
+      if (participantData == null) {
+        print("Participant null");
+      } else {
+        if (participantData.status!) {
+          print("Participant Success");
+          Utility.showToast("Participant Added Successfully");
+          Navigator.pop(context, true);
+        } else {
+          print("Participant Failed");
+        }
+      }
+    } else {
+      print("No Connectivity");
+    }
+  }
+
+  participantItem(dynamic participant) {
+    return Container(
+      margin: EdgeInsets.all(5.0),
+      width: MediaQuery.of(context).size.width,
+      decoration: kBoxDecor,
+      child: Container(
+        padding: EdgeInsets.all(5.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              child: Text(
+                "Name: ${participant.name}",
+                style: TextStyle(
+                  color: Colors.grey.shade900,
+                  fontSize: 14.0,
+                ),
+              ),
+            ),
+            SizedBox(height: kMargin),
+            Container(
+              child: Text(
+                "Number: ${participant.number}",
+                style: TextStyle(
+                  color: Colors.grey.shade900,
+                  fontSize: 14.0,
+                ),
+              ),
+            ),
+            SizedBox(height: kMargin),
+            Container(
+              child: Text(
+                "Gender: ${participant.gender}",
+                style: TextStyle(
+                  color: Colors.grey.shade900,
+                  fontSize: 14.0,
+                ),
+              ),
+            ),
+            SizedBox(height: kMargin),
+            Container(
+              child: Text(
+                "Age: ${participant.age}",
+                style: TextStyle(
+                  color: Colors.grey.shade900,
+                  fontSize: 14.0,
+                ),
+              ),
+            ),
+            SizedBox(height: kMargin),
+            Container(
+              child: Text(
+                "Amount: \u{20B9} ${participant.amount}",
+                style: TextStyle(
+                  color: Colors.grey.shade900,
+                  fontSize: 14.0,
+                ),
+              ),
+            ),
+            SizedBox(height: kMargin),
+            Container(
+              child: Text(
+                participant.paymentMode == "0"
+                    ? "Payment Mode : Offline"
+                    : "Payment Mode : Online",
+                style: TextStyle(
+                  color: Colors.grey.shade900,
+                  fontSize: 14.0,
+                ),
+              ),
+            ),
+            SizedBox(height: kMargin),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget eventItem(dynamic event) {
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        margin: EdgeInsets.all(5.0),
+//      padding: EdgeInsets.only(bottom: 10.0),
+        decoration: kBoxDecor,
+        // height: 200,
+        child: Stack(
+          children: [
+            Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(5.0),
+                    height: 80.0,
+                    width: 80.0,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      child: Image.network(
+                        APIResources.IMAGE_URL + event.image,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
+                  Row(),
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 100.0, right: 5.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 5.0),
+                  Text(
+                    event.name,
+                    style: TextStyle(
+                        color: kBaseColor,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 10.0),
+                  Text(
+                    event.address,
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Start Date: ${event.startDate}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Location: ${event.address}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget tournamentItem(dynamic tournament) {
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        margin: EdgeInsets.all(10.0),
+//      padding: EdgeInsets.only(bottom: 10.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10.0),
+          border: Border.all(
+            color: Colors.grey,
+            width: 0.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              offset: Offset(0, 2),
+              blurRadius: 6.0,
+            ),
+          ],
+        ),
+        // height: 200,
+        child: Stack(
+          children: [
+            Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(5.0),
+                    height: 85.0,
+                    width: 85.0,
+                    // child: SvgPicture.network(
+                    //   "https://www.svgrepo.com/show/2046/dog.svg",
+                    //   placeholderBuilder: (context) =>
+                    //       CircularProgressIndicator(),
+                    //   height: 110.0,
+                    //   width: 110,
+                    //   fit: BoxFit.cover,
+                    // ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      child: Image.network(
+                        APIResources.IMAGE_URL + tournament.image,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 110.0, right: 5.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 5.0),
+                  Text(
+                    tournament.tournamentName,
+                    style: TextStyle(
+                        color: kBaseColor,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Start Date: ${tournament.startDate}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Location: ${tournament.address}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Text(
+                    "Location: ${tournament.sportName}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Text(
+                    "\u{20B9} ${tournament.entryFees}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  // Text(
+                  //   "Time: ${tournament.startTime} to ${tournament.startTime}",
+                  //   style: TextStyle(
+                  //     color: Colors.grey.shade900,
+                  //     fontSize: 14.0,
+                  //   ),
+                  // ),
+                  // SizedBox(height: 5.0),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

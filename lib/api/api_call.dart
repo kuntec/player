@@ -9,6 +9,7 @@ import 'package:player/model/event_data.dart';
 import 'package:player/model/host_activity.dart';
 import 'package:player/model/looking_for_data.dart';
 import 'package:player/model/my_sport.dart';
+import 'package:player/model/participant_data.dart';
 import 'package:player/model/player_data.dart';
 import 'package:player/model/service_data.dart';
 import 'package:player/model/service_model.dart';
@@ -640,5 +641,56 @@ class APICall {
 
   Future<dynamic>? updateEventImage() {
     return null;
+  }
+
+  Future<ParticipantData> addParticipant(Participant participant) async {
+    Uri url = Uri.parse(APIResources.ADD_PARTICIPANT);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['name'] = participant.name!.toString();
+    params['player_id'] = participant.playerId!.toString();
+    params['status'] = participant.status!;
+    params['type'] = participant.type!;
+    params['number'] = participant.number!;
+    params['amount'] = participant.amount!;
+    params['age'] = participant.age!;
+    params['event_id'] = participant.eventId!;
+    params['gender'] = participant.gender!;
+    params['payment_id'] = participant.paymentId!;
+    params['payment_mode'] = participant.paymentMode!;
+    params['payment_status'] = participant.paymentStatus!;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return ParticipantData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<ParticipantData> updateParticipant(Participant participant) async {
+    Uri url = Uri.parse(APIResources.UPDATE_PARTICIPANT);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['id'] = participant.id!.toString();
+    params['status'] = participant.status!;
+    params['payment_mode'] = participant.paymentMode!;
+    params['payment_status'] = participant.paymentStatus!;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return ParticipantData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<ParticipantData> getParticipant(String eventId, String type) async {
+    Uri url = Uri.parse(APIResources.GET_PARTICIPANT);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['event_id'] = eventId;
+    params['type'] = type;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return ParticipantData.fromJson(jsonDecode(response.body));
   }
 }
