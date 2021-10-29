@@ -27,6 +27,7 @@ const friendEndColor = Color(0xff00D7FF);
 const tournamentEndColor = Color(0xff00FF93);
 const eventEndColor = Color(0xff9001DB);
 const offerEndColor = Color(0xffEB0808);
+const kBlack = Color(0xff000000);
 
 const kInternet = "No Internet Connection, Please connect to Internet";
 
@@ -213,6 +214,35 @@ final kContainerBox = BoxDecoration(
     )
   ],
 );
+
+final kBoxItem = BoxDecoration(
+  color: Colors.white,
+  borderRadius: BorderRadius.circular(5.0),
+  border: Border.all(
+    color: Colors.grey,
+    width: 0,
+  ),
+  boxShadow: [
+    BoxShadow(
+      color: Colors.black12,
+      offset: Offset(0, 2),
+      blurRadius: 6.0,
+    )
+  ],
+);
+
+final kServiceBoxItem = BoxDecoration(
+  color: Colors.white,
+  borderRadius: BorderRadius.circular(15.0),
+  boxShadow: [
+    BoxShadow(
+      color: Colors.black12,
+      offset: Offset(0, 2),
+      blurRadius: 6.0,
+    )
+  ],
+);
+
 void showToast(String msg) {
   Fluttertoast.showToast(
     msg: msg,

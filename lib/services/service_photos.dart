@@ -10,9 +10,9 @@ import 'package:player/constant/utility.dart';
 import 'package:player/model/service_photo.dart';
 
 class ServicePhotos extends StatefulWidget {
-  final serviceId;
+  final serviceDataId;
 
-  ServicePhotos({required this.serviceId});
+  ServicePhotos({required this.serviceDataId});
   @override
   _ServicePhotosState createState() => _ServicePhotosState();
 }
@@ -24,7 +24,7 @@ class _ServicePhotosState extends State<ServicePhotos> {
     return Scaffold(
       appBar: AppBar(
 //        leading: Icon(Icons.arrow_back),
-        title: Text("Photos"),
+        title: Text("Photos ${widget.serviceDataId}"),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -81,20 +81,20 @@ class _ServicePhotosState extends State<ServicePhotos> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      dynamic status =
-          await apiCall.addServicePhoto(filePath, widget.serviceId.toString());
+      dynamic status = await apiCall.addServicePhoto(
+          filePath, widget.serviceDataId.toString());
 
       if (status == null) {
         print("Service Photo null");
         Utility.showToast("Service Photo Null");
       } else {
         if (status) {
-          print("Venue Success");
+          print("Service Success");
           Utility.showToast("Photo Added Successfully");
           setState(() {});
         } else {
-          print("Venue Photo Failed");
-          Utility.showToast("Venue Photo Failed");
+          print("Service Photo Failed");
+          Utility.showToast("Service Photo Failed");
         }
       }
     }
@@ -165,7 +165,7 @@ class _ServicePhotosState extends State<ServicePhotos> {
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
       ServicePhoto servicePhoto =
-          await apiCall.getServicePhoto(widget.serviceId.toString());
+          await apiCall.getServicePhoto(widget.serviceDataId.toString());
 
       if (servicePhoto == null) {
         print("Photos null");
@@ -174,7 +174,7 @@ class _ServicePhotosState extends State<ServicePhotos> {
           print("Photos Success");
           photos = servicePhoto.photos;
         } else {
-          print("Photos Failed");
+          print("Photos Failed1");
         }
       }
     }

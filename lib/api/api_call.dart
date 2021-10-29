@@ -425,13 +425,17 @@ class APICall {
         APIResources.ADD_SERVICEDATA,
         data: formData,
       );
+      print("add service data1");
       var responseBody = response.data;
       print("Response Body ${responseBody['status']}");
-      return responseBody['status'];
+      print("Service New ID ${responseBody['service']['id']}");
+      return responseBody['service']['id'];
     } on DioError catch (e) {
       print("Response Body NO FOUND");
       return false;
-    } catch (e) {}
+    } catch (e) {
+      print("Something Wrong ${e.toString()}");
+    }
   }
 
   Future<dynamic> addServicePhoto(filePath, String serviceId) async {

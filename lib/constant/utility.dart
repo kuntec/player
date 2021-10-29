@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:player/constant/constants.dart';
 
@@ -47,5 +48,9 @@ class Utility {
       textColor: Colors.white,
       toastLength: Toast.LENGTH_LONG,
     );
+  }
+
+  static launchCall(String number) async {
+    await FlutterPhoneDirectCaller.callNumber(number);
   }
 }

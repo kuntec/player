@@ -28,12 +28,12 @@ class _MyServiceState extends State<MyService> {
                   title: "Manage Photos",
                   color: kBaseColor,
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ServicePhotos(
-                                  serviceId: widget.service.id.toString(),
-                                )));
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) => ServicePhotos(
+                    //               serviceId: widget.service.id.toString(),
+                    //             )));
                   },
                   minWidth: 150,
                   txtColor: Colors.white),
