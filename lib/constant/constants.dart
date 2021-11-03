@@ -150,10 +150,17 @@ final kContainerTabLeftDecoration = BoxDecoration(
     topLeft: Radius.circular(10.0),
     bottomLeft: Radius.circular(10.0),
   ),
-  border: Border.all(
-    color: Colors.grey,
-    width: 1.0,
-  ),
+  boxShadow: [
+    BoxShadow(
+      color: Colors.black12,
+      offset: Offset(0, 2),
+      blurRadius: 6.0,
+    )
+  ],
+  // border: Border.all(
+  //   color: Colors.grey,
+  //   width: 1.0,
+  // ),
 );
 
 final kContainerTabRightDecoration = BoxDecoration(
@@ -162,10 +169,17 @@ final kContainerTabRightDecoration = BoxDecoration(
     topRight: Radius.circular(10.0),
     bottomRight: Radius.circular(10.0),
   ),
-  border: Border.all(
-    color: Colors.grey,
-    width: 1.0,
-  ),
+  boxShadow: [
+    BoxShadow(
+      color: Colors.black12,
+      offset: Offset(0, 2),
+      blurRadius: 6.0,
+    )
+  ],
+  // border: Border.all(
+  //   color: Colors.grey,
+  //   width: 1.0,
+  // ),
 );
 final kContainerBoxDecoration = BoxDecoration(
   color: Colors.white,

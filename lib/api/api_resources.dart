@@ -59,17 +59,22 @@ class APIResources {
   static final String ADD_SERVICE_PHOTO = BASE_URL + "addServicePhoto";
   static final String DELETE_SERVICE_PHOTO = BASE_URL + "deleteServicePhoto";
 
-  static final String ADD_DAY_SLOT = BASE_URL + "addDaySlot";
+  static final String ADD_DAY_SLOT = BASE_URL + "addDaySlot2";
   static final String GET_DAY_SLOT = BASE_URL + "getDaySlot";
-  static final String UPDATE_DAY_SLOT = BASE_URL + "updateDaySlot";
+  static final String UPDATE_DAY_SLOT = BASE_URL + "updateDaySlot2";
 
   static final String GET_DAY_TIME_SLOT = BASE_URL + "getDayTimeSlot";
   static final String UPDATE_DAY_TIME_SLOT = BASE_URL + "updateDayTimeSlot";
 
-  static final String ADD_DAY_TIME_SLOT = BASE_URL + "addDayTimeSlot";
+//  static final String ADD_DAY_TIME_SLOT = BASE_URL + "addDayTimeSlot";
 
   static final String ADD_PARTICIPANT = BASE_URL + "addParticipant";
   static final String GET_PARTICIPANT = BASE_URL + "getParticipant";
   static final String UPDATE_PARTICIPANT = BASE_URL + "updateParticipant";
   static final String DELETE_PARTICIPANT = BASE_URL + "deleteParticipant";
+
+  //Booking
+  static final String ADD_BOOKING = BASE_URL + "addBooking";
+  static final String ADD_BOOKING_SLOT = BASE_URL + "addBookingSlot";
+  static final String GET_MY_BOOKINGS = BASE_URL + "getMyBookings";
 }

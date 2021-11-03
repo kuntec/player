@@ -3,9 +3,10 @@ import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/model/my_booking_data.dart';
 import 'package:player/model/venue_data.dart';
 import 'package:player/venue/add_venue_details.dart';
-import 'package:player/venue/add_venue_slot.dart';
+import 'package:player/venue/booked_slot.dart';
 import 'package:player/venue/venue_day_slot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -111,7 +112,7 @@ class _AddVenueState extends State<AddVenue> {
                 ],
               ),
             ),
-            isMyVenueSelected! ? booking() : myVenue(),
+            isMyVenueSelected! ? myBookings() : myVenue(),
           ],
         ),
       ),
@@ -121,7 +122,6 @@ class _AddVenueState extends State<AddVenue> {
   myVenue() {
     return Container(
       height: 700,
-      padding: EdgeInsets.all(20.0),
       child: FutureBuilder(
         future: getMyVenues(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -199,7 +199,7 @@ class _AddVenueState extends State<AddVenue> {
       child: Container(
         margin: EdgeInsets.all(10.0),
 //      padding: EdgeInsets.only(bottom: 10.0),
-        decoration: kContainerBoxDecoration,
+        decoration: kServiceBoxItem,
         // height: 200,
         child: Stack(
           children: [
@@ -219,23 +219,6 @@ class _AddVenueState extends State<AddVenue> {
                       ),
                     ),
                   ),
-                  Row(
-                      // mainAxisAlignment: MainAxisAlignment.start,
-                      // crossAxisAlignment: CrossAxisAlignment.start,
-                      // children: [
-                      //   SizedBox(width: 10.0),
-                      //   Icon(
-                      //     Icons.circle,
-                      //     color: Colors.green,
-                      //     size: 14.0,
-                      //   ),
-                      //   SizedBox(width: 10.0),
-                      //   Text(
-                      //     "2 hours ago",
-                      //     style: TextStyle(fontSize: 12.0),
-                      //   ),
-                      // ],
-                      ),
                 ],
               ),
             ),
@@ -249,32 +232,15 @@ class _AddVenueState extends State<AddVenue> {
                     venue.name,
                     style: TextStyle(
                         color: kBaseColor,
-                        fontSize: 20.0,
+                        fontSize: 18.0,
                         fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 10.0),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.start,
-                  //   crossAxisAlignment: CrossAxisAlignment.start,
-                  //   children: [
-                  //     SizedBox(width: 10.0),
-                  //     Icon(
-                  //       Icons.location_pin,
-                  //       color: kBaseColor,
-                  //       size: 14.0,
-                  //     ),
-                  //     SizedBox(width: 10.0),
-                  //     Text(
-                  //       "Saurashtra University, Munjka, Rajkot, Gujarat, 360005",
-                  //       style: TextStyle(fontSize: 14.0),
-                  //     ),
-                  //   ],
-                  // ),
                   Text(
                     venue.address,
                     style: TextStyle(
                       color: Colors.grey.shade900,
-                      fontSize: 14.0,
+                      fontSize: 12.0,
                     ),
                   ),
                   SizedBox(height: 5.0),
@@ -282,7 +248,7 @@ class _AddVenueState extends State<AddVenue> {
                     "Hours: ${venue.openTime} to ${venue.closeTime}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
-                      fontSize: 14.0,
+                      fontSize: 12.0,
                     ),
                   ),
                   SizedBox(height: 5.0),
@@ -290,22 +256,9 @@ class _AddVenueState extends State<AddVenue> {
                     "Phone: ${venue.openTime}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
-                      fontSize: 14.0,
+                      fontSize: 12.0,
                     ),
                   ),
-                  // Container(
-                  //   decoration: BoxDecoration(
-                  //       color: kBaseColor,
-                  //       borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                  //   width: 100,
-                  //   height: 40,
-                  //   child: Center(
-                  //     child: Text(
-                  //       "1000",
-                  //       style: TextStyle(color: Colors.white, fontSize: 16.0),
-                  //     ),
-                  //   ),
-                  // ),
                 ],
               ),
             ),
@@ -315,9 +268,137 @@ class _AddVenueState extends State<AddVenue> {
     );
   }
 
-  booking() {
+  // booking() {
+  //   return Container(
+  //     child: Text("Booking"),
+  //   );
+  // }
+
+  myBookings() {
     return Container(
-      child: Text("Booking"),
+      height: 700,
+      margin: EdgeInsets.all(10.0),
+      child: FutureBuilder(
+        future: getMyBookings(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.data == null) {
+            return Container(
+              child: Center(
+                child: Text('Loading....'),
+              ),
+            );
+          }
+          if (snapshot.hasData) {
+            print("Has Data ${snapshot.data.length}");
+
+            return ListView.builder(
+              padding: EdgeInsets.only(bottom: 210),
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: snapshot.data.length,
+              itemBuilder: (BuildContext context, int index) {
+                return bookingItem(snapshot.data[index]);
+              },
+            );
+          } else {
+            return Container(
+              child: Center(
+                child: Text('No Data'),
+              ),
+            );
+          }
+        },
+      ),
     );
+  }
+
+  bookingItem(dynamic booking) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => BookedSlot(
+                      booking: booking,
+                    )));
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 10.0),
+        padding: EdgeInsets.all(10.0),
+        decoration: kServiceBoxItem,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Name: ${booking.name}",
+              style: TextStyle(
+                color: Colors.grey.shade900,
+                fontSize: 14.0,
+              ),
+            ),
+            Text(
+              "Number: ${booking.number}",
+              style: TextStyle(
+                color: Colors.grey.shade900,
+                fontSize: 14.0,
+              ),
+            ),
+            Text(
+              "No of Slots: ${booking.slots.length}",
+              style: TextStyle(
+                color: Colors.grey.shade900,
+                fontSize: 14.0,
+              ),
+            ),
+            Text(
+              "Venue: ${booking.venue.name}",
+              style: TextStyle(
+                color: Colors.grey.shade900,
+                fontSize: 14.0,
+              ),
+            ),
+            Text(
+              "Person allowed: ${booking.venue.members}",
+              style: TextStyle(
+                color: Colors.grey.shade900,
+                fontSize: 14.0,
+              ),
+            ),
+            Text(
+              "Date: ${booking.createdAt}",
+              style: TextStyle(
+                color: Colors.grey.shade900,
+                fontSize: 14.0,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  List<Bookings>? bookings;
+
+  Future<List<Bookings>?> getMyBookings() async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var playerId = prefs.get("playerId");
+
+      MyBookingData bookingData =
+          await apiCall.getMyBookings(playerId.toString());
+      if (bookingData.bookings != null) {
+        bookings = bookingData.bookings!;
+        //setState(() {});
+      }
+      if (bookingData.status!) {
+        //print(hostActivity.message!);
+        //  Navigator.pop(context);
+      } else {
+        print(bookingData.message!);
+      }
+    }
+    return bookings;
   }
 }

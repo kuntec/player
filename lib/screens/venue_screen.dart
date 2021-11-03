@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
@@ -7,6 +8,7 @@ import 'package:player/constant/utility.dart';
 import 'package:player/model/venue_data.dart';
 import 'package:player/venue/add_venue.dart';
 import 'package:player/screens/register_ground.dart';
+import 'package:player/venue/venue_details.dart';
 import 'package:player/venue/venue_register.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,10 +33,13 @@ class _VenueScreenState extends State<VenueScreen> {
                 children: [
                   TextButton.icon(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => VenueRegister()));
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => VenueRegister()));
+
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => AddVenue()));
                     },
                     icon: Icon(
                       Icons.add,
@@ -55,7 +60,6 @@ class _VenueScreenState extends State<VenueScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 10),
               myVenue(),
             ],
           ),
@@ -67,7 +71,7 @@ class _VenueScreenState extends State<VenueScreen> {
   myVenue() {
     return Container(
       height: 700,
-      padding: EdgeInsets.all(20.0),
+      padding: EdgeInsets.all(10.0),
       child: FutureBuilder(
         future: getMyVenues(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -107,10 +111,7 @@ class _VenueScreenState extends State<VenueScreen> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      var playerId = prefs.get("playerId");
-
-      VenueData venueData = await apiCall.getMyVenue(playerId.toString());
+      VenueData venueData = await apiCall.getVenue();
       if (venueData.venues != null) {
         venues = venueData.venues!;
         //setState(() {});
@@ -129,12 +130,18 @@ class _VenueScreenState extends State<VenueScreen> {
   Widget venueItem(dynamic venue) {
     return GestureDetector(
       onTap: () {
-        Utility.showToast(venue.name.toString());
+        Utility.showToast("ID ${venue.id}");
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => VenueDetails(
+                      venue: venue,
+                    )));
       },
       child: Container(
-        margin: EdgeInsets.all(10.0),
+        margin: EdgeInsets.only(bottom: 10.0),
 //      padding: EdgeInsets.only(bottom: 10.0),
-        decoration: kContainerBoxDecoration,
+        decoration: kServiceBoxItem,
         // height: 200,
         child: Stack(
           children: [
@@ -192,7 +199,7 @@ class _VenueScreenState extends State<VenueScreen> {
                     venue.name,
                     style: TextStyle(
                         color: kBaseColor,
-                        fontSize: 20.0,
+                        fontSize: 16.0,
                         fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 10.0),
@@ -217,7 +224,7 @@ class _VenueScreenState extends State<VenueScreen> {
                     venue.address,
                     style: TextStyle(
                       color: Colors.grey.shade900,
-                      fontSize: 14.0,
+                      fontSize: 12.0,
                     ),
                   ),
                   SizedBox(height: 5.0),
@@ -225,7 +232,7 @@ class _VenueScreenState extends State<VenueScreen> {
                     "Hours: ${venue.openTime} to ${venue.closeTime}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
-                      fontSize: 14.0,
+                      fontSize: 12.0,
                     ),
                   ),
                   SizedBox(height: 5.0),
@@ -233,8 +240,28 @@ class _VenueScreenState extends State<VenueScreen> {
                     "Phone: ${venue.openTime}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
-                      fontSize: 14.0,
+                      fontSize: 12.0,
                     ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        decoration: kServiceBoxItem.copyWith(
+                            color: kBaseColor,
+                            borderRadius: BorderRadius.circular(5.0)),
+                        padding: EdgeInsets.only(
+                            top: 5.0, bottom: 5.0, right: 15.0, left: 15.0),
+                        child: Text(
+                          "\u{20B9} 1000",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12.0,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

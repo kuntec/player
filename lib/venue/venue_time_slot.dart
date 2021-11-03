@@ -8,8 +8,8 @@ import 'package:player/model/timeslot_data.dart';
 
 class VenueTimeSlot extends StatefulWidget {
   dynamic venue;
-  dynamic dayslots;
-  VenueTimeSlot({this.venue, this.dayslots});
+//  dynamic dayslots;
+  VenueTimeSlot({this.venue});
 
   @override
   _VenueTimeSlotState createState() => _VenueTimeSlotState();
@@ -25,16 +25,34 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    dayslots = widget.dayslots;
-    for (var d in dayslots!) {
-      // print("Day ${d.day} - ${d.status}");
-      if (d.status == "1") {
-        int day = int.parse(d.day.toString());
-        selectedDay = day;
-        break;
+    getDaySlots();
+  }
+
+  getDaySlots() async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    DayslotData? dayslotData;
+    if (connectivityStatus) {
+      dayslotData = await apiCall.getDaySlot(widget.venue.id.toString());
+      if (dayslotData.daySlots != null) {
+        if (dayslotData.status!) {
+          dayslots = dayslotData.daySlots!;
+          for (var d in dayslots!) {
+            // print("Day ${d.day} - ${d.status}");
+            if (d.status == "1") {
+              int day = int.parse(d.day.toString());
+              selectedDay = day;
+              break;
+            }
+          }
+          setState(() {});
+          getTimeSlots();
+        } else {
+          Utility.showToast("Failed");
+        }
       }
+      setState(() {});
     }
-    getTimeSlots();
   }
 
   bool isFirstEntry = true;
@@ -263,7 +281,7 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
         margin: EdgeInsets.all(10.0),
         width: 50,
         height: 50,
-        decoration: kContainerBox.copyWith(color: Colors.white),
+        decoration: kServiceBoxItem.copyWith(color: Colors.white),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,

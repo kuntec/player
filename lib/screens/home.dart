@@ -32,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    getMySports();
     getSports();
   }
 
@@ -94,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: [banner(), homeButtonBar(), sportBar(), hostActivity()],
+          children: [banner(), homeButtonBar(), sportBarList(), hostActivity()],
         ),
       ),
     );
@@ -120,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget hostActivity() {
     return Container(
       height: 700,
-      padding: EdgeInsets.all(20.0),
+      padding: EdgeInsets.all(10.0),
       child: FutureBuilder(
         future: getHostActivity(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -240,16 +241,16 @@ class _HomeScreenState extends State<HomeScreen> {
   hostActivityItem2(dynamic activity) {
     return Container(
       margin: EdgeInsets.all(5.0),
-      decoration: kContainerBoxDecoration,
+      decoration: kServiceBoxItem,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           //image column
           Expanded(
-            flex: 1,
+            flex: 3,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
@@ -268,11 +269,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Container(
-                  child: Text(
-                    "2 hours ago",
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 10.0,
+                  child: Center(
+                    child: Text(
+                      "2 hours ago",
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 10.0,
+                      ),
                     ),
                   ),
                 ),
@@ -281,17 +284,49 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           //info Column
           Expanded(
-            flex: 1,
+            flex: 7,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 5.0),
-                Text(
-                  activity.playerName,
-                  style: TextStyle(
-                    color: kBaseColor,
-                    fontSize: 16.0,
-                  ),
+                //SizedBox(height: 5.0),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 7,
+                      child: Container(
+                        height: 20,
+                        child: Text(
+                          activity.playerName,
+                          style: TextStyle(
+                            color: kBaseColor,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: kBaseColor,
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(10.0),
+                              bottomLeft: Radius.circular(10.0),
+                            )),
+                        width: 90,
+                        height: 30,
+                        child: Center(
+                          child: Text(
+                            selectedSportId == "0"
+                                ? activity.sportName
+                                : activity.lookingForValue,
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 12.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 5.0),
                 Text(
@@ -340,157 +375,157 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           //sport chip column
-          Expanded(
-            flex: 1,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                      color: kBaseColor,
-                      borderRadius: BorderRadius.only(
-                        //bottomRight: Radius.circular(10.0),
-                        //topLeft: Radius.circular(10.0),
-                        topRight: Radius.circular(10.0),
-                        bottomLeft: Radius.circular(10.0),
-                      )),
-                  width: 90,
-                  height: 35,
-                  child: Center(
-                    child: Text(
-                      selectedSportId == "0"
-                          ? activity.sportName
-                          : activity.lookingForValue,
-                      style: TextStyle(color: Colors.white, fontSize: 15.0),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Expanded(
+          //   flex: 1,
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.end,
+          //     children: [
+          //       Container(
+          //         decoration: BoxDecoration(
+          //             color: kBaseColor,
+          //             borderRadius: BorderRadius.only(
+          //               //bottomRight: Radius.circular(10.0),
+          //               //topLeft: Radius.circular(10.0),
+          //               topRight: Radius.circular(10.0),
+          //               bottomLeft: Radius.circular(10.0),
+          //             )),
+          //         width: 90,
+          //         height: 35,
+          //         child: Center(
+          //           child: Text(
+          //             selectedSportId == "0"
+          //                 ? activity.sportName
+          //                 : activity.lookingForValue,
+          //             style: TextStyle(color: Colors.white, fontSize: 15.0),
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );
   }
 
-  hostActivityItem(dynamic activity) {
-    return GestureDetector(
-      onTap: () {
-        Utility.showToast("${activity.sportName}");
-      },
-      child: Container(
-        margin: EdgeInsets.all(5.0),
-        decoration: kContainerBoxDecoration,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                  color: kBaseColor,
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(10.0),
-                    topLeft: Radius.circular(10.0),
-                    topRight: Radius.circular(10.0),
-                  )),
-              width: 90,
-              height: 35,
-              child: Center(
-                child: Text(
-                  selectedSportId == "0"
-                      ? activity.sportName
-                      : activity.lookingForValue,
-                  style: TextStyle(color: Colors.white, fontSize: 15.0),
-                ),
-              ),
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  flex: 4,
-                  child: Container(
-                    margin: EdgeInsets.all(5.0),
-//                  padding: EdgeInsets.all(5.0),
-                    height: 85.0,
-                    width: 85.0,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10.0),
-                      child: Image.network(
-                        playerImage == null
-                            ? APIResources.AVATAR_IMAGE
-                            : APIResources.IMAGE_URL + playerImage,
-                        //fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 6,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 10.0),
-                      Text(
-                        activity.playerName,
-                        style: TextStyle(
-                          color: kBaseColor,
-                          fontSize: 16.0,
-                        ),
-                      ),
-                      SizedBox(height: 10.0),
-                      Text(
-                        "Looking For: ${activity.lookingFor}",
-                        style: TextStyle(
-                          color: Colors.grey.shade900,
-                          fontSize: 12.0,
-                        ),
-                      ),
-                      SizedBox(height: 5.0),
-                      Text(
-                        "Location: ${activity.area}",
-                        style: TextStyle(
-                          color: Colors.grey.shade900,
-                          fontSize: 12.0,
-                        ),
-                      ),
-                      SizedBox(height: 5.0),
-                      Text(
-                        "Time: ${activity.timing}",
-                        style: TextStyle(
-                          color: Colors.grey.shade900,
-                          fontSize: 12.0,
-                        ),
-                      ),
-                      SizedBox(height: 5.0),
-                      Text(
-                        "Date: ${activity.startDate}",
-                        style: TextStyle(
-                          color: Colors.grey.shade900,
-                          fontSize: 12.0,
-                        ),
-                      ),
-                      SizedBox(height: 5.0),
-                      Text(
-                        activity.ballType != null
-                            ? "Ball Type: ${activity.ballType} "
-                            : "",
-                        style: TextStyle(
-                          color: Colors.grey.shade900,
-                          fontSize: 12.0,
-                        ),
-                      ),
-                      SizedBox(height: 5.0),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+//   hostActivityItem(dynamic activity) {
+//     return GestureDetector(
+//       onTap: () {
+//         Utility.showToast("${activity.sportName}");
+//       },
+//       child: Container(
+//         margin: EdgeInsets.all(5.0),
+//         decoration: kContainerBoxDecoration,
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.end,
+//           children: [
+//             Container(
+//               decoration: BoxDecoration(
+//                   color: kBaseColor,
+//                   borderRadius: BorderRadius.only(
+//                     bottomRight: Radius.circular(10.0),
+//                     topLeft: Radius.circular(10.0),
+//                     topRight: Radius.circular(10.0),
+//                   )),
+//               width: 90,
+//               height: 35,
+//               child: Center(
+//                 child: Text(
+//                   selectedSportId == "0"
+//                       ? activity.sportName
+//                       : activity.lookingForValue,
+//                   style: TextStyle(color: Colors.white, fontSize: 15.0),
+//                 ),
+//               ),
+//             ),
+//             Row(
+//               crossAxisAlignment: CrossAxisAlignment.center,
+//               children: [
+//                 Expanded(
+//                   flex: 4,
+//                   child: Container(
+//                     margin: EdgeInsets.all(5.0),
+// //                  padding: EdgeInsets.all(5.0),
+//                     height: 85.0,
+//                     width: 85.0,
+//                     child: ClipRRect(
+//                       borderRadius: BorderRadius.circular(10.0),
+//                       child: Image.network(
+//                         playerImage == null
+//                             ? APIResources.AVATAR_IMAGE
+//                             : APIResources.IMAGE_URL + playerImage,
+//                         //fit: BoxFit.cover,
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//                 Expanded(
+//                   flex: 6,
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     mainAxisAlignment: MainAxisAlignment.start,
+//                     children: [
+//                       SizedBox(height: 10.0),
+//                       Text(
+//                         activity.playerName,
+//                         style: TextStyle(
+//                           color: kBaseColor,
+//                           fontSize: 16.0,
+//                         ),
+//                       ),
+//                       SizedBox(height: 10.0),
+//                       Text(
+//                         "Looking For: ${activity.lookingFor}",
+//                         style: TextStyle(
+//                           color: Colors.grey.shade900,
+//                           fontSize: 12.0,
+//                         ),
+//                       ),
+//                       SizedBox(height: 5.0),
+//                       Text(
+//                         "Location: ${activity.area}",
+//                         style: TextStyle(
+//                           color: Colors.grey.shade900,
+//                           fontSize: 12.0,
+//                         ),
+//                       ),
+//                       SizedBox(height: 5.0),
+//                       Text(
+//                         "Time: ${activity.timing}",
+//                         style: TextStyle(
+//                           color: Colors.grey.shade900,
+//                           fontSize: 12.0,
+//                         ),
+//                       ),
+//                       SizedBox(height: 5.0),
+//                       Text(
+//                         "Date: ${activity.startDate}",
+//                         style: TextStyle(
+//                           color: Colors.grey.shade900,
+//                           fontSize: 12.0,
+//                         ),
+//                       ),
+//                       SizedBox(height: 5.0),
+//                       Text(
+//                         activity.ballType != null
+//                             ? "Ball Type: ${activity.ballType} "
+//                             : "",
+//                         style: TextStyle(
+//                           color: Colors.grey.shade900,
+//                           fontSize: 12.0,
+//                         ),
+//                       ),
+//                       SizedBox(height: 5.0),
+//                     ],
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
 
   var playerId;
   var playerImage;
@@ -525,123 +560,117 @@ class _HomeScreenState extends State<HomeScreen> {
     return activities;
   }
 
-  Widget sportBar() {
-    return Container(
-      padding: EdgeInsets.all(5.0),
-      child: FutureBuilder(
-        future: getMySports(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.data == null) {
-            return Container(
-              child: Center(
-                child: Text('Loading....'),
-              ),
-            );
-          }
-          if (snapshot.hasData) {
-            print("Has Data ${snapshot.data.length}");
-            return Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10.0),
-                border: Border.all(
-                  width: 1.0,
-                  color: Colors.grey,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    offset: Offset(0, 2),
-                    blurRadius: 6.0,
-                  )
-                ],
-              ),
-              height: 60,
+  // Widget sportBar() {
+  //   return Container(
+  //     padding: EdgeInsets.all(5.0),
+  //     child: FutureBuilder(
+  //       future: getMySports(),
+  //       builder: (BuildContext context, AsyncSnapshot snapshot) {
+  //         if (snapshot.data == null) {
+  //           return Container(
+  //             child: Center(
+  //               child: Text('Loading....'),
+  //             ),
+  //           );
+  //         }
+  //         if (snapshot.hasData) {
+  //           print("Has Data ${snapshot.data.length}");
+  //           return Container(
+  //             decoration: BoxDecoration(
+  //               color: Colors.white,
+  //               borderRadius: BorderRadius.circular(10.0),
+  //               border: Border.all(
+  //                 width: 1.0,
+  //                 color: Colors.grey,
+  //               ),
+  //               boxShadow: [
+  //                 BoxShadow(
+  //                   color: Colors.black12,
+  //                   offset: Offset(0, 2),
+  //                   blurRadius: 6.0,
+  //                 )
+  //               ],
+  //             ),
+  //             height: 60,
+  //             child: ListView.builder(
+  //               scrollDirection: Axis.horizontal,
+  //               itemCount: snapshot.data.length,
+  //               itemBuilder: (BuildContext context, int index) {
+  //                 return sportChip(snapshot.data[index]);
+  //               },
+  //             ),
+  //           );
+  //         } else {
+  //           return Container(
+  //             child: Center(
+  //               child: Text('No Data'),
+  //             ),
+  //           );
+  //         }
+  //       },
+  //     ),
+  //   );
+  // }
+
+  Widget sportBarList() {
+    return sports != null
+        ? Container(
+            margin: EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  offset: Offset(0, 2),
+                  blurRadius: 6.0,
+                )
+              ],
+            ),
+            height: 50,
+            child: Center(
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: snapshot.data.length,
+                itemCount: sports.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return sportChip(snapshot.data[index]);
+                  return sportChip(sports[index]);
                 },
               ),
-            );
-          } else {
-            return Container(
-              child: Center(
-                child: Text('No Data'),
-              ),
-            );
-          }
-        },
-      ),
-    );
-  }
-
-  final children = <Widget>[];
-
-  Widget ForExample() {
-    for (var i = 0; i < 10; i++) {
-      children.add(new Text("var $i"));
-    }
-    return Container(
-      child: ListView(
-        children: children,
-      ),
-    );
+            ),
+          )
+        : Container();
   }
 
   Widget sportChip(sport) {
     return GestureDetector(
       onTap: () {
-        print("Selected sport ${sport.sportId} ${sport.sportName} ");
         if (sport.sportId == null) {
-          Utility.showToast("Other Selected");
           sports.removeLast();
-
-          List<Sports> tempSports = sports;
-
-          Sports temp = new Sports();
-          for (Data s in allSports) {
-            String name = s.sportName.toString();
-            String sid = s.id.toString();
-            // print("My Sport $name - $sid");
-            temp.sportName = name;
-            temp.sportId = sid;
-            tempSports.add(temp);
-            print("all Sport ${s.sportName} - ${s.id}");
-            // for (Sports s2 in sports) {
-            //   int id = int.parse(s2.sportId!);
-            //   if (id == 0) {
-            //     continue;
-            //   } else {
-            //     if (id == s.id) {
-            //       print("found Sport ${s.sportName} - ${s.id}");
-            //     } else {
-            //       // print("My Sport ${s.sportName} - ${s.id}");
-            //
-            //       // String name = s.sportName.toString();
-            //       // String sid = s.id.toString();
-            //       // print("My Sport $name - $sid");
-            //       // temp.sportName = "test";
-            //       // temp.sportId = "9";
-            //       //tempSports.add(temp);
-            //     }
-            //   }
-            // }
-          }
-          for (var s2 in tempSports) {
-            print("Updated Sport ${s2.sportName} - ${s2.sportId}");
+          for (int i = 0; i < allSports.length; i++) {
+            bool status = false;
+            for (int j = 0; j < sports.length; j++) {
+              // print("Checking for ${allSports[i].sportName}");
+              if (allSports[i].sportName == sports[j].sportName) {
+                status = false;
+                // print("Found ${allSports[i].sportName}");
+                break;
+              } else {
+                status = true;
+                //  print("Not Found ${allSports[i].sportName}");
+              }
+            }
+            if (status) {
+              print("Sport Name ${allSports[i].sportName}");
+              Sports s = new Sports();
+              s.sportName = allSports[i].sportName;
+              s.sportId = allSports[i].id.toString();
+              sports.add(s);
+            }
           }
         } else {
-          Utility.showToast("${sport.sportName} Selected");
+          selectedSportId = sport.sportId.toString();
         }
-        // selectedSportId = sport.sportId.toString();
-        // if (selectedSportId != "-1") {
-        //   setState(() {});
-        // } else {
-        //   Utility.showToast("Others");
-        //   return;
-        // }
+
         setState(() {});
       },
       child: Container(
@@ -658,7 +687,7 @@ class _HomeScreenState extends State<HomeScreen> {
               : Colors.white,
         ),
         margin: EdgeInsets.all(10.0),
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(5.0),
         child: Center(
           child: Text(
             sport.sportName,
@@ -696,8 +725,7 @@ class _HomeScreenState extends State<HomeScreen> {
         s2.sportName = "Others";
         s2.sportId = null;
         sports.add(s2);
-
-        //print(sports);
+        setState(() {});
       }
     } else {}
     return sports;

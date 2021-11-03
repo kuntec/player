@@ -20,11 +20,14 @@ class _TournamentScreenState extends State<TournamentScreen> {
   int selectedIndex = 1;
   List<Sports> sports = [];
 
+  List<Data> allSports = [];
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getMySports();
+    getSports();
   }
 
   @override
@@ -106,7 +109,8 @@ class _TournamentScreenState extends State<TournamentScreen> {
               // ),
               SizedBox(height: 10),
               //buttonBar(),
-              sportBar(),
+              //sportBar(),
+              sportBarList(),
               allTournaments(),
               SizedBox(height: 10),
 
@@ -327,73 +331,177 @@ class _TournamentScreenState extends State<TournamentScreen> {
   //   );
   // }
 
-  Widget sportBar() {
-    // return Container(
-    //   height: 100,
-    //   child: ListView.builder(
-    //     scrollDirection: Axis.horizontal,
-    //     itemCount: 10,
-    //     itemBuilder: (BuildContext context, int index) => Container(
-    //       height: 50,
-    //       width: 50,
-    //       child: sportChip(sports[0]),
-    //     ),
-    //   ),
-    // );
-    return Container(
-      padding: EdgeInsets.all(5.0),
-      child: FutureBuilder(
-        future: getMySports(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.data == null) {
-            return Container(
-              child: Center(
-                child: Text('Loading....'),
-              ),
-            );
-          }
-          if (snapshot.hasData) {
-            print("Has Data ${snapshot.data.length}");
-            return Container(
-              decoration: kContainerBox,
-              height: 70,
+  // Widget sportBar() {
+  //   // return Container(
+  //   //   height: 100,
+  //   //   child: ListView.builder(
+  //   //     scrollDirection: Axis.horizontal,
+  //   //     itemCount: 10,
+  //   //     itemBuilder: (BuildContext context, int index) => Container(
+  //   //       height: 50,
+  //   //       width: 50,
+  //   //       child: sportChip(sports[0]),
+  //   //     ),
+  //   //   ),
+  //   // );
+  //   return Container(
+  //     padding: EdgeInsets.all(5.0),
+  //     child: FutureBuilder(
+  //       future: getMySports(),
+  //       builder: (BuildContext context, AsyncSnapshot snapshot) {
+  //         if (snapshot.data == null) {
+  //           return Container(
+  //             child: Center(
+  //               child: Text('Loading....'),
+  //             ),
+  //           );
+  //         }
+  //         if (snapshot.hasData) {
+  //           print("Has Data ${snapshot.data.length}");
+  //           return Container(
+  //             decoration: kContainerBox,
+  //             height: 70,
+  //             child: ListView.builder(
+  //               scrollDirection: Axis.horizontal,
+  //               itemCount: snapshot.data.length,
+  //               itemBuilder: (BuildContext context, int index) {
+  //                 return sportChip(snapshot.data[index]);
+  //               },
+  //             ),
+  //           );
+  //           // return ListView.builder(
+  //           //   scrollDirection: Axis.horizontal,
+  //           //   itemCount: snapshot.data.length,
+  //           //   itemBuilder: (BuildContext context, int index) {
+  //           //     return sportChip(snapshot.data[index]);
+  //           //   },
+  //           // );
+  //         } else {
+  //           return Container(
+  //             child: Center(
+  //               child: Text('No Data'),
+  //             ),
+  //           );
+  //         }
+  //       },
+  //     ),
+  //   );
+  // }
+  //
+  // Widget sportChip(sport) {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       print("Selected sport ${sport.sportId} ${sport.sportName} ");
+  //       selectedSportId = sport.sportId.toString();
+  //       setState(() {});
+  //     },
+  //     child: Container(
+  //       decoration: BoxDecoration(
+  //         borderRadius: BorderRadius.circular(10.0),
+  //         border: Border.all(
+  //           width: 1.0,
+  //           color: sport.sportId.toString() == selectedSportId
+  //               ? kBaseColor
+  //               : Colors.white,
+  //         ),
+  //         color: sport.sportId.toString() == selectedSportId
+  //             ? kBaseColor
+  //             : Colors.white,
+  //       ),
+  //       margin: EdgeInsets.all(10.0),
+  //       padding: EdgeInsets.all(10.0),
+  //
+  //       child: Center(
+  //         child: Text(
+  //           sport.sportName,
+  //           style: TextStyle(
+  //               color: sport.sportId.toString() == selectedSportId
+  //                   ? Colors.white
+  //                   : Colors.black,
+  //               fontSize: 14.0),
+  //         ),
+  //       ),
+  //       // margin: EdgeInsets.all(10.0),
+  //       // child: Center(
+  //       //   child: Chip(
+  //       //     label: Center(
+  //       //       child: Text(
+  //       //         sport.sportName,
+  //       //         style: TextStyle(color: Colors.white),
+  //       //       ),
+  //       //     ),
+  //       //     backgroundColor: kBaseColor,
+  //       //     elevation: 6.0,
+  //       //   ),
+  //       // ),
+  //     ),
+  //   );
+  // }
+
+  Widget sportBarList() {
+    return sports != null
+        ? Container(
+            margin: EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  offset: Offset(0, 2),
+                  blurRadius: 6.0,
+                )
+              ],
+            ),
+            height: 50,
+            child: Center(
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: snapshot.data.length,
+                itemCount: sports.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return sportChip(snapshot.data[index]);
+                  return sportChip(sports[index]);
                 },
               ),
-            );
-            // return ListView.builder(
-            //   scrollDirection: Axis.horizontal,
-            //   itemCount: snapshot.data.length,
-            //   itemBuilder: (BuildContext context, int index) {
-            //     return sportChip(snapshot.data[index]);
-            //   },
-            // );
-          } else {
-            return Container(
-              child: Center(
-                child: Text('No Data'),
-              ),
-            );
-          }
-        },
-      ),
-    );
+            ),
+          )
+        : Container();
   }
 
   Widget sportChip(sport) {
     return GestureDetector(
       onTap: () {
-        print("Selected sport ${sport.sportId} ${sport.sportName} ");
-        selectedSportId = sport.sportId.toString();
+        if (sport.sportId == null) {
+          sports.removeLast();
+          for (int i = 0; i < allSports.length; i++) {
+            bool status = false;
+            for (int j = 0; j < sports.length; j++) {
+              // print("Checking for ${allSports[i].sportName}");
+              if (allSports[i].sportName == sports[j].sportName) {
+                status = false;
+                // print("Found ${allSports[i].sportName}");
+                break;
+              } else {
+                status = true;
+                //  print("Not Found ${allSports[i].sportName}");
+              }
+            }
+            if (status) {
+              print("Sport Name ${allSports[i].sportName}");
+              Sports s = new Sports();
+              s.sportName = allSports[i].sportName;
+              s.sportId = allSports[i].id.toString();
+              sports.add(s);
+            }
+          }
+        } else {
+          selectedSportId = sport.sportId.toString();
+        }
+
         setState(() {});
       },
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
+          borderRadius: BorderRadius.circular(5.0),
           border: Border.all(
             width: 1.0,
             color: sport.sportId.toString() == selectedSportId
@@ -405,8 +513,7 @@ class _TournamentScreenState extends State<TournamentScreen> {
               : Colors.white,
         ),
         margin: EdgeInsets.all(10.0),
-        padding: EdgeInsets.all(10.0),
-
+        padding: EdgeInsets.all(5.0),
         child: Center(
           child: Text(
             sport.sportName,
@@ -414,22 +521,9 @@ class _TournamentScreenState extends State<TournamentScreen> {
                 color: sport.sportId.toString() == selectedSportId
                     ? Colors.white
                     : Colors.black,
-                fontSize: 14.0),
+                fontSize: 12.0),
           ),
         ),
-        // margin: EdgeInsets.all(10.0),
-        // child: Center(
-        //   child: Chip(
-        //     label: Center(
-        //       child: Text(
-        //         sport.sportName,
-        //         style: TextStyle(color: Colors.white),
-        //       ),
-        //     ),
-        //     backgroundColor: kBaseColor,
-        //     elevation: 6.0,
-        //   ),
-        // ),
       ),
     );
   }
@@ -480,13 +574,30 @@ class _TournamentScreenState extends State<TournamentScreen> {
         sports.clear();
         sports.add(s);
         sports.addAll(mySport.sports!);
-
-        print(sports);
+        Sports s2 = new Sports();
+        s2.sportName = "Others";
+        s2.sportId = null;
+        sports.add(s2);
+        setState(() {});
       }
     } else {}
     return sports;
   }
 
+  Future<List<Data>> getSports() async {
+    APICall apiCall = new APICall();
+    List<Data> data = [];
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      SportData sportData = await apiCall.getSports();
+
+      if (sportData.data != null) {
+        data.addAll(sportData.data!);
+        allSports = data;
+      }
+    } else {}
+    return data;
+  }
 //
 //   Widget activityItem(String sport, String tournament, String startDate,
 //       String endDate, String price) {

@@ -137,6 +137,7 @@ class Timeslot {
   String? _status;
   String? _daySlotId;
   String? _remainingSlot;
+  String? _bookedDay;
 
   Timeslot(
       {int? id,
@@ -149,7 +150,8 @@ class Timeslot {
       String? price,
       String? status,
       String? daySlotId,
-      String? remainingSlot}) {
+      String? remainingSlot,
+      String? bookedDay}) {
     this._id = id;
     this._day = day;
     this._startTime = startTime;
@@ -161,6 +163,7 @@ class Timeslot {
     this._status = status;
     this._daySlotId = daySlotId;
     this._remainingSlot = remainingSlot;
+    this._bookedDay = bookedDay;
   }
 
   int? get id => _id;
@@ -186,6 +189,9 @@ class Timeslot {
   String? get remainingSlot => _remainingSlot;
   set remainingSlot(String? remainingSlot) => _remainingSlot = remainingSlot;
 
+  String? get bookedDay => _bookedDay;
+  set bookedDay(String? bookedDay) => _bookedDay = bookedDay;
+
   Timeslot.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
     _day = json['day'];
@@ -198,6 +204,7 @@ class Timeslot {
     _status = json['status'];
     _daySlotId = json['day_slot_id'];
     _remainingSlot = json['remaining_slot'];
+    _bookedDay = json['booked_day'];
   }
 
   Map<String, dynamic> toJson() {
@@ -213,6 +220,7 @@ class Timeslot {
     data['status'] = this._status;
     data['day_slot_id'] = this._daySlotId;
     data['remaining_slot'] = this._remainingSlot;
+    data['booked_day'] = this._bookedDay;
     return data;
   }
 }

@@ -81,7 +81,6 @@ class _EventScreenState extends State<EventScreen> {
   Widget myEvent() {
     return Container(
       height: 700,
-      padding: EdgeInsets.all(20.0),
       child: FutureBuilder(
         future: getEvents(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -156,7 +155,7 @@ class _EventScreenState extends State<EventScreen> {
       child: Container(
         margin: EdgeInsets.all(10.0),
 //      padding: EdgeInsets.only(bottom: 10.0),
-        decoration: kContainerBoxDecoration,
+        decoration: kServiceBoxItem,
         // height: 200,
         child: Stack(
           children: [
@@ -190,7 +189,7 @@ class _EventScreenState extends State<EventScreen> {
                     event.name,
                     style: TextStyle(
                         color: kBaseColor,
-                        fontSize: 20.0,
+                        fontSize: 18.0,
                         fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 10.0),

@@ -4,10 +4,12 @@ import 'package:http/http.dart' as http;
 import 'package:player/api/api_resources.dart';
 import 'package:player/api/http_call.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/model/booking_data.dart';
 import 'package:player/model/dayslot_data.dart';
 import 'package:player/model/event_data.dart';
 import 'package:player/model/host_activity.dart';
 import 'package:player/model/looking_for_data.dart';
+import 'package:player/model/my_booking_data.dart';
 import 'package:player/model/my_sport.dart';
 import 'package:player/model/participant_data.dart';
 import 'package:player/model/player_data.dart';
@@ -240,7 +242,7 @@ class APICall {
 
 //  Venue
 
-  Future<dynamic> addVenue(filePath, Venue venue) async {
+  Future<VenueData> addVenue(filePath, Venue venue) async {
     print("add venue");
     try {
       FormData formData = new FormData.fromMap({
@@ -251,24 +253,38 @@ class APICall {
         "address": venue.address,
         "city": venue.city,
         "sport": venue.sport,
+        "sport_id": venue.sportId,
         "location_id": venue.locationId,
         "location_link": venue.locationLink,
         "facilities": venue.facilities,
         "player_id": venue.playerId,
+        "members": venue.members,
         "created_at": venue.createdAt,
         "image": await MultipartFile.fromFile(filePath, filename: "venue")
       });
 
-      Response response = await Dio().post(
+      Response<String> response = await Dio().post(
         APIResources.ADD_VENUE,
         data: formData,
       );
-      var responseBody = response.data;
-      print("Response Body ${responseBody['status']}");
-      return responseBody['venue'];
+      String responseBody = response.data.toString();
+      print("Venue Response Body ${responseBody.toString()}");
+
+      return VenueData.fromJson(jsonDecode(responseBody.toString()));
+//      return responseBody['venue'];
     } on DioError catch (e) {
-      return false;
+      print("DioError Body ${e.toString()}");
+      return VenueData();
     } catch (e) {}
+    return VenueData();
+  }
+
+  Future<VenueData> getVenue() async {
+    Uri url = Uri.parse(APIResources.GET_VENUE);
+    HttpCall call = new HttpCall();
+    http.Response response = await call.get(url);
+    print("Response Body: " + response.body);
+    return VenueData.fromJson(jsonDecode(response.body));
   }
 
   Future<VenueData> getMyVenue(String playerId) async {
@@ -558,17 +574,17 @@ class APICall {
     return TimeslotData.fromJson(jsonDecode(response.body));
   }
 
-  Future<DayslotData> addDayTimeSlot(String venueId) async {
-    Uri url = Uri.parse(APIResources.ADD_DAY_TIME_SLOT);
-    var header = new Map<String, String>();
-    var params = new Map<String, String>();
-    params['venue_id'] = venueId;
-
-    HttpCall call = new HttpCall();
-    http.Response response = await call.post(url, header, params);
-    print("Response Body: " + response.body);
-    return DayslotData.fromJson(jsonDecode(response.body));
-  }
+  // Future<DayslotData> addDayTimeSlot(String venueId) async {
+  //   Uri url = Uri.parse(APIResources.ADD_DAY_TIME_SLOT);
+  //   var header = new Map<String, String>();
+  //   var params = new Map<String, String>();
+  //   params['venue_id'] = venueId;
+  //
+  //   HttpCall call = new HttpCall();
+  //   http.Response response = await call.post(url, header, params);
+  //   print("Response Body: " + response.body);
+  //   return DayslotData.fromJson(jsonDecode(response.body));
+  // }
 
   //Event API
 
@@ -696,5 +712,57 @@ class APICall {
     http.Response response = await call.post(url, header, params);
     print("Response Body: " + response.body);
     return ParticipantData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<BookingData> addBooking(Booking booking) async {
+    Uri url = Uri.parse(APIResources.ADD_BOOKING);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['name'] = booking.name!;
+    params['number'] = booking.number!;
+    params['gender'] = booking.gender!;
+    params['age'] = booking.age!;
+    params['player_id'] = booking.playerId!;
+    params['sport_id'] = booking.sportId!;
+    params['venue_id'] = booking.venueId!;
+    params['payment_mode'] = booking.paymentMode!;
+    params['payment_status'] = booking.paymentStatus!;
+    params['booking_status'] = booking.bookingStatus!;
+    params['amount'] = booking.amount!;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return BookingData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<BookingData> addBookingSlot(Slot slot) async {
+    Uri url = Uri.parse(APIResources.ADD_BOOKING_SLOT);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['booking_id'] = slot.bookingId!;
+    params['venue_id'] = slot.venueId!;
+    params['time_slot_id'] = slot.timeSlotId!;
+    params['booking_date'] = slot.bookingDate!;
+    params['day'] = slot.day!;
+    params['start_time'] = slot.startTime!;
+    params['price'] = slot.price!;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return BookingData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<MyBookingData> getMyBookings(String playerId) async {
+    Uri url = Uri.parse(APIResources.GET_MY_BOOKINGS);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['player_id'] = playerId;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return MyBookingData.fromJson(jsonDecode(response.body));
   }
 }

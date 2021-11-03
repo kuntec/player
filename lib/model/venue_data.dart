@@ -81,6 +81,8 @@ class Venue {
     String? locationLink,
     String? createdAt,
     String? image,
+    String? sportId,
+    String? members,
     int? id,
   }) {
     _name = name;
@@ -96,6 +98,8 @@ class Venue {
     _locationLink = locationLink;
     _createdAt = createdAt;
     _image = image;
+    _sportId = sportId;
+    _members = members;
     _id = id;
   }
 
@@ -113,6 +117,8 @@ class Venue {
     _locationLink = json['location_link'];
     _createdAt = json['created_at'];
     _image = json['image'];
+    _sportId = json['sport_id'];
+    _members = json['members'];
     _id = json['id'];
   }
   String? _name;
@@ -128,6 +134,8 @@ class Venue {
   String? _locationLink;
   String? _createdAt;
   String? _image;
+  String? _sportId;
+  String? _members;
   int? _id;
 
   String? get name => _name;
@@ -143,6 +151,8 @@ class Venue {
   String? get locationLink => _locationLink;
   String? get createdAt => _createdAt;
   String? get image => _image;
+  String? get sportId => _sportId;
+  String? get members => _members;
   int? get id => _id;
 
   Map<String, dynamic> toJson() {
@@ -160,6 +170,8 @@ class Venue {
     map['location_link'] = _locationLink;
     map['created_at'] = _createdAt;
     map['image'] = _image;
+    map['sport_id'] = _sportId;
+    map['members'] = _members;
     map['id'] = _id;
     return map;
   }
@@ -218,6 +230,14 @@ class Venue {
 
   set name(String? value) {
     _name = value;
+  }
+
+  set sportId(String? value) {
+    _sportId = value;
+  }
+
+  set members(String? value) {
+    _members = value;
   }
 }
 

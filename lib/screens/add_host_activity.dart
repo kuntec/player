@@ -374,86 +374,94 @@ class _AddHostState extends State<AddHost> {
                                 )),
                           ),
                           SizedBox(height: k20Margin),
-                          RoundedButton(
-                            title: "CREATE ACTIVITY",
-                            color: kBaseColor,
-                            txtColor: Colors.white,
-                            minWidth: MediaQuery.of(context).size.width,
-                            onPressed: () async {
-                              if (this.selectedSport == null) {
-                                Utility.showToast("Please Select Sport");
-                                return;
-                              }
+                          isLoading!
+                              ? CircularProgressIndicator(
+                                  color: kBaseColor,
+                                )
+                              : RoundedButton(
+                                  title: "CREATE ACTIVITY",
+                                  color: kBaseColor,
+                                  txtColor: Colors.white,
+                                  minWidth: MediaQuery.of(context).size.width,
+                                  onPressed: () async {
+                                    if (this.selectedSport == null) {
+                                      Utility.showToast("Please Select Sport");
+                                      return;
+                                    }
 
-                              if (this._selectedLK == null) {
-                                Utility.showToast("Please Select Looking For");
-                                return;
-                              }
-                              if (this
-                                      .selectedSport!
-                                      .sportName!
-                                      .toLowerCase() ==
-                                  "cricket") {
-                                if (ballType == null) {
-                                  Utility.showToast("Please Select Ball Type");
-                                  return;
-                                }
-                              } else {
-                                if (ballType == null) {
-                                  ballType = "";
-                                }
-                              }
+                                    if (this._selectedLK == null) {
+                                      Utility.showToast(
+                                          "Please Select Looking For");
+                                      return;
+                                    }
+                                    if (this
+                                            .selectedSport!
+                                            .sportName!
+                                            .toLowerCase() ==
+                                        "cricket") {
+                                      if (ballType == null) {
+                                        Utility.showToast(
+                                            "Please Select Ball Type");
+                                        return;
+                                      }
+                                    } else {
+                                      if (ballType == null) {
+                                        ballType = "";
+                                      }
+                                    }
 
-                              if (area == null ||
-                                  area.toString().trim() == "") {
-                                Utility.showToast("Please Select Area");
-                                return;
-                              }
+                                    if (area == null ||
+                                        area.toString().trim() == "") {
+                                      Utility.showToast("Please Select Area");
+                                      return;
+                                    }
 
-                              if (date == null) {
-                                Utility.showToast("Please Select Date");
-                                return;
-                              }
-                              if (time == null) {
-                                Utility.showToast("Please Select Time");
-                                return;
-                              }
+                                    if (date == null) {
+                                      Utility.showToast("Please Select Date");
+                                      return;
+                                    }
+                                    if (time == null) {
+                                      Utility.showToast("Please Select Time");
+                                      return;
+                                    }
 
-                              Utility.showToast("CREATE ACTIVITY");
-                              SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
-                              playerId = prefs.get("playerId");
-                              playerName = prefs.get("playerName");
-                              //locationId = prefs.get("locationId");
-                              locationId = "1";
-                              sportId = this.selectedSport!.id!;
-                              sportName = this.selectedSport!.sportName!;
-                              lookingForId = this._selectedLK!.id!;
-                              lookingFor = this._selectedLK!.lookingFor!;
-                              lookingForValue =
-                                  this._selectedLK!.lookingForValue!;
-                              startDate = txtDate;
-                              timing = txtTime;
-                              createdAt = Utility.getCurrentDate();
+                                    //Utility.showToast("CREATE ACTIVITY");
+                                    SharedPreferences prefs =
+                                        await SharedPreferences.getInstance();
+                                    playerId = prefs.get("playerId");
+                                    playerName = prefs.get("playerName");
+                                    //locationId = prefs.get("locationId");
+                                    locationId = "1";
+                                    sportId = this.selectedSport!.id!;
+                                    sportName = this.selectedSport!.sportName!;
+                                    lookingForId = this._selectedLK!.id!;
+                                    lookingFor = this._selectedLK!.lookingFor!;
+                                    lookingForValue =
+                                        this._selectedLK!.lookingForValue!;
+                                    startDate = txtDate;
+                                    timing = txtTime;
+                                    createdAt = Utility.getCurrentDate();
 
-                              activity = new Activity();
-                              activity!.sportId = sportId.toString();
-                              activity!.sportName = sportName;
-                              activity!.lookingForId = lookingForId.toString();
-                              activity!.lookingFor = lookingFor;
-                              activity!.lookingForValue = lookingForValue;
-                              activity!.area = area;
-                              activity!.startDate = startDate;
-                              activity!.timing = timing;
-                              activity!.ballType = ballType;
-                              activity!.playerId = playerId.toString();
-                              activity!.playerName = playerName;
-                              activity!.locationId = locationId.toString();
-                              activity!.createdAt = createdAt;
-                              _onLoading();
-                              //addHostActivity(activity!);
-                            },
-                          ),
+                                    activity = new Activity();
+                                    activity!.sportId = sportId.toString();
+                                    activity!.sportName = sportName;
+                                    activity!.lookingForId =
+                                        lookingForId.toString();
+                                    activity!.lookingFor = lookingFor;
+                                    activity!.lookingForValue = lookingForValue;
+                                    activity!.area = area;
+                                    activity!.startDate = startDate;
+                                    activity!.timing = timing;
+                                    activity!.ballType = ballType;
+                                    activity!.playerId = playerId.toString();
+                                    activity!.playerName = playerName;
+                                    activity!.locationId =
+                                        locationId.toString();
+                                    activity!.createdAt = createdAt;
+                                    //_onLoading();
+                                    addHostActivity();
+                                  },
+                                ),
                         ],
                       ),
                     ),
@@ -482,6 +490,7 @@ class _AddHostState extends State<AddHost> {
 
   DateTime? date;
   TimeOfDay? time;
+  bool? isLoading = false;
 //  var txtDate = TextEditingController();
   var txtDate = "Select Date";
   var txtTime = "Select Time";
@@ -539,29 +548,32 @@ class _AddHostState extends State<AddHost> {
     });
   }
 
-  void _onLoading() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: new Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              new CircularProgressIndicator(),
-              new Text("Loading"),
-            ],
-          ),
-        );
-      },
-    );
-    addHostActivity();
-    // new Future.delayed(new Duration(seconds: 3), () {
-    //   Navigator.pop(context); //pop dialog
-    // });
-  }
+  // void _onLoading() {
+  //   showDialog(
+  //     context: context,
+  //     barrierDismissible: false,
+  //     builder: (BuildContext context) {
+  //       return Dialog(
+  //         child: new Row(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             new CircularProgressIndicator(),
+  //             new Text("Loading"),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  //
+  //   // new Future.delayed(new Duration(seconds: 3), () {
+  //   //   Navigator.pop(context); //pop dialog
+  //   // });
+  // }
 
   addHostActivity() async {
+    setState(() {
+      isLoading = true;
+    });
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
@@ -571,7 +583,11 @@ class _AddHostState extends State<AddHost> {
         print(hostActivity.message!);
 
         Utility.showToast(hostActivity.message!);
-        Navigator.pop(context);
+        setState(() {
+          isLoading = false;
+        });
+        //Navigator.pop(context);
+
       } else {
         print(hostActivity.message!);
         Utility.showToast(hostActivity.message!);

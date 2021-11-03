@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
+import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/player_data.dart';
@@ -112,7 +113,6 @@ class _FriendScreenState extends State<FriendScreen> {
   allPlayers() {
     return Container(
       height: 700,
-      padding: EdgeInsets.all(20.0),
       child: FutureBuilder(
         future: getPlayers(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -153,7 +153,7 @@ class _FriendScreenState extends State<FriendScreen> {
       },
       child: Container(
         margin: EdgeInsets.all(10.0),
-        decoration: kContainerBoxDecoration,
+        decoration: kServiceBoxItem,
         // height: 200,
         child: Stack(
           children: [
@@ -209,9 +209,24 @@ class _FriendScreenState extends State<FriendScreen> {
     );
   }
 
+  bool? isLoading = false;
+
   RequestFriends() {
     return Container(
-      child: Text("Request Friends"),
+      margin: EdgeInsets.all(20.0),
+      child: isLoading!
+          ? CircularProgressIndicator()
+          : RoundedButton(
+              title: "CONTINUE",
+              color: kBaseColor,
+              txtColor: Colors.white,
+              minWidth: MediaQuery.of(context).size.width,
+              onPressed: () async {
+                setState(() {
+                  isLoading = true;
+                });
+              },
+            ),
     );
   }
 }

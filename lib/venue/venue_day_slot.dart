@@ -202,10 +202,10 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
           dayslots![i],
         );
       }
-
+      Navigator.pop(context);
       if (dayslotData != null) {
         if (dayslotData.status!) {
-          addDayTimeSlot();
+          goToTimeSlot();
           Utility.showToast("Successfully Added");
         } else {
           Utility.showToast("Failed");
@@ -239,25 +239,25 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
     }
   }
 
-  addDayTimeSlot() async {
-    print("Adding day time slot");
-    APICall apiCall = new APICall();
-    bool connectivityStatus = await Utility.checkConnectivity();
-    DayslotData? dayslotData;
-    if (connectivityStatus) {
-      dayslotData = await apiCall.addDayTimeSlot(widget.venue.id.toString());
-
-      Navigator.pop(context);
-      if (dayslotData.status!) {
-        isAvailable = true;
-        goToTimeSlot();
-        Utility.showToast("Success");
-//        Navigator.pop(context);
-      } else {
-        Utility.showToast("Failed");
-      }
-    }
-  }
+//   addDayTimeSlot() async {
+//     print("Adding day time slot");
+//     APICall apiCall = new APICall();
+//     bool connectivityStatus = await Utility.checkConnectivity();
+//     DayslotData? dayslotData;
+//     if (connectivityStatus) {
+//       dayslotData = await apiCall.addDayTimeSlot(widget.venue.id.toString());
+//
+//       Navigator.pop(context);
+//       if (dayslotData.status!) {
+//         isAvailable = true;
+//         goToTimeSlot();
+//         Utility.showToast("Success");
+// //        Navigator.pop(context);
+//       } else {
+//         Utility.showToast("Failed");
+//       }
+//     }
+//   }
 
   goToTimeSlot() {
     Navigator.pushReplacement(
@@ -265,7 +265,7 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
         MaterialPageRoute(
             builder: (context) => VenueTimeSlot(
                   venue: widget.venue,
-                  dayslots: dayslots,
+                  // dayslots: dayslots,
                 )));
   }
 

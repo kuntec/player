@@ -229,8 +229,8 @@ class _PersonalCoachRegisterState extends State<PersonalCoachRegister> {
               service!.feesPerMatch = "";
               service!.feesPerDay = "";
               service!.experience = experience.toString();
-              service!.sportName = "";
-              service!.sportId = "";
+              service!.sportName = selectedSport!.sportName.toString();
+              service!.sportId = selectedSport!.id.toString();
               service!.companyName = name.toString();
 
               if (this.image != null) {

@@ -9,6 +9,7 @@ import 'package:player/constant/utility.dart';
 import 'package:player/model/venue_data.dart';
 import 'package:player/venue/add_venue_slot.dart';
 import 'package:player/venue/choose_sport.dart';
+import 'package:player/venue/venue_day_slot.dart';
 import 'package:player/venue/venue_facilities.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -34,6 +35,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
   var description;
   var facilities;
   var address;
+  var members;
   var locationLink;
   var city;
   var sport;
@@ -246,6 +248,16 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
           ),
           TextField(
             onChanged: (value) {
+              members = value;
+            },
+            decoration: InputDecoration(
+                labelText: "Max Person Allowed",
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                )),
+          ),
+          TextField(
+            onChanged: (value) {
               address = value;
             },
             decoration: InputDecoration(
@@ -339,8 +351,10 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
               venue!.address = address.toString();
               venue!.locationLink = locationLink;
               venue!.locationId = "1";
+              venue!.members = members.toString();
               venue!.city = city.toString();
               venue!.sport = sport.toString();
+              venue!.sportId = selectedSport.id.toString();
               venue!.createdAt = Utility.getCurrentDate();
 
               // Utility.showToast("Create Venue");
@@ -385,21 +399,24 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      dynamic addedVenue = await apiCall.addVenue(this.image!.path, venue!);
+      VenueData addedVenue = await apiCall.addVenue(this.image!.path, venue!);
+
       Navigator.pop(context);
+
       if (addedVenue == null) {
         print("Venue null");
         Utility.showToast("Venue Null");
       } else {
-        if (addedVenue['id'] != null) {
+        if (addedVenue.venue != null) {
           print("Venue Success");
           Utility.showToast(
-              "Venue Created Successfully ${addedVenue['id']} ${addedVenue['name']}");
+              "Venue Created Successfully ${addedVenue.venue!.id} ${addedVenue.venue!.name}");
+
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => AddVenueSlot(
-                        venue: addedVenue,
+                  builder: (context) => VenueDaySlot(
+                        venue: addedVenue.venue,
                       )));
         } else {
           print("Venue Failed");

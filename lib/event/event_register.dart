@@ -407,6 +407,7 @@ class _EventRegisterState extends State<EventRegister> {
                 )),
           ),
           TextField(
+            keyboardType: TextInputType.phone,
             onChanged: (value) {
               number = value;
             },
@@ -417,6 +418,7 @@ class _EventRegisterState extends State<EventRegister> {
                 )),
           ),
           TextField(
+            keyboardType: TextInputType.phone,
             onChanged: (value) {
               secondaryNumber = value;
             },
@@ -677,7 +679,7 @@ class _EventRegisterState extends State<EventRegister> {
       child: Container(
         margin: EdgeInsets.all(5.0),
 //      padding: EdgeInsets.only(bottom: 10.0),
-        decoration: kContainerBoxDecoration,
+        decoration: kServiceBoxItem,
         // height: 200,
         child: Stack(
           children: [
