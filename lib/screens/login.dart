@@ -13,6 +13,10 @@ import 'package:player/screens/otp.dart';
 import 'package:player/screens/sport_select.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:otp_text_field/otp_field.dart';
+import 'package:otp_text_field/otp_text_field.dart';
+import 'package:otp_text_field/style.dart';
+
 enum MobileVerificationState {
   SHOW_MOBILE_FORM_STATE,
   SHOW_OTP_FORM_STATE,
@@ -47,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              height: 150.0,
+              height: 50.0,
             ),
             Image(
               image: AssetImage(
@@ -96,64 +100,84 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextField(
                     controller: phoneController,
                     keyboardType: TextInputType.phone,
-                    onChanged: (value) {
-                      phoneNumber = value;
-                    },
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                    decoration: kTextFieldDecoration.copyWith(
-                        hintText: 'Enter Mobile Number',
-                        labelText: 'Phone',
-                        prefixText: "+91 - "),
-                    cursorColor: kBaseColor,
+                    decoration: InputDecoration(
+                        labelText: "Enter Mobile Number",
+                        prefixText: "+91 - ",
+                        labelStyle: TextStyle(
+                          color: Colors.grey,
+                        )),
                   ),
+                  // TextField(
+                  //   controller: phoneController,
+                  //   keyboardType: TextInputType.phone,
+                  //   onChanged: (value) {
+                  //     phoneNumber = value;
+                  //   },
+                  //   style: TextStyle(
+                  //     color: Colors.black,
+                  //   ),
+                  //   decoration: kTextFieldDecoration.copyWith(
+                  //       hintText: 'Enter Mobile Number',
+                  //       labelText: 'Phone',
+                  //       prefixText: "+91 - "),
+                  //   cursorColor: kBaseColor,
+                  // ),
                   SizedBox(height: 30.0),
-                  RoundedButton(
-                    title: "GET OTP",
-                    color: kBaseColor,
-                    txtColor: Colors.white,
-                    minWidth: MediaQuery.of(context).size.width,
-                    onPressed: () async {
+                  showLoading
+                      ? CircularProgressIndicator()
+                      : RoundedButton(
+                          title: "GET OTP",
+                          color: kBaseColor,
+                          txtColor: Colors.white,
+                          minWidth: MediaQuery.of(context).size.width,
+                          onPressed: () async {
 //                      checkPlayer(phoneNumber);
 
-                      phoneNumber = "+91" + phoneController.text;
+                            if (Utility.checkValidation(
+                                phoneController.text.toString())) {
+                              Utility.showToast("Please Enter Number");
+                              return;
+                            }
+                            FocusScope.of(context).requestFocus(FocusNode());
 
-                      print(phoneNumber);
-                      setState(() {
-                        showLoading = true;
-                      });
-                      await _auth.verifyPhoneNumber(
-                        phoneNumber: phoneNumber,
-                        verificationCompleted: (phoneAuthCredential) async {
-                          setState(() {
-                            showLoading = false;
-                          });
+                            phoneNumber = "+91" + phoneController.text;
+
+                            print(phoneNumber);
+                            setState(() {
+                              showLoading = true;
+                            });
+                            await _auth.verifyPhoneNumber(
+                              phoneNumber: phoneNumber,
+                              verificationCompleted:
+                                  (phoneAuthCredential) async {
+                                setState(() {
+                                  showLoading = false;
+                                });
 //                          signInWithPhoneAuthCredential(phoneAuthCredential);
-                        },
-                        verificationFailed: (verificationFailed) async {
-                          setState(() {
-                            showLoading = false;
-                          });
-                          // _scaffoldKey.currentState!.showSnackBar(
-                          //     SnackBar(content: Text("Verification Faile")));
-                        },
-                        codeSent: (verificationId, resendingToken) async {
-                          setState(() {
-                            showLoading = false;
-                            currentState =
-                                MobileVerificationState.SHOW_OTP_FORM_STATE;
-                            this.verificationId = verificationId;
-                          });
-                        },
-                        codeAutoRetrievalTimeout: (verificationId) async {
-                          setState(() {
-                            showLoading = false;
-                          });
-                        },
-                      );
-                    },
-                  ),
+                              },
+                              verificationFailed: (verificationFailed) async {
+                                setState(() {
+                                  showLoading = false;
+                                });
+                                // _scaffoldKey.currentState!.showSnackBar(
+                                //     SnackBar(content: Text("Verification Faile")));
+                              },
+                              codeSent: (verificationId, resendingToken) async {
+                                setState(() {
+                                  showLoading = false;
+                                  currentState = MobileVerificationState
+                                      .SHOW_OTP_FORM_STATE;
+                                  this.verificationId = verificationId;
+                                });
+                              },
+                              codeAutoRetrievalTimeout: (verificationId) async {
+                                setState(() {
+                                  showLoading = false;
+                                });
+                              },
+                            );
+                          },
+                        ),
                 ],
               ),
             ),
@@ -171,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              height: 150.0,
+              height: 50.0,
             ),
             Image(
               image: AssetImage(
@@ -217,21 +241,34 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
               child: Column(
                 children: [
-                  TextField(
-                    controller: otpController,
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) {
-//                      phoneNumber = value;
-                    },
-                    style: TextStyle(
-                      color: Colors.black,
+                  Container(
+                    margin: EdgeInsets.all(10.0),
+                    child: OTPTextField(
+                      length: 6,
+                      width: MediaQuery.of(context).size.width,
+                      fieldWidth: 30,
+                      style: TextStyle(fontSize: 14),
+                      textFieldAlignment: MainAxisAlignment.spaceAround,
+                      fieldStyle: FieldStyle.underline,
+                      obscureText: true,
+                      onCompleted: (pin) {
+                        print("Completed: " + pin);
+                        otpController.text = pin;
+                      },
                     ),
-                    decoration: kTextFieldDecoration.copyWith(
-                        hintText: 'OTP', labelText: 'OTP'),
-                    cursorColor: kBaseColor,
                   ),
+                  // TextField(
+                  //   controller: otpController,
+                  //   keyboardType: TextInputType.number,
+                  //   style: TextStyle(
+                  //     color: Colors.black,
+                  //   ),
+                  //   decoration: kTextFieldDecoration.copyWith(
+                  //       hintText: 'OTP', labelText: 'OTP'),
+                  //   cursorColor: kBaseColor,
+                  // ),
                   SizedBox(
-                    height: 10.0,
+                    height: 20.0,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -283,19 +320,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   SizedBox(height: 30.0),
-                  RoundedButton(
-                    title: "VERIFY & PROCEED",
-                    color: kBaseColor,
-                    txtColor: Colors.white,
-                    minWidth: MediaQuery.of(context).size.width,
-                    onPressed: () async {
-                      PhoneAuthCredential phoneAuthCredential =
-                          PhoneAuthProvider.credential(
-                              verificationId: verificationId,
-                              smsCode: otpController.text);
-                      signInWithPhoneAuthCredential(phoneAuthCredential);
-                    },
-                  ),
+                  showLoading
+                      ? CircularProgressIndicator()
+                      : RoundedButton(
+                          title: "VERIFY & PROCEED",
+                          color: kBaseColor,
+                          txtColor: Colors.white,
+                          minWidth: MediaQuery.of(context).size.width,
+                          onPressed: () async {
+                            PhoneAuthCredential phoneAuthCredential =
+                                PhoneAuthProvider.credential(
+                                    verificationId: verificationId,
+                                    smsCode: otpController.text);
+                            signInWithPhoneAuthCredential(phoneAuthCredential);
+                          },
+                        ),
                 ],
               ),
             ),
@@ -324,13 +363,9 @@ class _LoginScreenState extends State<LoginScreen> {
 //      ),
         backgroundColor: Colors.white,
         body: Container(
-          child: showLoading
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : currentState == MobileVerificationState.SHOW_MOBILE_FORM_STATE
-                  ? getMobileFormWidget(context)
-                  : getOtpFormWidget(context),
+          child: currentState == MobileVerificationState.SHOW_MOBILE_FORM_STATE
+              ? getMobileFormWidget(context)
+              : getOtpFormWidget(context),
         ),
       ),
     );
@@ -370,16 +405,26 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       final authCredential =
           await _auth.signInWithCredential(phoneAuthCredential);
-      setState(() {
-        showLoading = false;
-      });
+      // setState(() {
+      //   showLoading = false;
+      // });
 
       if (authCredential.user != null) {
-        checkPlayer(phoneNumber);
+        User? firebaseUser = authCredential.user;
+
+        Utility.showToast("User Found ${firebaseUser!.uid}");
+        setState(() {
+          showLoading = false;
+        });
+        // checkPlayer(phoneNumber);
         // Navigator.push(
         //     context,
         //     MaterialPageRoute(
         //         builder: (context) => AddDetails(phoneNumber: phoneNumber)));
+      } else {
+        setState(() {
+          showLoading = false;
+        });
       }
     } on FirebaseException catch (e) {
       setState(() {
@@ -398,6 +443,10 @@ class _LoginScreenState extends State<LoginScreen> {
       print("Player " + phoneNumber);
 //      showToast("Player " + phoneNumber);
       PlayerData playerData = await apiCall.checkPlayer(phoneNumber);
+
+      setState(() {
+        showLoading = false;
+      });
       if (playerData.status!) {
         print("Player Found");
 //        showToast("Player Found");

@@ -7,6 +7,21 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:player/constant/constants.dart';
 
 class Utility {
+  static bool isKeyboardShowing() {
+    if (WidgetsBinding.instance != null) {
+      return WidgetsBinding.instance!.window.viewInsets.bottom > 0;
+    } else {
+      return false;
+    }
+  }
+
+  static closeKeyboard(BuildContext context) {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
+  }
+
   static Future<bool> checkConnectivity() async {
     var result = await Connectivity().checkConnectivity();
     if (result == ConnectivityResult.none) {

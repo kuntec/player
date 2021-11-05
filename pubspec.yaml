@@ -36,6 +36,10 @@ dependencies:
   firebase_auth: ^3.1.1
   firebase_core: ^1.6.0
   firebase_messaging: ^10.0.7
+  cloud_firestore:
+  firebase_storage:
+  google_sign_in:
+  intl:
   flutter_local_notifications: ^8.2.0
   file_picker:
   dio: ^4.0.0
@@ -43,8 +47,10 @@ dependencies:
   get_storage:
   cached_network_image:
   image_picker:
-  provider:
+  provider: ^6.0.1
+  photo_view:
   flutter_phone_direct_caller: ^2.0.0
+  otp_text_field: ^1.1.1
 
 #  geolocator:
 #  geocoding:
