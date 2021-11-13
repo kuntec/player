@@ -494,7 +494,7 @@ class _AddHostState extends State<AddHost> {
                                         this._selectedLK!.lookingForValue!;
                                     startDate = txtDate;
                                     timing = txtTime;
-                                    createdAt = Utility.getCurrentDate();
+                                    createdAt = DateTime.now();
 
                                     activity = new Activity();
                                     activity!.sportId = sportId.toString();

@@ -4,8 +4,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:player/api/api_call.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/constant/utility.dart';
+import 'package:player/model/player_data.dart';
 import 'package:player/screens/login.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,6 +40,13 @@ class _PlayerProfileState extends State<PlayerProfile> {
     if (file == null) return;
     final fileName = basename(file!.path);
     final destination = 'files/$fileName';
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getMyProfile();
   }
 
   @override
@@ -155,5 +165,22 @@ class _PlayerProfileState extends State<PlayerProfile> {
         context, MaterialPageRoute(builder: (_) => LoginScreen()));
   }
 
-  getMyProfile() {}
+  getMyProfile() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var playerId = prefs.get("playerId");
+    var playerName = prefs.get("playerName");
+    var mobile = prefs.get("mobile");
+    //Utility.showToast("Player ${playerId} mobile ${mobile}");
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      print("Player " + mobile.toString());
+//      showToast("Player " + phoneNumber);
+      PlayerData playerData = await apiCall.checkPlayer(mobile.toString());
+
+      if (playerData.status!) {
+        Utility.showToast("Player Found ${playerData.player!.name}");
+      }
+    }
+  }
 }

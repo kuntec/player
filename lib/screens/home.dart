@@ -14,6 +14,7 @@ import 'package:player/friends/chat_screen.dart';
 import 'package:player/friends/friend.dart';
 import 'package:player/model/host_activity.dart';
 import 'package:player/model/my_sport.dart';
+import 'package:player/model/player_data.dart';
 import 'package:player/model/sport_data.dart';
 import 'package:player/screens/add_host_activity.dart';
 import 'package:player/screens/add_tournament.dart';
@@ -290,15 +291,8 @@ class _HomeScreenState extends State<HomeScreen> {
   hostActivityItem2(dynamic activity) {
     return GestureDetector(
       onTap: () {
-        Utility.showToast("Activity To Chat");
-
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (context) => ChatPage(
-        //             peerId: activity.playerId, // send fuid
-        //             peerAvatar: activity.playerName,
-        //             peerNickname: activity.playerName)));
+        //Utility.showToast("Activity To Chat ${activity.playerId}");
+        getPlayerById(activity.playerId);
       },
       child: Container(
         margin: EdgeInsets.all(5.0),
@@ -439,6 +433,26 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  getPlayerById(String id) async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      PlayerData playerData = await apiCall.getPlayerById(id);
+
+      if (playerData.status!) {
+//        Utility.showToast("Player Found ${playerData.player!.name}");
+        // Utility.showToast("Player FUID ${playerData.player!.fuid}");
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ChatPage(
+                    peerId: playerData.player!.fuid.toString(), // send fuid
+                    peerAvatar: playerData.player!.image.toString(),
+                    peerNickname: playerData.player!.name.toString())));
+      }
+    }
   }
 
 //   hostActivityItem(dynamic activity) {

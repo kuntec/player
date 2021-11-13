@@ -44,6 +44,17 @@ class APICall {
     return PlayerData.fromJson(jsonDecode(response.body));
   }
 
+  Future<PlayerData> getPlayerById(String id) async {
+    Uri url = Uri.parse(APIResources.GET_PLAYER_BY_ID);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['id'] = id;
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return PlayerData.fromJson(jsonDecode(response.body));
+  }
+
   Future<PlayerData> checkPlayer(String phoneNumber) async {
     Uri url = Uri.parse(APIResources.CHECK_PLAYER);
     var header = new Map<String, String>();
@@ -65,6 +76,21 @@ class APICall {
     params['dob'] = dob;
     params['gender'] = gender;
     params['f_uid'] = fuid;
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return PlayerData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<PlayerData> updatePlayer(Player player) async {
+    Uri url = Uri.parse(APIResources.UPDATE_PLAYER);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['name'] = player.name!;
+    params['mobile'] = player.mobile!;
+    params['dob'] = player.dob!;
+    params['gender'] = player.gender!;
+    params['email'] = player.email!;
     HttpCall call = new HttpCall();
     http.Response response = await call.post(url, header, params);
     print("Response Body: " + response.body);
