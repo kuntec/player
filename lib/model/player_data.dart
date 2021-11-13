@@ -131,6 +131,7 @@ class Player {
     String? image,
     String? email,
     String? locationId,
+    String? fuid,
     int? id,
   }) {
     _name = name;
@@ -140,6 +141,7 @@ class Player {
     _image = image;
     _email = email;
     _locationId = locationId;
+    _fuid = fuid;
     _id = id;
   }
   Player.fromJson(dynamic json) {
@@ -150,6 +152,7 @@ class Player {
     _image = json['image'];
     _email = json['email'];
     _locationId = json['location_id'];
+    _fuid = json['f_uid'];
     _id = json['id'];
   }
   String? _name;
@@ -159,6 +162,7 @@ class Player {
   String? _image;
   String? _email;
   String? _locationId;
+  String? _fuid;
   int? _id;
 
   String? get name => _name;
@@ -169,6 +173,7 @@ class Player {
   int? get id => _id;
   String? get email => _email;
   String? get locationId => _locationId;
+  String? get fuid => _fuid;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -179,6 +184,7 @@ class Player {
     map['image'] = _image;
     map['email'] = _email;
     map['location_id'] = _locationId;
+    map['f_uid'] = _fuid;
     map['id'] = _id;
     return map;
   }

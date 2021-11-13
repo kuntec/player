@@ -55,6 +55,7 @@ class Data {
     String? sportName,
     String? sportDesc,
     String? sportIcon,
+    String? activeIcon,
     String? createdAt,
     String? sportCategoryId,
   }) {
@@ -71,6 +72,7 @@ class Data {
     _sportName = json['sport_name'];
     _sportDesc = json['sport_desc'];
     _sportIcon = json['sport_icon'];
+    _activeIcon = json['active_icon'];
     _createdAt = json['created_at'];
     _sportCategoryId = json['sport_category_id'];
   }
@@ -78,6 +80,7 @@ class Data {
   String? _sportName;
   String? _sportDesc;
   String? _sportIcon;
+  String? _activeIcon;
   String? _createdAt;
   String? _sportCategoryId;
 
@@ -85,6 +88,7 @@ class Data {
   String? get sportName => _sportName;
   String? get sportDesc => _sportDesc;
   String? get sportIcon => _sportIcon;
+  String? get activeIcon => _activeIcon;
   String? get createdAt => _createdAt;
   String? get sportCategoryId => _sportCategoryId;
 
@@ -94,6 +98,7 @@ class Data {
     map['sport_name'] = _sportName;
     map['sport_desc'] = _sportDesc;
     map['sport_icon'] = _sportIcon;
+    map['active_icon'] = _activeIcon;
     map['created_at'] = _createdAt;
     map['sport_category_id'] = _sportCategoryId;
     return map;
@@ -121,5 +126,9 @@ class Data {
 
   set id(int? value) {
     _id = value;
+  }
+
+  set activeIcon(String? value) {
+    _activeIcon = value;
   }
 }

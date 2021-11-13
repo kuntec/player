@@ -5,6 +5,8 @@ import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/model/my_sport.dart';
+import 'package:player/model/sport_data.dart';
 import 'package:player/model/venue_data.dart';
 import 'package:player/venue/add_venue.dart';
 import 'package:player/screens/register_ground.dart';
@@ -20,6 +22,152 @@ class VenueScreen extends StatefulWidget {
 }
 
 class _VenueScreenState extends State<VenueScreen> {
+  int selectedIndex = 1;
+  List<Sports> sports = [];
+
+  List<Data> allSports = [];
+
+  var selectedSportId = "0";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getMySports();
+    getSports();
+  }
+
+  Future<List<Sports>> getMySports() async {
+    APICall apiCall = new APICall();
+    // List<Data> data = [];
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var playerId = prefs.get("playerId");
+      MySport mySport = await apiCall.getMySports(playerId.toString());
+
+      if (mySport.sports != null) {
+        Sports s = new Sports();
+        s.sportName = "All";
+        s.sportId = "0";
+        sports.clear();
+        sports.add(s);
+        sports.addAll(mySport.sports!);
+        Sports s2 = new Sports();
+        s2.sportName = "Others";
+        s2.sportId = null;
+        sports.add(s2);
+        setState(() {});
+      }
+    } else {}
+    return sports;
+  }
+
+  Future<List<Data>> getSports() async {
+    APICall apiCall = new APICall();
+    List<Data> data = [];
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      SportData sportData = await apiCall.getSports();
+
+      if (sportData.data != null) {
+        data.addAll(sportData.data!);
+        allSports = data;
+      }
+    } else {}
+    return data;
+  }
+
+  Widget sportBarList() {
+    return sports != null
+        ? Container(
+            margin: EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  offset: Offset(0, 2),
+                  blurRadius: 6.0,
+                )
+              ],
+            ),
+            height: 50,
+            child: Center(
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: sports.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return sportChip(sports[index]);
+                },
+              ),
+            ),
+          )
+        : Container();
+  }
+
+  Widget sportChip(sport) {
+    return GestureDetector(
+      onTap: () {
+        if (sport.sportId == null) {
+          sports.removeLast();
+          for (int i = 0; i < allSports.length; i++) {
+            bool status = false;
+            for (int j = 0; j < sports.length; j++) {
+              // print("Checking for ${allSports[i].sportName}");
+              if (allSports[i].sportName == sports[j].sportName) {
+                status = false;
+                // print("Found ${allSports[i].sportName}");
+                break;
+              } else {
+                status = true;
+                //  print("Not Found ${allSports[i].sportName}");
+              }
+            }
+            if (status) {
+              print("Sport Name ${allSports[i].sportName}");
+              Sports s = new Sports();
+              s.sportName = allSports[i].sportName;
+              s.sportId = allSports[i].id.toString();
+              sports.add(s);
+            }
+          }
+        } else {
+          selectedSportId = sport.sportId.toString();
+        }
+
+        setState(() {});
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5.0),
+          border: Border.all(
+            width: 1.0,
+            color: sport.sportId.toString() == selectedSportId
+                ? kBaseColor
+                : Colors.white,
+          ),
+          color: sport.sportId.toString() == selectedSportId
+              ? kBaseColor
+              : Colors.white,
+        ),
+        margin: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(5.0),
+        child: Center(
+          child: Text(
+            sport.sportName,
+            style: TextStyle(
+                color: sport.sportId.toString() == selectedSportId
+                    ? Colors.white
+                    : Colors.black,
+                fontSize: 12.0),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -60,6 +208,7 @@ class _VenueScreenState extends State<VenueScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              sportBarList(),
               myVenue(),
             ],
           ),
@@ -84,15 +233,23 @@ class _VenueScreenState extends State<VenueScreen> {
           }
           if (snapshot.hasData) {
             print("Has Data ${snapshot.data.length}");
-            return ListView.builder(
-              padding: EdgeInsets.only(bottom: 200),
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: snapshot.data.length,
-              itemBuilder: (BuildContext context, int index) {
-                return venueItem(snapshot.data[index]);
-              },
-            );
+            if (snapshot.data.length == 0) {
+              return Container(
+                child: Center(
+                  child: Text('No Data'),
+                ),
+              );
+            } else {
+              return ListView.builder(
+                padding: EdgeInsets.only(bottom: 200),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return venueItem(snapshot.data[index]);
+                },
+              );
+            }
           } else {
             return Container(
               child: Center(
@@ -110,8 +267,10 @@ class _VenueScreenState extends State<VenueScreen> {
   Future<List<Venue>?> getMyVenues() async {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
+    var locationId = "1";
     if (connectivityStatus) {
-      VenueData venueData = await apiCall.getVenue();
+      VenueData venueData =
+          await apiCall.getVenue(locationId.toString(), selectedSportId);
       if (venueData.venues != null) {
         venues = venueData.venues!;
         //setState(() {});
@@ -123,6 +282,8 @@ class _VenueScreenState extends State<VenueScreen> {
       } else {
         print(venueData.message!);
       }
+    } else {
+      Utility.showToast("NO INTERNET CONNECTION");
     }
     return venues;
   }
@@ -130,7 +291,7 @@ class _VenueScreenState extends State<VenueScreen> {
   Widget venueItem(dynamic venue) {
     return GestureDetector(
       onTap: () {
-        Utility.showToast("ID ${venue.id}");
+        // Utility.showToast("ID ${venue.id}");
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -221,7 +382,7 @@ class _VenueScreenState extends State<VenueScreen> {
                   //   ],
                   // ),
                   Text(
-                    venue.address,
+                    "Address: ${venue.address}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 12.0,

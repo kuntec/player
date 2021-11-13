@@ -9,6 +9,7 @@ import 'package:player/constant/utility.dart';
 import 'package:player/model/service_model.dart';
 import 'package:player/services/service_photos.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:player/model/sport_data.dart';
 
 class ManufacturerRegister extends StatefulWidget {
   dynamic serviceId;
@@ -22,6 +23,8 @@ class ManufacturerRegister extends StatefulWidget {
 class _ManufacturerRegisterState extends State<ManufacturerRegister> {
   File? image;
   Service? service;
+  Data? selectedSport;
+  List<Data>? sports;
 
   var companyName;
   var address;
@@ -31,6 +34,58 @@ class _ManufacturerRegisterState extends State<ManufacturerRegister> {
   var contactNo;
   var secondaryNo;
   var details;
+
+  Future<List<Data>> getSports() async {
+    APICall apiCall = new APICall();
+    List<Data> list = [];
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      SportData sportData = await apiCall.getSports();
+      if (sportData.data != null) {
+        list = sportData.data!;
+        setState(() {
+          sports = list;
+//          this.selectedSport = list[0];
+        });
+      }
+    }
+    return list;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getSports();
+  }
+
+  Widget buildSportData(List<Data> data) {
+    return DropdownButton<Data>(
+      value: selectedSport != null ? selectedSport : null,
+      hint: Text("Select Sport"),
+      isExpanded: true,
+      icon: const Icon(Icons.keyboard_arrow_down),
+      iconSize: 24,
+      elevation: 16,
+      style: const TextStyle(color: Colors.black),
+      underline: Container(
+        height: 2,
+        color: kBaseColor,
+      ),
+      onChanged: (Data? newValue) {
+        // this._selectedLK = newValue!;
+        setState(() {
+          this.selectedSport = newValue!;
+        });
+      },
+      items: data.map<DropdownMenuItem<Data>>((Data value) {
+        return DropdownMenuItem<Data>(
+          value: value,
+          child: Text(value.sportName!),
+        );
+      }).toList(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,6 +164,11 @@ class _ManufacturerRegisterState extends State<ManufacturerRegister> {
               ),
             ),
           ),
+          SizedBox(height: kMargin),
+          sports != null
+              ? buildSportData(sports!)
+              : Container(child: Text("Loading...")),
+          SizedBox(height: kMargin),
           TextField(
             keyboardType: TextInputType.text,
             onChanged: (value) {
@@ -238,8 +298,8 @@ class _ManufacturerRegisterState extends State<ManufacturerRegister> {
               service!.feesPerMatch = "";
               service!.feesPerDay = "";
               service!.experience = "";
-              service!.sportName = "";
-              service!.sportId = "";
+              service!.sportName = selectedSport!.sportName;
+              service!.sportId = selectedSport!.id.toString();
               service!.companyName = companyName.toString();
 
               if (this.image != null) {

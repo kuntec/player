@@ -24,7 +24,7 @@ class _ServicePhotosState extends State<ServicePhotos> {
     return Scaffold(
       appBar: AppBar(
 //        leading: Icon(Icons.arrow_back),
-        title: Text("Photos ${widget.serviceDataId}"),
+        title: Text("Photos"),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -115,12 +115,6 @@ class _ServicePhotosState extends State<ServicePhotos> {
             );
           }
           if (snapshot.hasData) {
-            print("Has Data ${snapshot.data.length}");
-            // return Container(
-            //   child: Center(
-            //     child: Text('Yes Data ${snapshot.data}'),
-            //   ),
-            // );
             if (snapshot.data.length == 0) {
               return Container(
                 child: Center(
@@ -135,16 +129,6 @@ class _ServicePhotosState extends State<ServicePhotos> {
                   itemBuilder: (context, index) {
                     return photoItem(snapshot.data![index]);
                   });
-
-              // return ListView.builder(
-              //   padding: EdgeInsets.only(bottom: 250),
-              //   scrollDirection: Axis.vertical,
-              //   shrinkWrap: true,
-              //   itemCount: snapshot.data.length,
-              //   itemBuilder: (BuildContext context, int index) {
-              //     return photoItem(snapshot.data[index]);
-              //   },
-              // );
             }
           } else {
             return Container(

@@ -65,7 +65,7 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
         actions: [
           GestureDetector(
             onTap: () {
-              Utility.showToast("SAVE");
+              //Utility.showToast("SAVE");
               Navigator.pop(context);
               // for (var t in timeslots!) {
               //   t.price = "0";
@@ -279,9 +279,10 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
       },
       child: Container(
         margin: EdgeInsets.all(10.0),
-        width: 50,
-        height: 50,
-        decoration: kServiceBoxItem.copyWith(color: Colors.white),
+        width: 40,
+        height: 40,
+        decoration: kServiceBoxItem.copyWith(
+            borderRadius: BorderRadius.circular(5.0), color: Colors.white),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -296,22 +297,25 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
             Container(
               margin: EdgeInsets.only(left: 10),
               child: Text(
-                "${data.startTime} to ${data.endTime}",
-                style: TextStyle(color: kBaseColor, fontSize: 18.0),
+                "${data.startTime}",
+                style: TextStyle(color: kBaseColor, fontSize: 16.0),
               ),
             ),
+            SizedBox(height: 10),
             Container(
               margin: EdgeInsets.only(left: 10),
               child: Text(
-                "\u{20B9} ${data.price}",
-                style: TextStyle(color: kBaseColor, fontSize: 18.0),
+                "\u{20B9} ${data.price} Status ${data.status}",
+                style: TextStyle(color: Colors.black87, fontSize: 16.0),
               ),
             ),
+            SizedBox(height: 10),
             Container(
-              margin: EdgeInsets.only(left: 10),
+              alignment: Alignment.bottomRight,
+              margin: EdgeInsets.only(right: 5),
               child: Text(
                 "${data.noSlot} Left",
-                style: TextStyle(color: Colors.grey, fontSize: 18.0),
+                style: TextStyle(color: Colors.grey, fontSize: 12.0),
               ),
             ),
           ],
@@ -323,6 +327,7 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
   void _showMaterialDialog(slot, index) async {
     bool isTextEnabled;
     bool isStopBooking;
+    bool isStopBookingDay = false;
     if (slot.status == "1") {
       isTextEnabled = false;
       isStopBooking = false;
@@ -388,11 +393,21 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
                         : SizedBox(height: 1.0),
                     isTextEnabled
                         ? CheckboxListTile(
-                            title: Text("Stop Booking For Entire Day "),
+                            title: Text("Stop Booking This Slot "),
                             value: isStopBooking,
                             onChanged: (value) {
                               setState(() {
                                 isStopBooking = value!;
+                              });
+                            })
+                        : SizedBox(width: 10.0),
+                    isTextEnabled
+                        ? CheckboxListTile(
+                            title: Text("Stop Booking For Entire Day "),
+                            value: isStopBookingDay,
+                            onChanged: (value) {
+                              setState(() {
+                                isStopBookingDay = value!;
                               });
                             })
                         : SizedBox(width: 10.0),
@@ -421,6 +436,7 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
                         t.price = priceController.text;
                         t.noSlot = slotController.text;
                         t.remainingSlot = slotController.text;
+
                         updateTimeSlots(t);
                       }
                       isFirstEntry = false;
@@ -430,6 +446,11 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
                         if (id == t.id) {
                           t.noSlot = slotController.text;
                           t.price = priceController.text;
+                          if (isStopBooking) {
+                            t.status = "0";
+                          } else {
+                            t.status = "1";
+                          }
                           updateTimeSlots(t);
                           print("Time slot ${t.price}");
                         }

@@ -19,6 +19,7 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
   List<DaySlot>? dayslots;
   TimeOfDay? openTime;
   TimeOfDay? closeTime;
+  bool? isLoading = false;
 
   // var txtOpenTime = "Select Start Date";
   // var txtEndDate = "Select End Date";
@@ -144,23 +145,24 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
                     )
                   : SizedBox(height: 10.0),
               SizedBox(height: 10.0),
-              RoundedButton(
-                title: "Next",
-                color: kBaseColor,
-                txtColor: Colors.white,
-                minWidth: MediaQuery.of(context).size.width,
-                onPressed: () {
-                  _onLoading();
-                  // goToTimeSlot();
-                  // if (isAvailable!) {
-                  //   print("UPDATE");
-                  //   print("DAY SLOT FOUND $isAvailable");
-                  // } else {
-                  //   print("ADD");
-                  //   print("DAY SLOT NOT  $isAvailable");
-                  // }
-                },
-              ),
+              isLoading == true
+                  ? Center(
+                      child: CircularProgressIndicator(
+                        color: kBaseColor,
+                      ),
+                    )
+                  : RoundedButton(
+                      title: "Next",
+                      color: kBaseColor,
+                      txtColor: Colors.white,
+                      minWidth: MediaQuery.of(context).size.width,
+                      onPressed: () {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        isAvailable! ? updateDaySlots() : addDaySlots();
+                      },
+                    ),
             ],
           ),
         ),
@@ -168,27 +170,27 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
     );
   }
 
-  void _onLoading() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: new Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              new CircularProgressIndicator(),
-              new Text("Loading"),
-            ],
-          ),
-        );
-      },
-    );
-    isAvailable! ? updateDaySlots() : addDaySlots();
-    // new Future.delayed(new Duration(seconds: 3), () {
-    //   Navigator.pop(context); //pop dialog
-    // });
-  }
+  // void _onLoading() {
+  //   showDialog(
+  //     context: context,
+  //     barrierDismissible: false,
+  //     builder: (BuildContext context) {
+  //       return Dialog(
+  //         child: new Row(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             new CircularProgressIndicator(),
+  //             new Text("Loading"),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  //
+  //   // new Future.delayed(new Duration(seconds: 3), () {
+  //   //   Navigator.pop(context); //pop dialog
+  //   // });
+  // }
 
   addDaySlots() async {
     print("ADD Day Slot");
@@ -202,7 +204,10 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
           dayslots![i],
         );
       }
-      Navigator.pop(context);
+      setState(() {
+        isLoading = false;
+      });
+
       if (dayslotData != null) {
         if (dayslotData.status!) {
           goToTimeSlot();
@@ -226,13 +231,21 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
           dayslots![i],
         );
       }
+      setState(() {
+        isLoading = false;
+      });
 
-      Navigator.pop(context);
       if (dayslotData != null) {
         if (dayslotData.status!) {
           goToTimeSlot();
+          setState(() {
+            isLoading = false;
+          });
           Utility.showToast("Successfully Updated");
         } else {
+          setState(() {
+            isLoading = false;
+          });
           Utility.showToast("Failed");
         }
       }
@@ -281,7 +294,7 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
           dayslots = dayslotData.daySlots!;
           isAvailable = true;
           print("DAY SLOT FOUND $isAvailable");
-          Utility.showToast("Success");
+          // Utility.showToast("Success");
           setState(() {});
         } else {
           Utility.showToast("Failed");
@@ -364,6 +377,8 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
     );
   }
 
+  var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
   slotTime(dynamic day) {
     int index = int.parse(day.day);
     return Container(
@@ -375,7 +390,7 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
           Expanded(
             flex: 2,
             child: Text(
-              "MON ${day.day}",
+              days[index],
               style: TextStyle(color: Colors.black, fontSize: 16.0),
             ),
           ),

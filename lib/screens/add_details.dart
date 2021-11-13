@@ -9,7 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AddDetails extends StatefulWidget {
   String phoneNumber;
-  AddDetails({required this.phoneNumber});
+  String fuid;
+  AddDetails({required this.phoneNumber, required this.fuid});
 
   @override
   _AddDetailsState createState() => _AddDetailsState();
@@ -19,6 +20,8 @@ class _AddDetailsState extends State<AddDetails> {
   late String name;
   late String dob;
   String? gender = "";
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +61,7 @@ class _AddDetailsState extends State<AddDetails> {
                   height: 10.0,
                 ),
                 Container(
-                  decoration: kContainerBoxDecoration,
+                  decoration: kServiceBoxItem,
                   margin: EdgeInsets.all(20.0),
                   padding: EdgeInsets.all(20.0),
                   child: Column(
@@ -71,8 +74,11 @@ class _AddDetailsState extends State<AddDetails> {
                         style: TextStyle(
                           color: Colors.black,
                         ),
-                        decoration: kTextFieldDecoration.copyWith(
-                            hintText: 'FULL NAME'),
+                        decoration: InputDecoration(
+                            labelText: "Name",
+                            labelStyle: TextStyle(
+                              color: Colors.grey,
+                            )),
                         cursorColor: kBaseColor,
                       ),
                       SizedBox(
@@ -86,8 +92,11 @@ class _AddDetailsState extends State<AddDetails> {
                         style: TextStyle(
                           color: Colors.black,
                         ),
-                        decoration: kTextFieldDecoration.copyWith(
-                            hintText: 'ENTER BIRTHDAY'),
+                        decoration: InputDecoration(
+                            labelText: "Enter Birthday",
+                            labelStyle: TextStyle(
+                              color: Colors.grey,
+                            )),
                         cursorColor: kBaseColor,
                       ),
                       SizedBox(
@@ -144,20 +153,25 @@ class _AddDetailsState extends State<AddDetails> {
                               child: Text("Female")),
                         ],
                       ),
-                      RoundedButton(
-                        title: "CONTINUE",
-                        color: kBaseColor,
-                        txtColor: Colors.white,
-                        minWidth: MediaQuery.of(context).size.width,
-                        onPressed: () async {
-                          print(name);
-                          print(widget.phoneNumber);
-                          print(dob);
-                          print(gender);
-                          await addPlayer(
-                              name, widget.phoneNumber, dob, gender!);
-                        },
-                      ),
+                      isLoading
+                          ? CircularProgressIndicator()
+                          : RoundedButton(
+                              title: "CONTINUE",
+                              color: kBaseColor,
+                              txtColor: Colors.white,
+                              minWidth: MediaQuery.of(context).size.width,
+                              onPressed: () async {
+                                print(name);
+                                print(widget.phoneNumber);
+                                print(dob);
+                                print(gender);
+                                setState(() {
+                                  isLoading = true;
+                                });
+                                await addPlayer(name, widget.phoneNumber, dob,
+                                    gender!, widget.fuid);
+                              },
+                            ),
                     ],
                   ),
                 ),
@@ -256,12 +270,13 @@ class _AddDetailsState extends State<AddDetails> {
 //     }
 //   }
 
-  addPlayer(String name, String phoneNumber, String dob, String gender) async {
+  addPlayer(String name, String phoneNumber, String dob, String gender,
+      String fuid) async {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
       PlayerData playerData =
-          await apiCall.addPlayer(name, phoneNumber, dob, gender);
+          await apiCall.addPlayer(name, phoneNumber, dob, gender, fuid);
       if (playerData.status!) {
         showToast(playerData.message!);
         // Go to Sport Selection
@@ -271,12 +286,15 @@ class _AddDetailsState extends State<AddDetails> {
         if (playerData.player != null) {
           int? playerId = playerData.player!.id;
           String? playerName = playerData.player!.name;
-          String? locationId = playerData.player!.locationId;
-          String? playerImage = playerData.player!.image;
-
+          // String? locationId = playerData.player!.locationId;
+          // String? playerImage = playerData.player!.image;
+          setState(() {
+            isLoading = false;
+          });
           SharedPreferences prefs = await SharedPreferences.getInstance();
           prefs.setInt("playerId", playerId!);
           prefs.setString("playerName", playerName!);
+          prefs.setString("fuid", fuid);
           //prefs.setString("playerImage", playerImage!);
           //prefs.setString("locationId", locationId!);
           prefs.setBool('isLogin', true);
@@ -288,9 +306,15 @@ class _AddDetailsState extends State<AddDetails> {
                       )));
         }
       } else {
+        setState(() {
+          isLoading = false;
+        });
         showToast(playerData.message!);
       }
     } else {
+      setState(() {
+        isLoading = false;
+      });
       showToast(kInternet);
     }
   }

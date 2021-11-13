@@ -33,6 +33,17 @@ class APICall {
     return PlayerData.fromJson(jsonDecode(response.body));
   }
 
+  Future<PlayerData> getChatPlayer(String id) async {
+    Uri url = Uri.parse(APIResources.GET_CHAT_PLAYER);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['id'] = id;
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return PlayerData.fromJson(jsonDecode(response.body));
+  }
+
   Future<PlayerData> checkPlayer(String phoneNumber) async {
     Uri url = Uri.parse(APIResources.CHECK_PLAYER);
     var header = new Map<String, String>();
@@ -45,7 +56,7 @@ class APICall {
   }
 
   Future<PlayerData> addPlayer(
-      String name, String phoneNumber, String dob, String gender) async {
+      String name, String phoneNumber, String dob, String gender, fuid) async {
     Uri url = Uri.parse(APIResources.ADD_PLAYER);
     var header = new Map<String, String>();
     var params = new Map<String, String>();
@@ -53,6 +64,7 @@ class APICall {
     params['mobile'] = phoneNumber;
     params['dob'] = dob;
     params['gender'] = gender;
+    params['f_uid'] = fuid;
     HttpCall call = new HttpCall();
     http.Response response = await call.post(url, header, params);
     print("Response Body: " + response.body);
@@ -88,6 +100,7 @@ class APICall {
     params['start_date'] = activity.startDate!;
     params['timing'] = activity.timing!;
     params['ball_type'] = activity.ballType!;
+    params['role_of_player'] = activity.roleOfPlayer!;
     params['player_id'] = activity.playerId!;
     params['player_name'] = activity.playerName!;
     params['location_id'] = activity.locationId!;
@@ -279,10 +292,15 @@ class APICall {
     return VenueData();
   }
 
-  Future<VenueData> getVenue() async {
+  Future<VenueData> getVenue(String locationId, String sportId) async {
     Uri url = Uri.parse(APIResources.GET_VENUE);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['sport_id'] = sportId;
+    params['location_id'] = locationId;
+
     HttpCall call = new HttpCall();
-    http.Response response = await call.get(url);
+    http.Response response = await call.post(url, header, params);
     print("Response Body: " + response.body);
     return VenueData.fromJson(jsonDecode(response.body));
   }
@@ -385,11 +403,13 @@ class APICall {
     return VenuePhoto.fromJson(jsonDecode(response.body));
   }
 
-  Future<ServiceModel> getServiceDataId(String serviceId) async {
+  Future<ServiceModel> getServiceDataId(
+      String serviceId, String sportId) async {
     Uri url = Uri.parse(APIResources.GET_SERVICEDATA_ID);
     var header = new Map<String, String>();
     var params = new Map<String, String>();
     params['service_id'] = serviceId;
+    params['sport_id'] = sportId;
 
     HttpCall call = new HttpCall();
     http.Response response = await call.post(url, header, params);

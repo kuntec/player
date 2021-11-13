@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
+import 'package:player/chatmodels/user_chat.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/constant/firestore_constants.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/player_data.dart';
 import 'package:player/screens/add_details.dart';
@@ -413,14 +417,16 @@ class _LoginScreenState extends State<LoginScreen> {
         User? firebaseUser = authCredential.user;
 
         Utility.showToast("User Found ${firebaseUser!.uid}");
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString("fuid", firebaseUser.uid);
+
+        bool status = await addFirebaseDocument(firebaseUser);
+
+        checkPlayer(phoneNumber, firebaseUser.uid);
+
         setState(() {
           showLoading = false;
         });
-        // checkPlayer(phoneNumber);
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (context) => AddDetails(phoneNumber: phoneNumber)));
       } else {
         setState(() {
           showLoading = false;
@@ -436,7 +442,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  checkPlayer(String phoneNumber) async {
+  checkPlayer(String phoneNumber, String fuid) async {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
@@ -455,11 +461,11 @@ class _LoginScreenState extends State<LoginScreen> {
           int? playerId = playerData.player!.id;
           String? playerName = playerData.player!.name;
           String? locationId = playerData.player!.locationId;
-          String? playerImage = playerData.player!.image;
+          String? playerFuid = playerData.player!.fuid;
 
           prefs.setInt("playerId", playerId!);
           prefs.setString("playerName", playerName!);
-          // prefs.setString("playerImage", playerImage!);
+          prefs.setString("fuid", playerFuid!);
           // prefs.setString("locationId", locationId!);
           prefs.setBool('isLogin', true);
         }
@@ -487,7 +493,10 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => AddDetails(phoneNumber: phoneNumber)));
+                builder: (context) => AddDetails(
+                      phoneNumber: phoneNumber,
+                      fuid: fuid,
+                    )));
 //        showToast(playerData.message!);
 //        print(playerData.message!);
       }
@@ -507,5 +516,50 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (_) => MainNavigation()));
     }
+  }
+
+  addFirebaseDocument(User firebaseUser) async {
+    if (firebaseUser != null) {
+      final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+      final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final QuerySnapshot result = await firebaseFirestore
+          .collection(FirestoreContants.pathUserCollection)
+          .where(FirestoreContants.id, isEqualTo: firebaseUser.uid)
+          .get();
+
+      final List<DocumentSnapshot> document = result.docs;
+      if (document.length == 0) {
+        firebaseFirestore
+            .collection(FirestoreContants.pathUserCollection)
+            .doc(firebaseUser.uid)
+            .set({
+          FirestoreContants.nickname: firebaseUser.displayName,
+          FirestoreContants.photoUrl: firebaseUser.photoURL,
+          FirestoreContants.id: firebaseUser.uid,
+          "createdAt": DateTime.now().millisecondsSinceEpoch.toString(),
+          FirestoreContants.chattingWith: null
+        });
+
+        User? currentUser = firebaseUser;
+        await prefs.setString(FirestoreContants.id, currentUser.uid);
+        await prefs.setString(
+            FirestoreContants.nickname, currentUser.displayName ?? "");
+        await prefs.setString(
+            FirestoreContants.photoUrl, currentUser.photoURL ?? "");
+        await prefs.setString(
+            FirestoreContants.phoneNumber, currentUser.phoneNumber ?? "");
+      } else {
+        DocumentSnapshot documentSnapshot = document[0];
+        UserChat userChat = UserChat.fromDocument(documentSnapshot);
+
+        await prefs.setString(FirestoreContants.id, userChat.id);
+        await prefs.setString(FirestoreContants.nickname, userChat.nickname);
+        await prefs.setString(FirestoreContants.photoUrl, userChat.photoUrl);
+        await prefs.setString(
+            FirestoreContants.phoneNumber, userChat.phoneNumber);
+      }
+    }
+    return true;
   }
 }

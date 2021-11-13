@@ -19,6 +19,7 @@ class AddVenue extends StatefulWidget {
 
 class _AddVenueState extends State<AddVenue> {
   bool? isMyVenueSelected = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,20 +135,23 @@ class _AddVenueState extends State<AddVenue> {
           }
           if (snapshot.hasData) {
             print("Has Data ${snapshot.data.length}");
-            // return Container(
-            //   child: Center(
-            //     child: Text('Yes Data ${snapshot.data}'),
-            //   ),
-            // );
-            return ListView.builder(
-              padding: EdgeInsets.only(bottom: 210),
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: snapshot.data.length,
-              itemBuilder: (BuildContext context, int index) {
-                return venueItem(snapshot.data[index]);
-              },
-            );
+            if (snapshot.data.length == 0) {
+              return Container(
+                child: Center(
+                  child: Text('No Data'),
+                ),
+              );
+            } else {
+              return ListView.builder(
+                padding: EdgeInsets.only(bottom: 210),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return venueItem(snapshot.data[index]);
+                },
+              );
+            }
           } else {
             return Container(
               child: Center(
@@ -290,16 +294,23 @@ class _AddVenueState extends State<AddVenue> {
           }
           if (snapshot.hasData) {
             print("Has Data ${snapshot.data.length}");
-
-            return ListView.builder(
-              padding: EdgeInsets.only(bottom: 210),
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: snapshot.data.length,
-              itemBuilder: (BuildContext context, int index) {
-                return bookingItem(snapshot.data[index]);
-              },
-            );
+            if (snapshot.data.length == 0) {
+              return Container(
+                child: Center(
+                  child: Text('No Data'),
+                ),
+              );
+            } else {
+              return ListView.builder(
+                padding: EdgeInsets.only(bottom: 100),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return bookingItem(snapshot.data[index]);
+                },
+              );
+            }
           } else {
             return Container(
               child: Center(

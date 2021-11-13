@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
+import 'package:player/api/api_resources.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
@@ -165,8 +166,8 @@ class _SportSelectState extends State<SportSelect> {
       },
       child: Container(
         margin: EdgeInsets.all(10.0),
-        width: 130,
-        height: 130,
+        width: 100,
+        height: 100,
         decoration: kContainerBox.copyWith(
             color: selectedList.any((element) => element == data.id)
                 ? kBaseColor
@@ -214,13 +215,13 @@ class _SportSelectState extends State<SportSelect> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
-                  margin: EdgeInsets.all(10.0),
+                  margin: EdgeInsets.only(right: 10.0, top: 40),
                   height: 50,
                   width: 50,
-                  child: Image.network(selectedList
-                          .any((element) => element == data.id)
-                      ? "https://www.iconbunny.com/icons/media/catalog/product/cache/2/thumbnail/600x/1b89f2fc96fc819c2a7e15c7e545e8a9/3/2/320.7-cricket-bat-and-ball-icon-iconbunny.jpg"
-                      : "http://simpleicon.com/wp-content/uploads/football.png"),
+                  child: Image.network(
+                      selectedList.any((element) => element == data.id)
+                          ? APIResources.IMAGE_URL + data.sportIcon
+                          : APIResources.IMAGE_URL + data.activeIcon),
                 ),
               ],
             ),

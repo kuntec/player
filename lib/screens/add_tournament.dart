@@ -266,6 +266,7 @@ class _AddTournamentState extends State<AddTournament> {
                 )),
           ),
           TextField(
+            keyboardType: TextInputType.phone,
             onChanged: (value) {
               organizerNumber = value;
             },
@@ -497,120 +498,128 @@ class _AddTournamentState extends State<AddTournament> {
                 )
               : SizedBox(height: 1.0),
           SizedBox(height: k20Margin),
-          RoundedButton(
-            title: "Create Tournament",
-            color: kBaseColor,
-            txtColor: Colors.white,
-            minWidth: 250,
-            onPressed: () async {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              var playerId = prefs.get("playerId");
-              if (ballTypeValue == null) {
-                ballTypeValue = "";
-              }
-              if (tournamentCategoryValue == null) {
-                tournamentCategoryValue = "";
-              }
-              if (noOfOvers == null) {
-                noOfOvers = "";
-              }
-              if (locationLink == null) {
-                locationLink = "";
-              }
+          isLoading == true
+              ? Center(
+                  child: CircularProgressIndicator(
+                  color: kBaseColor,
+                ))
+              : RoundedButton(
+                  title: "Create Tournament",
+                  color: kBaseColor,
+                  txtColor: Colors.white,
+                  minWidth: 250,
+                  onPressed: () async {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    var playerId = prefs.get("playerId");
+                    if (ballTypeValue == null) {
+                      ballTypeValue = "";
+                    }
+                    if (tournamentCategoryValue == null) {
+                      tournamentCategoryValue = "";
+                    }
+                    if (noOfOvers == null) {
+                      noOfOvers = "";
+                    }
+                    if (locationLink == null) {
+                      locationLink = "";
+                    }
 
-              tournament = new Tournament();
-              tournament!.playerId = playerId!.toString();
-              tournament!.organizerName = organizerName.toString();
-              tournament!.organizerNumber = organizerNumber.toString();
-              tournament!.tournamentName = tournamentName.toString();
-              tournament!.startDate = textStartDateController.text;
-              tournament!.endDate = textEndDateController.text;
-              tournament!.entryFees = entryFees.toString();
-              tournament!.startTime = textStartTimeController.text;
-              tournament!.endTime = textEndTimeController.text;
-              tournament!.noOfMembers = noOfMembers.toString();
-              tournament!.ageLimit = ageLimit.toString();
-              tournament!.address = address.toString();
-              tournament!.prizeDetails = prizeDetails.toString();
-              tournament!.otherInfo = otherInfo.toString();
-              tournament!.playerName = prefs.getString("playerName");
-              tournament!.locationId = "1";
-              tournament!.sportId = selectedSport.id.toString();
-              tournament!.sportName = selectedSport.sportName.toString();
-              tournament!.createdAt = Utility.getCurrentDate();
+                    tournament = new Tournament();
+                    tournament!.playerId = playerId!.toString();
+                    tournament!.organizerName = organizerName.toString();
+                    tournament!.organizerNumber = organizerNumber.toString();
+                    tournament!.tournamentName = tournamentName.toString();
+                    tournament!.startDate = textStartDateController.text;
+                    tournament!.endDate = textEndDateController.text;
+                    tournament!.entryFees = entryFees.toString();
+                    tournament!.startTime = textStartTimeController.text;
+                    tournament!.endTime = textEndTimeController.text;
+                    tournament!.noOfMembers = noOfMembers.toString();
+                    tournament!.ageLimit = ageLimit.toString();
+                    tournament!.address = address.toString();
+                    tournament!.prizeDetails = prizeDetails.toString();
+                    tournament!.otherInfo = otherInfo.toString();
+                    tournament!.playerName = prefs.getString("playerName");
+                    tournament!.locationId = "1";
+                    tournament!.sportId = selectedSport.id.toString();
+                    tournament!.sportName = selectedSport.sportName.toString();
+                    tournament!.createdAt = Utility.getCurrentDate();
 
-              tournament!.ballType = ballTypeValue.toString();
-              tournament!.tournamentCategory =
-                  tournamentCategoryValue.toString();
-              tournament!.noOfOvers = noOfOvers.toString();
-              tournament!.locationLink = locationLink.toString();
+                    tournament!.ballType = ballTypeValue.toString();
+                    tournament!.tournamentCategory =
+                        tournamentCategoryValue.toString();
+                    tournament!.noOfOvers = noOfOvers.toString();
+                    tournament!.locationLink = locationLink.toString();
 
 //            Utility.showToast("Create Tournament");
-              if (this.image != null) {
-                addTournament(this.image!.path, tournament!);
-                Utility.showToast("File Selected Image");
-              } else {
-                Utility.showToast("Please Select Image");
-              }
+                    if (this.image != null) {
+                      addTournament(this.image!.path, tournament!);
+                      // Utility.showToast("File Selected Image");
+                    } else {
+                      Utility.showToast("Please Select Image");
+                    }
 
-              print("Create Tournament");
-              //_load = false;
-              //showLoadingIndicator("Loading....");
-            },
-          ),
+                    print("Create Tournament");
+                    //_load = false;
+                    //showLoadingIndicator("Loading....");
+                  },
+                ),
         ],
       ),
     );
   }
 
-  var _load;
-  void showLoadingIndicator(String text) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-              content: _load
-                  ? Container(
-                      padding: EdgeInsets.all(16),
-                      color: Colors.black.withOpacity(0.8),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            _getLoadingIndicator(),
-                            _getHeading(),
-                            _getText('Text')
-                          ]))
-                  : null);
-        });
-  }
+  bool? isLoading = false;
 
-  Widget _getLoadingIndicator() {
-    return Padding(
-        child: Container(
-            child: CircularProgressIndicator(strokeWidth: 3),
-            width: 32,
-            height: 32),
-        padding: EdgeInsets.only(bottom: 16));
-  }
-
-  Widget _getHeading() {
-    return Padding(
-        child: Text(
-          'Please wait …',
-          style: TextStyle(color: Colors.white, fontSize: 16),
-          textAlign: TextAlign.center,
-        ),
-        padding: EdgeInsets.only(bottom: 4));
-  }
-
-  Widget _getText(String displayedText) {
-    return Text(
-      displayedText,
-      style: TextStyle(color: Colors.white, fontSize: 14),
-      textAlign: TextAlign.center,
-    );
-  }
+  // var _load;
+  // void showLoadingIndicator(String text) {
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //             content: _load
+  //                 ? Container(
+  //                     padding: EdgeInsets.all(16),
+  //                     color: Colors.black.withOpacity(0.8),
+  //                     child: Column(
+  //                         mainAxisAlignment: MainAxisAlignment.center,
+  //                         mainAxisSize: MainAxisSize.min,
+  //                         children: [
+  //                           _getLoadingIndicator(),
+  //                           _getHeading(),
+  //                           _getText('Text')
+  //                         ]))
+  //                 : null);
+  //       });
+  // }
+  //
+  // Widget _getLoadingIndicator() {
+  //   return Padding(
+  //       child: Container(
+  //           child: CircularProgressIndicator(strokeWidth: 3),
+  //           width: 32,
+  //           height: 32),
+  //       padding: EdgeInsets.only(bottom: 16));
+  // }
+  //
+  // Widget _getHeading() {
+  //   return Padding(
+  //       child: Text(
+  //         'Please wait …',
+  //         style: TextStyle(color: Colors.white, fontSize: 16),
+  //         textAlign: TextAlign.center,
+  //       ),
+  //       padding: EdgeInsets.only(bottom: 4));
+  // }
+  //
+  // Widget _getText(String displayedText) {
+  //   return Text(
+  //     displayedText,
+  //     style: TextStyle(color: Colors.white, fontSize: 14),
+  //     textAlign: TextAlign.center,
+  //   );
+  // }
 
   Future pickDate(BuildContext context, bool isStart) async {
     final initialDate = DateTime.now();
@@ -665,11 +674,16 @@ class _AddTournamentState extends State<AddTournament> {
   }
 
   addTournament(String filePath, Tournament tournament) async {
+    setState(() {
+      isLoading = true;
+    });
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
       dynamic status = await apiCall.addTournament(filePath, tournament);
-
+      setState(() {
+        isLoading = false;
+      });
       if (status == null) {
         print("Tournament null");
       } else {
@@ -701,20 +715,23 @@ class _AddTournamentState extends State<AddTournament> {
           }
           if (snapshot.hasData) {
             print("Has Data ${snapshot.data.length}");
-            // return Container(
-            //   child: Center(
-            //     child: Text('Yes Data ${snapshot.data}'),
-            //   ),
-            // );
-            return ListView.builder(
-              padding: EdgeInsets.only(bottom: 110),
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: snapshot.data.length,
-              itemBuilder: (BuildContext context, int index) {
-                return tournamentItem(snapshot.data[index]);
-              },
-            );
+            if (snapshot.data.length == 0) {
+              return Container(
+                child: Center(
+                  child: Text('No Data'),
+                ),
+              );
+            } else {
+              return ListView.builder(
+                padding: EdgeInsets.only(bottom: 110),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return tournamentItem(snapshot.data[index]);
+                },
+              );
+            }
           } else {
             return Container(
               child: Center(

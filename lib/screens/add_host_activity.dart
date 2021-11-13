@@ -269,20 +269,23 @@ class _AddHostState extends State<AddHost> {
                           }
                           if (snapshot.hasData) {
                             print("Has Data ${snapshot.data.length}");
-                            // return Container(
-                            //   child: Center(
-                            //     child: Text('Yes Data ${snapshot.data}'),
-                            //   ),
-                            // );
-                            return ListView.builder(
-                              padding: EdgeInsets.only(bottom: 110),
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              itemCount: snapshot.data.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return hostActivityItem(snapshot.data[index]);
-                              },
-                            );
+                            if (snapshot.data.length == 0) {
+                              return Container(
+                                child: Center(
+                                  child: Text('No Data'),
+                                ),
+                              );
+                            } else {
+                              return ListView.builder(
+                                padding: EdgeInsets.only(bottom: 110),
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                itemCount: snapshot.data.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return hostActivityItem(snapshot.data[index]);
+                                },
+                              );
+                            }
                           } else {
                             return Container(
                               child: Center(
@@ -294,7 +297,7 @@ class _AddHostState extends State<AddHost> {
                       ),
                     )
                   : Container(
-                      decoration: kContainerBoxDecoration,
+                      decoration: kServiceBoxItem,
                       margin: EdgeInsets.all(20.0),
                       padding: EdgeInsets.all(20.0),
                       child: Column(
@@ -324,8 +327,32 @@ class _AddHostState extends State<AddHost> {
                                   //           color: Colors.grey,
                                   //         )),
                                   //   )
-                                  : SizedBox(width: 1.0)
-                              : SizedBox(width: 1.0),
+                                  : SizedBox.shrink()
+                              : SizedBox.shrink(),
+                          this._selectedLK != null
+                              ? this._selectedLK!.lookingFor!.toLowerCase() ==
+                                          "a team to join as a player" ||
+                                      this
+                                              ._selectedLK!
+                                              .lookingFor!
+                                              .toLowerCase() ==
+                                          "a player to join my team"
+                                  ? TextField(
+                                      keyboardType: TextInputType.text,
+                                      onChanged: (value) {
+                                        roleOfPlayer = value;
+                                      },
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                      decoration: InputDecoration(
+                                          labelText: "Role of Player",
+                                          labelStyle: TextStyle(
+                                            color: Colors.grey,
+                                          )),
+                                    )
+                                  : SizedBox.shrink()
+                              : SizedBox.shrink(),
                           TextField(
                             keyboardType: TextInputType.text,
                             onChanged: (value) {
@@ -373,6 +400,33 @@ class _AddHostState extends State<AddHost> {
                                   color: Colors.grey,
                                 )),
                           ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            margin: EdgeInsets.only(top: 10, bottom: 10),
+                            child: Text(
+                              "Details",
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                          TextFormField(
+                              onChanged: (value) {
+                                details = value;
+                              },
+                              minLines: 3,
+                              maxLines: 5,
+                              keyboardType: TextInputType.multiline,
+                              textAlign: TextAlign.start,
+                              decoration: InputDecoration(
+                                labelText: "",
+                                labelStyle: TextStyle(
+                                  color: Colors.grey,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(5.0),
+                                  ),
+                                ),
+                              )),
                           SizedBox(height: k20Margin),
                           isLoading!
                               ? CircularProgressIndicator(
@@ -450,6 +504,7 @@ class _AddHostState extends State<AddHost> {
                                     activity!.lookingFor = lookingFor;
                                     activity!.lookingForValue = lookingForValue;
                                     activity!.area = area;
+                                    activity!.roleOfPlayer = roleOfPlayer;
                                     activity!.startDate = startDate;
                                     activity!.timing = timing;
                                     activity!.ballType = ballType;
@@ -479,6 +534,8 @@ class _AddHostState extends State<AddHost> {
   var lookingFor;
   var lookingForValue;
   var area;
+  var details;
+  var roleOfPlayer;
   var startDate;
   var timing;
   var ballType;

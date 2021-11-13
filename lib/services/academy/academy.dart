@@ -4,7 +4,9 @@ import 'package:player/api/api_resources.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/model/my_sport.dart';
 import 'package:player/model/service_model.dart';
+import 'package:player/model/sport_data.dart';
 import 'package:player/services/academy/academy_detail.dart';
 import 'package:player/services/academy/academy_register.dart';
 import 'package:player/services/academy/my_academy.dart';
@@ -19,11 +21,148 @@ class Academy extends StatefulWidget {
 }
 
 class _AcademyState extends State<Academy> {
+  List<Sports> sports = [];
+  List<Data> allSports = [];
+  var selectedSportId = "0";
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getMySports();
+    getSports();
     getPlayerService();
+  }
+
+  Future<List<Sports>> getMySports() async {
+    APICall apiCall = new APICall();
+    // List<Data> data = [];
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var playerId = prefs.get("playerId");
+      MySport mySport = await apiCall.getMySports(playerId.toString());
+
+      if (mySport.sports != null) {
+        Sports s = new Sports();
+        s.sportName = "All";
+        s.sportId = "0";
+        sports.clear();
+        sports.add(s);
+        sports.addAll(mySport.sports!);
+        Sports s2 = new Sports();
+        s2.sportName = "Others";
+        s2.sportId = null;
+        sports.add(s2);
+        setState(() {});
+      }
+    } else {}
+    return sports;
+  }
+
+  Future<List<Data>> getSports() async {
+    APICall apiCall = new APICall();
+    List<Data> data = [];
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      SportData sportData = await apiCall.getSports();
+
+      if (sportData.data != null) {
+        data.addAll(sportData.data!);
+        allSports = data;
+      }
+    } else {}
+    return data;
+  }
+
+  Widget sportBarList() {
+    return sports != null
+        ? Container(
+            margin: EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  offset: Offset(0, 2),
+                  blurRadius: 6.0,
+                )
+              ],
+            ),
+            height: 50,
+            child: Center(
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: sports.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return sportChip(sports[index]);
+                },
+              ),
+            ),
+          )
+        : Container();
+  }
+
+  Widget sportChip(sport) {
+    return GestureDetector(
+      onTap: () {
+        if (sport.sportId == null) {
+          sports.removeLast();
+          for (int i = 0; i < allSports.length; i++) {
+            bool status = false;
+            for (int j = 0; j < sports.length; j++) {
+              // print("Checking for ${allSports[i].sportName}");
+              if (allSports[i].sportName == sports[j].sportName) {
+                status = false;
+                // print("Found ${allSports[i].sportName}");
+                break;
+              } else {
+                status = true;
+                //  print("Not Found ${allSports[i].sportName}");
+              }
+            }
+            if (status) {
+              print("Sport Name ${allSports[i].sportName}");
+              Sports s = new Sports();
+              s.sportName = allSports[i].sportName;
+              s.sportId = allSports[i].id.toString();
+              sports.add(s);
+            }
+          }
+        } else {
+          selectedSportId = sport.sportId.toString();
+        }
+
+        setState(() {});
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5.0),
+          border: Border.all(
+            width: 1.0,
+            color: sport.sportId.toString() == selectedSportId
+                ? kBaseColor
+                : Colors.white,
+          ),
+          color: sport.sportId.toString() == selectedSportId
+              ? kBaseColor
+              : Colors.white,
+        ),
+        margin: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(5.0),
+        child: Center(
+          child: Text(
+            sport.sportName,
+            style: TextStyle(
+                color: sport.sportId.toString() == selectedSportId
+                    ? Colors.white
+                    : Colors.black,
+                fontSize: 12.0),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -89,6 +228,7 @@ class _AcademyState extends State<Academy> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            sportBarList(),
             SizedBox(height: 10),
             allServiceData(),
           ],
@@ -147,8 +287,8 @@ class _AcademyState extends State<Academy> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      ServiceModel serviceModel =
-          await apiCall.getServiceDataId(widget.serviceId);
+      ServiceModel serviceModel = await apiCall.getServiceDataId(
+          widget.serviceId, selectedSportId.toString());
       if (serviceModel.services != null) {
         services = serviceModel.services!;
         //setState(() {});
@@ -209,6 +349,7 @@ class _AcademyState extends State<Academy> {
                       child: Container(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
                               flex: 7,
@@ -229,16 +370,16 @@ class _AcademyState extends State<Academy> {
                                 decoration: BoxDecoration(
                                     color: kBaseColor,
                                     borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(15.0),
-                                      bottomLeft: Radius.circular(15.0),
+                                      topRight: Radius.circular(10.0),
+                                      bottomLeft: Radius.circular(10.0),
                                     )),
-                                width: 100,
-                                height: 40,
+                                width: 80,
+                                height: 30,
                                 child: Center(
                                   child: Text(
                                     service.sportName,
                                     style: TextStyle(
-                                        color: Colors.white, fontSize: 16.0),
+                                        color: Colors.white, fontSize: 12.0),
                                   ),
                                 ),
                               ),
@@ -250,7 +391,7 @@ class _AcademyState extends State<Academy> {
                     Expanded(
                         flex: 7,
                         child: Container(
-                          margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                          //margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

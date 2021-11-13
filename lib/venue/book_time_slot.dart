@@ -355,10 +355,11 @@ class _BookTimeSlotState extends State<BookTimeSlot> {
         setState(() {});
       },
       child: Container(
-        margin: EdgeInsets.all(10.0),
+        margin: EdgeInsets.all(5.0),
         width: 50,
         height: 50,
         decoration: kServiceBoxItem.copyWith(
+            borderRadius: BorderRadius.circular(5.0),
             color: bookedTimeslots!.any((element) =>
                     element.bookedDay == textStartDateController.text &&
                     element.id == data.id)
@@ -370,7 +371,6 @@ class _BookTimeSlotState extends State<BookTimeSlot> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              margin: EdgeInsets.only(left: 10),
               child: Text(
                 "${data.startTime}",
                 style: TextStyle(
@@ -382,8 +382,8 @@ class _BookTimeSlotState extends State<BookTimeSlot> {
                     fontSize: 18.0),
               ),
             ),
+            SizedBox(height: 5),
             Container(
-              margin: EdgeInsets.only(left: 10),
               child: Text(
                 "\u{20B9} ${data.price}",
                 style: TextStyle(
@@ -391,15 +391,17 @@ class _BookTimeSlotState extends State<BookTimeSlot> {
                             element.bookedDay == textStartDateController.text &&
                             element.id == data.id)
                         ? Colors.white
-                        : kBaseColor,
+                        : Colors.black87,
                     fontSize: 18.0),
               ),
             ),
+            SizedBox(height: 5),
             Container(
-              margin: EdgeInsets.only(left: 10),
+              alignment: Alignment.bottomRight,
+              margin: EdgeInsets.only(right: 5),
               child: Text(
                 "${data.remainingSlot} Left",
-                style: TextStyle(color: Colors.grey, fontSize: 18.0),
+                style: TextStyle(color: Colors.grey, fontSize: 12.0),
               ),
             ),
           ],

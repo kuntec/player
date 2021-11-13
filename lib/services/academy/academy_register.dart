@@ -285,13 +285,13 @@ class _AcademyRegisterState extends State<AcademyRegister> {
                   color: Colors.grey,
                 )),
           ),
-          TextField(
-            enabled: false,
-            decoration: InputDecoration(
-                labelText: "About Academy",
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                )),
+          Container(
+            alignment: Alignment.topLeft,
+            margin: EdgeInsets.only(top: 10, bottom: 10),
+            child: Text(
+              "About Academy",
+              style: TextStyle(color: Colors.grey),
+            ),
           ),
           TextFormField(
               onChanged: (value) {

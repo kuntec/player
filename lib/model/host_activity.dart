@@ -194,6 +194,8 @@ class Activity {
     String? ballType,
     String? playerId,
     String? playerName,
+    String? roleOfPlayer,
+    String? details,
     String? locationId,
     String? createdAt,
     int? id,
@@ -209,6 +211,8 @@ class Activity {
     _ballType = ballType;
     _playerId = playerId;
     _playerName = playerName;
+    _roleOfPlayer = roleOfPlayer;
+    _details = details;
     _locationId = locationId;
     _createdAt = createdAt;
     _id = id;
@@ -226,6 +230,8 @@ class Activity {
     _ballType = json['ball_type'];
     _playerId = json['player_id'];
     _playerName = json['player_name'];
+    _roleOfPlayer = json['role_of_player'];
+    _details = json['details'];
     _locationId = json['location_id'];
     _createdAt = json['created_at'];
     _id = json['id'];
@@ -241,6 +247,8 @@ class Activity {
   String? _ballType;
   String? _playerId;
   String? _playerName;
+  String? _details;
+  String? _roleOfPlayer;
   String? _locationId;
   String? _createdAt;
   int? _id;
@@ -256,6 +264,8 @@ class Activity {
   String? get ballType => _ballType;
   String? get playerId => _playerId;
   String? get playerName => _playerName;
+  String? get roleOfPlayer => _roleOfPlayer;
+  String? get details => _details;
   String? get locationId => _locationId;
   String? get createdAt => _createdAt;
   int? get id => _id;
@@ -273,10 +283,20 @@ class Activity {
     map['ball_type'] = _ballType;
     map['player_id'] = _playerId;
     map['player_name'] = _playerName;
+    map['role_of_player'] = _roleOfPlayer;
+    map['details'] = _details;
     map['location_id'] = _locationId;
     map['created_at'] = _createdAt;
     map['id'] = _id;
     return map;
+  }
+
+  set details(value) {
+    _details = value;
+  }
+
+  set roleOfPlayer(value) {
+    _roleOfPlayer = value;
   }
 
   set sportName(value) {

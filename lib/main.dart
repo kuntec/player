@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:player/chat/login_page.dart';
 import 'package:player/chatprovider/auth_provider.dart';
+import 'package:player/chatprovider/chat_provider.dart';
 import 'package:player/chatprovider/home_provider.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/screens/add_host_activity.dart';
@@ -50,6 +51,13 @@ class MyApp extends StatelessWidget {
           create: (_) =>
               HomeProvider(firebaseFirestore: this.firebaseFirestore),
         ),
+        Provider<ChatProvider>(
+          create: (_) => ChatProvider(
+            firebaseStorage: this.firebaseStorage,
+            firebaseFirestore: this.firebaseFirestore,
+            prefs: this.prefs,
+          ),
+        ),
       ],
       child: MaterialApp(
         title: 'Player',
@@ -58,14 +66,14 @@ class MyApp extends StatelessWidget {
           primaryColor: Colors.white,
 //        primarySwatch: kAppColor,
         ),
-        home: LoginPage(),
+        // home: LoginPage(),
 //      home: AddDetails(phoneNumber: "9409394242"),
 //      home: HomeScreen(),
 //      home: AddHost(),
 //      home: TournamentScreen(),
 //      home: VenueScreen(),
 //      home: ServiceScreen(),
-//        home: LoginScreen(),
+        home: LoginScreen(),
 //      home: LocationSelectScreen(),
 //      home: MainNavigation(),
         // routes: {

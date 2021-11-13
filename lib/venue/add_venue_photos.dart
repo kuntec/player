@@ -373,16 +373,16 @@ class _AddVenuePhotosState extends State<AddVenuePhotos> {
           await apiCall.getVenuePhoto(widget.venue.id.toString());
 
       if (venuePhoto == null) {
-        print("Timeslot null");
+        print("photo null");
       } else {
         if (venuePhoto.status!) {
-          print("Timeslot Success");
+          // print("photo Success");
           //Utility.showToast("Timeslot Get Successfully");
           // timeslots!.clear();
           photos = venuePhoto.photos;
 //          Navigator.pop(context);
         } else {
-          print("Timeslot Failed");
+          print("photo Failed");
         }
       }
     }

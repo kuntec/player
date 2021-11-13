@@ -66,7 +66,7 @@ class APIResources {
   static final String GET_DAY_TIME_SLOT = BASE_URL + "getDayTimeSlot";
   static final String UPDATE_DAY_TIME_SLOT = BASE_URL + "updateDayTimeSlot";
 
-//  static final String ADD_DAY_TIME_SLOT = BASE_URL + "addDayTimeSlot";
+//static final String ADD_DAY_TIME_SLOT = BASE_URL + "addDayTimeSlot";
 
   static final String ADD_PARTICIPANT = BASE_URL + "addParticipant";
   static final String GET_PARTICIPANT = BASE_URL + "getParticipant";
@@ -77,4 +77,10 @@ class APIResources {
   static final String ADD_BOOKING = BASE_URL + "addBooking";
   static final String ADD_BOOKING_SLOT = BASE_URL + "addBookingSlot";
   static final String GET_MY_BOOKINGS = BASE_URL + "getMyBookings";
+
+  //Friend
+  static final String ADD_FRIEND = BASE_URL + "addFriend";
+  static final String UPDATE_FRIEND = BASE_URL + "updateFriend";
+  static final String LIST_FRIENDS = BASE_URL + "listFriends";
+  static final String GET_CHAT_PLAYER = BASE_URL + "getChatPlayer";
 }

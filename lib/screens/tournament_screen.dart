@@ -175,20 +175,23 @@ class _TournamentScreenState extends State<TournamentScreen> {
           }
           if (snapshot.hasData) {
             print("Has Data ${snapshot.data.length}");
-            // return Container(
-            //   child: Center(
-            //     child: Text('Yes Data ${snapshot.data}'),
-            //   ),
-            // );
-            return ListView.builder(
-              padding: EdgeInsets.only(bottom: 150),
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: snapshot.data.length,
-              itemBuilder: (BuildContext context, int index) {
-                return tournamentItem(snapshot.data[index]);
-              },
-            );
+            if (snapshot.data.length == 0) {
+              return Container(
+                child: Center(
+                  child: Text('No Data'),
+                ),
+              );
+            } else {
+              return ListView.builder(
+                padding: EdgeInsets.only(bottom: 150),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return tournamentItem2(snapshot.data[index]);
+                },
+              );
+            }
           } else {
             return Container(
               child: Center(
@@ -223,8 +226,159 @@ class _TournamentScreenState extends State<TournamentScreen> {
       } else {
         print(tournamentData.message!);
       }
+    } else {
+      Utility.showToast("NO INTERNET CONNECTION");
     }
     return tournaments;
+  }
+
+  Widget tournamentItem2(dynamic tournament) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => TournamentDetails(
+                      tournament: tournament,
+                    )));
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 10.0),
+//      padding: EdgeInsets.only(bottom: 10.0),
+        decoration: kServiceBoxItem,
+        // height: 200,
+        child: Stack(
+          children: [
+            Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(10.0),
+                    height: 110.0,
+                    width: 110.0,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      child: Image.network(
+                        APIResources.IMAGE_URL + tournament.image,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 130.0, right: 5.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 7,
+                        child: Container(
+                          height: 20,
+                          child: Text(
+                            tournament.tournamentName,
+                            style: TextStyle(
+                              color: kBaseColor,
+                              fontSize: 16.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: kBaseColor,
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(10.0),
+                                bottomLeft: Radius.circular(10.0),
+                              )),
+                          width: 90,
+                          height: 30,
+                          child: Center(
+                            child: Text(
+                              tournament.sportName,
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 12.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  // SizedBox(height: 10.0),
+                  // Text(
+                  //   tournament.tournamentName,
+                  //   style: TextStyle(
+                  //       color: kBaseColor,
+                  //       fontSize: 16.0,
+                  //       fontWeight: FontWeight.bold),
+                  // ),
+                  //SizedBox(height: 10.0),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.start,
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: [
+                  //     SizedBox(width: 10.0),
+                  //     Icon(
+                  //       Icons.location_pin,
+                  //       color: kBaseColor,
+                  //       size: 14.0,
+                  //     ),
+                  //     SizedBox(width: 10.0),
+                  //     Text(
+                  //       "Saurashtra University, Munjka, Rajkot, Gujarat, 360005",
+                  //       style: TextStyle(fontSize: 14.0),
+                  //     ),
+                  //   ],
+                  // ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Start Date: ${tournament.startDate}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Location: ${tournament.address}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        decoration: kServiceBoxItem.copyWith(
+                            color: kBaseColor,
+                            borderRadius: BorderRadius.circular(5.0)),
+                        padding: EdgeInsets.only(
+                            top: 5.0, bottom: 5.0, right: 15.0, left: 15.0),
+                        child: Text(
+                          "\u{20B9}  ${tournament.entryFees}",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12.0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget tournamentItem(dynamic tournament) {

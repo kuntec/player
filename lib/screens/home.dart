@@ -1,8 +1,13 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
+import 'package:player/chat/chat_page.dart';
+import 'package:player/chatprovider/home_provider.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/constant/firestore_constants.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/event/event_screen.dart';
 import 'package:player/friends/chat_screen.dart';
@@ -16,6 +21,7 @@ import 'package:player/screens/choose_sport.dart';
 import 'package:player/screens/location_select.dart';
 import 'package:player/screens/notification_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -28,13 +34,56 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Sports> sports = [];
   List<Data> allSports = [];
 
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  late HomeProvider homeProvider;
+//  late String currentUserId;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    homeProvider = context.read<HomeProvider>();
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // currentUserId = prefs.getString("fuid")!;
     getMySports();
     getSports();
   }
+
+  // void registerNotification() {
+  //   firebaseMessaging.requestPermission();
+  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //     if (message.notification != null) {
+  //       //Show Notification
+  //     }
+  //     return;
+  //   });
+  //
+  //   firebaseMessaging.getToken().then((token) {
+  //     if (token != null) {
+  //       homeProvider.updateDataFirestore(FirestoreContants.pathUserCollection,
+  //           currentUserId, {'pushToken': token});
+  //     }
+  //   }).catchError((error) {
+  //     Utility.showToast("Error : ${error.message.toString()}");
+  //   });
+  // }
+
+  // void configureLocalNotification() {
+  //   AndroidInitializationSettings initializationAndroidSettings =
+  //       AndroidInitializationSettings("");
+  //   IOSInitializationSettings iosInitializationSettings =
+  //       IOSInitializationSettings();
+  //
+  //   InitializationSettings initializationSettings = InitializationSettings(
+  //       android: initializationAndroidSettings, iOS: iosInitializationSettings);
+  //
+  //   flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  // }
+
+//  void showNotification
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
+      body: Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -120,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget hostActivity() {
     return Container(
-      height: 700,
+      height: 300,
       padding: EdgeInsets.all(10.0),
       child: FutureBuilder(
         future: getHostActivity(),
@@ -128,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
           if (snapshot.data == null) {
             return Container(
               child: Center(
-                child: Text('Loading....'),
+                child: Text('Loading...'),
               ),
             );
           }
@@ -142,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             } else {
               return ListView.builder(
-                padding: EdgeInsets.only(bottom: double.infinity),
+                padding: EdgeInsets.only(bottom: 20),
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 itemCount: snapshot.data.length,
@@ -239,171 +288,155 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   hostActivityItem2(dynamic activity) {
-    return Container(
-      margin: EdgeInsets.all(5.0),
-      decoration: kServiceBoxItem,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          //image column
-          Expanded(
-            flex: 3,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  margin: EdgeInsets.all(5.0),
+    return GestureDetector(
+      onTap: () {
+        Utility.showToast("Activity To Chat");
+
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) => ChatPage(
+        //             peerId: activity.playerId, // send fuid
+        //             peerAvatar: activity.playerName,
+        //             peerNickname: activity.playerName)));
+      },
+      child: Container(
+        margin: EdgeInsets.all(5.0),
+        decoration: kServiceBoxItem,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            //image column
+            Expanded(
+              flex: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(5.0),
 //                  padding: EdgeInsets.all(5.0),
-                  height: 85.0,
-                  width: 85.0,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: Image.network(
-                      playerImage == null
-                          ? APIResources.AVATAR_IMAGE
-                          : APIResources.IMAGE_URL + playerImage,
-                      //fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Container(
-                  child: Center(
-                    child: Text(
-                      "2 hours ago",
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 10.0,
+                    height: 85.0,
+                    width: 85.0,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Image.network(
+                        playerImage == null
+                            ? APIResources.AVATAR_IMAGE
+                            : APIResources.IMAGE_URL + playerImage,
+                        //fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          //info Column
-          Expanded(
-            flex: 7,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                //SizedBox(height: 5.0),
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 7,
-                      child: Container(
-                        height: 20,
-                        child: Text(
-                          activity.playerName,
-                          style: TextStyle(
-                            color: kBaseColor,
-                            fontSize: 16.0,
-                          ),
+                  Container(
+                    child: Center(
+                      child: Text(
+                        "2 hours ago",
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 10.0,
                         ),
                       ),
                     ),
-                    Expanded(
-                      flex: 3,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: kBaseColor,
-                            borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(10.0),
-                              bottomLeft: Radius.circular(10.0),
-                            )),
-                        width: 90,
-                        height: 30,
-                        child: Center(
+                  ),
+                ],
+              ),
+            ),
+            //info Column
+            Expanded(
+              flex: 7,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //SizedBox(height: 5.0),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 7,
+                        child: Container(
+                          height: 20,
                           child: Text(
-                            selectedSportId == "0"
-                                ? activity.sportName
-                                : activity.lookingForValue,
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 12.0),
+                            activity.playerName,
+                            style: TextStyle(
+                              color: kBaseColor,
+                              fontSize: 16.0,
+                            ),
                           ),
                         ),
                       ),
+                      Expanded(
+                        flex: 3,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: kBaseColor,
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(10.0),
+                                bottomLeft: Radius.circular(10.0),
+                              )),
+                          width: 90,
+                          height: 30,
+                          child: Center(
+                            child: Text(
+                              selectedSportId == "0"
+                                  ? activity.sportName
+                                  : activity.lookingForValue,
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 12.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Looking For: ${activity.lookingFor}",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12.0,
                     ),
-                  ],
-                ),
-                SizedBox(height: 5.0),
-                Text(
-                  "Looking For: ${activity.lookingFor}",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 12.0,
                   ),
-                ),
-                SizedBox(height: 5.0),
-                Text(
-                  "Location: ${activity.area}",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 12.0,
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Location: ${activity.area}",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12.0,
+                    ),
                   ),
-                ),
-                SizedBox(height: 5.0),
-                Text(
-                  "Time: ${activity.timing}",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 12.0,
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Time: ${activity.timing}",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12.0,
+                    ),
                   ),
-                ),
-                SizedBox(height: 5.0),
-                Text(
-                  "Date: ${activity.startDate}",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 12.0,
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Date: ${activity.startDate}",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12.0,
+                    ),
                   ),
-                ),
-                SizedBox(height: 5.0),
-                Text(
-                  activity.ballType != null
-                      ? "Ball Type: ${activity.ballType} "
-                      : "",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 12.0,
+                  SizedBox(height: 5.0),
+                  Text(
+                    activity.ballType != null
+                        ? "Ball Type: ${activity.ballType} "
+                        : "",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12.0,
+                    ),
                   ),
-                ),
-                SizedBox(height: 5.0),
-              ],
+                  SizedBox(height: 5.0),
+                ],
+              ),
             ),
-          ),
-          //sport chip column
-          // Expanded(
-          //   flex: 1,
-          //   child: Column(
-          //     crossAxisAlignment: CrossAxisAlignment.end,
-          //     children: [
-          //       Container(
-          //         decoration: BoxDecoration(
-          //             color: kBaseColor,
-          //             borderRadius: BorderRadius.only(
-          //               //bottomRight: Radius.circular(10.0),
-          //               //topLeft: Radius.circular(10.0),
-          //               topRight: Radius.circular(10.0),
-          //               bottomLeft: Radius.circular(10.0),
-          //             )),
-          //         width: 90,
-          //         height: 35,
-          //         child: Center(
-          //           child: Text(
-          //             selectedSportId == "0"
-          //                 ? activity.sportName
-          //                 : activity.lookingForValue,
-          //             style: TextStyle(color: Colors.white, fontSize: 15.0),
-          //           ),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -556,6 +589,8 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         print(hostActivity.message!);
       }
+    } else {
+      Utility.showToast("NO INTERNET CONNECTION");
     }
     return activities;
   }

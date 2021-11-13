@@ -49,15 +49,24 @@ class _BookingSummaryState extends State<BookingSummary> {
           //  Utility.showToast("TAP");
           addBooking();
         },
-        child: Container(
-          color: kBaseColor,
-          height: 50,
-          child: Center(
-              child: Text(
-            "Total Amount $total  Confirm Booking",
-            style: TextStyle(color: Colors.white, fontSize: 18.0),
-          )),
-        ),
+        child: isLoading == true
+            ? Container(
+                height: 50,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: kBaseColor,
+                  ),
+                ),
+              )
+            : Container(
+                color: kBaseColor,
+                height: 50,
+                child: Center(
+                    child: Text(
+                  "Total Amount $total  Confirm Booking",
+                  style: TextStyle(color: Colors.white, fontSize: 18.0),
+                )),
+              ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -152,6 +161,9 @@ class _BookingSummaryState extends State<BookingSummary> {
   var bookingId;
 
   addBooking() async {
+    setState(() {
+      isLoading = true;
+    });
     APICall apiCall = new APICall();
     print("Booking add");
     bool connectivityStatus = await Utility.checkConnectivity();
@@ -196,12 +208,15 @@ class _BookingSummaryState extends State<BookingSummary> {
         bookingData = await apiCall.addBookingSlot(s);
       }
 
+      setState(() {
+        isLoading = false;
+      });
       if (bookingData == null) {
         print("Slots null");
       } else {
         if (bookingData.status!) {
           print("Slots Success");
-          Utility.showToast("Slots Added Successfully");
+          Utility.showToast("Booking Added Successfully");
           Navigator.pop(context, true);
         } else {
           print("Slots Failed");

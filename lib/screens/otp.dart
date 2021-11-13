@@ -80,7 +80,7 @@ class _OTPScreenState extends State<OTPScreen> {
                       onPressed: () async {
                         // print("clicked" + phoneNumber);
                         // sendOTP(phoneNumber);
-                        checkOTP(enteredOTP);
+                        //checkOTP(enteredOTP);
                       },
                     ),
                   ],
@@ -93,17 +93,17 @@ class _OTPScreenState extends State<OTPScreen> {
     );
   }
 
-  checkOTP(String otp) async {
-    if (otp == widget.sentOTP) {
-//      Utility.showToast("OTP MATCHED");
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (_) => AddDetails(
-                    phoneNumber: widget.phoneNumber,
-                  )));
-    } else {
-      Utility.showToast("NO OTP MATCHED");
-    }
-  }
+//   checkOTP(String otp) async {
+//     if (otp == widget.sentOTP) {
+// //      Utility.showToast("OTP MATCHED");
+//       Navigator.pushReplacement(
+//           context,
+//           MaterialPageRoute(
+//               builder: (_) => AddDetails(
+//                     phoneNumber: widget.phoneNumber,
+//                   )));
+//     } else {
+//       Utility.showToast("NO OTP MATCHED");
+//     }
+//   }
 }

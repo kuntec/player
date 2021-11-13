@@ -27,8 +27,8 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
   TimeOfDay? openTime;
   TimeOfDay? closeTime;
 
-  var txtOpenTime = "Open Time";
-  var txtCloseTime = "Close Time";
+  // var txtOpenTime = "Open Time";
+  // var txtCloseTime = "Close Time";
 
   Venue? venue;
   var name;
@@ -45,6 +45,11 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
 
   TextEditingController textFacilityController = new TextEditingController();
   TextEditingController textSportController = new TextEditingController();
+
+  TextEditingController textOpenTimeController = new TextEditingController();
+  TextEditingController textCloseTimeController = new TextEditingController();
+
+  bool? isLoading = false;
 
   @override
   void initState() {
@@ -112,12 +117,13 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
             var hour = "0" + openTime!.hour.toString();
             if (openTime!.minute < 10) {
               var minute = "0" + openTime!.minute.toString();
-              txtOpenTime = "$hour:$minute";
+              textOpenTimeController.text = "$hour:$minute";
             }
           }
-          txtOpenTime = "${openTime!.hour}:${openTime!.minute}";
+          textOpenTimeController.text = "${openTime!.hour}:${openTime!.minute}";
         } else {
-          txtCloseTime = "${openTime!.hour}:${openTime!.minute}";
+          textCloseTimeController.text =
+              "${openTime!.hour}:${openTime!.minute}";
         }
       }
     });
@@ -218,29 +224,68 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
             children: [
               Expanded(
                 flex: 1,
-                child: GestureDetector(
-                  onTap: () {
+                child: TextField(
+                  controller: textOpenTimeController,
+                  readOnly: true,
+                  keyboardType: TextInputType.text,
+                  onTap: () async {
                     pickTime(context, true);
                   },
-                  child: Text(
-                    txtOpenTime,
+                  style: TextStyle(
+                    color: Colors.black,
                   ),
+                  decoration: InputDecoration(
+                      labelText: "Select Time",
+                      labelStyle: TextStyle(
+                        color: Colors.grey,
+                      )),
                 ),
               ),
-              SizedBox(
-                width: 20.0,
-              ),
+              SizedBox(width: 20.0),
               Expanded(
                 flex: 1,
-                child: GestureDetector(
-                  onTap: () {
+                child: TextField(
+                  controller: textCloseTimeController,
+                  readOnly: true,
+                  keyboardType: TextInputType.text,
+                  onTap: () async {
                     pickTime(context, false);
                   },
-                  child: Text(
-                    txtCloseTime,
+                  style: TextStyle(
+                    color: Colors.black,
                   ),
+                  decoration: InputDecoration(
+                      labelText: "Select Time",
+                      labelStyle: TextStyle(
+                        color: Colors.grey,
+                      )),
                 ),
               ),
+              // Expanded(
+              //   flex: 1,
+              //   child: GestureDetector(
+              //     onTap: () {
+              //       pickTime(context, true);
+              //     },
+              //     child: Text(
+              //       txtOpenTime,
+              //     ),
+              //   ),
+              // ),
+              // SizedBox(
+              //   width: 20.0,
+              // ),
+              // Expanded(
+              //   flex: 1,
+              //   child: GestureDetector(
+              //     onTap: () {
+              //       pickTime(context, false);
+              //     },
+              //     child: Text(
+              //       txtCloseTime,
+              //     ),
+              //   ),
+              // ),
             ],
           )),
           SizedBox(
@@ -331,84 +376,114 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
           //       )),
           // ),
           SizedBox(height: k20Margin),
-          RoundedButton(
-            title: widget.isEdit ? "UPDATE" : "NEXT",
-            color: kBaseColor,
-            txtColor: Colors.white,
-            minWidth: 150,
-            onPressed: () async {
-//              if (widget.isEdit) {}
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              var playerId = prefs.get("playerId");
-              venue = new Venue();
+          isLoading == true
+              ? CircularProgressIndicator(
+                  color: kBaseColor,
+                )
+              : RoundedButton(
+                  title: "NEXT",
+                  color: kBaseColor,
+                  txtColor: Colors.white,
+                  minWidth: 200,
+                  onPressed: () async {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    var playerId = prefs.get("playerId");
 
-              venue!.playerId = playerId!.toString();
-              venue!.name = name.toString();
-              venue!.description = description.toString();
-              venue!.facilities = facilities.toString();
-              venue!.openTime = txtOpenTime;
-              venue!.closeTime = txtCloseTime;
-              venue!.address = address.toString();
-              venue!.locationLink = locationLink;
-              venue!.locationId = "1";
-              venue!.members = members.toString();
-              venue!.city = city.toString();
-              venue!.sport = sport.toString();
-              venue!.sportId = selectedSport.id.toString();
-              venue!.createdAt = Utility.getCurrentDate();
+                    if (Utility.checkValidation(name.toString())) {
+                      Utility.showToast("Please Select Name");
+                      return;
+                    }
 
-              // Utility.showToast("Create Venue");
-              if (this.image != null) {
-                // addVenue(this.image!.path, venue!);
-                // Utility.showToast("File Selected Image");
-                _onLoading();
-              } else {
-                Utility.showToast("Please Select Image");
-              }
-              //  print("Create Tournament");
-            },
-          ),
+                    if (Utility.checkValidation(
+                        textFacilityController.text.toString())) {
+                      Utility.showToast("Please Select Facility");
+                      return;
+                    }
+
+                    if (selectedSport == null) {
+                      Utility.showToast("Please Select Sport");
+                      return;
+                    }
+
+                    venue = new Venue();
+
+                    venue!.playerId = playerId!.toString();
+                    venue!.name = name.toString();
+                    venue!.description = description.toString();
+                    venue!.facilities = textFacilityController.text;
+                    venue!.openTime = textOpenTimeController.text;
+                    venue!.closeTime = textCloseTimeController.text;
+                    venue!.address = address.toString();
+                    venue!.locationLink = locationLink;
+                    venue!.locationId = "1";
+                    venue!.members = members.toString();
+                    venue!.city = city.toString();
+                    venue!.sport = sport.toString();
+                    venue!.sportId = selectedSport.id.toString();
+                    venue!.createdAt = Utility.getCurrentDate();
+
+                    // Utility.showToast("Create Venue");
+                    if (this.image != null) {
+                      // addVenue(this.image!.path, venue!);
+                      // Utility.showToast("File Selected Image");
+                      // _onLoading();
+                      addVenue();
+                    } else {
+                      Utility.showToast("Please Select Image");
+                      return;
+                    }
+                    //  print("Create Tournament");
+                  },
+                ),
         ],
       ),
     );
   }
 
-  void _onLoading() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: new Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              new CircularProgressIndicator(),
-              new Text("Loading"),
-            ],
-          ),
-        );
-      },
-    );
-    addVenue();
-    // new Future.delayed(new Duration(seconds: 3), () {
-    //   Navigator.pop(context); //pop dialog
-    // });
-  }
+  // void _onLoading() {
+  //   showDialog(
+  //     context: context,
+  //     barrierDismissible: false,
+  //     builder: (BuildContext context) {
+  //       return Dialog(
+  //         child: new Row(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             new CircularProgressIndicator(),
+  //             new Text("Loading"),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  //   addVenue();
+  //   // new Future.delayed(new Duration(seconds: 3), () {
+  //   //   Navigator.pop(context); //pop dialog
+  //   // });
+  // }
 
   addVenue() async {
+    setState(() {
+      isLoading = true;
+    });
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
       VenueData addedVenue = await apiCall.addVenue(this.image!.path, venue!);
 
-      Navigator.pop(context);
-
       if (addedVenue == null) {
         print("Venue null");
         Utility.showToast("Venue Null");
+        setState(() {
+          isLoading = false;
+        });
       } else {
         if (addedVenue.venue != null) {
           print("Venue Success");
+          setState(() {
+            isLoading = false;
+          });
           Utility.showToast(
               "Venue Created Successfully ${addedVenue.venue!.id} ${addedVenue.venue!.name}");
 
@@ -419,6 +494,9 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                         venue: addedVenue.venue,
                       )));
         } else {
+          setState(() {
+            isLoading = false;
+          });
           print("Venue Failed");
           Utility.showToast("Venue Failed");
         }

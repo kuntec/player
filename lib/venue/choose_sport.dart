@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
+import 'package:player/api/api_resources.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
@@ -66,7 +67,7 @@ class _ChooseSportState extends State<ChooseSport> {
         ),
       ),
       appBar: AppBar(
-        title: Center(child: Text("Venue Sport")),
+        title: Center(child: Text("Sport")),
         leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
@@ -209,11 +210,12 @@ class _ChooseSportState extends State<ChooseSport> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
-                  margin: EdgeInsets.all(10.0),
+                  margin: EdgeInsets.only(right: 10.0, top: 40),
                   height: 50,
                   width: 50,
-                  child: Image.network(
-                      "http://simpleicon.com/wp-content/uploads/football.png"),
+                  child: Image.network(currentSelectedSport == data.id
+                      ? APIResources.IMAGE_URL + data.sportIcon
+                      : APIResources.IMAGE_URL + data.activeIcon),
                 ),
               ],
             ),

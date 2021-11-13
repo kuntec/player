@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
+import 'package:player/chat/chat_page.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/player_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FriendScreen extends StatefulWidget {
   const FriendScreen({Key? key}) : super(key: key);
@@ -92,19 +94,19 @@ class _FriendScreenState extends State<FriendScreen> {
     );
   }
 
-  List<Player>? players;
+//  List<Player>? players;
 
   Future<List<Player>> getPlayers() async {
     APICall apiCall = new APICall();
     List<Player> list = [];
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      PlayerData playerData = await apiCall.getPlayers();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      int? playerId = prefs.getInt("playerId");
+
+      PlayerData playerData = await apiCall.getChatPlayer(playerId.toString());
       if (playerData.players != null) {
         list = playerData.players!;
-        setState(() {
-          players = list;
-        });
       }
     }
     return list;
@@ -148,8 +150,16 @@ class _FriendScreenState extends State<FriendScreen> {
 
   Widget playerItem(dynamic player) {
     return GestureDetector(
-      onTap: () {
-        Utility.showToast(player.name.toString());
+      onTap: () async {
+        // Utility.showToast(player.fuid.toString());
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ChatPage(
+                    peerId: player.fuid.toString(),
+                    peerAvatar: player.image.toString(),
+                    peerNickname: player.name.toString())));
       },
       child: Container(
         margin: EdgeInsets.all(10.0),
