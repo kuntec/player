@@ -9,6 +9,7 @@ import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/firestore_constants.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/model/my_sport.dart';
 import 'package:player/model/player_data.dart';
 import 'package:player/screens/add_details.dart';
 import 'package:player/screens/home.dart';
@@ -416,17 +417,17 @@ class _LoginScreenState extends State<LoginScreen> {
       if (authCredential.user != null) {
         User? firebaseUser = authCredential.user;
 
-        Utility.showToast("User Found ${firebaseUser!.uid}");
+        //Utility.showToast("User Found ${firebaseUser!.uid}");
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString("fuid", firebaseUser.uid);
+        prefs.setString("fuid", firebaseUser!.uid);
 
         bool status = await addFirebaseDocument(firebaseUser);
 
         checkPlayer(phoneNumber, firebaseUser.uid);
 
-        setState(() {
-          showLoading = false;
-        });
+        // setState(() {
+        //   showLoading = false;
+        // });
       } else {
         setState(() {
           showLoading = false;
@@ -450,9 +451,6 @@ class _LoginScreenState extends State<LoginScreen> {
 //      showToast("Player " + phoneNumber);
       PlayerData playerData = await apiCall.checkPlayer(phoneNumber);
 
-      setState(() {
-        showLoading = false;
-      });
       if (playerData.status!) {
         print("Player Found");
 //        showToast("Player Found");
@@ -471,10 +469,11 @@ class _LoginScreenState extends State<LoginScreen> {
           // prefs.setString("locationId", locationId!);
           prefs.setBool('isLogin', true);
         }
-        bool? sportSelect = prefs.getBool("sportSelect");
-        print("Sport select $sportSelect");
+        await getMySports(playerData.player!.id.toString());
+        //bool? sportSelect = prefs.getBool("sportSelect");
+        // print("Sport select $sportSelect");
         if (sportSelect != null) {
-          if (sportSelect) {
+          if (sportSelect!) {
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) => MainNavigation()));
           } else {
@@ -502,6 +501,9 @@ class _LoginScreenState extends State<LoginScreen> {
 //        showToast(playerData.message!);
 //        print(playerData.message!);
       }
+      setState(() {
+        showLoading = false;
+      });
     } else {
       showToast(kInternet);
     }
@@ -563,5 +565,27 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }
     return true;
+  }
+
+  bool? sportSelect = false;
+
+  Future<bool> getMySports(String playerId) async {
+    APICall apiCall = new APICall();
+    // List<Data> data = [];
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      MySport mySport = await apiCall.getMySports(playerId.toString());
+
+      if (mySport.sports != null) {
+        if (mySport.sports!.length == 0) {
+          sportSelect = false;
+        } else {
+          sportSelect = true;
+        }
+      }
+    } else {
+      sportSelect = false;
+    }
+    return sportSelect!;
   }
 }
