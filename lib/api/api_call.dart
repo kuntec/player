@@ -86,6 +86,7 @@ class APICall {
     Uri url = Uri.parse(APIResources.UPDATE_PLAYER);
     var header = new Map<String, String>();
     var params = new Map<String, String>();
+    params['id'] = player.id!.toString();
     params['name'] = player.name!;
     params['mobile'] = player.mobile!;
     params['dob'] = player.dob!;

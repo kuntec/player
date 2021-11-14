@@ -170,9 +170,9 @@ class _ChooseSportState extends State<ChooseSport> {
       },
       child: Container(
         margin: EdgeInsets.all(10.0),
-        width: 130,
-        height: 130,
-        decoration: kContainerBox.copyWith(
+        width: 100,
+        height: 100,
+        decoration: kServiceBoxItem.copyWith(
             color: currentSelectedSport == data.id ? kBaseColor : Colors.white),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

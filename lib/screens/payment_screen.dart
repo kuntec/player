@@ -19,6 +19,7 @@ class PaymentScreen extends StatefulWidget {
 class _PaymentScreenState extends State<PaymentScreen> {
   Participant? participant;
 
+  bool? isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,18 +53,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
               SizedBox(height: kMargin),
               Container(
                 margin: EdgeInsets.only(left: k20Margin, right: k20Margin),
-                child: RoundedButton(
-                  title: widget.participant.paymentMode == "1"
-                      ? "Proceed"
-                      : "Confirm Booking",
-                  color: kBaseColor,
-                  txtColor: Colors.white,
-                  minWidth: MediaQuery.of(context).size.width,
-                  onPressed: () async {
-                    widget.participant.paymentStatus = "2";
-                    addParticipant(widget.participant);
-                  },
-                ),
+                child: isLoading == true
+                    ? Center(
+                        child: CircularProgressIndicator(color: kBaseColor))
+                    : RoundedButton(
+                        title: widget.participant.paymentMode == "1"
+                            ? "Proceed"
+                            : "Confirm Booking",
+                        color: kBaseColor,
+                        txtColor: Colors.white,
+                        minWidth: MediaQuery.of(context).size.width,
+                        onPressed: () async {
+                          widget.participant.paymentStatus = "2";
+                          addParticipant(widget.participant);
+                        },
+                      ),
               ),
             ],
           ),
@@ -73,13 +77,18 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   addParticipant(Participant participant) async {
+    setState(() {
+      isLoading = true;
+    });
     APICall apiCall = new APICall();
     print("Participant add");
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
       ParticipantData participantData =
           await apiCall.addParticipant(participant);
-
+      setState(() {
+        isLoading = false;
+      });
       if (participantData == null) {
         print("Participant null");
       } else {

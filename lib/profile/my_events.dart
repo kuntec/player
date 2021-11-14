@@ -1,116 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
+import 'package:player/components/custom_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
-import 'package:player/event/event_details.dart';
-import 'package:player/event/event_register.dart';
 import 'package:player/model/event_data.dart';
+import 'package:player/screens/tournament_participants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class EventScreen extends StatefulWidget {
-  const EventScreen({Key? key}) : super(key: key);
+class MyEvents extends StatefulWidget {
+  dynamic player;
+  MyEvents({this.player});
 
   @override
-  _EventScreenState createState() => _EventScreenState();
+  _MyEventsState createState() => _MyEventsState();
 }
 
-class _EventScreenState extends State<EventScreen> {
-  bool isEvent = false;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getMyEvents();
-  }
-
-  Future getMyEvents() async {
-    APICall apiCall = new APICall();
-    bool connectivityStatus = await Utility.checkConnectivity();
-    if (connectivityStatus) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      var playerId = prefs.get("playerId");
-
-      EventData eventData = await apiCall.getMyEvent(playerId.toString());
-      if (eventData.events != null) {
-        if (eventData.events!.length == 0) {
-          isEvent = false;
-        } else {
-          isEvent = true;
-        }
-      }
-
-      if (eventData.status!) {
-        //print(hostActivity.message!);
-        //  Navigator.pop(context);
-      } else {
-        print(eventData.message!);
-      }
-    }
-    setState(() {});
-  }
-
+class _MyEventsState extends State<MyEvents> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-//        leading: Icon(Icons.arrow_back),
-        title: Text("EVENTS"),
-        actions: [
-          Container(
-            child: Row(
-              children: [
-                TextButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => EventRegister()));
-                  },
-                  icon: Icon(
-                    isEvent ? Icons.star : Icons.add,
-                    color: kBaseColor,
-                  ),
-                  label: Text(
-                    isEvent ? "My Events" : "Register",
-                    style: TextStyle(color: kBaseColor),
-                  ),
-                )
-              ],
-            ),
-          ),
-        ],
+        title: Text("My Events"),
       ),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [myEvent()],
+          children: [
+            myEvent(),
+          ],
         ),
       ),
     );
   }
 
-  // Widget myEventList() {
-  //   return Container(
-  //     child: events != null
-  //         ? ListView.builder(
-  //             padding: EdgeInsets.only(bottom: 110),
-  //             scrollDirection: Axis.vertical,
-  //             shrinkWrap: true,
-  //             itemCount: events!.length,
-  //             itemBuilder: (BuildContext context, int index) {
-  //               return eventItem(events![index]);
-  //             },
-  //           )
-  //         : Center(child: Text("Loading")),
-  //   );
-  // }
   Widget myEvent() {
     return Container(
       height: 700,
+      padding: EdgeInsets.all(5.0),
       child: FutureBuilder(
-        future: getEvents(),
+        future: getMyEvents(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.data == null) {
             return Container(
@@ -121,24 +49,27 @@ class _EventScreenState extends State<EventScreen> {
           }
           if (snapshot.hasData) {
             print("Has Data ${snapshot.data.length}");
-            // return Container(
-            //   child: Center(
-            //     child: Text('Yes Data ${snapshot.data}'),
-            //   ),
-            // );
-            return ListView.builder(
-              padding: EdgeInsets.only(bottom: 110),
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: snapshot.data.length,
-              itemBuilder: (BuildContext context, int index) {
-                return eventItem(snapshot.data[index]);
-              },
-            );
+            if (snapshot.data.length == 0) {
+              return Container(
+                child: Center(
+                  child: Text('No Events'),
+                ),
+              );
+            } else {
+              return ListView.builder(
+                padding: EdgeInsets.only(bottom: 110),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return eventItem(snapshot.data[index]);
+                },
+              );
+            }
           } else {
             return Container(
               child: Center(
-                child: Text('No Data'),
+                child: Text('No Events'),
               ),
             );
           }
@@ -149,15 +80,16 @@ class _EventScreenState extends State<EventScreen> {
 
   List<Event>? events;
 
-  Future<List<Event>?> getEvents() async {
+  Future<List<Event>?> getMyEvents() async {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      var locationId = "1";
-      EventData eventData = await apiCall.getEvent(locationId.toString());
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var playerId = prefs.get("playerId");
+
+      EventData eventData = await apiCall.getMyEvent(playerId.toString());
       if (eventData.events != null) {
         events = eventData.events!;
-
         events = events!.reversed.toList();
         //setState(() {});
       }
@@ -172,31 +104,108 @@ class _EventScreenState extends State<EventScreen> {
     return events;
   }
 
+  void _showDialog(dynamic event) async {
+    return await showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: CustomButton(
+                        height: 20,
+                        fontSize: 16.0,
+                        title: "Edit",
+                        color: kBaseColor,
+                        txtColor: Colors.white,
+                        minWidth: 80,
+                        onPressed: () async {
+                          _dismissDialog();
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => EditEvent(
+                          //               event: event,
+                          //             )));
+                        }),
+                  ),
+                  SizedBox(width: 20),
+                  Expanded(
+                    flex: 1,
+                    child: CustomButton(
+                        height: 20,
+                        fontSize: 16.0,
+                        title: "Delete",
+                        color: Colors.red,
+                        txtColor: Colors.white,
+                        minWidth: 80,
+                        onPressed: () async {
+                          _dismissDialog();
+                        }),
+                  ),
+                ],
+              );
+            },
+          ),
+          // actions: <Widget>[
+          //   TextButton(
+          //       onPressed: () {
+          //         _dismissDialog();
+          //       },
+          //       child: Text('Close')),
+          // ],
+        );
+      },
+    );
+  }
+
+  _dismissDialog() {
+    Navigator.pop(context);
+  }
+
   Widget eventItem(dynamic event) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => EventDetails(
-                      event: event,
-                    )));
+                builder: (context) =>
+                    TournamentParticipants(event: event, type: "1")));
       },
       child: Container(
-        margin: EdgeInsets.all(10.0),
+        margin: EdgeInsets.all(5.0),
 //      padding: EdgeInsets.only(bottom: 10.0),
         decoration: kServiceBoxItem,
         // height: 200,
         child: Stack(
           children: [
+            GestureDetector(
+              onTap: () {
+                // Utility.showToast("hi");
+                _showDialog(event);
+              },
+              child: Container(
+                alignment: Alignment.topRight,
+                margin: EdgeInsets.all(5.0),
+                child: Icon(
+                  Icons.more_horiz,
+                  size: 20,
+                  color: kBaseColor,
+                ),
+              ),
+            ),
             Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    margin: EdgeInsets.all(10.0),
-                    height: 110.0,
-                    width: 110.0,
+                    margin: EdgeInsets.all(5.0),
+                    height: 80.0,
+                    width: 80.0,
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                       child: Image.network(
@@ -210,16 +219,16 @@ class _EventScreenState extends State<EventScreen> {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(left: 130.0, right: 5.0),
+              margin: EdgeInsets.only(left: 100.0, right: 5.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 10.0),
+                  SizedBox(height: 5.0),
                   Text(
                     event.name,
                     style: TextStyle(
                         color: kBaseColor,
-                        fontSize: 18.0,
+                        fontSize: 16.0,
                         fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 10.0),
@@ -227,7 +236,7 @@ class _EventScreenState extends State<EventScreen> {
                     event.address,
                     style: TextStyle(
                       color: Colors.grey.shade900,
-                      fontSize: 14.0,
+                      fontSize: 12.0,
                     ),
                   ),
                   SizedBox(height: 5.0),
@@ -235,7 +244,7 @@ class _EventScreenState extends State<EventScreen> {
                     "Start Date: ${event.startDate}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
-                      fontSize: 14.0,
+                      fontSize: 12.0,
                     ),
                   ),
                   SizedBox(height: 5.0),
@@ -243,7 +252,7 @@ class _EventScreenState extends State<EventScreen> {
                     "Location: ${event.address}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
-                      fontSize: 14.0,
+                      fontSize: 12.0,
                     ),
                   ),
                   SizedBox(height: 5.0),

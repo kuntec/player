@@ -273,6 +273,7 @@ class _VenueScreenState extends State<VenueScreen> {
           await apiCall.getVenue(locationId.toString(), selectedSportId);
       if (venueData.venues != null) {
         venues = venueData.venues!;
+        venues = venues!.reversed.toList();
         //setState(() {});
       }
 

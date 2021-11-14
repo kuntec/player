@@ -229,7 +229,7 @@ class _ManufacturerState extends State<Manufacturer> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            sportBarList(),
+            //sportBarList(),
             SizedBox(height: 10),
             allServiceData(),
           ],

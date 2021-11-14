@@ -234,15 +234,41 @@ class _TournamentParticipantsState extends State<TournamentParticipants> {
         ? Container(
             decoration: kBoxDecor,
             margin: EdgeInsets.all(5.0),
-            child: Container(
-                margin: EdgeInsets.all(10.0),
-                child: Text(
-                  "${participant.name}",
-                  style: TextStyle(color: Colors.black87, fontSize: 18.0),
-                )))
-        : SizedBox(
-            height: 1.0,
-          );
+            padding: EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  child: Text(
+                    "${participant.name}",
+                    style: TextStyle(color: Colors.black87, fontSize: 18.0),
+                  ),
+                ),
+                SizedBox(height: 5),
+                Container(
+                  child: Text(
+                    "${participant.number}",
+                    style: TextStyle(color: Colors.black87, fontSize: 14.0),
+                  ),
+                ),
+                SizedBox(height: 5),
+                Container(
+                  child: Text(
+                    "Gender: ${participant.gender}",
+                    style: TextStyle(color: Colors.black87, fontSize: 14.0),
+                  ),
+                ),
+                SizedBox(height: 5),
+                Container(
+                  child: Text(
+                    "Age: ${participant.age}",
+                    style: TextStyle(color: Colors.black87, fontSize: 14.0),
+                  ),
+                ),
+              ],
+            ),
+          )
+        : SizedBox(height: 1.0);
   }
 
   offlineItem(dynamic participant) {
@@ -250,15 +276,41 @@ class _TournamentParticipantsState extends State<TournamentParticipants> {
         ? Container(
             decoration: kBoxDecor,
             margin: EdgeInsets.all(5.0),
+            padding: EdgeInsets.all(10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  margin: EdgeInsets.all(10.0),
-                  child: Text(
-                    "${participant.name}",
-                    style: TextStyle(color: Colors.black87, fontSize: 18.0),
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      child: Text(
+                        "${participant.name}",
+                        style: TextStyle(color: Colors.black87, fontSize: 18.0),
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Container(
+                      child: Text(
+                        "${participant.number}",
+                        style: TextStyle(color: Colors.black87, fontSize: 14.0),
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Container(
+                      child: Text(
+                        "Gender: ${participant.gender}",
+                        style: TextStyle(color: Colors.black87, fontSize: 14.0),
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Container(
+                      child: Text(
+                        "Age: ${participant.age}",
+                        style: TextStyle(color: Colors.black87, fontSize: 14.0),
+                      ),
+                    ),
+                  ],
                 ),
                 participant.paymentStatus == "2"
                     ? Container(
@@ -311,9 +363,7 @@ class _TournamentParticipantsState extends State<TournamentParticipants> {
               ],
             ),
           )
-        : SizedBox(
-            height: 1.0,
-          );
+        : SizedBox(height: 1.0);
   }
 
   Future<List<Participant>?> updateParticipant(Participant participant) async {

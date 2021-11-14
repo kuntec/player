@@ -26,7 +26,7 @@ class EventRegister extends StatefulWidget {
 
 class _EventRegisterState extends State<EventRegister> {
   bool? isMyEventSelected = false;
-
+  bool? isLoading = false;
   DateTime? startDate;
   DateTime? endDate;
   TimeOfDay? time;
@@ -456,57 +456,67 @@ class _EventRegisterState extends State<EventRegister> {
                 ),
               )),
           SizedBox(height: k20Margin),
-          RoundedButton(
-            title: "Create Event",
-            color: kBaseColor,
-            txtColor: Colors.white,
-            minWidth: 250,
-            onPressed: () async {
-              //Utility.showToast("Event clicked");
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              var playerId = prefs.get("playerId");
-              if (locationLink == null) locationLink = "";
+          isLoading == true
+              ? CircularProgressIndicator(
+                  color: kBaseColor,
+                )
+              : RoundedButton(
+                  title: "Create Event",
+                  color: kBaseColor,
+                  txtColor: Colors.white,
+                  minWidth: 250,
+                  onPressed: () async {
+                    //Utility.showToast("Event clicked");
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    var playerId = prefs.get("playerId");
+                    if (locationLink == null) locationLink = "";
 
-              event = new Event();
-              event!.playerId = playerId!.toString();
-              event!.name = eventName.toString();
-              event!.type = eventType.toString();
-              event!.description = description.toString();
-              event!.address = address.toString();
-              event!.locationLink = locationLink.toString();
-              event!.locationId = "1";
-              event!.entryFees = entryFees.toString();
-              event!.members = noOfMembers.toString();
-              event!.startDate = textStartDateController.text;
-              event!.endDate = textEndDateController.text;
-              event!.startTime = textStartTimeController.text;
-              event!.endTime = textEndTimeController.text;
-              event!.details = otherInfo.toString();
+                    event = new Event();
+                    event!.playerId = playerId!.toString();
+                    event!.name = eventName.toString();
+                    event!.type = eventType.toString();
+                    event!.description = description.toString();
+                    event!.address = address.toString();
+                    event!.locationLink = locationLink.toString();
+                    event!.locationId = "1";
+                    event!.entryFees = entryFees.toString();
+                    event!.members = noOfMembers.toString();
+                    event!.startDate = textStartDateController.text;
+                    event!.endDate = textEndDateController.text;
+                    event!.startTime = textStartTimeController.text;
+                    event!.endTime = textEndTimeController.text;
+                    event!.details = otherInfo.toString();
 
-              event!.organizerName = organizerName.toString();
-              event!.number = number.toString();
-              event!.secondaryNumber = secondaryNumber.toString();
+                    event!.organizerName = organizerName.toString();
+                    event!.number = number.toString();
+                    event!.secondaryNumber = secondaryNumber.toString();
 
-              event!.createdAt = Utility.getCurrentDate();
-              if (this.image != null) {
-                addEvent(this.image!.path, event!);
-                //Utility.showToast("File Selected Image");
-              } else {
-                Utility.showToast("Please Select Image");
-              }
-            },
-          ),
+                    event!.createdAt = Utility.getCurrentDate();
+                    if (this.image != null) {
+                      addEvent(this.image!.path, event!);
+                      //Utility.showToast("File Selected Image");
+                    } else {
+                      Utility.showToast("Please Select Image");
+                    }
+                  },
+                ),
         ],
       ),
     );
   }
 
   addEvent(String filePath, Event event) async {
+    setState(() {
+      isLoading = true;
+    });
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
       dynamic status = await apiCall.addEvent(filePath, event);
-
+      setState(() {
+        isLoading = false;
+      });
       if (status == null) {
         print("Event null");
       } else {
@@ -754,6 +764,26 @@ class _EventRegisterState extends State<EventRegister> {
                       color: Colors.grey.shade900,
                       fontSize: 12.0,
                     ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        decoration: kServiceBoxItem.copyWith(
+                            color: kBaseColor,
+                            borderRadius: BorderRadius.circular(5.0)),
+                        padding: EdgeInsets.only(
+                            top: 5.0, bottom: 5.0, right: 15.0, left: 15.0),
+                        child: Text(
+                          "\u{20B9} ${event.entryFees}",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12.0,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

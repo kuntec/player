@@ -151,6 +151,21 @@ class _AddDetailsState extends State<AddDetails> {
                                 setState(() {});
                               },
                               child: Text("Female")),
+                          Radio(
+                            value: "Other",
+                            groupValue: gender,
+                            onChanged: (value) {
+                              gender = value.toString();
+                              setState(() {});
+                            },
+                          ),
+                          SizedBox(width: 10.0),
+                          GestureDetector(
+                              onTap: () {
+                                gender = "Other";
+                                setState(() {});
+                              },
+                              child: Text("Other")),
                         ],
                       ),
                       isLoading

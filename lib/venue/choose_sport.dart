@@ -107,6 +107,7 @@ class _ChooseSportState extends State<ChooseSport> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return GridView.builder(
+                          padding: EdgeInsets.only(bottom: 200),
                           itemCount: snapshot.data!.length,
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(

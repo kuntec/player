@@ -4,74 +4,76 @@ import 'package:player/api/api_resources.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/model/my_sport.dart';
 import 'package:player/model/player_data.dart';
 import 'package:player/model/sport_data.dart';
 import 'package:player/screens/home.dart';
 import 'package:player/screens/main_navigation.dart';
+import 'package:player/venue/model/sport.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
 
-// Only One Sport selection
-
-class SportSelect extends StatefulWidget {
+class FavoriteSport extends StatefulWidget {
   dynamic player;
-  SportSelect({required this.player});
+  FavoriteSport({this.player});
 
   @override
-  _SportSelectState createState() => _SportSelectState();
+  _FavoriteSportState createState() => _FavoriteSportState();
 }
 
-class _SportSelectState extends State<SportSelect> {
+class _FavoriteSportState extends State<FavoriteSport> {
   bool? checked = false;
   int? playerId;
+  var currentSelectedSport;
+  var selectedList = [];
+  List<Sports> sports = [];
+  List<Data> allSports = [];
+  bool? isLoading = false;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // playerId = prefs.getInt('playerId');
-    // print("Playerid " + playerId.toString());
+    getMySports();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomSheet: GestureDetector(
-        onTap: () async {
-          log(selectedList.toString());
+      bottomSheet: isLoading == true
+          ? Container(
+              alignment: Alignment.center,
+              height: 40,
+              child: CircularProgressIndicator(),
+            )
+          : GestureDetector(
+              onTap: () async {
+                log(selectedList.toString());
 //          print(selectedList);
-          await this.addSport();
-          // APICall apiCall = new APICall();
-          // var response = await apiCall.addPlayerSport(
-          //     widget.player!.id, selectedList.toString());
-          // log("Response Sport Select =  $response");
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              decoration:
-                  BoxDecoration(shape: BoxShape.circle, color: kBaseColor),
-              padding: EdgeInsets.all(20),
-              child: Icon(
-                Icons.arrow_forward_ios,
-                size: 35.0,
-                color: Colors.white,
+                await this.addSport();
+                // APICall apiCall = new APICall();
+                // var response = await apiCall.addPlayerSport(
+                //     widget.player!.id, selectedList.toString());
+                // log("Response Sport Select =  $response");
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: kBaseColor),
+                    padding: EdgeInsets.all(20),
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 35.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
       appBar: AppBar(
-        title: Center(child: Text("Sport Selection")),
-        // leading: GestureDetector(
-        //     onTap: () {
-        //       Navigator.pop(context);
-        //     },
-        //     child: Icon(
-        //       Icons.arrow_back_ios,
-        //       color: kBaseColor,
-        //     )),
+        title: Text("Favorite Sport"),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -125,9 +127,28 @@ class _SportSelectState extends State<SportSelect> {
     );
   }
 
-  goToHome() {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (_) => MainNavigation()));
+  Future<List<Sports>> getMySports() async {
+    APICall apiCall = new APICall();
+    // List<Data> data = [];
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var playerId = prefs.get("playerId");
+
+      MySport mySport = await apiCall.getMySports(playerId.toString());
+
+      if (mySport.sports != null) {
+        sports.addAll(mySport.sports!);
+
+        for (int i = 0; i < sports.length; i++) {
+          int id = int.parse(sports[i].sportId.toString());
+          selectedList.add(id);
+        }
+        print("Selected Sport 1 ${selectedList.toString()}");
+        setState(() {});
+      }
+    } else {}
+    return sports;
   }
 
   Future<List<Data>> getSports() async {
@@ -139,13 +160,11 @@ class _SportSelectState extends State<SportSelect> {
 
       if (sportData.data != null) {
         data.addAll(sportData.data!);
+        allSports = data;
       }
     } else {}
     return data;
   }
-
-  var currentSelectedSport;
-  var selectedList = [];
 
   sportItem(dynamic data) {
     return GestureDetector(
@@ -164,11 +183,12 @@ class _SportSelectState extends State<SportSelect> {
         selectedList.add(currentSelectedSport);
 
         setState(() {});
+        print("Selected Sport 2 ${selectedList.toString()}");
       },
       child: Container(
         margin: EdgeInsets.all(10.0),
-        width: 100,
-        height: 100,
+        width: 80,
+        height: 80,
         decoration: kServiceBoxItem.copyWith(
             color: selectedList.any((element) => element == data.id)
                 ? kBaseColor
@@ -233,6 +253,9 @@ class _SportSelectState extends State<SportSelect> {
   }
 
   Future addSport() async {
+    setState(() {
+      isLoading = true;
+    });
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     log("Add player sport");
@@ -250,11 +273,11 @@ class _SportSelectState extends State<SportSelect> {
 
       PlayerData playerData =
           await apiCall.addPlayerSport(widget.player!.id.toString(), sport_id);
+      setState(() {
+        isLoading = false;
+      });
       if (playerData.status!) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setBool("sportSelection", true);
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => MainNavigation()));
+        Navigator.pop(context);
       }
 
       // PlayerData playerData =

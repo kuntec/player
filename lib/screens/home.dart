@@ -197,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 itemCount: snapshot.data.length,
-                reverse: true,
+                //reverse: true,
                 itemBuilder: (BuildContext context, int index) {
                   return hostActivityItem2(snapshot.data[index]);
                 },
@@ -604,6 +604,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (hostActivity.activites != null) {
         activities = hostActivity.activites!;
 
+        activities = activities!.reversed.toList();
         //setState(() {});
       }
       if (hostActivity.status!) {
@@ -615,6 +616,7 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       Utility.showToast("NO INTERNET CONNECTION");
     }
+
     return activities;
   }
 

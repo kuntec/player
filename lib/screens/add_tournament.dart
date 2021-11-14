@@ -256,6 +256,53 @@ class _AddTournamentState extends State<AddTournament> {
             ),
           ),
           TextField(
+            controller: textSportController,
+            readOnly: true,
+            onTap: () async {
+              final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ChooseSport(
+                            selectedSport: selectedSport,
+                          )));
+
+              selectedSport = result;
+
+              textSportController.text = selectedSport.sportName;
+
+              if (selectedSport.sportName.toString().toLowerCase() ==
+                  "cricket") {
+                // Utility.showToast(
+                //     "This is selected ${selectedSport.sportName} ${selectedSport.id}");
+                isCricket = true;
+              } else {
+                isCricket = false;
+              }
+              setState(() {});
+            },
+            decoration: InputDecoration(
+                labelText: "Select Sport",
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                )),
+          ),
+          SizedBox(height: 10.0),
+          isCricket ? buildBallTypeData() : SizedBox(height: 1.0),
+          SizedBox(height: 10.0),
+          isCricket ? buildTournamentCategory() : SizedBox(height: 1.0),
+          isCricket
+              ? TextField(
+                  onChanged: (value) {
+                    noOfOvers = value;
+                  },
+                  decoration: InputDecoration(
+                      labelText: "Number of Overs",
+                      labelStyle: TextStyle(
+                        color: Colors.grey,
+                      )),
+                )
+              : SizedBox(height: 1.0),
+          TextField(
             onChanged: (value) {
               organizerName = value;
             },
@@ -431,72 +478,59 @@ class _AddTournamentState extends State<AddTournament> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              prizeDetails = value;
-            },
+            readOnly: true,
             decoration: InputDecoration(
                 labelText: "Prize Details",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
+          TextFormField(
+              onChanged: (value) {
+                prizeDetails = value;
+              },
+              minLines: 3,
+              maxLines: 5,
+              keyboardType: TextInputType.multiline,
+              textAlign: TextAlign.start,
+              decoration: InputDecoration(
+                labelText: "",
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(5.0),
+                  ),
+                ),
+              )),
           TextField(
-            onChanged: (value) {
-              otherInfo = value;
-            },
+            readOnly: true,
             decoration: InputDecoration(
                 labelText: "Any Other Information",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
-          TextField(
-            controller: textSportController,
-            readOnly: true,
-            onTap: () async {
-              final result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ChooseSport(
-                            selectedSport: selectedSport,
-                          )));
-
-              selectedSport = result;
-
-              textSportController.text = selectedSport.sportName;
-
-              if (selectedSport.sportName.toString().toLowerCase() ==
-                  "cricket") {
-                Utility.showToast(
-                    "This is selected ${selectedSport.sportName} ${selectedSport.id}");
-                isCricket = true;
-              } else {
-                isCricket = false;
-              }
-              setState(() {});
-            },
-            decoration: InputDecoration(
-                labelText: "Select Sport",
+          TextFormField(
+              onChanged: (value) {
+                otherInfo = value;
+              },
+              minLines: 3,
+              maxLines: 5,
+              keyboardType: TextInputType.multiline,
+              textAlign: TextAlign.start,
+              decoration: InputDecoration(
+                labelText: "",
                 labelStyle: TextStyle(
                   color: Colors.grey,
-                )),
-          ),
-          SizedBox(height: 10.0),
-          isCricket ? buildBallTypeData() : SizedBox(height: 1.0),
-          SizedBox(height: 10.0),
-          isCricket ? buildTournamentCategory() : SizedBox(height: 1.0),
-          isCricket
-              ? TextField(
-                  onChanged: (value) {
-                    noOfOvers = value;
-                  },
-                  decoration: InputDecoration(
-                      labelText: "Number of Overs",
-                      labelStyle: TextStyle(
-                        color: Colors.grey,
-                      )),
-                )
-              : SizedBox(height: 1.0),
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(5.0),
+                  ),
+                ),
+              )),
           SizedBox(height: k20Margin),
           isLoading == true
               ? Center(

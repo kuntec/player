@@ -159,7 +159,7 @@ class _HelperState extends State<Helper> {
     return services;
   }
 
-  Widget serviceItem(dynamic umpire) {
+  Widget serviceItem(dynamic service) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -189,7 +189,7 @@ class _HelperState extends State<Helper> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                       child: Image.network(
-                        APIResources.IMAGE_URL + umpire.posterImage,
+                        APIResources.IMAGE_URL + service.posterImage,
                         fit: BoxFit.fill,
                       ),
                     ),
@@ -204,7 +204,7 @@ class _HelperState extends State<Helper> {
                 children: [
                   SizedBox(height: 10.0),
                   Text(
-                    umpire.name,
+                    service.name,
                     style: TextStyle(
                       color: kBaseColor,
                       fontSize: 16.0,
@@ -213,7 +213,7 @@ class _HelperState extends State<Helper> {
                   SizedBox(height: 5.0),
                   SizedBox(height: 5.0),
                   Text(
-                    "Contact: ${umpire.contactNo}",
+                    "Contact: ${service.contactNo}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 12.0,
@@ -221,7 +221,7 @@ class _HelperState extends State<Helper> {
                   ),
                   SizedBox(height: 5.0),
                   Text(
-                    "City: ${umpire.city}",
+                    "City: ${service.city}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 12.0,
