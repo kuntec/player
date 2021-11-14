@@ -5,8 +5,7 @@ import 'package:intl/intl.dart';
 class TimeAgo {
   static String timeAgoSinceDate(String dateString,
       {bool numericDates = true}) {
-    DateTime notificationDate =
-        DateFormat("dd-MM-yyyy h:mma").parse(dateString);
+    DateTime notificationDate = DateFormat("yyyy-MM-dd h:mm").parse(dateString);
     final date2 = DateTime.now();
     final difference = date2.difference(notificationDate);
 

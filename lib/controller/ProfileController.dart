@@ -11,7 +11,7 @@ class ProfileController extends GetxController {
   var isLoading = false.obs;
   var imageURL = '';
 
-  void uploadImage(ImageSource imageSource, String playerId) async {
+  Future<String> uploadImage(ImageSource imageSource, String playerId) async {
     try {
       final pickedFile = await ImagePicker().getImage(source: imageSource);
       isLoading(true);
@@ -30,7 +30,7 @@ class ProfileController extends GetxController {
           if (playerData.player!.image != null) {
             String? image = playerData.player!.image!;
 //            print("Image " + image!);
-            imageURL = APIResources.IMAGE_URL + image;
+            imageURL = image;
           }
 
           Get.snackbar('Success', 'Image uploaded successfully',
@@ -50,5 +50,7 @@ class ProfileController extends GetxController {
     } finally {
       isLoading(false);
     }
+
+    return imageURL;
   }
 }

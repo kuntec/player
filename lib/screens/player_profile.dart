@@ -5,6 +5,7 @@ import 'package:path/path.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
+import 'package:player/api/api_resources.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
@@ -26,6 +27,7 @@ class _PlayerProfileState extends State<PlayerProfile> {
   final ProfileController profilerController = Get.put(ProfileController());
 
   File? file;
+  Player? player;
   Future selectFile() async {
     final result = await FilePicker.platform.pickFiles(allowMultiple: false);
     if (result == null) return;
@@ -68,92 +70,105 @@ class _PlayerProfileState extends State<PlayerProfile> {
           ),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(),
-          Container(
-            margin: EdgeInsets.all(20.0),
-            decoration: BoxDecoration(
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.3),
-                  blurRadius: 40,
+      body: SingleChildScrollView(
+        child: Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                margin: EdgeInsets.all(20.0),
+                decoration: BoxDecoration(
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      blurRadius: 40,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: SizedBox(
-              height: 115,
-              width: 115,
-              child: Stack(
-                fit: StackFit.expand,
-                overflow: Overflow.visible,
-                children: [
-                  Obx(() {
-                    if (profilerController.isLoading.value) {
-                      return CircleAvatar(
-                        backgroundImage:
-                            AssetImage('assets/images/no_user.jpg'),
-                        child: Center(
-                            child: CircularProgressIndicator(
-                          backgroundColor: Colors.white,
-                        )),
-                      );
-                    } else {
-                      if (profilerController.imageURL.length != 0) {
-                        return CachedNetworkImage(
-                          imageUrl: profilerController.imageURL,
-                          fit: BoxFit.cover,
-                          imageBuilder: (context, imageProvider) =>
-                              CircleAvatar(
-                            backgroundColor: Colors.white,
-                            backgroundImage: imageProvider,
-                          ),
-                          placeholder: (context, url) => CircleAvatar(
+                child: SizedBox(
+                  height: 115,
+                  width: 115,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    overflow: Overflow.visible,
+                    children: [
+                      Obx(() {
+                        if (profilerController.isLoading.value) {
+                          return CircleAvatar(
                             backgroundImage:
                                 AssetImage('assets/images/no_user.jpg'),
                             child: Center(
                                 child: CircularProgressIndicator(
                               backgroundColor: Colors.white,
                             )),
+                          );
+                        } else {
+                          if (player != null) {
+                            return CachedNetworkImage(
+                              imageUrl: APIResources.IMAGE_URL +
+                                  player!.image.toString(),
+                              fit: BoxFit.cover,
+                              imageBuilder: (context, imageProvider) =>
+                                  CircleAvatar(
+                                backgroundColor: Colors.white,
+                                backgroundImage: imageProvider,
+                              ),
+                              placeholder: (context, url) => CircleAvatar(
+                                backgroundImage:
+                                    AssetImage('assets/images/no_user.jpg'),
+                                child: Center(
+                                    child: CircularProgressIndicator(
+                                  backgroundColor: Colors.white,
+                                )),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
+                            );
+                          } else {
+                            return CircleAvatar(
+                              backgroundImage:
+                                  AssetImage('assets/images/no_user.jpg'),
+                            );
+                          }
+                        }
+                      }),
+                      Positioned(
+                        right: 16,
+                        bottom: 0,
+                        child: GestureDetector(
+                          child: SizedBox(
+                            height: 36,
+                            width: 36,
+                            child: SvgPicture.asset(
+                                "assets/images/Camera Icon.svg"),
                           ),
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error),
-                        );
-                      } else {
-                        return CircleAvatar(
-                          backgroundImage:
-                              AssetImage('assets/images/no_user.jpg'),
-                        );
-                      }
-                    }
-                  }),
-                  Positioned(
-                    right: 16,
-                    bottom: 0,
-                    child: GestureDetector(
-                      child: SizedBox(
-                        height: 36,
-                        width: 36,
-                        child:
-                            SvgPicture.asset("assets/images/Camera Icon.svg"),
-                      ),
-                      onTap: () async {
-                        print("Camera Clicked");
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        int? playerId = prefs.getInt("playerId");
-                        print("Player id " + playerId.toString());
-                        profilerController.uploadImage(
-                            ImageSource.gallery, playerId.toString());
-                      },
-                    ),
-                  )
-                ],
+                          onTap: () async {
+                            print("Camera Clicked");
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            int? playerId = prefs.getInt("playerId");
+                            print("Player id " + playerId.toString());
+                            String url = await profilerController.uploadImage(
+                                ImageSource.gallery, playerId.toString());
+
+                            setState(() {
+                              player!.image = url;
+                            });
+                            //await getMyProfile();
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                ),
               ),
-            ),
+              // Container(
+              //   decoration: kServiceBoxItem,
+              //   child: Text("My Profile"),
+              // ),
+            ],
           ),
-        ],
+        ),
       ),
     ));
   }
@@ -179,7 +194,10 @@ class _PlayerProfileState extends State<PlayerProfile> {
       PlayerData playerData = await apiCall.checkPlayer(mobile.toString());
 
       if (playerData.status!) {
-        Utility.showToast("Player Found ${playerData.player!.name}");
+        setState(() {
+          player = playerData.player;
+        });
+        //  Utility.showToast("Player Found ${playerData.player!.image}");
       }
     }
   }

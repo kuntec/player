@@ -188,4 +188,40 @@ class Player {
     map['id'] = _id;
     return map;
   }
+
+  set id(value) {
+    _id = value;
+  }
+
+  set fuid(value) {
+    _fuid = value;
+  }
+
+  set locationId(value) {
+    _locationId = value;
+  }
+
+  set email(value) {
+    _email = value;
+  }
+
+  set image(value) {
+    _image = value;
+  }
+
+  set gender(value) {
+    _gender = value;
+  }
+
+  set dob(value) {
+    _dob = value;
+  }
+
+  set mobile(value) {
+    _mobile = value;
+  }
+
+  set name(value) {
+    _name = value;
+  }
 }

@@ -8,6 +8,7 @@ import 'package:player/chat/chat_page.dart';
 import 'package:player/chatprovider/home_provider.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/firestore_constants.dart';
+import 'package:player/constant/time_ago.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/event/event_screen.dart';
 import 'package:player/friends/chat_screen.dart';
@@ -196,6 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 itemCount: snapshot.data.length,
+                reverse: true,
                 itemBuilder: (BuildContext context, int index) {
                   return hostActivityItem2(snapshot.data[index]);
                 },
@@ -220,8 +222,11 @@ class _HomeScreenState extends State<HomeScreen> {
         scrollDirection: Axis.horizontal,
         children: [
           iconCard(Icons.add, "Host Activity", 1, hostEndColor, () {
-            Navigator.push(
+            var result = Navigator.push(
                 context, MaterialPageRoute(builder: (context) => AddHost()));
+            if (result == true) {
+              setState(() {});
+            }
           }),
           iconCard(Icons.people, "Friends", 2, friendEndColor, () {
             Navigator.push(context,
@@ -291,8 +296,18 @@ class _HomeScreenState extends State<HomeScreen> {
   hostActivityItem2(dynamic activity) {
     return GestureDetector(
       onTap: () {
-        //Utility.showToast("Activity To Chat ${activity.playerId}");
-        getPlayerById(activity.playerId);
+        //Utility.showToast("Activity To Chat ${activity.playerImage}");
+        if (playerId.toString() == activity.playerId.toString()) {
+          Utility.showToast("This is your Host Activity");
+        } else {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ChatPage(
+                      peerId: activity.playerFuid.toString(), // send fuid
+                      peerAvatar: activity.playerImage.toString(),
+                      peerNickname: activity.playerName.toString())));
+        }
       },
       child: Container(
         margin: EdgeInsets.all(5.0),
@@ -316,17 +331,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),
                       child: Image.network(
-                        playerImage == null
+                        activity.playerImage == null
                             ? APIResources.AVATAR_IMAGE
-                            : APIResources.IMAGE_URL + playerImage,
-                        //fit: BoxFit.cover,
+                            : APIResources.IMAGE_URL + activity.playerImage,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
                   Container(
                     child: Center(
                       child: Text(
-                        "2 hours ago",
+                        TimeAgo.timeAgoSinceDate(activity.createdAt),
                         style: TextStyle(
                           color: Colors.black54,
                           fontSize: 10.0,
@@ -435,25 +450,19 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  getPlayerById(String id) async {
-    APICall apiCall = new APICall();
-    bool connectivityStatus = await Utility.checkConnectivity();
-    if (connectivityStatus) {
-      PlayerData playerData = await apiCall.getPlayerById(id);
-
-      if (playerData.status!) {
-//        Utility.showToast("Player Found ${playerData.player!.name}");
-        // Utility.showToast("Player FUID ${playerData.player!.fuid}");
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ChatPage(
-                    peerId: playerData.player!.fuid.toString(), // send fuid
-                    peerAvatar: playerData.player!.image.toString(),
-                    peerNickname: playerData.player!.name.toString())));
-      }
-    }
-  }
+//   getPlayerById(String id) async {
+//     APICall apiCall = new APICall();
+//     bool connectivityStatus = await Utility.checkConnectivity();
+//     if (connectivityStatus) {
+//       PlayerData playerData = await apiCall.getPlayerById(id);
+//
+//       if (playerData.status!) {
+// //        Utility.showToast("Player Found ${playerData.player!.name}");
+//         // Utility.showToast("Player FUID ${playerData.player!.fuid}");
+//
+//       }
+//     }
+//   }
 
 //   hostActivityItem(dynamic activity) {
 //     return GestureDetector(
@@ -578,9 +587,9 @@ class _HomeScreenState extends State<HomeScreen> {
   var playerImage;
   var locationId;
 
-  List<Activites>? activities;
+  List<Activity>? activities;
 
-  Future<List<Activites>?> getHostActivity() async {
+  Future<List<Activity>?> getHostActivity() async {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {

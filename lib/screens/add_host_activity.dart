@@ -255,7 +255,6 @@ class _AddHostState extends State<AddHost> {
               isMyGameSelected!
                   ? Container(
                       height: 700,
-                      padding: EdgeInsets.all(20.0),
                       child: FutureBuilder(
                         future: getMyHostActivity(),
                         builder:
@@ -479,6 +478,11 @@ class _AddHostState extends State<AddHost> {
                                       return;
                                     }
 
+                                    if (roleOfPlayer == null) {
+                                      roleOfPlayer = "";
+                                      return;
+                                    }
+
                                     //Utility.showToast("CREATE ACTIVITY");
                                     SharedPreferences prefs =
                                         await SharedPreferences.getInstance();
@@ -494,7 +498,7 @@ class _AddHostState extends State<AddHost> {
                                         this._selectedLK!.lookingForValue!;
                                     startDate = txtDate;
                                     timing = txtTime;
-                                    createdAt = DateTime.now();
+                                    createdAt = DateTime.now().toString();
 
                                     activity = new Activity();
                                     activity!.sportId = sportId.toString();
@@ -635,7 +639,9 @@ class _AddHostState extends State<AddHost> {
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
       HostActivity hostActivity = await apiCall.addHostActivity(activity!);
-      Navigator.pop(context);
+      setState(() {
+        isLoading = false;
+      });
       if (hostActivity.status!) {
         print(hostActivity.message!);
 
@@ -643,8 +649,7 @@ class _AddHostState extends State<AddHost> {
         setState(() {
           isLoading = false;
         });
-        //Navigator.pop(context);
-
+        Navigator.pop(context, true);
       } else {
         print(hostActivity.message!);
         Utility.showToast(hostActivity.message!);
@@ -652,9 +657,9 @@ class _AddHostState extends State<AddHost> {
     }
   }
 
-  List<Activites>? activities;
+  List<Activity>? activities;
 
-  Future<List<Activites>?> getMyHostActivity() async {
+  Future<List<Activity>?> getMyHostActivity() async {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
@@ -682,7 +687,7 @@ class _AddHostState extends State<AddHost> {
   hostActivityItem(dynamic activity) {
     return GestureDetector(
       onTap: () {
-        Utility.showToast("Show Details");
+        Utility.showToast("Show Details ${activity.playerImage}");
       },
       child: Container(
         margin: EdgeInsets.all(10.0),
@@ -711,16 +716,17 @@ class _AddHostState extends State<AddHost> {
                   flex: 4,
                   child: Container(
                     margin: EdgeInsets.all(10.0),
-                    height: 65.0,
-                    width: 65.0,
-                    child: playerImage == null
-                        ? FlutterLogo()
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(25.0),
-                            child: Image.network(
-                              APIResources.IMAGE_URL + playerImage,
-                            ),
-                          ),
+                    height: 95.0,
+                    width: 95.0,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15.0),
+                      child: Image.network(
+                        activity.playerImage == null
+                            ? APIResources.AVATAR_IMAGE
+                            : APIResources.IMAGE_URL + activity.playerImage,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                 ),
                 Expanded(
