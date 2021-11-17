@@ -84,4 +84,5 @@ class APIResources {
   static final String UPDATE_FRIEND = BASE_URL + "updateFriend";
   static final String LIST_FRIENDS = BASE_URL + "listFriends";
   static final String GET_CHAT_PLAYER = BASE_URL + "getChatPlayer";
+  static final String GET_FRIEND_REQUEST = BASE_URL + "getFriendRequest";
 }

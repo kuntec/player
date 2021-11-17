@@ -91,6 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         leading: GestureDetector(
           onTap: () {
             Navigator.push(
@@ -137,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     builder: (context) => LocationSelectScreen()));
           },
           child: Text(
-            "Vadodara1",
+            "Vadodara",
             style: TextStyle(color: kBaseColor),
           ),
         ),

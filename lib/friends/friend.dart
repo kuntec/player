@@ -5,6 +5,7 @@ import 'package:player/chat/chat_page.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/model/friend_data.dart';
 import 'package:player/model/player_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,6 +18,8 @@ class FriendScreen extends StatefulWidget {
 
 class _FriendScreenState extends State<FriendScreen> {
   bool? isRequestSelected = false;
+  var myPlayerId;
+  var selectedPlayerId;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,10 +90,42 @@ class _FriendScreenState extends State<FriendScreen> {
                 ],
               ),
             ),
-            isRequestSelected! ? RequestFriends() : findFriends()
+            isRequestSelected! ? requestFriends() : findFriends()
           ],
         ),
       ),
+    );
+  }
+
+  String searchString = "";
+  TextEditingController searchController = new TextEditingController();
+  findFriends() {
+    return Column(
+      children: [
+        Container(
+          decoration: kServiceBoxItem,
+          margin: EdgeInsets.all(10),
+          child: TextField(
+            onChanged: (value) {
+              setState(() {
+                searchString = value;
+              });
+            },
+            controller: searchController,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: "Search",
+              prefixIcon: Icon(
+                Icons.search,
+                color: kBaseColor,
+              ),
+            ),
+          ),
+        ),
+        Container(
+          child: allPlayers(),
+        ),
+      ],
     );
   }
 
@@ -103,10 +138,11 @@ class _FriendScreenState extends State<FriendScreen> {
     if (connectivityStatus) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       int? playerId = prefs.getInt("playerId");
-
+      myPlayerId = playerId.toString();
       PlayerData playerData = await apiCall.getChatPlayer(playerId.toString());
       if (playerData.players != null) {
         list = playerData.players!;
+        list = list.reversed.toList();
       }
     }
     return list;
@@ -133,7 +169,13 @@ class _FriendScreenState extends State<FriendScreen> {
               shrinkWrap: true,
               itemCount: snapshot.data.length,
               itemBuilder: (BuildContext context, int index) {
-                return playerItem(snapshot.data[index]);
+                return snapshot.data[index].name
+                        .toString()
+                        .toLowerCase()
+                        .contains(searchString)
+                    ? playerItem(snapshot.data[index])
+                    : Container();
+//                return playerItem();
               },
             );
           } else {
@@ -149,94 +191,471 @@ class _FriendScreenState extends State<FriendScreen> {
   }
 
   Widget playerItem(dynamic player) {
-    return GestureDetector(
-      onTap: () async {
-        // Utility.showToast(player.fuid.toString());
-
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ChatPage(
-                    peerId: player.fuid.toString(),
-                    peerAvatar: player.image.toString(),
-                    peerNickname: player.name.toString())));
-      },
-      child: Container(
-        margin: EdgeInsets.all(10.0),
-        decoration: kServiceBoxItem,
-        // height: 200,
-        child: Stack(
-          children: [
-            Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: EdgeInsets.all(10.0),
-                    height: 40.0,
-                    width: 40.0,
-                    child: player.image == null
-                        ? FlutterLogo()
-                        : ClipRRect(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(5.0)),
-                            child: Image.network(
-                              APIResources.IMAGE_URL + player.image,
-                              fit: BoxFit.fill,
+    return Container(
+      margin: EdgeInsets.all(10.0),
+      decoration:
+          kServiceBoxItem.copyWith(borderRadius: BorderRadius.circular(5)),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: EdgeInsets.all(10.0),
+                  height: 40.0,
+                  width: 40.0,
+                  child: player.image == null
+                      ? FlutterLogo()
+                      : ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                          child: Image.network(
+                            APIResources.IMAGE_URL + player.image,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 4,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  player.name,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Column(
+              children: [
+                player.friend == null
+                    ? GestureDetector(
+                        onTap: () async {
+                          // Utility.showToast(
+                          //     "Send ${myPlayerId.toString()} to ${player.id}");
+                          setState(() {
+                            selectedPlayerId = player.id.toString();
+                          });
+                          addFriend(
+                              myPlayerId.toString(), player.id.toString());
+                        },
+                        child: isLoading == true &&
+                                selectedPlayerId == player.id.toString()
+                            ? CircularProgressIndicator(color: kBaseColor)
+                            : Container(
+                                color: kBaseColor,
+                                padding: EdgeInsets.all(5),
+                                child: Text(
+                                  "Send Request",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12.0,
+                                  ),
+                                ),
+                              ),
+                      )
+                    : player.friend.status == "0"
+                        ? Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: kBaseColor,
+                                width: 0,
+                              ),
+                            ),
+                            padding: EdgeInsets.all(5),
+                            child: Text(
+                              "Requested",
+                              style: TextStyle(
+                                color: kBaseColor,
+                                fontSize: 12.0,
+                              ),
+                            ),
+                          )
+                        : Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: kBaseColor,
+                                width: 0,
+                              ),
+                            ),
+                            padding: EdgeInsets.all(5),
+                            child: Text(
+                              "Friend",
+                              style: TextStyle(
+                                color: kBaseColor,
+                                fontSize: 12.0,
+                              ),
                             ),
                           ),
-                  ),
-//                  Row(),
-                ],
-              ),
+              ],
             ),
-            Container(
-              margin: EdgeInsets.only(left: 70.0, right: 5.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 10.0),
-                  Text(
-                    player.name,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 5.0),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  findFriends() {
-    return Container(
-      child: allPlayers(),
-    );
-  }
+//   Widget playerItem(dynamic player) {
+//     return GestureDetector(
+//       onTap: () async {
+//         // Utility.showToast(player.fuid.toString());
+//
+//         Navigator.push(
+//             context,
+//             MaterialPageRoute(
+//                 builder: (context) => ChatPage(
+//                     peerId: player.fuid.toString(),
+//                     peerAvatar: player.image.toString(),
+//                     peerNickname: player.name.toString())));
+//       },
+//       child: Container(
+//         margin: EdgeInsets.all(10.0),
+//         decoration: kServiceBoxItem,
+//         // height: 200,
+//         child: Stack(
+//           children: [
+//             Container(
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Container(
+//                     margin: EdgeInsets.all(10.0),
+//                     height: 40.0,
+//                     width: 40.0,
+//                     child: player.image == null
+//                         ? FlutterLogo()
+//                         : ClipRRect(
+//                             borderRadius:
+//                                 BorderRadius.all(Radius.circular(5.0)),
+//                             child: Image.network(
+//                               APIResources.IMAGE_URL + player.image,
+//                               fit: BoxFit.fill,
+//                             ),
+//                           ),
+//                   ),
+// //                  Row(),
+//                 ],
+//               ),
+//             ),
+//             Container(
+//               margin: EdgeInsets.only(left: 70.0, right: 5.0),
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   SizedBox(height: 10.0),
+//                   Text(
+//                     player.name,
+//                     style: TextStyle(
+//                         color: Colors.black,
+//                         fontSize: 16.0,
+//                         fontWeight: FontWeight.bold),
+//                   ),
+//                   SizedBox(height: 5.0),
+//                 ],
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
 
   bool? isLoading = false;
 
-  RequestFriends() {
+  requestFriends() {
     return Container(
-      margin: EdgeInsets.all(20.0),
-      child: isLoading!
-          ? CircularProgressIndicator()
-          : RoundedButton(
-              title: "CONTINUE",
-              color: kBaseColor,
-              txtColor: Colors.white,
-              minWidth: MediaQuery.of(context).size.width,
-              onPressed: () async {
-                setState(() {
-                  isLoading = true;
-                });
-              },
-            ),
+      child: allRequestPlayers(),
     );
+  }
+
+  allRequestPlayers() {
+    return Container(
+      height: 700,
+      child: FutureBuilder(
+        future: getRequestFriend(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.data == null) {
+            return Container(
+              child: Center(
+                child: Text('Loading....'),
+              ),
+            );
+          }
+          if (snapshot.hasData) {
+            print("Has Data ${snapshot.data.length}");
+            if (snapshot.data.length == 0) {
+              return Container(
+                child: Center(
+                  child: Text('No Request Found'),
+                ),
+              );
+            } else {
+              return ListView.builder(
+                padding: EdgeInsets.only(bottom: 200),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return requestPlayerItem(snapshot.data[index]);
+                },
+              );
+            }
+          } else {
+            return Container(
+              child: Center(
+                child: Text('No Data'),
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Widget requestPlayerItem(dynamic friend) {
+    return Container(
+      margin: EdgeInsets.all(10.0),
+      decoration: kServiceBoxItem,
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: EdgeInsets.all(10.0),
+                  height: 40.0,
+                  width: 40.0,
+                  child: friend.player.image == null
+                      ? FlutterLogo()
+                      : ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                          child: Image.network(
+                            APIResources.IMAGE_URL + friend.player.image,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 4,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  friend.player.name,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: GestureDetector(
+              onTap: () async {
+                updateFriend(myPlayerId, friend.player.id.toString(), "1");
+                Utility.showToast("Confirm");
+              },
+              child: Container(
+                margin: EdgeInsets.all(2),
+                color: kBaseColor,
+                padding: EdgeInsets.all(5),
+                child: Center(
+                  child: Text(
+                    "Confirm",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 5),
+          Expanded(
+            flex: 3,
+            child: GestureDetector(
+              onTap: () async {
+                updateFriend(myPlayerId, friend.player.id.toString(), "2");
+                Utility.showToast("Cancel");
+              },
+              child: Container(
+                margin: EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: kBaseColor,
+                    width: 0,
+                  ),
+                ),
+                padding: EdgeInsets.all(5),
+                child: Center(
+                  child: Text(
+                    "Cancel",
+                    style: TextStyle(
+                      color: kBaseColor,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // Expanded(
+          //   flex: 3,
+          //   child: Column(
+          //     children: [
+          //       player.friend == null
+          //           ? GestureDetector(
+          //               onTap: () async {
+          //                 // Utility.showToast(
+          //                 //     "Send ${myPlayerId.toString()} to ${player.id}");
+          //                 setState(() {
+          //                   selectedPlayerId = player.id.toString();
+          //                 });
+          //                 addFriend(
+          //                     myPlayerId.toString(), player.id.toString());
+          //               },
+          //               child: isLoading == true &&
+          //                       selectedPlayerId == player.id.toString()
+          //                   ? CircularProgressIndicator(color: kBaseColor)
+          //                   : Container(
+          //                       color: kBaseColor,
+          //                       padding: EdgeInsets.all(5),
+          //                       child: Text(
+          //                         "Send Request",
+          //                         style: TextStyle(
+          //                           color: Colors.white,
+          //                           fontSize: 12.0,
+          //                         ),
+          //                       ),
+          //                     ),
+          //             )
+          //           : player.friend.status == "0"
+          //               ? Container(
+          //                   decoration: BoxDecoration(
+          //                     border: Border.all(
+          //                       color: kBaseColor,
+          //                       width: 0,
+          //                     ),
+          //                   ),
+          //                   padding: EdgeInsets.all(5),
+          //                   child: Text(
+          //                     "Requested",
+          //                     style: TextStyle(
+          //                       color: kBaseColor,
+          //                       fontSize: 12.0,
+          //                     ),
+          //                   ),
+          //                 )
+          //               : Container(
+          //                   decoration: BoxDecoration(
+          //                     border: Border.all(
+          //                       color: kBaseColor,
+          //                       width: 0,
+          //                     ),
+          //                   ),
+          //                   padding: EdgeInsets.all(5),
+          //                   child: Text(
+          //                     "Friend",
+          //                     style: TextStyle(
+          //                       color: kBaseColor,
+          //                       fontSize: 12.0,
+          //                     ),
+          //                   ),
+          //                 ),
+          //     ],
+          //   ),
+          // ),
+        ],
+      ),
+    );
+  }
+
+  addFriend(String playerId1, String playerId2) async {
+    setState(() {
+      isLoading = true;
+    });
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      PlayerData playerData = await apiCall.addFriend(playerId1, playerId2);
+      setState(() {
+        isLoading = false;
+      });
+      if (playerData.status!) {
+        print(playerData.message!);
+
+        Utility.showToast(playerData.message!);
+        setState(() {
+          isLoading = false;
+        });
+        // Navigator.pop(context, true);
+      } else {
+        print(playerData.message!);
+        Utility.showToast(playerData.message!);
+      }
+    }
+  }
+
+  updateFriend(String playerId1, String playerId2, String status) async {
+    setState(() {
+      isLoading = true;
+    });
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      PlayerData playerData =
+          await apiCall.updateFriend(playerId1, playerId2, status);
+      setState(() {
+        isLoading = false;
+      });
+      if (playerData.status!) {
+        print(playerData.message!);
+
+        Utility.showToast(playerData.message!);
+        setState(() {
+          isLoading = false;
+        });
+        // Navigator.pop(context, true);
+      } else {
+        print(playerData.message!);
+        Utility.showToast(playerData.message!);
+      }
+    }
+  }
+
+  Future<List<Friends>> getRequestFriend() async {
+    List<Friends> list = [];
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      FriendData friendData = await apiCall.getRequestFriend(myPlayerId);
+      if (friendData.friend != null) {
+        list = friendData.friend!;
+      }
+      if (friendData.status!) {
+        print(friendData.message!);
+      } else {
+        print(friendData.message!);
+      }
+    }
+    return list;
   }
 }

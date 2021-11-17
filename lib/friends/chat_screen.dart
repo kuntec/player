@@ -4,6 +4,7 @@ import 'package:player/api/api_resources.dart';
 import 'package:player/chat/chat_page.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/model/friend_data.dart';
 import 'package:player/model/player_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -86,7 +87,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 ],
               ),
             ),
-            isRequestSelected! ? RequestFriends() : findFriends()
+            isRequestSelected! ? requestFriends() : findFriends()
           ],
         ),
       ),
@@ -218,9 +219,140 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  RequestFriends() {
+  bool? isLoading = false;
+
+  requestFriends() {
     return Container(
-      child: Text("Request Friends"),
+      child: listPlayerFriends(),
     );
+  }
+
+  listPlayerFriends() {
+    return Container(
+      height: 700,
+      child: FutureBuilder(
+        future: listFriend(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.data == null) {
+            return Container(
+              child: Center(
+                child: Text('Loading....'),
+              ),
+            );
+          }
+          if (snapshot.hasData) {
+            print("Has Data ${snapshot.data.length}");
+            if (snapshot.data.length == 0) {
+              return Container(
+                child: Center(
+                  child: Text('No Request Found'),
+                ),
+              );
+            } else {
+              return ListView.builder(
+                padding: EdgeInsets.only(bottom: 200),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return friendItem(snapshot.data[index]);
+                },
+              );
+            }
+          } else {
+            return Container(
+              child: Center(
+                child: Text('No Data'),
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Widget friendItem(dynamic friend) {
+    return friend.status == "1"
+        ? GestureDetector(
+            onTap: () {
+              //Utility.showToast("fuid ${friend.player.fUid.toString()}");
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ChatPage(
+                          peerId: friend.player.fUid.toString(),
+                          peerAvatar: friend.player.image.toString(),
+                          peerNickname: friend.player.name.toString())));
+            },
+            child: Container(
+              margin: EdgeInsets.all(10.0),
+              decoration: kServiceBoxItem.copyWith(
+                  borderRadius: BorderRadius.circular(5)),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.all(10.0),
+                          height: 40.0,
+                          width: 40.0,
+                          child: friend.player.image == null
+                              ? FlutterLogo()
+                              : ClipRRect(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5.0)),
+                                  child: Image.network(
+                                    APIResources.IMAGE_URL +
+                                        friend.player.image,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 4,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          friend.player.name,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+        : SizedBox.shrink();
+  }
+
+  Future<List<Friends>> listFriend() async {
+    List<Friends> list = [];
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      int? playerId = prefs.getInt("playerId");
+      FriendData friendData = await apiCall.listFriend(playerId.toString());
+      if (friendData.friend != null) {
+        list = friendData.friend!;
+      }
+      if (friendData.status!) {
+        print(friendData.message!);
+      } else {
+        print(friendData.message!);
+      }
+    }
+    return list;
   }
 }

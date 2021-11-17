@@ -304,10 +304,36 @@ class _AddHostState extends State<AddHost> {
                           sports != null
                               ? buildSportData(sports!)
                               : Container(child: Text("Loading...")),
-                          looks != null
-                              ? buildData(looks!)
-                              : Container(child: Text("Loading...")),
-                          SizedBox(height: k20Margin),
+                          this.selectedSport != null
+                              ? this
+                                              .selectedSport!
+                                              .sportName!
+                                              .toLowerCase() ==
+                                          "swimming" ||
+                                      this
+                                              .selectedSport!
+                                              .sportName!
+                                              .toLowerCase() ==
+                                          "cycling" ||
+                                      this
+                                              .selectedSport!
+                                              .sportName!
+                                              .toLowerCase() ==
+                                          "skate" ||
+                                      this
+                                              .selectedSport!
+                                              .sportName!
+                                              .toLowerCase() ==
+                                          "running"
+                                  ? Container(
+                                      margin: EdgeInsets.only(top: 10),
+                                      child: Text(
+                                          "Looking For - Someone to join me"))
+                                  : looks != null
+                                      ? buildData(looks!)
+                                      : Container(child: Text("Loading..."))
+                              : SizedBox.shrink(),
+                          // SizedBox(height: k20Margin),
                           this.selectedSport != null
                               ? this.selectedSport!.sportName!.toLowerCase() ==
                                       "cricket"
@@ -399,33 +425,80 @@ class _AddHostState extends State<AddHost> {
                                   color: Colors.grey,
                                 )),
                           ),
-                          Container(
-                            alignment: Alignment.topLeft,
-                            margin: EdgeInsets.only(top: 10, bottom: 10),
-                            child: Text(
-                              "Details",
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          ),
-                          TextFormField(
-                              onChanged: (value) {
-                                details = value;
-                              },
-                              minLines: 3,
-                              maxLines: 5,
-                              keyboardType: TextInputType.multiline,
-                              textAlign: TextAlign.start,
-                              decoration: InputDecoration(
-                                labelText: "",
-                                labelStyle: TextStyle(
-                                  color: Colors.grey,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(5.0),
-                                  ),
-                                ),
-                              )),
+                          this.selectedSport != null
+                              ? this
+                                              .selectedSport!
+                                              .sportName!
+                                              .toLowerCase() ==
+                                          "swimming" ||
+                                      this
+                                              .selectedSport!
+                                              .sportName!
+                                              .toLowerCase() ==
+                                          "cycling" ||
+                                      this
+                                              .selectedSport!
+                                              .sportName!
+                                              .toLowerCase() ==
+                                          "skate" ||
+                                      this
+                                              .selectedSport!
+                                              .sportName!
+                                              .toLowerCase() ==
+                                          "running"
+                                  ? Container(
+                                      alignment: Alignment.topLeft,
+                                      margin:
+                                          EdgeInsets.only(top: 10, bottom: 10),
+                                      child: Text(
+                                        "Details",
+                                        style: TextStyle(color: Colors.grey),
+                                      ),
+                                    )
+                                  : SizedBox.shrink()
+                              : SizedBox.shrink(),
+                          this.selectedSport != null
+                              ? this
+                                              .selectedSport!
+                                              .sportName!
+                                              .toLowerCase() ==
+                                          "swimming" ||
+                                      this
+                                              .selectedSport!
+                                              .sportName!
+                                              .toLowerCase() ==
+                                          "cycling" ||
+                                      this
+                                              .selectedSport!
+                                              .sportName!
+                                              .toLowerCase() ==
+                                          "skate" ||
+                                      this
+                                              .selectedSport!
+                                              .sportName!
+                                              .toLowerCase() ==
+                                          "running"
+                                  ? TextFormField(
+                                      onChanged: (value) {
+                                        details = value;
+                                      },
+                                      minLines: 3,
+                                      maxLines: 5,
+                                      keyboardType: TextInputType.multiline,
+                                      textAlign: TextAlign.start,
+                                      decoration: InputDecoration(
+                                        labelText: "",
+                                        labelStyle: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(5.0),
+                                          ),
+                                        ),
+                                      ))
+                                  : SizedBox.shrink()
+                              : SizedBox.shrink(),
                           SizedBox(height: k20Margin),
                           isLoading!
                               ? CircularProgressIndicator(
@@ -442,11 +515,6 @@ class _AddHostState extends State<AddHost> {
                                       return;
                                     }
 
-                                    if (this._selectedLK == null) {
-                                      Utility.showToast(
-                                          "Please Select Looking For");
-                                      return;
-                                    }
                                     if (this
                                             .selectedSport!
                                             .sportName!
@@ -480,7 +548,46 @@ class _AddHostState extends State<AddHost> {
 
                                     if (roleOfPlayer == null) {
                                       roleOfPlayer = "";
-                                      return;
+                                    }
+
+                                    if (details == null) {
+                                      details = "";
+                                    }
+
+                                    if (this
+                                                .selectedSport!
+                                                .sportName!
+                                                .toLowerCase() ==
+                                            "swimming" ||
+                                        this
+                                                .selectedSport!
+                                                .sportName!
+                                                .toLowerCase() ==
+                                            "cycling" ||
+                                        this
+                                                .selectedSport!
+                                                .sportName!
+                                                .toLowerCase() ==
+                                            "running" ||
+                                        this
+                                                .selectedSport!
+                                                .sportName!
+                                                .toLowerCase() ==
+                                            "skate") {
+                                      lookingForId = "0";
+                                      lookingFor = "Someone to join me";
+                                      lookingForValue = "Join";
+                                    } else {
+                                      if (this._selectedLK == null) {
+                                        Utility.showToast(
+                                            "Please Select Looking For");
+                                        return;
+                                      }
+                                      lookingForId = this._selectedLK!.id!;
+                                      lookingFor =
+                                          this._selectedLK!.lookingFor!;
+                                      lookingForValue =
+                                          this._selectedLK!.lookingForValue!;
                                     }
 
                                     //Utility.showToast("CREATE ACTIVITY");
@@ -492,10 +599,7 @@ class _AddHostState extends State<AddHost> {
                                     locationId = "1";
                                     sportId = this.selectedSport!.id!;
                                     sportName = this.selectedSport!.sportName!;
-                                    lookingForId = this._selectedLK!.id!;
-                                    lookingFor = this._selectedLK!.lookingFor!;
-                                    lookingForValue =
-                                        this._selectedLK!.lookingForValue!;
+
                                     startDate = txtDate;
                                     timing = txtTime;
                                     createdAt = DateTime.now().toString();
@@ -671,6 +775,7 @@ class _AddHostState extends State<AddHost> {
           await apiCall.getMyHostActivity(playerId.toString());
       if (hostActivity.activites != null) {
         activities = hostActivity.activites!;
+        activities = activities!.reversed.toList();
         //setState(() {});
       }
 
@@ -687,7 +792,7 @@ class _AddHostState extends State<AddHost> {
   hostActivityItem(dynamic activity) {
     return GestureDetector(
       onTap: () {
-        Utility.showToast("Show Details ${activity.playerImage}");
+        //Utility.showToast("Show Details ${activity.playerImage}");
       },
       child: Container(
         margin: EdgeInsets.all(10.0),

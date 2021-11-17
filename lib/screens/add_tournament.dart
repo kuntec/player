@@ -50,6 +50,7 @@ class _AddTournamentState extends State<AddTournament> {
   TextEditingController textSportController = new TextEditingController();
   var selectedSport;
   bool isCricket = false;
+  bool isBoxCricket = false;
 
   TextEditingController textStartDateController = new TextEditingController();
   TextEditingController textEndDateController = new TextEditingController();
@@ -278,6 +279,14 @@ class _AddTournamentState extends State<AddTournament> {
               } else {
                 isCricket = false;
               }
+              if (selectedSport.sportName.toString().toLowerCase() ==
+                  "box cricket") {
+                // Utility.showToast(
+                //     "This is selected ${selectedSport.sportName} ${selectedSport.id}");
+                isBoxCricket = true;
+              } else {
+                isBoxCricket = false;
+              }
               setState(() {});
             },
             decoration: InputDecoration(
@@ -290,7 +299,7 @@ class _AddTournamentState extends State<AddTournament> {
           isCricket ? buildBallTypeData() : SizedBox(height: 1.0),
           SizedBox(height: 10.0),
           isCricket ? buildTournamentCategory() : SizedBox(height: 1.0),
-          isCricket
+          isCricket || isBoxCricket
               ? TextField(
                   onChanged: (value) {
                     noOfOvers = value;

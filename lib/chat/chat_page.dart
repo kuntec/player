@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:player/allWidgets/loading_view.dart';
+import 'package:player/api/api_resources.dart';
 import 'package:player/chat/login_page.dart';
 import 'package:player/chatmodels/message_chat.dart';
 import 'package:player/chatprovider/auth_provider.dart';
@@ -222,7 +224,44 @@ class ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${peerNickname}"),
+        automaticallyImplyLeading: false,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            GestureDetector(
+              onTap: () {
+                // Utility.showToast("Peer avatar ${peerAvatar}");
+                Navigator.pop(context);
+              },
+              child: Container(
+                child: Icon(
+                  Icons.arrow_back_ios,
+                  color: kBaseColor,
+                ),
+              ),
+            ),
+            Container(
+                height: 40,
+                width: 40,
+                child: peerAvatar == ""
+                    ? FlutterLogo()
+                    : CachedNetworkImage(
+                        imageUrl: APIResources.IMAGE_URL + peerAvatar,
+                        fit: BoxFit.cover,
+                        imageBuilder: (context, imageProvider) => CircleAvatar(
+                          backgroundColor: Colors.white,
+                          backgroundImage: imageProvider,
+                        ),
+                        errorWidget: (context, url, error) => FlutterLogo(),
+                      )),
+            Container(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  peerNickname,
+                  style: TextStyle(fontSize: 16),
+                ))
+          ],
+        ),
       ),
       body: WillPopScope(
         onWillPop: onBackPress,
@@ -343,6 +382,37 @@ class ChatPageState extends State<ChatPage> {
     } else {
       return SizedBox.shrink();
     }
+  }
+
+  Widget buildChatItem(int index, DocumentSnapshot? document) {
+    //if (document != null) {
+    MessageChat messageChat = MessageChat.fromDocument(document!);
+    //}
+    return Container(
+      padding: EdgeInsets.only(top: 10, bottom: 10),
+      child: Align(
+        alignment: (messageChat.idFrom != currentUserId
+            ? Alignment.topLeft
+            : Alignment.topRight),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: (messageChat.idFrom != currentUserId
+                ? kBaseColor
+                : Colors.grey.shade200),
+          ),
+          padding: EdgeInsets.all(16),
+          child: Text(
+            messageChat.content,
+            style: TextStyle(
+                fontSize: 14,
+                color: messageChat.idFrom != currentUserId
+                    ? Colors.white
+                    : Colors.black),
+          ),
+        ),
+      ),
+    );
   }
 
   // Widget buildItem(int index, DocumentSnapshot? document) {
@@ -552,7 +622,7 @@ class ChatPageState extends State<ChatPage> {
                   return ListView.builder(
                     padding: EdgeInsets.all(10),
                     itemBuilder: (context, index) =>
-                        buildItem(index, snapshot.data?.docs[index]),
+                        buildChatItem(index, snapshot.data?.docs[index]),
                     itemCount: snapshot.data?.docs.length,
                     reverse: true,
                     controller: listScrollController,

@@ -7,6 +7,7 @@ import 'package:player/constant/utility.dart';
 import 'package:player/model/booking_data.dart';
 import 'package:player/model/dayslot_data.dart';
 import 'package:player/model/event_data.dart';
+import 'package:player/model/friend_data.dart';
 import 'package:player/model/host_activity.dart';
 import 'package:player/model/looking_for_data.dart';
 import 'package:player/model/my_booking_data.dart';
@@ -811,5 +812,57 @@ class APICall {
     http.Response response = await call.post(url, header, params);
     print("Response Body: " + response.body);
     return MyBookingData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<PlayerData> addFriend(String playerId1, String playerId2) async {
+    Uri url = Uri.parse(APIResources.ADD_FRIEND);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['player_id1'] = playerId1;
+    params['player_id2'] = playerId2;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return PlayerData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<PlayerData> updateFriend(
+      String playerId1, String playerId2, String status) async {
+    Uri url = Uri.parse(APIResources.UPDATE_FRIEND);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['player_id1'] = playerId1;
+    params['player_id2'] = playerId2;
+    params['status'] = status;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return PlayerData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<FriendData> getRequestFriend(String playerId) async {
+    Uri url = Uri.parse(APIResources.GET_FRIEND_REQUEST);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['id'] = playerId;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return FriendData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<FriendData> listFriend(String playerId) async {
+    Uri url = Uri.parse(APIResources.LIST_FRIENDS);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['player_id'] = playerId;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return FriendData.fromJson(jsonDecode(response.body));
   }
 }

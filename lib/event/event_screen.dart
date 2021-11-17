@@ -17,7 +17,8 @@ class EventScreen extends StatefulWidget {
 
 class _EventScreenState extends State<EventScreen> {
   bool isEvent = false;
-
+  String searchString = "";
+  TextEditingController searchController = new TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
@@ -85,7 +86,29 @@ class _EventScreenState extends State<EventScreen> {
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: [myEvent()],
+          children: [
+            Container(
+              decoration: kServiceBoxItem,
+              margin: EdgeInsets.all(10),
+              child: TextField(
+                onChanged: (value) {
+                  setState(() {
+                    searchString = value;
+                  });
+                },
+                controller: searchController,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: "Search",
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: kBaseColor,
+                  ),
+                ),
+              ),
+            ),
+            myEvent(),
+          ],
         ),
       ),
     );
@@ -132,7 +155,17 @@ class _EventScreenState extends State<EventScreen> {
               shrinkWrap: true,
               itemCount: snapshot.data.length,
               itemBuilder: (BuildContext context, int index) {
-                return eventItem(snapshot.data[index]);
+                // return eventItem(snapshot.data[index]);
+                return snapshot.data[index].name
+                            .toString()
+                            .toLowerCase()
+                            .contains(searchString) ||
+                        snapshot.data[index].address
+                            .toString()
+                            .toLowerCase()
+                            .contains(searchString)
+                    ? eventItem(snapshot.data[index])
+                    : Container();
               },
             );
           } else {
