@@ -373,7 +373,11 @@ class _PlayerProfileState extends State<PlayerProfile> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (_) => LoginScreen()));
+        context,
+        MaterialPageRoute(
+            builder: (_) => LoginScreen(
+                  prefs: prefs,
+                )));
   }
 
   getMyProfile() async {

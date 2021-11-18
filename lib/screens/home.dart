@@ -305,6 +305,7 @@ class _HomeScreenState extends State<HomeScreen> {
               context,
               MaterialPageRoute(
                   builder: (context) => ChatPage(
+                      playerId: activity.playerId.toString(),
                       peerId: activity.playerFuid.toString(), // send fuid
                       peerAvatar: activity.playerImage.toString(),
                       peerNickname: activity.playerName.toString())));

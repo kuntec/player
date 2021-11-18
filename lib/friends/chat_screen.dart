@@ -47,7 +47,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                 isRequestSelected! ? Colors.white : kBaseColor),
                         child: Center(
                           child: Text(
-                            "New Friends",
+                            "New Connection",
                             style: TextStyle(
                                 color: isRequestSelected!
                                     ? kBaseColor
@@ -88,6 +88,13 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
             isRequestSelected! ? requestFriends() : findFriends()
+//             isRequestSelected!
+//                 ? requestFriends()
+//                 : Container(
+//                     child: Center(
+//                       child: Text("Coming Soon"),
+//                     ),
+//                   )
           ],
         ),
       ),
@@ -128,15 +135,23 @@ class _ChatScreenState extends State<ChatScreen> {
           }
           if (snapshot.hasData) {
             print("Has Data ${snapshot.data.length}");
-            return ListView.builder(
-              padding: EdgeInsets.only(bottom: 200),
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: snapshot.data.length,
-              itemBuilder: (BuildContext context, int index) {
-                return playerItem(snapshot.data[index]);
-              },
-            );
+            if (snapshot.data.length == 0) {
+              return Container(
+                child: Center(
+                  child: Text('No Connection Found'),
+                ),
+              );
+            } else {
+              return ListView.builder(
+                padding: EdgeInsets.only(bottom: 200),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return playerItem(snapshot.data[index]);
+                },
+              );
+            }
           } else {
             return Container(
               child: Center(
@@ -157,6 +172,7 @@ class _ChatScreenState extends State<ChatScreen> {
             context,
             MaterialPageRoute(
                 builder: (context) => ChatPage(
+                    playerId: player.id.toString(),
                     peerId: player.fuid.toString(),
                     peerAvatar: player.image.toString(),
                     peerNickname: player.name.toString())));
@@ -245,7 +261,7 @@ class _ChatScreenState extends State<ChatScreen> {
             if (snapshot.data.length == 0) {
               return Container(
                 child: Center(
-                  child: Text('No Request Found'),
+                  child: Text('No Friends Found'),
                 ),
               );
             } else {
@@ -280,6 +296,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => ChatPage(
+                          playerId: friend.player.id.toString(),
                           peerId: friend.player.fUid.toString(),
                           peerAvatar: friend.player.image.toString(),
                           peerNickname: friend.player.name.toString())));

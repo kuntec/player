@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/chatmodels/user_chat.dart';
+import 'package:player/chatprovider/home_provider.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/firestore_constants.dart';
@@ -16,11 +18,13 @@ import 'package:player/screens/home.dart';
 import 'package:player/screens/main_navigation.dart';
 import 'package:player/screens/otp.dart';
 import 'package:player/screens/sport_select.dart';
+import 'package:player/service/local_notification_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
+import 'package:provider/provider.dart';
 
 enum MobileVerificationState {
   SHOW_MOBILE_FORM_STATE,
@@ -28,13 +32,16 @@ enum MobileVerificationState {
 }
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  final SharedPreferences prefs;
+  LoginScreen({required this.prefs});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+
   late String phoneNumber;
   String btnText = "Send OTP";
   MobileVerificationState currentState =
@@ -350,13 +357,44 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-
+  late HomeProvider homeProvider;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     print("Init State");
+    homeProvider = context.read<HomeProvider>();
+    FirebaseMessaging.instance.getInitialMessage();
+
+    _fcm.getToken().then((value) {
+      widget.prefs.setString("device_token", value!);
+      print("Device Token ${value}");
+    });
+
+    FirebaseMessaging.onMessage.listen((message) {
+      if (message.notification != null) {
+        print(message.notification!.body);
+        print(message.notification!.title);
+      }
+      LocalNotificationService.display(message);
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      //    final routeFromMessage = message.data["route"];
+//      print("Data received from Notification ${routeFromMessage}");
+    });
+
     checkLogin();
+  }
+
+  registerNotification(currentUserId) {
+    _fcm.requestPermission();
+    _fcm.getToken().then((token) {
+      if (token != null) {
+        homeProvider.updateDataFirestore(FirestoreContants.pathUserCollection,
+            currentUserId, {'pushToken': token});
+      }
+    });
   }
 
   @override
@@ -422,8 +460,8 @@ class _LoginScreenState extends State<LoginScreen> {
         prefs.setString("fuid", firebaseUser!.uid);
 
         bool status = await addFirebaseDocument(firebaseUser);
-
-        checkPlayer(phoneNumber, firebaseUser.uid);
+        String? device_token = prefs.getString("device_token");
+        checkPlayer(phoneNumber, firebaseUser.uid, device_token!);
 
         // setState(() {
         //   showLoading = false;
@@ -443,7 +481,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  checkPlayer(String phoneNumber, String fuid) async {
+  checkPlayer(String phoneNumber, String fuid, String device_token) async {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
@@ -468,6 +506,8 @@ class _LoginScreenState extends State<LoginScreen> {
           prefs.setString("fuid", playerFuid!);
           // prefs.setString("locationId", locationId!);
           prefs.setBool('isLogin', true);
+
+          registerNotification(playerData.player!.fuid);
         }
         await getMySports(playerData.player!.id.toString());
         //bool? sportSelect = prefs.getBool("sportSelect");
@@ -497,6 +537,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 builder: (context) => AddDetails(
                       phoneNumber: phoneNumber,
                       fuid: fuid,
+                      deviceToken: device_token,
                     )));
 //        showToast(playerData.message!);
 //        print(playerData.message!);
@@ -563,6 +604,7 @@ class _LoginScreenState extends State<LoginScreen> {
         await prefs.setString(
             FirestoreContants.phoneNumber, userChat.phoneNumber);
       }
+      registerNotification(firebaseUser.uid);
     }
     return true;
   }

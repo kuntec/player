@@ -163,21 +163,29 @@ class _FriendScreenState extends State<FriendScreen> {
           }
           if (snapshot.hasData) {
             print("Has Data ${snapshot.data.length}");
-            return ListView.builder(
-              padding: EdgeInsets.only(bottom: 200),
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: snapshot.data.length,
-              itemBuilder: (BuildContext context, int index) {
-                return snapshot.data[index].name
-                        .toString()
-                        .toLowerCase()
-                        .contains(searchString)
-                    ? playerItem(snapshot.data[index])
-                    : Container();
+            if (snapshot.data.length == 0) {
+              return Container(
+                child: Center(
+                  child: Text('No Players'),
+                ),
+              );
+            } else {
+              return ListView.builder(
+                padding: EdgeInsets.only(bottom: 200),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return snapshot.data[index].name
+                          .toString()
+                          .toLowerCase()
+                          .contains(searchString)
+                      ? playerItem(snapshot.data[index])
+                      : Container();
 //                return playerItem();
-              },
-            );
+                },
+              );
+            }
           } else {
             return Container(
               child: Center(

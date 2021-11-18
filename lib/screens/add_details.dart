@@ -10,7 +10,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AddDetails extends StatefulWidget {
   String phoneNumber;
   String fuid;
-  AddDetails({required this.phoneNumber, required this.fuid});
+  String deviceToken;
+  AddDetails(
+      {required this.phoneNumber,
+      required this.fuid,
+      required this.deviceToken});
 
   @override
   _AddDetailsState createState() => _AddDetailsState();
@@ -62,8 +66,8 @@ class _AddDetailsState extends State<AddDetails> {
                 ),
                 Container(
                   decoration: kServiceBoxItem,
-                  margin: EdgeInsets.all(20.0),
-                  padding: EdgeInsets.all(20.0),
+                  margin: EdgeInsets.all(10.0),
+                  padding: EdgeInsets.all(10.0),
                   child: Column(
                     children: [
                       TextField(
@@ -184,7 +188,7 @@ class _AddDetailsState extends State<AddDetails> {
                                   isLoading = true;
                                 });
                                 await addPlayer(name, widget.phoneNumber, dob,
-                                    gender!, widget.fuid);
+                                    gender!, widget.fuid, widget.deviceToken);
                               },
                             ),
                     ],
@@ -286,12 +290,15 @@ class _AddDetailsState extends State<AddDetails> {
 //   }
 
   addPlayer(String name, String phoneNumber, String dob, String gender,
-      String fuid) async {
+      String fuid, String deviceToken) async {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      PlayerData playerData =
-          await apiCall.addPlayer(name, phoneNumber, dob, gender, fuid);
+      PlayerData playerData = await apiCall.addPlayer(
+          name, phoneNumber, dob, gender, fuid, deviceToken);
+      setState(() {
+        isLoading = false;
+      });
       if (playerData.status!) {
         showToast(playerData.message!);
         // Go to Sport Selection

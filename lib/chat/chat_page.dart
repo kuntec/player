@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:player/allWidgets/loading_view.dart';
+import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
 import 'package:player/chat/login_page.dart';
 import 'package:player/chatmodels/message_chat.dart';
@@ -18,12 +19,14 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatPage extends StatefulWidget {
+  final String playerId;
   final String peerId;
   final String peerAvatar;
   final String peerNickname;
 
   const ChatPage(
       {Key? key,
+      required this.playerId,
       required this.peerId,
       required this.peerAvatar,
       required this.peerNickname})
@@ -165,7 +168,7 @@ class ChatPageState extends State<ChatPage> {
   //   }
   // }
 
-  void onSendMessage(String content, int type) {
+  void onSendMessage(String content, int type) async {
     if (content.trim().isNotEmpty) {
       textEditingController.clear();
       chatProvider.sendMessage(
@@ -173,6 +176,8 @@ class ChatPageState extends State<ChatPage> {
 
       listScrollController.animateTo(0,
           duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+
+      await chatNotification(widget.playerId, "New Message Received", content);
     } else {
       Utility.showToast("Nothing to send");
     }
@@ -413,6 +418,14 @@ class ChatPageState extends State<ChatPage> {
         ),
       ),
     );
+  }
+
+  chatNotification(String playerId, String title, String content) async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      await apiCall.chatNotification(playerId, title, content);
+    }
   }
 
   // Widget buildItem(int index, DocumentSnapshot? document) {

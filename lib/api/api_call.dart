@@ -67,8 +67,8 @@ class APICall {
     return PlayerData.fromJson(jsonDecode(response.body));
   }
 
-  Future<PlayerData> addPlayer(
-      String name, String phoneNumber, String dob, String gender, fuid) async {
+  Future<PlayerData> addPlayer(String name, String phoneNumber, String dob,
+      String gender, String fuid, String deviceToken) async {
     Uri url = Uri.parse(APIResources.ADD_PLAYER);
     var header = new Map<String, String>();
     var params = new Map<String, String>();
@@ -77,6 +77,7 @@ class APICall {
     params['dob'] = dob;
     params['gender'] = gender;
     params['f_uid'] = fuid;
+    params['device_token'] = deviceToken;
     HttpCall call = new HttpCall();
     http.Response response = await call.post(url, header, params);
     print("Response Body: " + response.body);
@@ -864,5 +865,19 @@ class APICall {
     http.Response response = await call.post(url, header, params);
     print("Response Body: " + response.body);
     return FriendData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<void> chatNotification(
+      String playerId, String title, String body) async {
+    Uri url = Uri.parse(APIResources.CHAT_NOTIFICATION);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['id'] = playerId;
+    params['title'] = title;
+    params['body'] = body;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
   }
 }
