@@ -479,7 +479,7 @@ class _EventRegisterState extends State<EventRegister> {
                     event!.description = description.toString();
                     event!.address = address.toString();
                     event!.locationLink = locationLink.toString();
-                    event!.locationId = "1";
+                    event!.locationId = prefs.get("locationId").toString();
                     event!.entryFees = entryFees.toString();
                     event!.members = noOfMembers.toString();
                     event!.startDate = textStartDateController.text;

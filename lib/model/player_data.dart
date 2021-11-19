@@ -74,6 +74,7 @@ class Player {
     String? image,
     String? email,
     String? locationId,
+    String? city,
     String? fuid,
     int? id,
     Friend? friend,
@@ -85,6 +86,7 @@ class Player {
     _image = image;
     _email = email;
     _locationId = locationId;
+    _city = city;
     _fuid = fuid;
     _id = id;
     _friend = friend;
@@ -97,6 +99,7 @@ class Player {
     _image = json['image'];
     _email = json['email'];
     _locationId = json['location_id'];
+    _city = json['city'];
     _fuid = json['f_uid'];
     _id = json['id'];
     _friend = json['friend'] != null ? Friend.fromJson(json['friend']) : null;
@@ -108,6 +111,7 @@ class Player {
   String? _image;
   String? _email;
   String? _locationId;
+  String? _city;
   String? _fuid;
   int? _id;
   Friend? _friend;
@@ -119,6 +123,7 @@ class Player {
   String? get image => _image;
   int? get id => _id;
   String? get email => _email;
+  String? get city => _city;
   String? get locationId => _locationId;
   String? get fuid => _fuid;
   Friend? get friend => _friend;
@@ -131,6 +136,7 @@ class Player {
     map['gender'] = _gender;
     map['image'] = _image;
     map['email'] = _email;
+    map['city'] = _city;
     map['location_id'] = _locationId;
     map['f_uid'] = _fuid;
     map['id'] = _id;
@@ -138,6 +144,10 @@ class Player {
       map['friend'] = _friend?.toJson();
     }
     return map;
+  }
+
+  set city(value) {
+    _city = value;
   }
 
   set friend(value) {

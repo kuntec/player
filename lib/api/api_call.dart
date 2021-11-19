@@ -9,6 +9,7 @@ import 'package:player/model/dayslot_data.dart';
 import 'package:player/model/event_data.dart';
 import 'package:player/model/friend_data.dart';
 import 'package:player/model/host_activity.dart';
+import 'package:player/model/location_data.dart';
 import 'package:player/model/looking_for_data.dart';
 import 'package:player/model/my_booking_data.dart';
 import 'package:player/model/my_sport.dart';
@@ -26,6 +27,14 @@ import 'package:player/model/venue_data.dart';
 import 'package:player/model/venue_photo.dart';
 
 class APICall {
+  Future<LocationData> getLocation() async {
+    Uri url = Uri.parse(APIResources.GET_LOCATION);
+    HttpCall call = new HttpCall();
+    http.Response response = await call.get(url);
+    print("Response Body: Location " + response.body);
+    return LocationData.fromJson(jsonDecode(response.body));
+  }
+
   Future<PlayerData> getPlayers() async {
     Uri url = Uri.parse(APIResources.GET_PLAYER);
     HttpCall call = new HttpCall();
@@ -67,8 +76,15 @@ class APICall {
     return PlayerData.fromJson(jsonDecode(response.body));
   }
 
-  Future<PlayerData> addPlayer(String name, String phoneNumber, String dob,
-      String gender, String fuid, String deviceToken) async {
+  Future<PlayerData> addPlayer(
+      String name,
+      String phoneNumber,
+      String dob,
+      String gender,
+      String fuid,
+      String deviceToken,
+      String locationId,
+      String city) async {
     Uri url = Uri.parse(APIResources.ADD_PLAYER);
     var header = new Map<String, String>();
     var params = new Map<String, String>();
@@ -78,6 +94,8 @@ class APICall {
     params['gender'] = gender;
     params['f_uid'] = fuid;
     params['device_token'] = deviceToken;
+    params['location_id'] = locationId;
+    params['city'] = city;
     HttpCall call = new HttpCall();
     http.Response response = await call.post(url, header, params);
     print("Response Body: " + response.body);
@@ -94,6 +112,8 @@ class APICall {
     params['dob'] = player.dob!;
     params['gender'] = player.gender!;
     params['email'] = player.email!;
+    params['location_id'] = player.locationId!;
+    params['city'] = player.city!;
     HttpCall call = new HttpCall();
     http.Response response = await call.post(url, header, params);
     print("Response Body: " + response.body);

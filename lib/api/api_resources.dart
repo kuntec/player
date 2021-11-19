@@ -88,4 +88,8 @@ class APIResources {
 
   //Notification
   static final String CHAT_NOTIFICATION = BASE_URL + "chatNotification";
+
+  //Location
+
+  static final String GET_LOCATION = BASE_URL + "getLocation";
 }

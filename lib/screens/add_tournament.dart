@@ -584,7 +584,7 @@ class _AddTournamentState extends State<AddTournament> {
                     tournament!.prizeDetails = prizeDetails.toString();
                     tournament!.otherInfo = otherInfo.toString();
                     tournament!.playerName = prefs.getString("playerName");
-                    tournament!.locationId = "1";
+                    tournament!.locationId = prefs.getString("locationId");
                     tournament!.sportId = selectedSport.id.toString();
                     tournament!.sportName = selectedSport.sportName.toString();
                     tournament!.createdAt = Utility.getCurrentDate();

@@ -3,6 +3,7 @@ import 'package:player/api/api_call.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/model/location_data.dart';
 import 'package:player/model/player_data.dart';
 import 'package:player/screens/sport_select.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,10 +23,42 @@ class AddDetails extends StatefulWidget {
 
 class _AddDetailsState extends State<AddDetails> {
   late String name;
-  late String dob;
+//  late String dob;
   String? gender = "";
+  DateTime? date;
+  var txtDate = "Select Date";
+
+  TextEditingController txtDateController = new TextEditingController();
 
   bool isLoading = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getLocation();
+  }
+
+  Future pickDate(BuildContext context) async {
+    final initialDate = DateTime.now();
+    final newDate = await showDatePicker(
+      context: context,
+      initialDate: date ?? initialDate,
+      firstDate: DateTime(DateTime.now().year - 90),
+      lastDate: DateTime.now(),
+    );
+
+    if (newDate == null) return;
+    setState(() {
+      date = newDate;
+      if (date == null) {
+        txtDate = "Select Date";
+      } else {
+        txtDate = "${date!.day}-${date!.month}-${date!.year}";
+      }
+      txtDateController.text = txtDate;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +80,7 @@ class _AddDetailsState extends State<AddDetails> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
-                  height: k20Margin,
-                ),
+                SizedBox(height: k20Margin),
                 Text(
                   "KINDLY ADD YOUR DETAILS",
                   style: const TextStyle(
@@ -89,9 +120,11 @@ class _AddDetailsState extends State<AddDetails> {
                         height: k20Margin,
                       ),
                       TextField(
+                        controller: txtDateController,
+                        readOnly: true,
                         keyboardType: TextInputType.text,
-                        onChanged: (value) {
-                          dob = value;
+                        onTap: () async {
+                          pickDate(context);
                         },
                         style: TextStyle(
                           color: Colors.black,
@@ -101,8 +134,22 @@ class _AddDetailsState extends State<AddDetails> {
                             labelStyle: TextStyle(
                               color: Colors.grey,
                             )),
-                        cursorColor: kBaseColor,
                       ),
+                      // TextField(
+                      //   keyboardType: TextInputType.text,
+                      //   onChanged: (value) {
+                      //     dob = value;
+                      //   },
+                      //   style: TextStyle(
+                      //     color: Colors.black,
+                      //   ),
+                      //   decoration: InputDecoration(
+                      //       labelText: "Enter Birthday",
+                      //       labelStyle: TextStyle(
+                      //         color: Colors.grey,
+                      //       )),
+                      //   cursorColor: kBaseColor,
+                      // ),
                       SizedBox(
                         height: k20Margin,
                       ),
@@ -172,6 +219,9 @@ class _AddDetailsState extends State<AddDetails> {
                               child: Text("Other")),
                         ],
                       ),
+                      locations != null
+                          ? buildLocationData(locations!)
+                          : Container(child: Text("Loading...")),
                       isLoading
                           ? CircularProgressIndicator()
                           : RoundedButton(
@@ -180,15 +230,33 @@ class _AddDetailsState extends State<AddDetails> {
                               txtColor: Colors.white,
                               minWidth: MediaQuery.of(context).size.width,
                               onPressed: () async {
-                                print(name);
-                                print(widget.phoneNumber);
-                                print(dob);
-                                print(gender);
+                                // print(name);
+                                // print(widget.phoneNumber);
+                                // print(dob);
+                                // print(gender);
+
+                                if (this.gender == null) {
+                                  Utility.showToast("Please Select Gender");
+                                  return;
+                                }
+
+                                if (this.selectedLocation == null) {
+                                  Utility.showToast("Please Select Location");
+                                  return;
+                                }
+
                                 setState(() {
                                   isLoading = true;
                                 });
-                                await addPlayer(name, widget.phoneNumber, dob,
-                                    gender!, widget.fuid, widget.deviceToken);
+                                await addPlayer(
+                                    name,
+                                    widget.phoneNumber,
+                                    txtDateController.text,
+                                    gender!,
+                                    widget.fuid,
+                                    widget.deviceToken,
+                                    selectedLocation!.id.toString(),
+                                    selectedLocation!.name.toString());
                               },
                             ),
                     ],
@@ -202,100 +270,13 @@ class _AddDetailsState extends State<AddDetails> {
     );
   }
 
-  // goToSportSelect() {
-  //   Navigator.pushReplacement(
-  //       context, MaterialPageRoute(builder: (_) => SportSelect()));
-  // }
-
-//   void doRegister() async {
-//     print('Register click ');
-// //    showToast("This is Register");
-//
-//     // //test user
-//     // firstname = "Tausif";
-//     // lastname = "Saiyed";
-//     // aadhar_no = "123467891235";
-//     // gender = "Male";
-//     // address = "Vasna";
-//     // city = "Baroda";
-//     // country = "India";
-//     // postcode = "390012";
-//
-//     APICall call = new APICall();
-//
-//     if (Utility.checkValidation(firstname)) {
-//       showToast('Please enter first name');
-//       return;
-//     }
-//     if (Utility.checkValidation(lastname)) {
-//       showToast('Please enter last name');
-//       return;
-//     }
-//
-//     if (Utility.checkValidation(aadhar_no)) {
-//       showToast('Please enter Aadhar no');
-//       return;
-//     }
-//
-//     bool connectivityStatus = await Utility.checkConnectivity();
-//     if (connectivityStatus) {
-//       User user = new User();
-//       user.firstname = firstname;
-//       user.lastname = lastname;
-//       user.aadhar_no = aadhar_no;
-//       user.gender = gender;
-//       user.mobile = widget.phonenumber;
-//       user.address = address;
-//       user.city = city;
-//       user.country = country;
-//       user.postcode = postcode;
-//       user.status = "0";
-//       user.user_roles_id = widget.userRole;
-//       user.created_at = Utility.getCurrentDate();
-//
-//       print('Register click ${user.created_at}');
-//
-//       Register register = await call.register(user);
-//
-//       if (register.status) {
-//         showToast('register Successful, ${register.data.mobile}');
-//
-//         SharedPreferences preferences = await SharedPreferences.getInstance();
-//         preferences.setBool('isLogin', true);
-//         preferences.setInt('loginId', register.data.id);
-//
-//         if (widget.userRole == "2") {
-//           Navigator.pushReplacement(
-//             context,
-//             MaterialPageRoute(
-//               builder: (_) => HomeScreen(),
-//             ),
-//           );
-//         }
-//
-//         if (widget.userRole == "3") {
-//           Navigator.pushReplacement(
-//             context,
-//             MaterialPageRoute(
-//               builder: (_) => DonorHomeScreen(),
-//             ),
-//           );
-//         }
-//       } else {
-//         showToast('register Failed, ${register.message}');
-//       }
-//     } else {
-//       showToast(kInternet);
-//     }
-//   }
-
   addPlayer(String name, String phoneNumber, String dob, String gender,
-      String fuid, String deviceToken) async {
+      String fuid, String deviceToken, String locationId, String city) async {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
       PlayerData playerData = await apiCall.addPlayer(
-          name, phoneNumber, dob, gender, fuid, deviceToken);
+          name, phoneNumber, dob, gender, fuid, deviceToken, locationId, city);
       setState(() {
         isLoading = false;
       });
@@ -309,7 +290,8 @@ class _AddDetailsState extends State<AddDetails> {
           int? playerId = playerData.player!.id;
           String? playerName = playerData.player!.name;
           String? mobile = playerData.player!.mobile;
-          // String? locationId = playerData.player!.locationId;
+          String? locationId = playerData.player!.locationId;
+          String? city = playerData.player!.city;
           // String? playerImage = playerData.player!.image;
           setState(() {
             isLoading = false;
@@ -320,7 +302,8 @@ class _AddDetailsState extends State<AddDetails> {
           prefs.setString("mobile", mobile!);
           prefs.setString("fuid", fuid);
           //prefs.setString("playerImage", playerImage!);
-          //prefs.setString("locationId", locationId!);
+          prefs.setString("locationId", locationId!);
+          prefs.setString("city", city!);
           prefs.setBool('isLogin', true);
           Navigator.pushReplacement(
               context,
@@ -341,5 +324,51 @@ class _AddDetailsState extends State<AddDetails> {
       });
       showToast(kInternet);
     }
+  }
+
+  List<Location>? locations;
+  getLocation() async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      LocationData locationData = await apiCall.getLocation();
+
+      if (locationData.location != null) {
+        setState(() {
+          locations = locationData.location;
+        });
+      }
+    } else {
+      showToast(kInternet);
+    }
+  }
+
+  Location? selectedLocation;
+  Widget buildLocationData(List<Location> location) {
+    return DropdownButton<Location>(
+      value: selectedLocation != null ? selectedLocation : null,
+      hint: Text("Select Location"),
+      isExpanded: true,
+      icon: const Icon(Icons.keyboard_arrow_down),
+      iconSize: 24,
+      elevation: 16,
+      style: const TextStyle(color: Colors.black),
+      underline: Container(
+        height: 2,
+        color: kBaseColor,
+      ),
+      onChanged: (Location? newValue) {
+        // this._selectedLK = newValue!;
+        setState(() {
+          this.selectedLocation = newValue!;
+        });
+      },
+      items: location.map<DropdownMenuItem<Location>>((Location value) {
+        return DropdownMenuItem<Location>(
+          value: value,
+          child: Text(value.name!),
+        );
+      }).toList(),
+    );
   }
 }

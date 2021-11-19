@@ -596,7 +596,7 @@ class _AddHostState extends State<AddHost> {
                                     playerId = prefs.get("playerId");
                                     playerName = prefs.get("playerName");
                                     //locationId = prefs.get("locationId");
-                                    locationId = "1";
+                                    locationId = prefs.get("locationId");
                                     sportId = this.selectedSport!.id!;
                                     sportName = this.selectedSport!.sportName!;
 

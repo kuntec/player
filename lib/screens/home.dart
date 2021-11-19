@@ -35,6 +35,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Sports> sports = [];
   List<Data> allSports = [];
+  var city;
 
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -48,10 +49,15 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     super.initState();
     homeProvider = context.read<HomeProvider>();
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // currentUserId = prefs.getString("fuid")!;
     getMySports();
     getSports();
+    getMyCity();
+  }
+
+  getMyCity() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    city = prefs.getString("city")!;
+    setState(() {});
   }
 
   // void registerNotification() {
@@ -92,18 +98,19 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => LocationSelectScreen()));
-          },
-          child: Icon(
-            Icons.location_pin,
-            color: kBaseColor,
-          ),
-        ),
+        // leading: GestureDetector(
+        //   onTap: () async {
+        //     var result = await Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //             builder: (context) => LocationSelectScreen()));
+        //     getMyCity();
+        //   },
+        //   child: Icon(
+        //     Icons.location_pin,
+        //     color: kBaseColor,
+        //   ),
+        // ),
         actions: [
           GestureDetector(
             onTap: () {
@@ -131,15 +138,26 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(width: 10.0),
         ],
         title: GestureDetector(
-          onTap: () {
-            Navigator.push(
+          onTap: () async {
+            var result = await Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => LocationSelectScreen()));
+            if (result) {
+              getMyCity();
+            }
           },
-          child: Text(
-            "Vadodara",
-            style: TextStyle(color: kBaseColor),
+          child: Row(
+            children: [
+              Icon(
+                Icons.location_pin,
+                color: kBaseColor,
+              ),
+              Text(
+                city != null ? city : "",
+                style: TextStyle(color: kBaseColor),
+              ),
+            ],
           ),
         ),
       ),
@@ -222,8 +240,8 @@ class _HomeScreenState extends State<HomeScreen> {
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
-          iconCard(Icons.add, "Host Activity", 1, hostEndColor, () {
-            var result = Navigator.push(
+          iconCard(Icons.add, "Host Activity", 1, hostEndColor, () async {
+            var result = await Navigator.push(
                 context, MaterialPageRoute(builder: (context) => AddHost()));
             if (result == true) {
               setState(() {});
@@ -597,7 +615,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (connectivityStatus) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       playerId = prefs.get("playerId");
-      locationId = "1";
+      locationId = prefs.get("locationId");
       playerImage = prefs.get("playerImage");
       //locationId = "1";
       print("Player ID $playerId");

@@ -186,7 +186,8 @@ class _EventScreenState extends State<EventScreen> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      var locationId = "1";
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var locationId = prefs.get("locationId");
       EventData eventData = await apiCall.getEvent(locationId.toString());
       if (eventData.events != null) {
         events = eventData.events!;

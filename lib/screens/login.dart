@@ -498,13 +498,15 @@ class _LoginScreenState extends State<LoginScreen> {
           String? playerName = playerData.player!.name;
           String? mobile = playerData.player!.mobile;
           String? locationId = playerData.player!.locationId;
+          String? city = playerData.player!.city;
           String? playerFuid = playerData.player!.fuid;
 
           prefs.setInt("playerId", playerId!);
           prefs.setString("playerName", playerName!);
           prefs.setString("mobile", mobile!);
           prefs.setString("fuid", playerFuid!);
-          // prefs.setString("locationId", locationId!);
+          prefs.setString("locationId", locationId!);
+          prefs.setString("city", city!);
           prefs.setBool('isLogin', true);
 
           registerNotification(playerData.player!.fuid);

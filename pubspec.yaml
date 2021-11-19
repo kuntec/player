@@ -51,12 +51,23 @@ dependencies:
   photo_view:
   flutter_phone_direct_caller: ^2.0.0
   otp_text_field: ^1.1.1
+  flutter_launcher_icons: ^0.9.2
+
+
 #  geolocator: ^7.7.1
 #  geocoding: ^2.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+
+
+
+flutter_icons:
+  image_path: "assets/images/icon.png"
+  android: true
+  ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

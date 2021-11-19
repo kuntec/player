@@ -212,7 +212,7 @@ class _TournamentScreenState extends State<TournamentScreen> {
     if (connectivityStatus) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var playerId = prefs.get("playerId");
-      var locationId = "1";
+      var locationId = prefs.get("locationId");
       TournamentData tournamentData =
           await apiCall.getTournament(locationId.toString(), selectedSportId);
       if (tournamentData.tournaments != null) {

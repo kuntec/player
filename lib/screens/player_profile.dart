@@ -308,7 +308,9 @@ class _PlayerProfileState extends State<PlayerProfile> {
               } else {
                 if (player != null) {
                   return CachedNetworkImage(
-                    imageUrl: APIResources.IMAGE_URL + player!.image.toString(),
+                    imageUrl: player!.image == null
+                        ? APIResources.AVATAR_IMAGE
+                        : APIResources.IMAGE_URL + player!.image.toString(),
                     fit: BoxFit.cover,
                     imageBuilder: (context, imageProvider) => CircleAvatar(
                       backgroundColor: Colors.white,

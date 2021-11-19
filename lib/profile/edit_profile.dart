@@ -3,7 +3,9 @@ import 'package:player/api/api_call.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/model/location_data.dart';
 import 'package:player/model/player_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfile extends StatefulWidget {
   dynamic player;
@@ -16,22 +18,47 @@ class EditProfile extends StatefulWidget {
 class _EditProfileState extends State<EditProfile> {
   String? gender = "";
   bool isLoading = false;
+  DateTime? date;
+  var txtDate = "Select Date";
 
+  TextEditingController txtDateController = new TextEditingController();
   TextEditingController nameController = new TextEditingController();
-  TextEditingController dobController = new TextEditingController();
+//  TextEditingController dobController = new TextEditingController();
   TextEditingController emailController = new TextEditingController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getLocation();
     nameController.text = widget.player.name;
-    dobController.text = widget.player.dob;
+    txtDateController.text = widget.player.dob;
     if (widget.player.email == null) {
       widget.player.email = "";
     }
     emailController.text = widget.player.email;
     gender = widget.player.gender;
+  }
+
+  Future pickDate(BuildContext context) async {
+    final initialDate = DateTime.now();
+    final newDate = await showDatePicker(
+      context: context,
+      initialDate: date ?? initialDate,
+      firstDate: DateTime(DateTime.now().year - 90),
+      lastDate: DateTime.now(),
+    );
+
+    if (newDate == null) return;
+    setState(() {
+      date = newDate;
+      if (date == null) {
+        txtDate = "Select Date";
+      } else {
+        txtDate = "${date!.day}-${date!.month}-${date!.year}";
+      }
+      txtDateController.text = txtDate;
+    });
   }
 
   @override
@@ -73,8 +100,12 @@ class _EditProfileState extends State<EditProfile> {
             height: k20Margin,
           ),
           TextField(
-            controller: dobController,
+            controller: txtDateController,
+            readOnly: true,
             keyboardType: TextInputType.text,
+            onTap: () async {
+              pickDate(context);
+            },
             style: TextStyle(
               color: Colors.black,
             ),
@@ -83,8 +114,20 @@ class _EditProfileState extends State<EditProfile> {
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
-            cursorColor: kBaseColor,
           ),
+          // TextField(
+          //   controller: dobController,
+          //   keyboardType: TextInputType.text,
+          //   style: TextStyle(
+          //     color: Colors.black,
+          //   ),
+          //   decoration: InputDecoration(
+          //       labelText: "Enter Birthday",
+          //       labelStyle: TextStyle(
+          //         color: Colors.grey,
+          //       )),
+          //   cursorColor: kBaseColor,
+          // ),
           TextField(
             controller: emailController,
             keyboardType: TextInputType.text,
@@ -155,6 +198,9 @@ class _EditProfileState extends State<EditProfile> {
                   child: Text("Other")),
             ],
           ),
+          locations != null
+              ? buildLocationData(locations!)
+              : Container(child: Text("Loading...")),
           isLoading
               ? CircularProgressIndicator()
               : RoundedButton(
@@ -167,9 +213,18 @@ class _EditProfileState extends State<EditProfile> {
                       isLoading = true;
                     });
                     widget.player.name = nameController.text;
-                    widget.player.dob = dobController.text;
+                    widget.player.dob = txtDateController.text;
                     widget.player.email = emailController.text;
                     widget.player.gender = gender;
+                    widget.player.locationId =
+                        this.selectedLocation!.id.toString();
+                    widget.player.city = this.selectedLocation!.name.toString();
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    prefs.setString(
+                        "locationId", widget.player!.locationId.toString());
+                    prefs.setString(
+                        "city", widget.player!.locationId.toString());
                     await updatePlayer();
                   },
                 ),
@@ -200,5 +255,56 @@ class _EditProfileState extends State<EditProfile> {
       });
       showToast(kInternet);
     }
+  }
+
+  List<Location>? locations;
+  getLocation() async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      LocationData locationData = await apiCall.getLocation();
+
+      if (locationData.location != null) {
+        setState(() {
+          locations = locationData.location;
+          for (Location l in locations!) {
+            if (l.id.toString() == widget.player.locationId.toString()) {
+              this.selectedLocation = l;
+            }
+          }
+        });
+      }
+    } else {
+      showToast(kInternet);
+    }
+  }
+
+  Location? selectedLocation;
+  Widget buildLocationData(List<Location> location) {
+    return DropdownButton<Location>(
+      value: selectedLocation != null ? selectedLocation : null,
+      hint: Text("Select Location"),
+      isExpanded: true,
+      icon: const Icon(Icons.keyboard_arrow_down),
+      iconSize: 24,
+      elevation: 16,
+      style: const TextStyle(color: Colors.black),
+      underline: Container(
+        height: 2,
+        color: kBaseColor,
+      ),
+      onChanged: (Location? newValue) {
+        // this._selectedLK = newValue!;
+        setState(() {
+          this.selectedLocation = newValue!;
+        });
+      },
+      items: location.map<DropdownMenuItem<Location>>((Location value) {
+        return DropdownMenuItem<Location>(
+          value: value,
+          child: Text(value.name!),
+        );
+      }).toList(),
+    );
   }
 }

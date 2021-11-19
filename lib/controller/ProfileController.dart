@@ -50,7 +50,6 @@ class ProfileController extends GetxController {
     } finally {
       isLoading(false);
     }
-
     return imageURL;
   }
 }
