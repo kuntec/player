@@ -5,6 +5,8 @@ import 'package:player/components/custom_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/event_data.dart';
+import 'package:player/model/my_participant_data.dart';
+import 'package:player/model/participant_data.dart';
 import 'package:player/screens/tournament_participants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -78,33 +80,56 @@ class _MyEventsState extends State<MyEvents> {
     );
   }
 
-  List<Event>? events;
+  List<Participants>? participants;
 
-  Future<List<Event>?> getMyEvents() async {
+  Future<List<Participants>?> getMyEvents() async {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var playerId = prefs.get("playerId");
 
-      EventData eventData = await apiCall.getMyEvent(playerId.toString());
-      if (eventData.events != null) {
-        events = eventData.events!;
-        events = events!.reversed.toList();
+      MyParticipantData myParticipantData =
+          await apiCall.getEventParticipant(playerId.toString());
+      if (myParticipantData.participants != null) {
+        participants = myParticipantData.participants!;
+        participants = participants!.reversed.toList();
         //setState(() {});
       }
 
-      if (eventData.status!) {
+      if (myParticipantData.status!) {
         //print(hostActivity.message!);
         //  Navigator.pop(context);
       } else {
-        print(eventData.message!);
+        print(myParticipantData.message!);
       }
     }
-    return events;
+    return participants;
   }
 
-  void _showDialog(dynamic event) async {
+  Future<void> updateParticipant(participant) async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      ParticipantData participantData =
+          await apiCall.updateParticipant(participant);
+      if (participantData.participants != null) {
+        //Utility.showToast("Something went wrong");
+        // participants = participantData.participants!;
+      }
+      if (participantData.status!) {
+        print(participantData.message!);
+        Utility.showToast("Booking Cancelled Successfully");
+        //  Navigator.pop(context);
+      } else {
+        Utility.showToast("Something went wrong");
+        print(participantData.message!);
+      }
+    }
+    //return participants;
+  }
+
+  void _showDialog(Participants participant) async {
     return await showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -114,37 +139,33 @@ class _MyEventsState extends State<MyEvents> {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                    flex: 1,
-                    child: CustomButton(
-                        height: 20,
-                        fontSize: 16.0,
-                        title: "Edit",
-                        color: kBaseColor,
-                        txtColor: Colors.white,
-                        minWidth: 80,
-                        onPressed: () async {
-                          _dismissDialog();
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => EditEvent(
-                          //               event: event,
-                          //             )));
-                        }),
-                  ),
+                  // Expanded(
+                  //   flex: 1,
+                  //   child: CustomButton(
+                  //       height: 20,
+                  //       fontSize: 16.0,
+                  //       title: "Cancel Booking",
+                  //       color: kBaseColor,
+                  //       txtColor: Colors.white,
+                  //       minWidth: 80,
+                  //       onPressed: () async {
+                  //         _dismissDialog();
+                  //       }),
+                  // ),
                   SizedBox(width: 20),
                   Expanded(
                     flex: 1,
                     child: CustomButton(
                         height: 20,
                         fontSize: 16.0,
-                        title: "Delete",
+                        title: "Cancel Booking",
                         color: Colors.red,
                         txtColor: Colors.white,
                         minWidth: 80,
                         onPressed: () async {
                           _dismissDialog();
+                          participant.status = "0";
+                          await updateParticipant(participant);
                         }),
                   ),
                 ],
@@ -167,14 +188,14 @@ class _MyEventsState extends State<MyEvents> {
     Navigator.pop(context);
   }
 
-  Widget eventItem(dynamic event) {
+  Widget eventItem(Participants participant) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    TournamentParticipants(event: event, type: "1")));
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) => TournamentParticipants(
+        //             event: participant.event, type: "1")));
       },
       child: Container(
         margin: EdgeInsets.all(5.0),
@@ -186,7 +207,7 @@ class _MyEventsState extends State<MyEvents> {
             GestureDetector(
               onTap: () {
                 // Utility.showToast("hi");
-                _showDialog(event);
+                _showDialog(participant);
               },
               child: Container(
                 alignment: Alignment.topRight,
@@ -209,7 +230,8 @@ class _MyEventsState extends State<MyEvents> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                       child: Image.network(
-                        APIResources.IMAGE_URL + event.image,
+                        APIResources.IMAGE_URL +
+                            participant.event!.image.toString(),
                         fit: BoxFit.fill,
                       ),
                     ),
@@ -225,7 +247,7 @@ class _MyEventsState extends State<MyEvents> {
                 children: [
                   SizedBox(height: 5.0),
                   Text(
-                    event.name,
+                    participant.event!.name.toString(),
                     style: TextStyle(
                         color: kBaseColor,
                         fontSize: 16.0,
@@ -233,7 +255,7 @@ class _MyEventsState extends State<MyEvents> {
                   ),
                   SizedBox(height: 10.0),
                   Text(
-                    event.address,
+                    participant.event!.address.toString(),
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 12.0,
@@ -241,7 +263,7 @@ class _MyEventsState extends State<MyEvents> {
                   ),
                   SizedBox(height: 5.0),
                   Text(
-                    "Start Date: ${event.startDate}",
+                    "participant name: ${participant.name}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 12.0,
@@ -249,7 +271,15 @@ class _MyEventsState extends State<MyEvents> {
                   ),
                   SizedBox(height: 5.0),
                   Text(
-                    "Location: ${event.address}",
+                    "Start Date: ${participant.event!.startDate.toString()}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Location: ${participant.event!.address}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 12.0,
@@ -266,7 +296,7 @@ class _MyEventsState extends State<MyEvents> {
                         padding: EdgeInsets.only(
                             top: 5.0, bottom: 5.0, right: 15.0, left: 15.0),
                         child: Text(
-                          "\u{20B9} ${event.entryFees}",
+                          "\u{20B9} ${participant.event!.entryFees}",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12.0,

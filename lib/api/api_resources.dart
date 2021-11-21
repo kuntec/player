@@ -86,6 +86,12 @@ class APIResources {
   static final String GET_CHAT_PLAYER = BASE_URL + "getChatPlayer";
   static final String GET_FRIEND_REQUEST = BASE_URL + "getFriendRequest";
 
+  //My Participant
+
+  static final String GET_EVENT_PARTICIPANT = BASE_URL + "getEventParticipant";
+  static final String GET_TOURNAMENT_PARTICIPANT =
+      BASE_URL + "getTournamentParticipant";
+
   //Notification
   static final String CHAT_NOTIFICATION = BASE_URL + "chatNotification";
 

@@ -438,7 +438,7 @@ class _EventRegisterState extends State<EventRegister> {
           ),
           TextFormField(
               onChanged: (value) {
-                // sport = value;
+                otherInfo = value;
               },
               minLines: 3,
               maxLines: 5,
@@ -491,6 +491,7 @@ class _EventRegisterState extends State<EventRegister> {
                     event!.organizerName = organizerName.toString();
                     event!.number = number.toString();
                     event!.secondaryNumber = secondaryNumber.toString();
+                    event!.status = "1";
 
                     event!.createdAt = Utility.getCurrentDate();
                     if (this.image != null) {

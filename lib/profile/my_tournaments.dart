@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
+import 'package:player/components/custom_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/model/my_participant_data.dart';
+import 'package:player/model/participant_data.dart';
 import 'package:player/model/tournament_data.dart';
 import 'package:player/screens/tournament_participants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -77,41 +80,122 @@ class _MyTournamentsState extends State<MyTournaments> {
     );
   }
 
-  List<Tournament>? tournaments;
+  Future<void> updateParticipant(participant) async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      ParticipantData participantData =
+          await apiCall.updateParticipant(participant);
+      if (participantData.participants != null) {
+        //Utility.showToast("Something went wrong");
+        // participants = participantData.participants!;
+      }
+      if (participantData.status!) {
+        print(participantData.message!);
+        Utility.showToast("Booking Cancelled Successfully");
+        //  Navigator.pop(context);
+      } else {
+        Utility.showToast("Something went wrong");
+        print(participantData.message!);
+      }
+    }
+    //return participants;
+  }
 
-  Future<List<Tournament>?> getMyTournaments() async {
+  void _showDialog(Participants participant) async {
+    return await showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Expanded(
+                  //   flex: 1,
+                  //   child: CustomButton(
+                  //       height: 20,
+                  //       fontSize: 16.0,
+                  //       title: "Cancel Booking",
+                  //       color: kBaseColor,
+                  //       txtColor: Colors.white,
+                  //       minWidth: 80,
+                  //       onPressed: () async {
+                  //         _dismissDialog();
+                  //       }),
+                  // ),
+                  SizedBox(width: 20),
+                  Expanded(
+                    flex: 1,
+                    child: CustomButton(
+                        height: 20,
+                        fontSize: 16.0,
+                        title: "Cancel Booking",
+                        color: Colors.red,
+                        txtColor: Colors.white,
+                        minWidth: 80,
+                        onPressed: () async {
+                          _dismissDialog();
+                          participant.status = "0";
+                          await updateParticipant(participant);
+                        }),
+                  ),
+                ],
+              );
+            },
+          ),
+          // actions: <Widget>[
+          //   TextButton(
+          //       onPressed: () {
+          //         _dismissDialog();
+          //       },
+          //       child: Text('Close')),
+          // ],
+        );
+      },
+    );
+  }
+
+  _dismissDialog() {
+    Navigator.pop(context);
+  }
+
+  List<Participants>? participants;
+
+  Future<List<Participants>?> getMyTournaments() async {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var playerId = prefs.get("playerId");
 
-      TournamentData tournamentData =
-          await apiCall.getMyTournament(playerId.toString());
-      if (tournamentData.tournaments != null) {
-        tournaments = tournamentData.tournaments!;
-        tournaments = tournaments!.reversed.toList();
+      MyParticipantData myParticipantData =
+          await apiCall.getTournamentParticipant(playerId.toString());
+      if (myParticipantData.participants != null) {
+        participants = myParticipantData.participants!;
+        participants = participants!.reversed.toList();
         //setState(() {});
       }
 
-      if (tournamentData.status!) {
+      if (myParticipantData.status!) {
         //print(hostActivity.message!);
         //  Navigator.pop(context);
       } else {
-        print(tournamentData.message!);
+        print(myParticipantData.message!);
       }
     }
-    return tournaments;
+    return participants;
   }
 
-  Widget tournamentItem(dynamic tournament) {
+  Widget tournamentItem(Participants participant) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    TournamentParticipants(event: tournament, type: "0")));
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) =>
+        //             TournamentParticipants(event: tournament, type: "0")));
       },
       child: Container(
         margin: EdgeInsets.all(10.0),
@@ -134,6 +218,21 @@ class _MyTournamentsState extends State<MyTournaments> {
         // height: 200,
         child: Stack(
           children: [
+            GestureDetector(
+              onTap: () {
+                // Utility.showToast("hi");
+                _showDialog(participant);
+              },
+              child: Container(
+                alignment: Alignment.topRight,
+                margin: EdgeInsets.all(5.0),
+                child: Icon(
+                  Icons.more_horiz,
+                  size: 20,
+                  color: kBaseColor,
+                ),
+              ),
+            ),
             Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,7 +252,8 @@ class _MyTournamentsState extends State<MyTournaments> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                       child: Image.network(
-                        APIResources.IMAGE_URL + tournament.image,
+                        APIResources.IMAGE_URL +
+                            participant.tournament!.image.toString(),
                         fit: BoxFit.fill,
                       ),
                     ),
@@ -168,7 +268,7 @@ class _MyTournamentsState extends State<MyTournaments> {
                 children: [
                   SizedBox(height: 5.0),
                   Text(
-                    tournament.tournamentName,
+                    participant.tournament!.tournamentName.toString(),
                     style: TextStyle(
                         color: kBaseColor,
                         fontSize: 16.0,
@@ -176,7 +276,7 @@ class _MyTournamentsState extends State<MyTournaments> {
                   ),
                   SizedBox(height: 5.0),
                   Text(
-                    "Start Date: ${tournament.startDate}",
+                    "Start Date: ${participant.tournament!.startDate.toString()}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 12.0,
@@ -184,21 +284,21 @@ class _MyTournamentsState extends State<MyTournaments> {
                   ),
                   SizedBox(height: 5.0),
                   Text(
-                    "Location: ${tournament.address}",
+                    "Location: ${participant.tournament!.address}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 12.0,
                     ),
                   ),
                   Text(
-                    "Location: ${tournament.sportName}",
+                    "Location: ${participant.tournament!.sportName}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 12.0,
                     ),
                   ),
                   Text(
-                    "\u{20B9} ${tournament.entryFees}",
+                    "\u{20B9} ${participant.tournament!.entryFees}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 12.0,

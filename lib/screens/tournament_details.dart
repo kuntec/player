@@ -4,6 +4,7 @@ import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/screens/participant_summary.dart';
 import 'package:player/screens/payment_screen.dart';
+import 'package:player/services/servicewidgets/ServiceWidget.dart';
 
 class TournamentDetails extends StatefulWidget {
   dynamic tournament;
@@ -46,73 +47,51 @@ class _TournamentDetailsState extends State<TournamentDetails> {
                   ),
                 ),
               ),
+              itemDetail(
+                  context, "Tournament Name", widget.tournament.tournamentName),
+              itemDetail(context, "Address", widget.tournament.address),
+              itemDetail(
+                  context, "Contact Number", widget.tournament.organizerNumber),
+              itemDetail(context, "Start Date", widget.tournament.startDate),
+              itemDetail(context, "End Date", widget.tournament.endDate),
+              itemDetail(context, "Entry Fees",
+                  "\u{20B9} ${widget.tournament.entryFees}"),
+              itemDetail(context, "Prize", widget.tournament.prizeDetails),
+              itemDetail(
+                  context, "Sport", widget.tournament.sportName.toString()),
+              itemDetail(
+                  context, "Status", widget.tournament.status.toString()),
               SizedBox(height: k20Margin),
-              Text(
-                "Tournament Name",
-                style: TextStyle(color: kBaseColor, fontSize: 16.0),
-              ),
-              SizedBox(height: k20Margin),
-              Text(
-                widget.tournament.tournamentName,
-                style: TextStyle(color: Colors.black, fontSize: 16.0),
-              ),
-              SizedBox(height: k20Margin),
-              Text(
-                "Location",
-                style: TextStyle(color: kBaseColor, fontSize: 16.0),
-              ),
-              SizedBox(height: k20Margin),
-              Text(
-                widget.tournament.address,
-                style: TextStyle(color: Colors.black, fontSize: 16.0),
-              ),
-              SizedBox(height: k20Margin),
-              Text(
-                "Contact Number",
-                style: TextStyle(color: kBaseColor, fontSize: 16.0),
-              ),
-              SizedBox(height: k20Margin),
-              Text(
-                widget.tournament.organizerNumber,
-                style: TextStyle(color: Colors.black, fontSize: 16.0),
-              ),
-              SizedBox(height: k20Margin),
-              Text(
-                "Tournament Date",
-                style: TextStyle(color: kBaseColor, fontSize: 16.0),
-              ),
-              SizedBox(height: k20Margin),
-              Text(
-                widget.tournament.startDate,
-                style: TextStyle(color: Colors.black, fontSize: 16.0),
-              ),
-              SizedBox(height: k20Margin),
-              Text(
-                "Price",
-                style: TextStyle(color: kBaseColor, fontSize: 16.0),
-              ),
-              SizedBox(height: k20Margin),
-              Text(
-                widget.tournament.prizeDetails,
-                style: TextStyle(color: Colors.black, fontSize: 16.0),
-              ),
-              SizedBox(height: k20Margin),
-              Container(
-                margin: EdgeInsets.only(left: k20Margin, right: k20Margin),
-                child: RoundedButton(
-                  title: "Proceed To Book",
-                  color: kBaseColor,
-                  txtColor: Colors.white,
-                  minWidth: MediaQuery.of(context).size.width,
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ParticipantSummary(
-                                event: widget.tournament, isEvent: false)));
-                  },
-                ),
-              ),
+              widget.tournament.status.toString() == "0"
+                  ? Container(
+                      margin:
+                          EdgeInsets.only(left: k20Margin, right: k20Margin),
+                      child: RoundedButton(
+                        title: "Booking Closed",
+                        color: kBaseColor,
+                        txtColor: Colors.white,
+                        minWidth: MediaQuery.of(context).size.width,
+                        onPressed: () {},
+                      ),
+                    )
+                  : Container(
+                      margin:
+                          EdgeInsets.only(left: k20Margin, right: k20Margin),
+                      child: RoundedButton(
+                        title: "Proceed To Book",
+                        color: kBaseColor,
+                        txtColor: Colors.white,
+                        minWidth: MediaQuery.of(context).size.width,
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ParticipantSummary(
+                                      event: widget.tournament,
+                                      isEvent: false)));
+                        },
+                      ),
+                    ),
             ],
           ),
         ),

@@ -62,22 +62,59 @@ class _EventScreenState extends State<EventScreen> {
           Container(
             child: Row(
               children: [
-                TextButton.icon(
-                  onPressed: () {
+                GestureDetector(
+                  onTap: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => EventRegister()));
                   },
-                  icon: Icon(
-                    isEvent ? Icons.star : Icons.add,
-                    color: kBaseColor,
+                  child: Container(
+                    margin: EdgeInsets.all(5),
+                    decoration: kServiceBoxItem.copyWith(
+                      color: kBaseColor,
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    padding: EdgeInsets.all(5),
+                    child: Row(
+                      children: [
+                        Icon(
+                          isEvent ? Icons.star : Icons.add,
+                          color: Colors.white,
+                          size: 15,
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          isEvent ? "My Events" : "Register",
+                          style: TextStyle(color: Colors.white, fontSize: 12.0),
+                        ),
+                      ],
+                    ),
                   ),
-                  label: Text(
-                    isEvent ? "My Events" : "Register",
-                    style: TextStyle(color: kBaseColor),
-                  ),
-                )
+                ),
+                // Container(
+                //   decoration: kServiceBoxItem.copyWith(
+                //     color: kBaseColor,
+                //     borderRadius: BorderRadius.circular(5.0),
+                //   ),
+                //   child: TextButton.icon(
+                //     onPressed: () {
+                //       Navigator.push(
+                //           context,
+                //           MaterialPageRoute(
+                //               builder: (context) => EventRegister()));
+                //     },
+                //     icon: Icon(
+                //       isEvent ? Icons.star : Icons.add,
+                //       color: Colors.white,
+                //       size: 15,
+                //     ),
+                //     label: Text(
+                //       isEvent ? "My Events" : "Register",
+                //       style: TextStyle(color: Colors.white, fontSize: 12.0),
+                //     ),
+                //   ),
+                // )
               ],
             ),
           ),
@@ -144,30 +181,33 @@ class _EventScreenState extends State<EventScreen> {
           }
           if (snapshot.hasData) {
             print("Has Data ${snapshot.data.length}");
-            // return Container(
-            //   child: Center(
-            //     child: Text('Yes Data ${snapshot.data}'),
-            //   ),
-            // );
-            return ListView.builder(
-              padding: EdgeInsets.only(bottom: 110),
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: snapshot.data.length,
-              itemBuilder: (BuildContext context, int index) {
-                // return eventItem(snapshot.data[index]);
-                return snapshot.data[index].name
-                            .toString()
-                            .toLowerCase()
-                            .contains(searchString) ||
-                        snapshot.data[index].address
-                            .toString()
-                            .toLowerCase()
-                            .contains(searchString)
-                    ? eventItem(snapshot.data[index])
-                    : Container();
-              },
-            );
+            if (snapshot.data.length == 0) {
+              return Container(
+                child: Center(
+                  child: Text('No Events'),
+                ),
+              );
+            } else {
+              return ListView.builder(
+                padding: EdgeInsets.only(bottom: 110),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  // return eventItem(snapshot.data[index]);
+                  return snapshot.data[index].name
+                              .toString()
+                              .toLowerCase()
+                              .contains(searchString) ||
+                          snapshot.data[index].address
+                              .toString()
+                              .toLowerCase()
+                              .contains(searchString)
+                      ? eventItem(snapshot.data[index])
+                      : Container();
+                },
+              );
+            }
           } else {
             return Container(
               child: Center(
@@ -191,7 +231,6 @@ class _EventScreenState extends State<EventScreen> {
       EventData eventData = await apiCall.getEvent(locationId.toString());
       if (eventData.events != null) {
         events = eventData.events!;
-
         events = events!.reversed.toList();
         //setState(() {});
       }
@@ -229,8 +268,8 @@ class _EventScreenState extends State<EventScreen> {
                 children: [
                   Container(
                     margin: EdgeInsets.all(10.0),
-                    height: 110.0,
-                    width: 110.0,
+                    height: 100.0,
+                    width: 100.0,
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                       child: Image.network(
@@ -253,7 +292,7 @@ class _EventScreenState extends State<EventScreen> {
                     event.name,
                     style: TextStyle(
                         color: kBaseColor,
-                        fontSize: 18.0,
+                        fontSize: 16.0,
                         fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 10.0),
@@ -261,7 +300,7 @@ class _EventScreenState extends State<EventScreen> {
                     event.address,
                     style: TextStyle(
                       color: Colors.grey.shade900,
-                      fontSize: 14.0,
+                      fontSize: 12.0,
                     ),
                   ),
                   SizedBox(height: 5.0),
@@ -269,7 +308,7 @@ class _EventScreenState extends State<EventScreen> {
                     "Start Date: ${event.startDate}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
-                      fontSize: 14.0,
+                      fontSize: 12.0,
                     ),
                   ),
                   SizedBox(height: 5.0),
@@ -277,7 +316,7 @@ class _EventScreenState extends State<EventScreen> {
                     "Location: ${event.address}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
-                      fontSize: 14.0,
+                      fontSize: 12.0,
                     ),
                   ),
                   SizedBox(height: 5.0),
@@ -285,6 +324,7 @@ class _EventScreenState extends State<EventScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Container(
+                        margin: EdgeInsets.all(10.0),
                         decoration: kServiceBoxItem.copyWith(
                             color: kBaseColor,
                             borderRadius: BorderRadius.circular(5.0)),

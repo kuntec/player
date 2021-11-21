@@ -305,7 +305,7 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
             Container(
               margin: EdgeInsets.only(left: 10),
               child: Text(
-                "\u{20B9} ${data.price} Status ${data.status}",
+                "\u{20B9} ${data.price}",
                 style: TextStyle(color: Colors.black87, fontSize: 16.0),
               ),
             ),

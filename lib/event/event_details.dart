@@ -4,6 +4,7 @@ import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/screens/participant_summary.dart';
 import 'package:player/screens/payment_screen.dart';
+import 'package:player/services/servicewidgets/ServiceWidget.dart';
 
 class EventDetails extends StatefulWidget {
   dynamic event;
@@ -46,98 +47,50 @@ class _EventDetailsState extends State<EventDetails> {
                   ),
                 ),
               ),
+              itemDetail(context, "Event Name", widget.event.name),
+              itemDetail(context, "Address", widget.event.address),
+              itemDetail(context, "Organizer Name", widget.event.organizerName),
+              itemCallDetail(context, "Contact Number", widget.event.number),
+              itemCallDetail(
+                  context, "Secondary Number", widget.event.secondaryNumber),
+              itemDetail(context, "Date",
+                  "${widget.event.startDate} to ${widget.event.endDate}"),
+              itemDetail(context, "Time",
+                  "${widget.event.startTime} to ${widget.event.endTime}"),
+              itemDetail(context, "Entry Fees",
+                  "\u{20B9} ${widget.event.entryFees} / ${widget.event.members} person"),
+              itemDetail(context, "Description", widget.event.description),
+              itemDetail(context, "Details", widget.event.details),
               SizedBox(height: k20Margin),
-              Text(
-                "Event Name",
-                style: TextStyle(color: kBaseColor, fontSize: 16.0),
-              ),
-              SizedBox(height: kMargin),
-              Text(
-                widget.event.name,
-                style: TextStyle(color: Colors.black, fontSize: 16.0),
-              ),
-              SizedBox(height: k20Margin),
-              Text(
-                "Location",
-                style: TextStyle(color: kBaseColor, fontSize: 16.0),
-              ),
-              SizedBox(height: kMargin),
-              Text(
-                widget.event.address,
-                style: TextStyle(color: Colors.black, fontSize: 16.0),
-              ),
-              SizedBox(height: k20Margin),
-              Text(
-                "Organizer Name",
-                style: TextStyle(color: kBaseColor, fontSize: 16.0),
-              ),
-              SizedBox(height: kMargin),
-              Text(
-                widget.event.organizerName,
-                style: TextStyle(color: Colors.black, fontSize: 16.0),
-              ),
-              SizedBox(height: k20Margin),
-              Text(
-                "Contact Number",
-                style: TextStyle(color: kBaseColor, fontSize: 16.0),
-              ),
-              SizedBox(height: kMargin),
-              Text(
-                "${widget.event.number}",
-                style: TextStyle(color: Colors.black, fontSize: 16.0),
-              ),
-              SizedBox(height: kMargin),
-              Text(
-                "${widget.event.secondaryNumber}",
-                style: TextStyle(color: Colors.black, fontSize: 16.0),
-              ),
-              SizedBox(height: k20Margin),
-              Text(
-                "Event Date",
-                style: TextStyle(color: kBaseColor, fontSize: 16.0),
-              ),
-              SizedBox(height: kMargin),
-              Text(
-                "${widget.event.startDate} to ${widget.event.endDate}",
-                style: TextStyle(color: Colors.black, fontSize: 16.0),
-              ),
-              SizedBox(height: k20Margin),
-              Text(
-                "Event Time",
-                style: TextStyle(color: kBaseColor, fontSize: 16.0),
-              ),
-              SizedBox(height: kMargin),
-              Text(
-                "${widget.event.startTime} to ${widget.event.endTime}",
-                style: TextStyle(color: Colors.black, fontSize: 16.0),
-              ),
-              SizedBox(height: k20Margin),
-              Text(
-                "Price",
-                style: TextStyle(color: kBaseColor, fontSize: 16.0),
-              ),
-              SizedBox(height: kMargin),
-              Text(
-                "\u{20B9} ${widget.event.entryFees} / ${widget.event.members} person",
-                style: TextStyle(color: Colors.black, fontSize: 16.0),
-              ),
-              SizedBox(height: k20Margin),
-              Container(
-                margin: EdgeInsets.only(left: k20Margin, right: k20Margin),
-                child: RoundedButton(
-                  title: "Proceed To Book",
-                  color: kBaseColor,
-                  txtColor: Colors.white,
-                  minWidth: MediaQuery.of(context).size.width,
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ParticipantSummary(
-                                event: widget.event, isEvent: true)));
-                  },
-                ),
-              ),
+              widget.event.status.toString() == "0"
+                  ? Container(
+                      margin:
+                          EdgeInsets.only(left: k20Margin, right: k20Margin),
+                      child: RoundedButton(
+                        title: "Booking Closed",
+                        color: kBaseColor,
+                        txtColor: Colors.white,
+                        minWidth: MediaQuery.of(context).size.width,
+                        onPressed: () {},
+                      ),
+                    )
+                  : Container(
+                      margin:
+                          EdgeInsets.only(left: k20Margin, right: k20Margin),
+                      child: RoundedButton(
+                        title: "Proceed To Book",
+                        color: kBaseColor,
+                        txtColor: Colors.white,
+                        minWidth: MediaQuery.of(context).size.width,
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ParticipantSummary(
+                                      event: widget.event, isEvent: true)));
+                        },
+                      ),
+                    ),
             ],
           ),
         ),

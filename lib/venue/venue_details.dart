@@ -121,8 +121,10 @@ class _VenueDetailsState extends State<VenueDetails> {
           itemDetail(context, "Venue Name", widget.venue.name.toString()),
           itemDetail(
               context, "Venue Location", widget.venue.address.toString()),
-          // itemDetail(
-          //     context, "Contact Number", widget.venue.contactNo.toString()),
+          itemDetail(context, "Open Time", widget.venue.openTime.toString()),
+          itemDetail(context, "Close Time", widget.venue.closeTime.toString()),
+          itemDetail(context, "Sport", widget.venue.sport.toString()),
+          itemDetail(context, "Facilities", widget.venue.facilities.toString()),
           // itemDetail(context, "Address", widget.service.address.toString()),
           // itemDetail(
           //     context, "Address Link", widget.service.locationLink.toString()),
@@ -241,16 +243,16 @@ class _VenueDetailsState extends State<VenueDetails> {
           await apiCall.getVenuePhoto(widget.venue.id.toString());
 
       if (venuePhoto == null) {
-        print("Timeslot null");
+        print("null");
       } else {
         if (venuePhoto.status!) {
-          print("Timeslot Success");
+          print("Success");
           //Utility.showToast("Timeslot Get Successfully");
           // timeslots!.clear();
           photos = venuePhoto.photos;
 //          Navigator.pop(context);
         } else {
-          print("Timeslot Failed");
+          print("Failed");
         }
       }
     }

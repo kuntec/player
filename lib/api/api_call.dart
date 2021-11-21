@@ -12,6 +12,7 @@ import 'package:player/model/host_activity.dart';
 import 'package:player/model/location_data.dart';
 import 'package:player/model/looking_for_data.dart';
 import 'package:player/model/my_booking_data.dart';
+import 'package:player/model/my_participant_data.dart';
 import 'package:player/model/my_sport.dart';
 import 'package:player/model/participant_data.dart';
 import 'package:player/model/player_data.dart';
@@ -708,7 +709,7 @@ class APICall {
 
     HttpCall call = new HttpCall();
     http.Response response = await call.post(url, header, params);
-    print("Response Body: " + response.body);
+    print("Response Body2: " + response.body);
     return EventData.fromJson(jsonDecode(response.body));
   }
 
@@ -720,7 +721,7 @@ class APICall {
 
     HttpCall call = new HttpCall();
     http.Response response = await call.post(url, header, params);
-    print("Response Body: " + response.body);
+    print("Response Body1: " + response.body);
     return EventData.fromJson(jsonDecode(response.body));
   }
 
@@ -755,7 +756,7 @@ class APICall {
     return ParticipantData.fromJson(jsonDecode(response.body));
   }
 
-  Future<ParticipantData> updateParticipant(Participant participant) async {
+  Future<ParticipantData> updateParticipant(participant) async {
     Uri url = Uri.parse(APIResources.UPDATE_PARTICIPANT);
     var header = new Map<String, String>();
     var params = new Map<String, String>();
@@ -899,5 +900,29 @@ class APICall {
     HttpCall call = new HttpCall();
     http.Response response = await call.post(url, header, params);
     print("Response Body: " + response.body);
+  }
+
+  Future<MyParticipantData> getEventParticipant(String playerId) async {
+    Uri url = Uri.parse(APIResources.GET_EVENT_PARTICIPANT);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['player_id'] = playerId;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return MyParticipantData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<MyParticipantData> getTournamentParticipant(String playerId) async {
+    Uri url = Uri.parse(APIResources.GET_TOURNAMENT_PARTICIPANT);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['player_id'] = playerId;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return MyParticipantData.fromJson(jsonDecode(response.body));
   }
 }

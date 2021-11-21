@@ -594,6 +594,7 @@ class _AddTournamentState extends State<AddTournament> {
                         tournamentCategoryValue.toString();
                     tournament!.noOfOvers = noOfOvers.toString();
                     tournament!.locationLink = locationLink.toString();
+                    tournament!.status = "1";
 
 //            Utility.showToast("Create Tournament");
                     if (this.image != null) {

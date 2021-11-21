@@ -416,10 +416,10 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                     venue!.closeTime = textCloseTimeController.text;
                     venue!.address = address.toString();
                     venue!.locationLink = locationLink;
-                    venue!.locationId = "1";
+                    venue!.locationId = prefs.getString("locationId");
                     venue!.members = members.toString();
                     venue!.city = city.toString();
-                    venue!.sport = sport.toString();
+                    venue!.sport = selectedSport.sportName.toString();
                     venue!.sportId = selectedSport.id.toString();
                     venue!.createdAt = Utility.getCurrentDate();
 

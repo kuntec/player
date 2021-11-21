@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
@@ -14,10 +15,6 @@ class VenueFacilities extends StatefulWidget {
 
 class _VenueFacilitiesState extends State<VenueFacilities> {
   List facilities = [
-    // {"id": 1,
-    // "name": "24/7",
-    // "icon": ""},
-
     "24/7",
     "Artificial Turf",
     "Ball Boy",
@@ -38,6 +35,29 @@ class _VenueFacilitiesState extends State<VenueFacilities> {
     "Air Conditioning",
     "Wi-Fi",
     "Coach",
+  ];
+
+  List facilityIcons = [
+    "two.svg",
+    "artificial_turf.svg",
+    "ball_boy.svg",
+    "cafe.svg",
+    "drinking_water.svg",
+    "flood_lights.svg",
+    "locker_room.svg",
+    "parking.svg",
+    "rental_equipment.svg",
+    "seating_lounge.svg",
+    "shower.svg",
+    "sound_system.svg",
+    "sport_shop.svg",
+    "steam.svg",
+    "walking_track.svg",
+    "warm_up.svg",
+    "washroom.svg",
+    "ac.svg",
+    "wifi.svg",
+    "coach.svg",
   ];
 
   List selectedFacilities = [];
@@ -95,7 +115,7 @@ class _VenueFacilitiesState extends State<VenueFacilities> {
           padding: EdgeInsets.only(bottom: 100),
           itemCount: facilities.length,
           itemBuilder: (BuildContext context, int index) {
-            return facilityItem(facilities[index]);
+            return facilityItem(facilities[index], index);
             // return ListTile(
             //     leading: Icon(Icons.list),
             //     trailing: Text(
@@ -107,7 +127,7 @@ class _VenueFacilitiesState extends State<VenueFacilities> {
     );
   }
 
-  facilityItem(String item) {
+  facilityItem(String item, int index) {
     return GestureDetector(
       onTap: () {
         for (int i = 0; i < selectedFacilities.length; i++) {
@@ -128,12 +148,34 @@ class _VenueFacilitiesState extends State<VenueFacilities> {
             color: selectedFacilities.any((element) => element == item)
                 ? kBaseColor
                 : Colors.white),
-        child: Text(
-          item,
-          style: TextStyle(
-              color: selectedFacilities.any((element) => element == item)
-                  ? Colors.white
-                  : kBaseColor),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Expanded(
+                flex: 2,
+                child: Container(
+                    height: 30,
+                    width: 30,
+                    child: SvgPicture.asset(
+                        "assets/images/${facilityIcons[index]}",
+                        color:
+                            selectedFacilities.any((element) => element == item)
+                                ? Colors.white
+                                : Colors.grey))),
+            Expanded(
+              flex: 8,
+              child: Container(
+                child: Text(
+                  item,
+                  style: TextStyle(
+                      color:
+                          selectedFacilities.any((element) => element == item)
+                              ? Colors.white
+                              : Colors.grey),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

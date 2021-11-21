@@ -84,13 +84,13 @@ class _PlayerProfileState extends State<PlayerProfile> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                isLoading == true
-                    ? Center(
-                        child: Container(
-                          child: Text("Loading"),
-                        ),
-                      )
-                    : profileImageUpdate(),
+                // isLoading == true
+                //     ? Center(
+                //         child: Container(
+                //           child: Text("Loading"),
+                //         ),
+                //       )
+                //     : profileImageUpdate(),
                 isLoading == true ? SizedBox.shrink() : profileInfo(context),
               ],
             ),
@@ -100,158 +100,199 @@ class _PlayerProfileState extends State<PlayerProfile> {
     ));
   }
 
+  profileItem(String icon, String title, dynamic callback) {
+    return GestureDetector(
+      onTap: callback,
+      child: Container(
+        padding: EdgeInsets.all(5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Expanded(flex: 2, child: Container(child: SvgPicture.asset(icon))),
+            Expanded(
+              flex: 7,
+              child: Container(
+                child: Text(
+                  title,
+                  style: TextStyle(color: Colors.black87, fontSize: 16.0),
+                ),
+              ),
+            ),
+            Expanded(
+                flex: 1,
+                child: Container(
+                    child: Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.grey,
+                  size: 15,
+                )))
+          ],
+        ),
+      ),
+    );
+  }
+
+  horizontalLine() {
+    return Container(
+      margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
+      height: 1,
+      color: Colors.grey.shade300,
+      //width: 150,
+    );
+  }
+
   profileInfo(BuildContext context) {
     return Container(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            child: Text(
-              "${player!.name}",
-              style: TextStyle(
-                fontSize: 20.0,
-                color: kBaseColor,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            padding: EdgeInsets.all(5.0),
+            margin: EdgeInsets.only(top: 40.0, left: 10, right: 10, bottom: 20),
+            child: Stack(
+                overflow: Overflow.visible,
+                alignment: AlignmentDirectional.topCenter,
+                fit: StackFit.loose,
+                children: [
+                  Container(
+                    height: 200,
+                    width: double.infinity,
+                    decoration: kServiceBoxItem.copyWith(
+                      color: kBaseColor,
+                      borderRadius: BorderRadius.circular(10.0),
+                      gradient: new LinearGradient(
+                        colors: [kBaseColor, hostEndColor],
+                        begin: FractionalOffset.bottomCenter,
+                        end: FractionalOffset.topCenter,
+                        stops: [0.4, 1.0],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: -50,
+                    child: isLoading == true
+                        ? Center(
+                            child: Container(
+                              child: Text("Loading"),
+                            ),
+                          )
+                        : profileImageUpdate(),
+                  ),
+                  // Container(
+                  //   child: profileImageUpdate(),
+                  // ),
+                  Positioned(
+                    top: 90,
+                    child: Column(
+                      children: [
+                        Container(
+                          child: Text(
+                            "${player!.name.toString()}",
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        Container(),
+                        SizedBox(height: kMargin),
+                        Container(
+                          child: Text(
+                            "${player!.mobile}",
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: kMargin),
+                        Container(
+                          child: Text(
+                            "100 Friends",
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ]),
           ),
-          Container(
-            child: Text(
-              "${player!.mobile}",
-              style: TextStyle(
-                fontSize: 16.0,
-                color: Colors.black87,
-              ),
-            ),
-          ),
+
           SizedBox(height: kMargin),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditProfile(
-                    player: player,
-                  ),
-                ),
-              );
-            },
-            child: Container(
-              margin: EdgeInsets.all(kMargin),
-              decoration: kServiceBoxItem.copyWith(
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-              padding: EdgeInsets.all(10.0),
-              width: MediaQuery.of(context).size.width,
-              child: Center(
-                child: Text(
-                  "My Profile",
-                  style: TextStyle(color: kBaseColor, fontSize: 16.0),
-                ),
-              ),
+
+          Container(
+            margin: EdgeInsets.all(kMargin),
+            decoration: kServiceBoxItem.copyWith(
+              borderRadius: BorderRadius.circular(10.0),
             ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FavoriteSport(
-                    player: player,
-                  ),
-                ),
-              );
-            },
-            child: Container(
-              margin: EdgeInsets.all(kMargin),
-              decoration: kServiceBoxItem.copyWith(
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-              padding: EdgeInsets.all(10.0),
-              width: MediaQuery.of(context).size.width,
-              child: Center(
-                child: Text(
-                  "Favorite Sport",
-                  style: TextStyle(color: kBaseColor, fontSize: 16.0),
-                ),
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MyTournaments(
-                    player: player,
-                  ),
-                ),
-              );
-            },
-            child: Container(
-              margin: EdgeInsets.all(kMargin),
-              decoration: kServiceBoxItem.copyWith(
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-              padding: EdgeInsets.all(10.0),
-              width: MediaQuery.of(context).size.width,
-              child: Center(
-                child: Text(
-                  "My Tournaments",
-                  style: TextStyle(color: kBaseColor, fontSize: 16.0),
-                ),
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MyEvents(
-                    player: player,
-                  ),
-                ),
-              );
-            },
-            child: Container(
-              margin: EdgeInsets.all(kMargin),
-              decoration: kServiceBoxItem.copyWith(
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-              padding: EdgeInsets.all(10.0),
-              width: MediaQuery.of(context).size.width,
-              child: Center(
-                child: Text(
-                  "My Events",
-                  style: TextStyle(color: kBaseColor, fontSize: 16.0),
-                ),
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MyBookings(
-                    player: player,
-                  ),
-                ),
-              );
-            },
-            child: Container(
-              margin: EdgeInsets.all(kMargin),
-              decoration: kServiceBoxItem.copyWith(
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-              padding: EdgeInsets.all(10.0),
-              width: MediaQuery.of(context).size.width,
-              child: Center(
-                child: Text(
-                  "My Bookings",
-                  style: TextStyle(color: kBaseColor, fontSize: 16.0),
-                ),
-              ),
+            padding: EdgeInsets.all(5.0),
+            child: Column(
+              children: [
+                profileItem("assets/images/profile.svg", "Profile", () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditProfile(
+                        player: player,
+                      ),
+                    ),
+                  );
+                }),
+                horizontalLine(),
+                profileItem("assets/images/favorite.svg", "Favorite Sport", () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FavoriteSport(
+                        player: player,
+                      ),
+                    ),
+                  );
+                }),
+                horizontalLine(),
+                profileItem(
+                    "assets/images/tournament.svg", "Participated Tournaments",
+                    () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyTournaments(
+                        player: player,
+                      ),
+                    ),
+                  );
+                }),
+                horizontalLine(),
+                profileItem("assets/images/events.svg", "Participated Events",
+                    () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyEvents(
+                        player: player,
+                      ),
+                    ),
+                  );
+                }),
+                horizontalLine(),
+                profileItem("assets/images/booking.svg", "My Venue Booking",
+                    () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyBookings(
+                        player: player,
+                      ),
+                    ),
+                  );
+                }),
+                horizontalLine(),
+                profileItem(
+                    "assets/images/share.svg", "Share with Friends", () {}),
+              ],
             ),
           ),
           GestureDetector(
@@ -259,20 +300,141 @@ class _PlayerProfileState extends State<PlayerProfile> {
               logout(context);
             },
             child: Container(
-              margin: EdgeInsets.all(kMargin),
               decoration: kServiceBoxItem.copyWith(
-                borderRadius: BorderRadius.circular(5.0),
+                color: kBaseColor,
+                borderRadius: BorderRadius.circular(10.0),
               ),
-              padding: EdgeInsets.all(10.0),
-              width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.only(top: 20, bottom: 10),
+              height: 40,
+              width: 200,
+              padding: EdgeInsets.all(5),
               child: Center(
                 child: Text(
-                  "Logout",
-                  style: TextStyle(color: Colors.red, fontSize: 16.0),
+                  "Log Out",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                  ),
                 ),
               ),
             ),
           ),
+          // RoundedButton(
+          //     title: "Log Out",
+          //     color: kBaseColor,
+          //     onPressed: () {
+          //       logout(context);
+          //     },
+          //     minWidth: 200,
+          //     txtColor: Colors.white)
+          // GestureDetector(
+          //   onTap: () {},
+          //   child: Container(
+          //     margin: EdgeInsets.all(kMargin),
+          //     decoration: kServiceBoxItem.copyWith(
+          //       borderRadius: BorderRadius.circular(5.0),
+          //     ),
+          //     padding: EdgeInsets.all(10.0),
+          //     width: MediaQuery.of(context).size.width,
+          //     child: Center(
+          //       child: Text(
+          //         "My Profile",
+          //         style: TextStyle(color: kBaseColor, fontSize: 16.0),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          // GestureDetector(
+          //   onTap: () {},
+          //   child: Container(
+          //     margin: EdgeInsets.all(kMargin),
+          //     decoration: kServiceBoxItem.copyWith(
+          //       borderRadius: BorderRadius.circular(5.0),
+          //     ),
+          //     padding: EdgeInsets.all(10.0),
+          //     width: MediaQuery.of(context).size.width,
+          //     child: Center(
+          //       child: Text(
+          //         "Favorite Sport",
+          //         style: TextStyle(color: kBaseColor, fontSize: 16.0),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          // GestureDetector(
+          //   onTap: () {
+          //
+          //   },
+          //   child: Container(
+          //     margin: EdgeInsets.all(kMargin),
+          //     decoration: kServiceBoxItem.copyWith(
+          //       borderRadius: BorderRadius.circular(5.0),
+          //     ),
+          //     padding: EdgeInsets.all(10.0),
+          //     width: MediaQuery.of(context).size.width,
+          //     child: Center(
+          //       child: Text(
+          //         "My Tournaments",
+          //         style: TextStyle(color: kBaseColor, fontSize: 16.0),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          // GestureDetector(
+          //   onTap: () {
+          //
+          //   },
+          //   child: Container(
+          //     margin: EdgeInsets.all(kMargin),
+          //     decoration: kServiceBoxItem.copyWith(
+          //       borderRadius: BorderRadius.circular(5.0),
+          //     ),
+          //     padding: EdgeInsets.all(10.0),
+          //     width: MediaQuery.of(context).size.width,
+          //     child: Center(
+          //       child: Text(
+          //         "My Events",
+          //         style: TextStyle(color: kBaseColor, fontSize: 16.0),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          // GestureDetector(
+          //   onTap: () {},
+          //   child: Container(
+          //     margin: EdgeInsets.all(kMargin),
+          //     decoration: kServiceBoxItem.copyWith(
+          //       borderRadius: BorderRadius.circular(5.0),
+          //     ),
+          //     padding: EdgeInsets.all(10.0),
+          //     width: MediaQuery.of(context).size.width,
+          //     child: Center(
+          //       child: Text(
+          //         "My Bookings",
+          //         style: TextStyle(color: kBaseColor, fontSize: 16.0),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          // GestureDetector(
+          //   onTap: () {
+          //     logout(context);
+          //   },
+          //   child: Container(
+          //     margin: EdgeInsets.all(kMargin),
+          //     decoration: kServiceBoxItem.copyWith(
+          //       borderRadius: BorderRadius.circular(5.0),
+          //     ),
+          //     padding: EdgeInsets.all(10.0),
+          //     width: MediaQuery.of(context).size.width,
+          //     child: Center(
+          //       child: Text(
+          //         "Logout",
+          //         style: TextStyle(color: Colors.red, fontSize: 16.0),
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -290,8 +452,8 @@ class _PlayerProfileState extends State<PlayerProfile> {
         ],
       ),
       child: SizedBox(
-        height: 115,
-        width: 115,
+        height: 95,
+        width: 95,
         child: Stack(
           fit: StackFit.expand,
           overflow: Overflow.visible,
@@ -341,7 +503,7 @@ class _PlayerProfileState extends State<PlayerProfile> {
                   width: 30,
                   child: SvgPicture.asset(
                     "assets/images/Camera Icon.svg",
-                    color: kBaseColor,
+                    color: Colors.white,
                   ),
                 ),
                 onTap: () async {

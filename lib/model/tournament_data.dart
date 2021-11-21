@@ -241,6 +241,7 @@ class Tournament {
     String? noOfOvers,
     String? locationLink,
     String? image,
+    String? status,
     int? id,
   }) {
     _organizerName = organizerName;
@@ -270,6 +271,7 @@ class Tournament {
     _locationLink = locationLink;
 
     _image = image;
+    _status = status;
     _id = id;
   }
 
@@ -301,6 +303,7 @@ class Tournament {
     _locationLink = json['location_link'];
 
     _image = json['image'];
+    _status = json['status'];
     _id = json['id'];
   }
   String? _organizerName;
@@ -330,6 +333,7 @@ class Tournament {
   String? _locationLink;
 
   String? _image;
+  String? _status;
   int? _id;
 
   String? get organizerName => _organizerName;
@@ -359,6 +363,7 @@ class Tournament {
   String? get locationLink => _locationLink;
 
   String? get image => _image;
+  String? get status => _status;
   int? get id => _id;
 
   Map<String, dynamic> toJson() {
@@ -390,8 +395,13 @@ class Tournament {
     map['location_link'] = _locationLink;
 
     map['image'] = _image;
+    map['status'] = _status;
     map['id'] = _id;
     return map;
+  }
+
+  set status(String? value) {
+    _status = value;
   }
 
   set sportId(String? value) {
