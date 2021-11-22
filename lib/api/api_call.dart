@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:player/api/api_resources.dart';
 import 'package:player/api/http_call.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/model/banner_data.dart';
 import 'package:player/model/booking_data.dart';
 import 'package:player/model/dayslot_data.dart';
 import 'package:player/model/event_data.dart';
@@ -34,6 +35,14 @@ class APICall {
     http.Response response = await call.get(url);
     print("Response Body: Location " + response.body);
     return LocationData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<BannerData> getBanner() async {
+    Uri url = Uri.parse(APIResources.GET_BANNER);
+    HttpCall call = new HttpCall();
+    http.Response response = await call.get(url);
+    print("Response Body: " + response.body);
+    return BannerData.fromJson(jsonDecode(response.body));
   }
 
   Future<PlayerData> getPlayers() async {

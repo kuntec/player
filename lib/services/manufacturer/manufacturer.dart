@@ -328,6 +328,7 @@ class _ManufacturerState extends State<Manufacturer> {
           widget.serviceId, selectedSportId.toString());
       if (serviceModel.services != null) {
         services = serviceModel.services!;
+        services = services!.reversed.toList();
         //setState(() {});
       }
 

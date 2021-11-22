@@ -41,43 +41,80 @@ class _PhysioFitnessState extends State<PhysioFitness> {
         title: Text("Physio & Fitness"),
         actions: [
           Container(
-            decoration: BoxDecoration(
-              color: kBaseColor,
-              borderRadius: BorderRadius.circular(5.0),
-            ),
             margin: EdgeInsets.all(10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Center(
-                  child: TextButton.icon(
-                    onPressed: () {
-                      if (isService) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => MyPhysioFitness(
-                                      serviceId: widget.serviceId,
-                                    )));
-                      } else {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PhysioFitnessRegister(
-                                      serviceId: widget.serviceId,
-                                    )));
-                      }
-                    },
-                    icon: Icon(
-                      isService ? Icons.person : Icons.add,
-                      color: Colors.white,
+                GestureDetector(
+                  onTap: () {
+                    if (isService) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MyPhysioFitness(
+                                    serviceId: widget.serviceId,
+                                  )));
+                    } else {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PhysioFitnessRegister(
+                                    serviceId: widget.serviceId,
+                                  )));
+                    }
+                  },
+                  child: Container(
+                    margin: EdgeInsets.all(5),
+                    decoration: kServiceBoxItem.copyWith(
+                      color: kBaseColor,
+                      borderRadius: BorderRadius.circular(5.0),
                     ),
-                    label: Text(
-                      isService ? "MyProfile" : "Register",
-                      style: TextStyle(color: Colors.white),
+                    padding: EdgeInsets.all(5),
+                    child: Row(
+                      children: [
+                        Icon(
+                          isService ? Icons.person : Icons.add,
+                          color: Colors.white,
+                          size: 15,
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          isService ? "My Profile" : "Register",
+                          style: TextStyle(color: Colors.white, fontSize: 12.0),
+                        ),
+                      ],
                     ),
                   ),
-                )
+                ),
+                // Center(
+                //   child: TextButton.icon(
+                //     onPressed: () {
+                //       if (isService) {
+                //         Navigator.push(
+                //             context,
+                //             MaterialPageRoute(
+                //                 builder: (context) => MyPhysioFitness(
+                //                       serviceId: widget.serviceId,
+                //                     )));
+                //       } else {
+                //         Navigator.push(
+                //             context,
+                //             MaterialPageRoute(
+                //                 builder: (context) => PhysioFitnessRegister(
+                //                       serviceId: widget.serviceId,
+                //                     )));
+                //       }
+                //     },
+                //     icon: Icon(
+                //       isService ? Icons.person : Icons.add,
+                //       color: Colors.white,
+                //     ),
+                //     label: Text(
+                //       isService ? "MyProfile" : "Register",
+                //       style: TextStyle(color: Colors.white),
+                //     ),
+                //   ),
+                // )
               ],
             ),
           ),
@@ -149,7 +186,7 @@ class _PhysioFitnessState extends State<PhysioFitness> {
           await apiCall.getServiceDataId(widget.serviceId, "0");
       if (serviceModel.services != null) {
         services = serviceModel.services!;
-        //setState(() {});
+        services = services!.reversed.toList();
       }
 
       if (serviceModel.status!) {

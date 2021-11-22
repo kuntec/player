@@ -325,7 +325,7 @@ class _EditManufacturerState extends State<EditManufacturer> {
                     service!.experience = "";
                     service!.sportName = selectedSport!.sportName;
                     service!.sportId = selectedSport!.id.toString();
-                    service!.companyName = companyCtrl.toString();
+                    service!.companyName = companyCtrl.text;
                     updateService(service!);
                   },
                 ),

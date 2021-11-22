@@ -72,7 +72,19 @@ class _BookedSlotState extends State<BookedSlot> {
 
   slotItem(dynamic slot, int index) {
     return Container(
-      child: Text(slot.startTime.toString()),
+      margin: EdgeInsets.only(bottom: 10),
+      padding: EdgeInsets.all(10),
+      decoration: kServiceBoxItem.copyWith(
+        borderRadius: BorderRadius.circular(5.0),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Date : ${slot.bookingDate.toString()}"),
+          Text("Start Time : ${slot.startTime.toString()}"),
+          Text("Price : ${slot.price.toString()}"),
+        ],
+      ),
     );
   }
 }

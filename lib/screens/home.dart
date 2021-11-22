@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'package:player/constant/utility.dart';
 import 'package:player/event/event_screen.dart';
 import 'package:player/friends/chat_screen.dart';
 import 'package:player/friends/friend.dart';
+import 'package:player/model/banner_data.dart';
 import 'package:player/model/host_activity.dart';
 import 'package:player/model/my_sport.dart';
 import 'package:player/model/player_data.dart';
@@ -35,6 +37,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Sports> sports = [];
   List<Data> allSports = [];
+  List<Banners> banners = [];
   var city;
 
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
@@ -49,9 +52,21 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     super.initState();
     homeProvider = context.read<HomeProvider>();
+    getBanner();
     getMySports();
     getSports();
     getMyCity();
+  }
+
+  Future<void> getBanner() async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      BannerData bannerData = await apiCall.getBanner();
+      if (bannerData.banners != null) {
+        banners = bannerData.banners!;
+      }
+    }
   }
 
   getMyCity() async {
@@ -172,18 +187,43 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget banner() {
+    return banners.length == 0
+        ? SizedBox.shrink()
+        : Container(
+            margin: EdgeInsets.all(5),
+            child: CarouselSlider.builder(
+                itemCount: banners.length,
+                itemBuilder: (context, index, realIndex) {
+                  final urlImage = banners[index].imgUrl.toString();
+                  return buildImage(urlImage, index);
+                },
+                options: CarouselOptions(
+                    height: 110,
+                    autoPlay: true,
+                    autoPlayInterval: Duration(seconds: 3))),
+          );
+    // : Container(
+    //     height: 115,
+    //     padding: EdgeInsets.all(10.0),
+    //     child: ClipRRect(
+    //       borderRadius: BorderRadius.circular(15.0),
+    //       child: Image(
+    //         image: AssetImage(
+    //           'assets/images/dream11.png',
+    //         ),
+    //         fit: BoxFit.cover,
+    //         width: MediaQuery.of(context).size.width,
+    //       ),
+    //     ),
+    //   );
+  }
+
+  Widget buildImage(String urlImage, int index) {
     return Container(
-      height: 115,
-      padding: EdgeInsets.all(10.0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15.0),
-        child: Image(
-          image: AssetImage(
-            'assets/images/dream11.png',
-          ),
-          fit: BoxFit.cover,
-          width: MediaQuery.of(context).size.width,
-        ),
+      margin: EdgeInsets.symmetric(horizontal: 2),
+      child: Image.network(
+        APIResources.IMAGE_URL + urlImage,
+        fit: BoxFit.cover,
       ),
     );
   }

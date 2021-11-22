@@ -4,6 +4,8 @@ class APIResources {
   static final String AVATAR_IMAGE =
       "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png";
 
+  static final String GET_BANNER = BASE_URL + "getBanner";
+
   static final String GET_PLAYER = BASE_URL + "getPlayer";
   static final String GET_PLAYER_BY_ID = BASE_URL + "getPlayerById";
   static final String ADD_PLAYER = BASE_URL + "addPlayer";
