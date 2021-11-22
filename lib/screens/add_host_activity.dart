@@ -2,12 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
+import 'package:player/components/custom_button.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/host_activity.dart';
 import 'package:player/model/looking_for_data.dart';
 import 'package:player/model/sport_data.dart';
+import 'package:player/screens/edit_host_activity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddHost extends StatefulWidget {
@@ -18,7 +20,7 @@ class AddHost extends StatefulWidget {
 }
 
 class _AddHostState extends State<AddHost> {
-  late String valueChoose;
+//  late String valueChoose;
   // List sports = [
   //   "Cricket",
   //   "Football",
@@ -621,6 +623,7 @@ class _AddHostState extends State<AddHost> {
                                     activity!.locationId =
                                         locationId.toString();
                                     activity!.createdAt = createdAt;
+                                    activity!.details = details;
                                     //_onLoading();
                                     addHostActivity();
                                   },
@@ -802,8 +805,9 @@ class _AddHostState extends State<AddHost> {
           children: [
             GestureDetector(
               onTap: () {
-                Utility.showToast("Show More");
-                showPopup();
+                //Utility.showToast("Show More");
+                // showPopup();
+                _showDialog(activity);
               },
               child: Container(
                 child: Icon(
@@ -894,22 +898,6 @@ class _AddHostState extends State<AddHost> {
                     ],
                   ),
                 ),
-                // GestureDetector(
-                //   onTap: () {
-                //     //Utility.showToast("Hello");
-                //     //showPopup();
-                //   },
-                //   child: Expanded(
-                //     flex: 1,
-                //     child: Container(
-                //       child: Icon(
-                //         Icons.more_horiz,
-                //         color: kBaseColor,
-                //         size: 20.0,
-                //       ),
-                //     ),
-                //   ),
-                // ),
               ],
             ),
             Container(
@@ -934,158 +922,75 @@ class _AddHostState extends State<AddHost> {
     );
   }
 
-  showPopup() {
-    PopupMenuButton(
-      itemBuilder: (context) {
-        return [
-          PopupMenuItem(
-            value: 'edit',
-            child: Text('Edit'),
+  void _showDialog(dynamic activity) async {
+    return await showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: CustomButton(
+                        height: 20,
+                        fontSize: 16.0,
+                        title: "EDIT",
+                        color: kBaseColor,
+                        txtColor: Colors.white,
+                        minWidth: 80,
+                        onPressed: () async {
+                          _dismissDialog();
+                          var result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EditHost(
+                                        activity: activity,
+                                      )));
+                          if (result == true) {
+                            _refresh();
+                          }
+                        }),
+                  ),
+                  SizedBox(width: 20),
+                  Expanded(
+                    flex: 1,
+                    child: CustomButton(
+                        height: 20,
+                        fontSize: 16.0,
+                        title: "Cancel",
+                        color: Colors.red,
+                        txtColor: Colors.white,
+                        minWidth: 80,
+                        onPressed: () async {
+                          _dismissDialog();
+                          // participant.status = "0";
+                          // await updateParticipant(participant);
+                        }),
+                  ),
+                ],
+              );
+            },
           ),
-          PopupMenuItem(
-            value: 'delete',
-            child: Text('Delete'),
-          )
-        ];
-      },
-      onSelected: (String value) {
-        print('You Click on po up menu item');
+          // actions: <Widget>[
+          //   TextButton(
+          //       onPressed: () {
+          //         _dismissDialog();
+          //       },
+          //       child: Text('Close')),
+          // ],
+        );
       },
     );
-    // showDialog(
-    //     context: context,
-    //     builder: (BuildContext context) {
-    //       return SimpleDialog(
-    //         title: Text("This is title"),
-    //         children: [
-    //           Container(
-    //             width: 100,
-    //             height: 100,
-    //             color: Colors.red,
-    //             child: Center(
-    //               child: Text(
-    //                 "Dialog",
-    //                 style: TextStyle(color: Colors.white),
-    //               ),
-    //             ),
-    //           ),
-    //         ],
-    //       );
-    //     });
   }
 
-//   Widget stackExample() {
-//     return Container(
-//       margin: EdgeInsets.all(10.0),
-//       padding: EdgeInsets.only(bottom: 10.0),
-//       decoration: kContainerBoxDecoration,
-//       // height: 200,
-//       child: Stack(
-//         alignment: Alignment.bottomRight,
-//         children: [
-//           Container(
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Container(
-//                   margin: EdgeInsets.all(10.0),
-//                   height: 85.0,
-//                   width: 85.0,
-//                   child: ClipRRect(
-//                     borderRadius: BorderRadius.circular(25.0),
-//                     child: Image(
-//                       image: AssetImage("assets/images/demo.jpg"),
-//                       fit: BoxFit.cover,
-//                     ),
-//                   ),
-//                 ),
-//                 Row(
-//                   mainAxisAlignment: MainAxisAlignment.start,
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     SizedBox(width: 10.0),
-//                     Icon(
-//                       Icons.circle,
-//                       color: Colors.green,
-//                       size: 14.0,
-//                     ),
-//                     SizedBox(width: 10.0),
-//                     Text(
-//                       "2 hours ago",
-//                       style: TextStyle(fontSize: 12.0),
-//                     ),
-//                   ],
-//                 ),
-//               ],
-//             ),
-//           ),
-//           Container(
-//             margin: EdgeInsets.only(left: 100.0, right: 5.0),
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 SizedBox(height: 20.0),
-//                 Text(
-//                   "Tausif Saiyed",
-//                   style: TextStyle(
-//                     color: kBaseColor,
-//                     fontSize: 20.0,
-//                   ),
-//                 ),
-//                 SizedBox(height: 10.0),
-//                 Text(
-//                   "Looking For: A Player To Join My Team",
-//                   style: TextStyle(
-//                     color: Colors.grey.shade900,
-//                     fontSize: 14.0,
-//                   ),
-//                 ),
-//                 SizedBox(height: 5.0),
-//                 Text(
-//                   "Location: Vasna",
-//                   style: TextStyle(
-//                     color: Colors.grey.shade900,
-//                     fontSize: 14.0,
-//                   ),
-//                 ),
-//                 SizedBox(height: 5.0),
-//                 Text(
-//                   "Time: 6:30 PM",
-//                   style: TextStyle(
-//                     color: Colors.grey.shade900,
-//                     fontSize: 14.0,
-//                   ),
-//                 ),
-//                 SizedBox(height: 5.0),
-//                 Text(
-//                   "Date: 06-11-2021",
-//                   style: TextStyle(
-//                     color: Colors.grey.shade900,
-//                     fontSize: 14.0,
-//                   ),
-//                 ),
-// //                Row(),
-//               ],
-//             ),
-//           ),
-//           Container(
-//             decoration: BoxDecoration(
-//                 color: kBaseColor,
-//                 borderRadius: BorderRadius.only(
-//                   bottomLeft: Radius.circular(15.0),
-//                   topRight: Radius.circular(15.0),
-//                 )),
-//             width: 100,
-//             height: 40,
-//             child: Center(
-//               child: Text(
-//                 "Cricket",
-//                 style: TextStyle(color: Colors.white, fontSize: 16.0),
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
+  _dismissDialog() {
+    Navigator.pop(context);
+  }
+
+  _refresh() {
+    setState(() {});
+  }
 }

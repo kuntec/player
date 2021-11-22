@@ -155,6 +155,34 @@ class APICall {
     params['player_name'] = activity.playerName!;
     params['location_id'] = activity.locationId!;
     params['created_at'] = activity.createdAt!;
+    params['details'] = activity.details!;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return HostActivity.fromJson(jsonDecode(response.body));
+  }
+
+  Future<HostActivity> updateHostActivity(Activity activity) async {
+    Uri url = Uri.parse(APIResources.UPDATE_HOST_ACTIVITY);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['id'] = activity.id.toString();
+    params['sport_id'] = activity.sportId!;
+    params['sport_name'] = activity.sportName!;
+    params['looking_for_id'] = activity.lookingForId!;
+    params['looking_for'] = activity.lookingFor!;
+    params['looking_for_value'] = activity.lookingForValue!;
+    params['area'] = activity.area!;
+    params['start_date'] = activity.startDate!;
+    params['timing'] = activity.timing!;
+    params['ball_type'] = activity.ballType!;
+    params['role_of_player'] = activity.roleOfPlayer!;
+    params['player_id'] = activity.playerId!;
+    params['player_name'] = activity.playerName!;
+    params['location_id'] = activity.locationId!;
+    params['created_at'] = activity.createdAt!;
+    params['details'] = activity.details!;
 
     HttpCall call = new HttpCall();
     http.Response response = await call.post(url, header, params);
