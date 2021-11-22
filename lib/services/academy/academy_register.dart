@@ -26,6 +26,7 @@ class _AcademyRegisterState extends State<AcademyRegister> {
   Data? selectedSport;
   List<Data>? sports;
   Service? service;
+  bool? isLoading = false;
 
   var academyName;
   var address;
@@ -229,6 +230,7 @@ class _AcademyRegisterState extends State<AcademyRegister> {
             onChanged: (value) {
               contactNumber = value;
             },
+            keyboardType: TextInputType.phone,
             decoration: InputDecoration(
                 labelText: "Contact Number",
                 labelStyle: TextStyle(
@@ -239,6 +241,7 @@ class _AcademyRegisterState extends State<AcademyRegister> {
             onChanged: (value) {
               secondaryNumber = value;
             },
+            keyboardType: TextInputType.phone,
             decoration: InputDecoration(
                 labelText: "Secondary Number",
                 labelStyle: TextStyle(
@@ -313,79 +316,82 @@ class _AcademyRegisterState extends State<AcademyRegister> {
                 ),
               )),
           SizedBox(height: k20Margin),
-          RoundedButton(
-            title: "ADD",
-            color: kBaseColor,
-            txtColor: Colors.white,
-            minWidth: 150,
-            onPressed: () async {
-              if (selectedSport == null) {
-                Utility.showToast("Please Select Sport");
-                return;
-              } else {
-                Utility.showToast(
-                    "Selected Sport ${selectedSport!.sportName} - ${selectedSport!.id}");
-              }
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              var playerId = prefs.get("playerId");
-              service = new Service();
+          isLoading == true
+              ? CircularProgressIndicator(color: kBaseColor)
+              : RoundedButton(
+                  title: "ADD",
+                  color: kBaseColor,
+                  txtColor: Colors.white,
+                  minWidth: 150,
+                  onPressed: () async {
+                    if (selectedSport == null) {
+                      Utility.showToast("Please Select Sport");
+                      return;
+                    } else {
+                      // Utility.showToast(
+                      //     "Selected Sport ${selectedSport!.sportName} - ${selectedSport!.id}");
+                    }
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    var playerId = prefs.get("playerId");
+                    service = new Service();
 
-              service!.playerId = playerId!.toString();
-              service!.serviceId = widget.serviceId.toString();
-              service!.name = academyName.toString();
-              service!.address = address.toString();
-              service!.city = city.toString();
-              service!.contactName = ownerName.toString();
-              service!.contactNo = contactNumber.toString();
-              service!.secondaryNo = secondaryNumber.toString();
-              service!.about = about.toString();
-              service!.locationLink = addressLink.toString();
-              service!.monthlyFees = monthlyFees.toString();
-              service!.coaches = coaches.toString();
-              service!.feesPerMatch = "";
-              service!.feesPerDay = "";
-              service!.experience = "";
-              service!.sportName = selectedSport!.sportName;
-              service!.sportId = selectedSport!.id.toString();
-              service!.companyName = "";
+                    service!.playerId = playerId!.toString();
+                    service!.serviceId = widget.serviceId.toString();
+                    service!.name = academyName.toString();
+                    service!.address = address.toString();
+                    service!.city = city.toString();
+                    service!.contactName = ownerName.toString();
+                    service!.contactNo = contactNumber.toString();
+                    service!.secondaryNo = secondaryNumber.toString();
+                    service!.about = about.toString();
+                    service!.locationLink = addressLink.toString();
+                    service!.monthlyFees = monthlyFees.toString();
+                    service!.coaches = coaches.toString();
+                    service!.feesPerMatch = "";
+                    service!.feesPerDay = "";
+                    service!.experience = textFacilityController.text;
+                    service!.sportName = selectedSport!.sportName;
+                    service!.sportId = selectedSport!.id.toString();
+                    service!.companyName = "";
 
-              if (this.image != null) {
-                addService(this.image!.path, service!);
-                // Utility.showToast("File Selected Image");
-              } else {
-                Utility.showToast("Please Select Image");
-              }
-            },
-          ),
+                    if (this.image != null) {
+                      addService(this.image!.path, service!);
+                      // Utility.showToast("File Selected Image");
+                    } else {
+                      Utility.showToast("Please Select Image");
+                    }
+                  },
+                ),
         ],
       ),
     );
   }
 
   addService(String filePath, Service service) async {
+    setState(() {
+      isLoading = true;
+    });
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
       dynamic id = await apiCall.addServiceData(filePath, service);
+      setState(() {
+        isLoading = false;
+      });
 
       if (id == null) {
         print("null");
         Utility.showToast("Failed");
       } else {
-        if (id > 0) {
-          print("Success");
-          Utility.showToast("Service Created Successfully");
-          // Navigator.pop(context);
-          var result = Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ServicePhotos(serviceDataId: id)));
-          if (result == true) {
-            Utility.showToast("Result $result");
-          }
-        } else {
-          print("Failed");
-          Utility.showToast("Failed");
+        print("Success");
+        Utility.showToast("Service Created Successfully");
+        var result = Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ServicePhotos(serviceDataId: id)));
+        if (result == true) {
+          Utility.showToast("Result $result");
         }
       }
     }

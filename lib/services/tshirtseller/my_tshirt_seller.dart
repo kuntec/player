@@ -1,12 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/model/service_data.dart';
 import 'package:player/model/service_model.dart';
 import 'package:player/services/manufacturer/manufacturer_register.dart';
 import 'package:player/services/service_photos.dart';
 import 'package:player/services/trophyseller/trophy_seller_register.dart';
+import 'package:player/services/tshirtseller/edit_tshirt_seller.dart';
 import 'package:player/services/tshirtseller/tshirt_seller_register.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -99,17 +102,36 @@ class _MyTshirtSellerState extends State<MyTshirtSeller> {
     );
   }
 
+  var selectedService;
   Widget serviceItem(dynamic service) {
     return GestureDetector(
       onTap: () {
         Utility.showToast(service.name.toString());
       },
       child: Container(
-        margin: EdgeInsets.all(10.0),
+        margin: EdgeInsets.only(bottom: 10.0),
         decoration: kServiceBoxItem,
         // height: 200,
         child: Stack(
           children: [
+            GestureDetector(
+              onTap: () {
+                selectedService = service;
+                showCupertinoDialog(
+                  barrierDismissible: true,
+                  context: context,
+                  builder: createDialog,
+                );
+              },
+              child: Container(
+                alignment: Alignment.topRight,
+                child: Icon(
+                  Icons.more_horiz,
+                  color: kBaseColor,
+                  size: 25.0,
+                ),
+              ),
+            ),
             Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,6 +197,69 @@ class _MyTshirtSellerState extends State<MyTshirtSeller> {
     );
   }
 
+  Widget createDialog(BuildContext context) => CupertinoAlertDialog(
+        title: Text("Choose an option"),
+        // content: Text("Message"),
+        actions: [
+          CupertinoDialogAction(
+            child: Text(
+              "Edit",
+              style: TextStyle(color: kBaseColor),
+            ),
+            onPressed: () async {
+              Navigator.pop(context);
+
+              var result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => EditTshirtSeller(
+                            service: selectedService,
+                          )));
+              if (result == true) {
+                _refresh();
+              }
+            },
+          ),
+          CupertinoDialogAction(
+            child: Text(
+              "Delete",
+              style: TextStyle(color: Colors.red),
+            ),
+            onPressed: () async {
+              Navigator.pop(context);
+              await deleteService(selectedService.id.toString());
+            },
+          ),
+          CupertinoDialogAction(
+            child: Text(
+              "Close",
+              style: TextStyle(color: Colors.black),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )
+        ],
+      );
+
+  _refresh() {
+    setState(() {});
+  }
+
+  deleteService(String id) async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      ServiceData serviceData = await apiCall.deleteService(id);
+      if (serviceData.status!) {
+        Utility.showToast(serviceData.message.toString());
+        _refresh();
+      } else {
+        print(serviceData.message!);
+      }
+    }
+  }
+
   List<Service>? services;
 
   Future<List<Service>?> getServiceData() async {
@@ -187,6 +272,7 @@ class _MyTshirtSellerState extends State<MyTshirtSeller> {
           widget.serviceId.toString(), playerId.toString());
       if (serviceModel.services != null) {
         services = serviceModel.services!;
+        services = services!.reversed.toList();
       }
 
       if (serviceModel.status!) {

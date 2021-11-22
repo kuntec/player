@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -564,20 +565,23 @@ class _EventRegisterState extends State<EventRegister> {
           }
           if (snapshot.hasData) {
             print("Has Data ${snapshot.data.length}");
-            // return Container(
-            //   child: Center(
-            //     child: Text('Yes Data ${snapshot.data}'),
-            //   ),
-            // );
-            return ListView.builder(
-              padding: EdgeInsets.only(bottom: 110),
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: snapshot.data.length,
-              itemBuilder: (BuildContext context, int index) {
-                return eventItem(snapshot.data[index]);
-              },
-            );
+            if (snapshot.data.length == 0) {
+              return Container(
+                child: Center(
+                  child: Text('No Events'),
+                ),
+              );
+            } else {
+              return ListView.builder(
+                padding: EdgeInsets.only(bottom: 110),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return eventItem(snapshot.data[index]);
+                },
+              );
+            }
           } else {
             return Container(
               child: Center(
@@ -614,70 +618,78 @@ class _EventRegisterState extends State<EventRegister> {
     }
     return events;
   }
+  //
+  // void _showDialog(dynamic event) async {
+  //   return await showDialog<void>(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         content: StatefulBuilder(
+  //           builder: (BuildContext context, StateSetter setState) {
+  //             return Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //               children: [
+  //                 Expanded(
+  //                   flex: 1,
+  //                   child: CustomButton(
+  //                       height: 20,
+  //                       fontSize: 16.0,
+  //                       title: "Edit",
+  //                       color: kBaseColor,
+  //                       txtColor: Colors.white,
+  //                       minWidth: 80,
+  //                       onPressed: () async {
+  //                         _dismissDialog();
+  //                         var result = await Navigator.push(
+  //                             context,
+  //                             MaterialPageRoute(
+  //                                 builder: (context) => EditEvent(
+  //                                       event: event,
+  //                                     )));
+  //                         if (result == true) {
+  //                           _refresh();
+  //                         }
+  //                       }),
+  //                 ),
+  //                 SizedBox(width: 20),
+  //                 Expanded(
+  //                   flex: 1,
+  //                   child: CustomButton(
+  //                       height: 20,
+  //                       fontSize: 16.0,
+  //                       title: "Delete",
+  //                       color: Colors.red,
+  //                       txtColor: Colors.white,
+  //                       minWidth: 80,
+  //                       onPressed: () async {
+  //                         _dismissDialog();
+  //                       }),
+  //                 ),
+  //               ],
+  //             );
+  //           },
+  //         ),
+  //         // actions: <Widget>[
+  //         //   TextButton(
+  //         //       onPressed: () {
+  //         //         _dismissDialog();
+  //         //       },
+  //         //       child: Text('Close')),
+  //         // ],
+  //       );
+  //     },
+  //   );
+  // }
+  //
+  // _dismissDialog() {
+  //   Navigator.pop(context);
+  // }
 
-  void _showDialog(dynamic event) async {
-    return await showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: CustomButton(
-                        height: 20,
-                        fontSize: 16.0,
-                        title: "Edit",
-                        color: kBaseColor,
-                        txtColor: Colors.white,
-                        minWidth: 80,
-                        onPressed: () async {
-                          _dismissDialog();
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => EditEvent(
-                          //               event: event,
-                          //             )));
-                        }),
-                  ),
-                  SizedBox(width: 20),
-                  Expanded(
-                    flex: 1,
-                    child: CustomButton(
-                        height: 20,
-                        fontSize: 16.0,
-                        title: "Delete",
-                        color: Colors.red,
-                        txtColor: Colors.white,
-                        minWidth: 80,
-                        onPressed: () async {
-                          _dismissDialog();
-                        }),
-                  ),
-                ],
-              );
-            },
-          ),
-          // actions: <Widget>[
-          //   TextButton(
-          //       onPressed: () {
-          //         _dismissDialog();
-          //       },
-          //       child: Text('Close')),
-          // ],
-        );
-      },
-    );
+  _refresh() {
+    setState(() {});
   }
 
-  _dismissDialog() {
-    Navigator.pop(context);
-  }
-
+  var selectedEvent;
   Widget eventItem(dynamic event) {
     return GestureDetector(
       onTap: () {
@@ -696,8 +708,12 @@ class _EventRegisterState extends State<EventRegister> {
           children: [
             GestureDetector(
               onTap: () {
-                // Utility.showToast("hi");
-                _showDialog(event);
+                selectedEvent = event;
+                showCupertinoDialog(
+                  barrierDismissible: true,
+                  context: context,
+                  builder: createDialog,
+                );
               },
               child: Container(
                 alignment: Alignment.topRight,
@@ -767,10 +783,18 @@ class _EventRegisterState extends State<EventRegister> {
                     ),
                   ),
                   SizedBox(height: 5.0),
+                  Text(
+                    event.status == "1" ? "Booking: ON" : "Booking: OFF",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Container(
+                        margin: EdgeInsets.all(10.0),
                         decoration: kServiceBoxItem.copyWith(
                             color: kBaseColor,
                             borderRadius: BorderRadius.circular(5.0)),
@@ -793,5 +817,102 @@ class _EventRegisterState extends State<EventRegister> {
         ),
       ),
     );
+  }
+
+  Widget createDialog(BuildContext context) => CupertinoAlertDialog(
+        title: Text("Choose an option"),
+        // content: Text("Message"),
+        actions: [
+          CupertinoDialogAction(
+            child: Text(
+              "Edit",
+              style: TextStyle(color: kBaseColor),
+            ),
+            onPressed: () async {
+              Navigator.pop(context);
+
+              var result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => EditEvent(
+                            event: selectedEvent,
+                          )));
+              if (result == true) {
+                _refresh();
+              }
+            },
+          ),
+          CupertinoDialogAction(
+            child: Text(
+              selectedEvent.status == "1" ? "Stop Booking" : "Restart Booking",
+              style: TextStyle(color: kBaseColor),
+            ),
+            onPressed: () async {
+              Navigator.pop(context);
+              selectedEvent.status == "1"
+                  ? selectedEvent.status = "0"
+                  : selectedEvent.status = "1";
+              await updateEvent(selectedEvent);
+            },
+          ),
+          CupertinoDialogAction(
+            child: Text(
+              "Delete",
+              style: TextStyle(color: Colors.red),
+            ),
+            onPressed: () async {
+              Navigator.pop(context);
+              await deleteEvent(selectedEvent.id.toString());
+            },
+          ),
+          CupertinoDialogAction(
+            child: Text(
+              "Close",
+              style: TextStyle(color: Colors.black),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )
+        ],
+      );
+
+  updateEvent(Event event) async {
+    setState(() {
+      isLoading = true;
+    });
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      EventData eventData = await apiCall.updateEvent(event);
+      setState(() {
+        isLoading = false;
+      });
+      if (eventData == null) {
+        print("Event null");
+      } else {
+        if (eventData.status!) {
+          print("Event Success");
+          Utility.showToast("Event Booking Status Updated");
+          // Navigator.pop(context, true);
+        } else {
+          print("Event Failed");
+        }
+      }
+    }
+  }
+
+  deleteEvent(String id) async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      EventData eventData = await apiCall.deleteEvent(id);
+      if (eventData.status!) {
+        Utility.showToast(eventData.message.toString());
+        _refresh();
+      } else {
+        print(eventData.message!);
+      }
+    }
   }
 }

@@ -190,6 +190,50 @@ class APICall {
     return HostActivity.fromJson(jsonDecode(response.body));
   }
 
+  Future<HostActivity> deleteHostActivity(String id) async {
+    Uri url = Uri.parse(APIResources.DELETE_HOST_ACTIVITY);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['id'] = id;
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return HostActivity.fromJson(jsonDecode(response.body));
+  }
+
+  Future<TournamentData> deleteTournament(String id) async {
+    Uri url = Uri.parse(APIResources.DELETE_TOURNAMENT);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['id'] = id;
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return TournamentData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<EventData> deleteEvent(String id) async {
+    Uri url = Uri.parse(APIResources.DELETE_EVENT);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['id'] = id;
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return EventData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<ServiceData> deleteService(String id) async {
+    Uri url = Uri.parse(APIResources.DELETE_SERVICEDATA);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['id'] = id;
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return ServiceData.fromJson(jsonDecode(response.body));
+  }
+
   Future<HostActivity> getMyHostActivity(String playerId) async {
     Uri url = Uri.parse(APIResources.GET_MY_HOST_ACTIVITY);
     var header = new Map<String, String>();
@@ -264,6 +308,7 @@ class APICall {
         "tournament_category": tournament.tournamentCategory,
         "no_of_overs": tournament.noOfOvers,
         "location_link": tournament.locationLink,
+        "status": tournament.status,
         "image": await MultipartFile.fromFile(filePath, filename: "tournament")
       });
 
@@ -271,16 +316,76 @@ class APICall {
         APIResources.ADD_TOURNAMENT,
         data: formData,
       );
-//      return response;
       var responseBody = response.data;
       print("Response Body ${responseBody['status']}");
 
-      // tournamentData =
-      //     TournamentData.fromJson(jsonDecode(responseBody.toString()));
-      //print("Response Body ${tournamentData.status}");
       return responseBody['status'];
     } on DioError catch (e) {
       print("add tournament3");
+      return false;
+    } catch (e) {}
+  }
+
+  Future<TournamentData> updateTournament(Tournament tournament) async {
+    log("Add Player Sport");
+    Uri url = Uri.parse(APIResources.UPDATE_TOURNAMENT);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    log("Add Player Sport");
+    params['id'] = tournament.id.toString();
+    params['organizer_name'] = tournament.organizerName!;
+    params['organizer_number'] = tournament.organizerNumber!;
+    params['tournament_name'] = tournament.tournamentName!;
+    params['start_date'] = tournament.startDate!;
+    params['end_date'] = tournament.endDate!;
+
+    params['start_time'] = tournament.startTime!;
+    params['end_time'] = tournament.endTime!;
+    params['entry_fees'] = tournament.entryFees!;
+    params['timing'] = tournament.timing!;
+    params['no_of_members'] = tournament.noOfMembers!;
+
+    params['age_limit'] = tournament.ageLimit!;
+    params['address'] = tournament.address!;
+    params['prize_details'] = tournament.prizeDetails!;
+    params['other_info'] = tournament.otherInfo!;
+    params['location_id'] = tournament.locationId!;
+
+    params['player_id'] = tournament.playerId!;
+    params['player_name'] = tournament.playerName!;
+    params['sport_id'] = tournament.sportId!;
+    params['sport_name'] = tournament.sportName!;
+    params['created_at'] = tournament.createdAt!;
+
+    params['ball_type'] = tournament.ballType!;
+    params['tournament_category'] = tournament.tournamentCategory!;
+    params['no_of_overs'] = tournament.noOfOvers!;
+    params['location_link'] = tournament.locationLink!;
+    params['status'] = tournament.status!;
+
+    HttpCall call = new HttpCall();
+
+    http.Response response = await call.post(url, header, params);
+    log("Response Body: " + response.body);
+//    return response.body;
+    return TournamentData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<dynamic> updateTournamentImage(filePath, Tournament tournament) async {
+    try {
+      FormData formData = new FormData.fromMap({
+        "id": tournament.id,
+        "image": await MultipartFile.fromFile(filePath, filename: "tournament")
+      });
+      Response response = await Dio().post(
+        APIResources.UPDATE_TOURNAMENT_IMAGE,
+        data: formData,
+      );
+      var responseBody = response.data;
+      print("Response Body ${responseBody['status']}");
+
+      return responseBody['status'];
+    } on DioError catch (e) {
       return false;
     } catch (e) {}
   }
@@ -552,6 +657,60 @@ class APICall {
     }
   }
 
+  Future<ServiceData> updateServiceData(Service service) async {
+    Uri url = Uri.parse(APIResources.UPDATE_SERVICEDATA);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+
+    params['id'] = service.id.toString();
+    params['service_id'] = service.serviceId.toString();
+    params['player_id'] = service.playerId!;
+    params['name'] = service.name!;
+    params['address'] = service.address!;
+    params['city'] = service.city!;
+
+    params['contact_name'] = service.contactName!;
+    params['contact_no'] = service.contactNo!;
+    params['secondary_no'] = service.secondaryNo!;
+    params['about'] = service.about!;
+    params['location_link'] = service.locationLink!;
+
+    params['monthly_fees'] = service.monthlyFees!;
+    params['coaches'] = service.coaches!;
+    params['fees_per_match'] = service.feesPerMatch!;
+    params['fees_per_day'] = service.feesPerDay!;
+    params['experience'] = service.experience!;
+
+    params['company_name'] = service.companyName!;
+    params['sport_id'] = service.sportId!;
+    params['sport_name'] = service.sportName!;
+    params['created_at'] = Utility.getCurrentDate();
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return ServiceData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<dynamic> updateServicePosterImage(filePath, String id) async {
+    try {
+      FormData formData = new FormData.fromMap({
+        "id": id,
+        "image":
+            await MultipartFile.fromFile(filePath, filename: "servicephoto")
+      });
+      Response response = await Dio().post(
+        APIResources.UPDATE_SERVICEDATA_POSTER_IMAGE,
+        data: formData,
+      );
+      var responseBody = response.data;
+      print("Response Body ${responseBody['status']}");
+      return responseBody['status'];
+    } on DioError catch (e) {
+      return false;
+    } catch (e) {}
+  }
+
   Future<dynamic> addServicePhoto(filePath, String serviceId) async {
     try {
       FormData formData = new FormData.fromMap({
@@ -729,6 +888,63 @@ class APICall {
     } catch (e) {}
   }
 
+  Future<EventData> updateEvent(Event event) async {
+    Uri url = Uri.parse(APIResources.UPDATE_EVENT);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+
+    params['id'] = event.id.toString();
+    params['player_id'] = event.playerId!;
+    params['name'] = event.name!;
+    params['type'] = event.type!;
+    params['description'] = event.description!;
+    params['status'] = event.status!;
+
+    params['start_date'] = event.startDate!;
+    params['end_date'] = event.endDate!;
+    params['start_time'] = event.startTime!;
+    params['end_time'] = event.endTime!;
+    params['entry_fees'] = event.entryFees!;
+
+    params['members'] = event.members!;
+    params['address'] = event.address!;
+    params['location_id'] = event.locationId!;
+    params['location_link'] = event.locationLink!;
+    params['details'] = event.details!;
+
+    params['organizer_name'] = event.organizerName!;
+    params['number'] = event.number!;
+    params['secondary_number'] = event.secondaryNumber!;
+
+    params['created_at'] = event.createdAt!;
+
+    HttpCall call = new HttpCall();
+
+    http.Response response = await call.post(url, header, params);
+    log("Response Body: " + response.body);
+//    return response.body;
+    return EventData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<dynamic> updateEventImage(filePath, Event event) async {
+    try {
+      FormData formData = new FormData.fromMap({
+        "id": event.id,
+        "image": await MultipartFile.fromFile(filePath, filename: "tournament")
+      });
+      Response response = await Dio().post(
+        APIResources.UPDATE_EVENT_IMAGE,
+        data: formData,
+      );
+      var responseBody = response.data;
+      print("Response Body ${responseBody['status']}");
+
+      return responseBody['status'];
+    } on DioError catch (e) {
+      return false;
+    } catch (e) {}
+  }
+
   Future<EventData> getMyEvent(String playerId) async {
     Uri url = Uri.parse(APIResources.GET_MY_EVENT);
     var header = new Map<String, String>();
@@ -751,14 +967,6 @@ class APICall {
     http.Response response = await call.post(url, header, params);
     print("Response Body1: " + response.body);
     return EventData.fromJson(jsonDecode(response.body));
-  }
-
-  Future<dynamic>? updateEvent() {
-    return null;
-  }
-
-  Future<dynamic>? updateEventImage() {
-    return null;
   }
 
   Future<ParticipantData> addParticipant(Participant participant) async {

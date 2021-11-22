@@ -1,12 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/model/service_data.dart';
 import 'package:player/model/service_model.dart';
 import 'package:player/model/service_photo.dart';
 import 'package:player/services/service_photos.dart';
+import 'package:player/services/sportmarket/edit_sport_market.dart';
 import 'package:player/services/sportmarket/sport_market_details.dart';
 import 'package:player/services/sportmarket/sport_market_register.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -125,6 +128,7 @@ class _MySportMarketState extends State<MySportMarket> {
     return services;
   }
 
+  var selectedService;
   Widget serviceItem(dynamic service) {
     return GestureDetector(
       onTap: () {
@@ -146,7 +150,12 @@ class _MySportMarketState extends State<MySportMarket> {
           children: [
             GestureDetector(
               onTap: () {
-                Utility.showToast("Show Dialog");
+                selectedService = service;
+                showCupertinoDialog(
+                  barrierDismissible: true,
+                  context: context,
+                  builder: createDialog,
+                );
               },
               child: Container(
                 alignment: Alignment.topRight,
@@ -220,5 +229,68 @@ class _MySportMarketState extends State<MySportMarket> {
         ),
       ),
     );
+  }
+
+  Widget createDialog(BuildContext context) => CupertinoAlertDialog(
+        title: Text("Choose an option"),
+        // content: Text("Message"),
+        actions: [
+          CupertinoDialogAction(
+            child: Text(
+              "Edit",
+              style: TextStyle(color: kBaseColor),
+            ),
+            onPressed: () async {
+              Navigator.pop(context);
+
+              var result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => EditSportMarket(
+                            service: selectedService,
+                          )));
+              if (result == true) {
+                _refresh();
+              }
+            },
+          ),
+          CupertinoDialogAction(
+            child: Text(
+              "Delete",
+              style: TextStyle(color: Colors.red),
+            ),
+            onPressed: () async {
+              Navigator.pop(context);
+              await deleteService(selectedService.id.toString());
+            },
+          ),
+          CupertinoDialogAction(
+            child: Text(
+              "Close",
+              style: TextStyle(color: Colors.black),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )
+        ],
+      );
+
+  _refresh() {
+    setState(() {});
+  }
+
+  deleteService(String id) async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      ServiceData serviceData = await apiCall.deleteService(id);
+      if (serviceData.status!) {
+        Utility.showToast(serviceData.message.toString());
+        _refresh();
+      } else {
+        print(serviceData.message!);
+      }
+    }
   }
 }

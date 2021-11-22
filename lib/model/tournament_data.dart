@@ -232,7 +232,7 @@ class Tournament {
     String? playerId,
     String? playerName,
     String? sportId,
-    String? SportName,
+    String? sportName,
     String? createdAt,
     String? startTime,
     String? endTime,
@@ -260,7 +260,7 @@ class Tournament {
     _playerId = playerId;
     _playerName = playerName;
     _sportId = sportId;
-    _sportName = SportName;
+    _sportName = sportName;
     _createdAt = createdAt;
 
     _startTime = startTime;

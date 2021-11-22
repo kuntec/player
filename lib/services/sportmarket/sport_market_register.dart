@@ -7,6 +7,7 @@ import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/service_model.dart';
+import 'package:player/services/service_photos.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SportMarketRegister extends StatefulWidget {
@@ -21,7 +22,7 @@ class SportMarketRegister extends StatefulWidget {
 class _SportMarketRegisterState extends State<SportMarketRegister> {
   File? image;
   Service? service;
-
+  bool? isLoading = false;
   var shopName;
   var address;
   var addressLink;
@@ -204,69 +205,100 @@ class _SportMarketRegisterState extends State<SportMarketRegister> {
                 ),
               )),
           SizedBox(height: k20Margin),
-          RoundedButton(
-            title: "ADD",
-            color: kBaseColor,
-            txtColor: Colors.white,
-            minWidth: 150,
-            onPressed: () async {
+          isLoading == true
+              ? CircularProgressIndicator(
+                  color: kBaseColor,
+                )
+              : RoundedButton(
+                  title: "ADD",
+                  color: kBaseColor,
+                  txtColor: Colors.white,
+                  minWidth: 150,
+                  onPressed: () async {
 //              if (widget.isEdit) {}
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              var playerId = prefs.get("playerId");
-              service = new Service();
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    var playerId = prefs.get("playerId");
+                    service = new Service();
 
-              service!.playerId = playerId!.toString();
-              service!.serviceId = widget.serviceId.toString();
-              service!.name = shopName.toString();
-              service!.address = address.toString();
-              service!.city = city.toString();
-              service!.contactName = ownerName.toString();
-              service!.contactNo = contactNo.toString();
-              service!.secondaryNo = secondaryNo.toString();
-              service!.about = detailOfShop.toString();
-              service!.locationLink = addressLink.toString();
-              service!.monthlyFees = "";
-              service!.coaches = "";
-              service!.feesPerMatch = "";
-              service!.feesPerDay = "";
-              service!.experience = "";
-              service!.sportName = "";
-              service!.sportId = "";
-              service!.companyName = "";
+                    service!.playerId = playerId!.toString();
+                    service!.serviceId = widget.serviceId.toString();
+                    service!.name = shopName.toString();
+                    service!.address = address.toString();
+                    service!.city = city.toString();
+                    service!.contactName = ownerName.toString();
+                    service!.contactNo = contactNo.toString();
+                    service!.secondaryNo = secondaryNo.toString();
+                    service!.about = detailOfShop.toString();
+                    service!.locationLink = addressLink.toString();
+                    service!.monthlyFees = "";
+                    service!.coaches = "";
+                    service!.feesPerMatch = "";
+                    service!.feesPerDay = "";
+                    service!.experience = "";
+                    service!.sportName = "";
+                    service!.sportId = "";
+                    service!.companyName = "";
 
-              if (this.image != null) {
-                addService(this.image!.path, service!);
-                // Utility.showToast("File Selected Image");
-              } else {
-                Utility.showToast("Please Select Image");
-              }
-              //  print("Create Tournament");
-            },
-          ),
+                    if (this.image != null) {
+                      addService(this.image!.path, service!);
+                      // Utility.showToast("File Selected Image");
+                    } else {
+                      Utility.showToast("Please Select Image");
+                    }
+                    //  print("Create Tournament");
+                  },
+                ),
         ],
       ),
     );
   }
 
   addService(String filePath, Service service) async {
+    setState(() {
+      isLoading = true;
+    });
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      dynamic status = await apiCall.addServiceData(filePath, service);
-
-      if (status == null) {
+      dynamic id = await apiCall.addServiceData(filePath, service);
+      setState(() {
+        isLoading = false;
+      });
+      if (id == null) {
         print("null");
         Utility.showToast("Failed");
       } else {
-        if (status) {
-          print("Success");
-          Utility.showToast("Service Created Successfully");
-          Navigator.pop(context);
-        } else {
-          print("Failed");
-          Utility.showToast("Failed");
-        }
+        print("Success $id");
+        Utility.showToast("Service Created Successfully");
+        Navigator.pop(context);
       }
     }
   }
+  // addService(String filePath, Service service) async {
+  //   setState(() {
+  //     isLoading = true;
+  //   });
+  //   APICall apiCall = new APICall();
+  //   bool connectivityStatus = await Utility.checkConnectivity();
+  //   if (connectivityStatus) {
+  //     dynamic status = await apiCall.addServiceData(filePath, service);
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //     if (status == null) {
+  //       print("null");
+  //       Utility.showToast("Failed");
+  //     } else {
+  //       if (status) {
+  //         print("Success");
+  //         Utility.showToast("Service Created Successfully");
+  //         Navigator.pop(context);
+  //       } else {
+  //         print("Failed");
+  //         Utility.showToast("Failed");
+  //       }
+  //     }
+  //   }
+  // }
 }

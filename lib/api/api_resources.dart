@@ -19,6 +19,10 @@ class APIResources {
   static final String ADD_HOST_ACTIVITY = BASE_URL + "addHostActivity";
   static final String UPDATE_HOST_ACTIVITY = BASE_URL + "updateHostActivity";
 
+  static final String DELETE_HOST_ACTIVITY = BASE_URL + "deleteHostActivity";
+  static final String DELETE_TOURNAMENT = BASE_URL + "deleteTournament";
+  static final String DELETE_EVENT = BASE_URL + "deleteEvent";
+
   static final String GET_LOOKING_FOR = BASE_URL + "getLookingFor";
   static final String GET_SPORT = BASE_URL + "getSport";
   static final String GET_PLAYER_SPORT = BASE_URL + "getPlayerSport";
@@ -55,6 +59,10 @@ class APIResources {
       BASE_URL + "getServiceByPlayerId";
   static final String ADD_SERVICEDATA = BASE_URL + "addServiceData";
   static final String GET_SERVICEDATA = BASE_URL + "getServiceData";
+  static final String DELETE_SERVICEDATA = BASE_URL + "deleteServiceData";
+  static final String UPDATE_SERVICEDATA = BASE_URL + "updateServiceData";
+  static final String UPDATE_SERVICEDATA_POSTER_IMAGE =
+      BASE_URL + "updateServicePosterImage";
 
   static final String GET_SERVICE_PHOTO = BASE_URL + "getServicePhoto";
   static final String ADD_SERVICE_PHOTO = BASE_URL + "addServicePhoto";

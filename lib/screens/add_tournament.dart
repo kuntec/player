@@ -1,15 +1,18 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
+import 'package:player/components/custom_button.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/tournament_data.dart';
+import 'package:player/screens/edit_tournament.dart';
 import 'package:player/screens/tournament_participants.dart';
 import 'package:player/venue/choose_sport.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -595,6 +598,7 @@ class _AddTournamentState extends State<AddTournament> {
                     tournament!.noOfOvers = noOfOvers.toString();
                     tournament!.locationLink = locationLink.toString();
                     tournament!.status = "1";
+                    tournament!.timing = "";
 
 //            Utility.showToast("Create Tournament");
                     if (this.image != null) {
@@ -814,6 +818,8 @@ class _AddTournamentState extends State<AddTournament> {
     return tournaments;
   }
 
+  var selectedTournament;
+
   Widget tournamentItem(dynamic tournament) {
     return GestureDetector(
       onTap: () {
@@ -844,6 +850,27 @@ class _AddTournamentState extends State<AddTournament> {
         // height: 200,
         child: Stack(
           children: [
+            GestureDetector(
+              onTap: () {
+                // Utility.showToast("hi");
+                selectedTournament = tournament;
+                // _showDialog(tournament);
+                showCupertinoDialog(
+                  barrierDismissible: true,
+                  context: context,
+                  builder: createDialog,
+                );
+              },
+              child: Container(
+                alignment: Alignment.topRight,
+                margin: EdgeInsets.all(5.0),
+                child: Icon(
+                  Icons.more_horiz,
+                  size: 20,
+                  color: kBaseColor,
+                ),
+              ),
+            ),
             Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -900,6 +927,7 @@ class _AddTournamentState extends State<AddTournament> {
                       fontSize: 12.0,
                     ),
                   ),
+                  SizedBox(height: 5.0),
                   Text(
                     "Location: ${tournament.sportName}",
                     style: TextStyle(
@@ -907,13 +935,24 @@ class _AddTournamentState extends State<AddTournament> {
                       fontSize: 12.0,
                     ),
                   ),
+                  SizedBox(height: 5.0),
                   Text(
-                    "\u{20B9} ${tournament.entryFees}",
+                    "Entry Fees : \u{20B9} ${tournament.entryFees}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 12.0,
                     ),
                   ),
+                  SizedBox(height: 5.0),
+
+                  Text(
+                    tournament.status == "1" ? "Booking: ON" : "Booking: OFF",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 10.0),
                   // Text(
                   //   "Time: ${tournament.startTime} to ${tournament.startTime}",
                   //   style: TextStyle(
@@ -931,217 +970,222 @@ class _AddTournamentState extends State<AddTournament> {
     );
   }
 
-  // Widget tournamentItem(dynamic tournament) {
-  //   return GestureDetector(
-  //     onTap: () {
-  //       //       Utility.showToast("Tournament Clicked ${tournament.prizeDetails}");
-  //       Navigator.push(
-  //           context,
-  //           MaterialPageRoute(
-  //               builder: (context) => TournamentParticipants(
-  //                     tournamentId: tournament.id,
-  //                   )));
-  //     },
-  //     child: Container(
-  //       margin: EdgeInsets.all(10.0),
-  //       decoration: kContainerBoxDecoration,
-  //       // height: 150,
-  //       child: Stack(
-  //         alignment: Alignment.bottomRight,
-  //         children: [
-  //           Container(
-  //             child: Column(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
+  Widget createDialog(BuildContext context) => CupertinoAlertDialog(
+        title: Text("Choose an option"),
+        // content: Text("Message"),
+        actions: [
+          CupertinoDialogAction(
+            child: Text(
+              "Edit",
+              style: TextStyle(color: kBaseColor),
+            ),
+            onPressed: () async {
+              Navigator.pop(context);
+
+              var result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => EditTournament(
+                            tournament: selectedTournament,
+                          )));
+              if (result == true) {
+                _refresh();
+              }
+            },
+          ),
+          CupertinoDialogAction(
+            child: Text(
+              selectedTournament.status == "1"
+                  ? "Stop Booking"
+                  : "Restart Booking",
+              style: TextStyle(color: kBaseColor),
+            ),
+            onPressed: () async {
+              Navigator.pop(context);
+              selectedTournament.status == "1"
+                  ? selectedTournament.status = "0"
+                  : selectedTournament.status = "1";
+              selectedTournament.timing = "";
+              await updateTournament(selectedTournament);
+            },
+          ),
+          CupertinoDialogAction(
+            child: Text(
+              "Delete",
+              style: TextStyle(color: Colors.red),
+            ),
+            onPressed: () async {
+              Navigator.pop(context);
+              await deleteTournament(selectedTournament.id.toString());
+            },
+          ),
+          CupertinoDialogAction(
+            child: Text(
+              "Close",
+              style: TextStyle(color: Colors.black),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )
+        ],
+      );
+
+  // void _showDialog(dynamic tournament) async {
+  //   return await showDialog<void>(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         content: StatefulBuilder(
+  //           builder: (BuildContext context, StateSetter setState) {
+  //             return Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
   //               children: [
-  //                 ClipRRect(
-  //                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
-  //                   child: Image.network(
-  //                     APIResources.IMAGE_URL + tournament.image,
-  //                     fit: BoxFit.fill,
+  //                 Expanded(
+  //                   flex: 1,
+  //                   child: GestureDetector(
+  //                     onTap: () async {
+  //                       _dismissDialog();
+  //                       var result = await Navigator.push(
+  //                           context,
+  //                           MaterialPageRoute(
+  //                               builder: (context) => EditTournament(
+  //                                     tournament: tournament,
+  //                                   )));
+  //                       if (result == true) {
+  //                         _refresh();
+  //                       }
+  //                     },
+  //                     child: Container(
+  //                       height: 30,
+  //                       decoration: kServiceBoxItem.copyWith(color: kBaseColor),
+  //                       padding: EdgeInsets.all(5),
+  //                       child: Center(
+  //                         child: Text(
+  //                           "EDIT",
+  //                           style: TextStyle(
+  //                             color: Colors.white,
+  //                             fontSize: 12.0,
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ),
   //                   ),
   //                 ),
-  //                 SizedBox(height: 20),
-  //                 Container(
-  //                   margin: EdgeInsets.only(left: 10.0),
-  //                   child: Column(
-  //                     crossAxisAlignment: CrossAxisAlignment.start,
-  //                     children: [
-  //                       Text(
-  //                         tournament.tournamentName,
-  //                         style: TextStyle(color: kBaseColor, fontSize: 18.0),
+  //                 SizedBox(width: 10),
+  //                 Expanded(
+  //                   flex: 1,
+  //                   child: GestureDetector(
+  //                     onTap: () async {
+  //                       _dismissDialog();
+  //                       tournament.status == "1"
+  //                           ? tournament.status = "0"
+  //                           : tournament.status = "1";
+  //                       tournament.timing = "";
+  //                       await updateTournament(tournament);
+  //                     },
+  //                     child: Container(
+  //                       height: 40,
+  //                       decoration: kServiceBoxItem.copyWith(color: kBaseColor),
+  //                       padding: EdgeInsets.all(5),
+  //                       child: Center(
+  //                         child: Text(
+  //                           tournament.status == "1"
+  //                               ? "STOP BOOKING"
+  //                               : "RESTART BOOKING",
+  //                           style: TextStyle(
+  //                             color: Colors.white,
+  //                             fontSize: 12.0,
+  //                           ),
+  //                         ),
   //                       ),
-  //                       SizedBox(height: 5),
-  //                       Text(
-  //                         "Start Date : ${tournament.startDate}",
-  //                         style: TextStyle(color: Colors.black, fontSize: 14.0),
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 SizedBox(width: 10),
+  //                 Expanded(
+  //                   flex: 1,
+  //                   child: GestureDetector(
+  //                     onTap: () async {
+  //                       _dismissDialog();
+  //                     },
+  //                     child: Container(
+  //                       height: 30,
+  //                       decoration: kServiceBoxItem.copyWith(color: Colors.red),
+  //                       padding: EdgeInsets.all(5),
+  //                       child: Center(
+  //                         child: Text(
+  //                           "CLOSE",
+  //                           style: TextStyle(
+  //                             color: Colors.white,
+  //                             fontSize: 12.0,
+  //                           ),
+  //                         ),
   //                       ),
-  //                       SizedBox(height: 5),
-  //                       // Text(
-  //                       //   "End Date : ${tournament.endDate}",
-  //                       //   style: TextStyle(color: Colors.black, fontSize: 14.0),
-  //                       // ),
-  //                       // SizedBox(height: 5),
-  //                       // Text(
-  //                       //   "Time : ${tournament.timing}",
-  //                       //   style: TextStyle(color: Colors.black, fontSize: 14.0),
-  //                       // ),
-  //                       // SizedBox(height: 5),
-  //                       Text(
-  //                         "Location : ${tournament.address}",
-  //                         style: TextStyle(color: Colors.black, fontSize: 14.0),
-  //                       ),
-  //                       SizedBox(height: 10),
-  //                     ],
+  //                     ),
   //                   ),
   //                 ),
   //               ],
-  //             ),
-  //           ),
-  //           Positioned(
-  //             bottom: 50,
-  //             right: 20,
-  //             child: Container(
-  //               child: Text(
-  //                 "Rs ${tournament.prizeDetails}",
-  //                 style: TextStyle(color: kBaseColor, fontSize: 18.0),
-  //               ),
-  //             ),
-  //           ),
-  //           Container(
-  //             decoration: BoxDecoration(
-  //                 color: kBaseColor,
-  //                 borderRadius: BorderRadius.only(
-  //                   topLeft: Radius.circular(15.0),
-  //                   bottomRight: Radius.circular(15.0),
-  //                 )),
-  //             width: 100,
-  //             height: 40,
-  //             child: Center(
-  //               child: Text(
-  //                 tournament.sportName,
-  //                 style: TextStyle(color: Colors.white, fontSize: 16.0),
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
+  //             );
+  //           },
+  //         ),
+  //         // actions: <Widget>[
+  //         //   TextButton(
+  //         //       onPressed: () {
+  //         //         _dismissDialog();
+  //         //       },
+  //         //       child: Text('Close')),
+  //         // ],
+  //       );
+  //     },
   //   );
+  // }
+  //
+  // _dismissDialog() {
+  //   Navigator.pop(context);
   // }
 
-  // hostActivityItem(dynamic activity) {
-  //   return Container(
-  //     margin: EdgeInsets.all(10.0),
-  //     decoration: kContainerBoxDecoration,
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.end,
-  //       children: [
-  //         Row(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //           children: [
-  //             Expanded(
-  //               flex: 4,
-  //               child: Container(
-  //                 margin: EdgeInsets.all(10.0),
-  //                 height: 90.0,
-  //                 width: 90.0,
-  //                 child: ClipRRect(
-  //                   borderRadius: BorderRadius.circular(25.0),
-  //                   child: Image.network(
-  //                     APIResources.IMAGE_URL + activity.image,
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //             Expanded(
-  //               flex: 6,
-  //               child: Column(
-  //                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                 mainAxisAlignment: MainAxisAlignment.start,
-  //                 children: [
-  //                   SizedBox(height: 10.0),
-  //                   Text(
-  //                     activity.playerName,
-  //                     style: TextStyle(
-  //                       color: kBaseColor,
-  //                       fontSize: 20.0,
-  //                     ),
-  //                   ),
-  //                   SizedBox(height: 10.0),
-  //                   Text(
-  //                     "Looking For: ${activity.sportName}",
-  //                     style: TextStyle(
-  //                       color: Colors.grey.shade900,
-  //                       fontSize: 14.0,
-  //                     ),
-  //                   ),
-  //                   SizedBox(height: 5.0),
-  //                   Text(
-  //                     "Location: ${activity.address}",
-  //                     style: TextStyle(
-  //                       color: Colors.grey.shade900,
-  //                       fontSize: 14.0,
-  //                     ),
-  //                   ),
-  //                   SizedBox(height: 5.0),
-  //                   Text(
-  //                     "Time: ${activity.timing}",
-  //                     style: TextStyle(
-  //                       color: Colors.grey.shade900,
-  //                       fontSize: 14.0,
-  //                     ),
-  //                   ),
-  //                   SizedBox(height: 5.0),
-  //                   Text(
-  //                     "Date: ${activity.startDate}",
-  //                     style: TextStyle(
-  //                       color: Colors.grey.shade900,
-  //                       fontSize: 14.0,
-  //                     ),
-  //                   ),
-  //                   SizedBox(height: 5.0),
-  //                   Text(
-  //                     "Ball Type: ${activity.sportName} ",
-  //                     style: TextStyle(
-  //                       color: Colors.grey.shade900,
-  //                       fontSize: 14.0,
-  //                     ),
-  //                   ),
-  //                   SizedBox(height: 5.0),
-  //                 ],
-  //               ),
-  //             ),
-  //             Expanded(
-  //               flex: 1,
-  //               child: Container(
-  //                 child: Icon(
-  //                   Icons.more_horiz,
-  //                   color: kBaseColor,
-  //                   size: 20.0,
-  //                 ),
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //         Container(
-  //           decoration: BoxDecoration(
-  //               color: kBaseColor,
-  //               borderRadius: BorderRadius.only(
-  //                 bottomRight: Radius.circular(15.0),
-  //                 topLeft: Radius.circular(15.0),
-  //               )),
-  //           width: 100,
-  //           height: 35,
-  //           child: Center(
-  //             child: Text(
-  //               activity.sportName,
-  //               style: TextStyle(color: Colors.white, fontSize: 16.0),
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
+  _refresh() {
+    setState(() {});
+  }
+
+  updateTournament(Tournament tournament) async {
+    setState(() {
+      isLoading = true;
+    });
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      TournamentData tournamentData =
+          await apiCall.updateTournament(tournament);
+      setState(() {
+        isLoading = false;
+      });
+      if (tournamentData == null) {
+        print("Tournament null");
+      } else {
+        if (tournamentData.status!) {
+          print("Tournament Success");
+          Utility.showToast("Tournament Booking Status Updated");
+          // Navigator.pop(context, true);
+        } else {
+          print("Tournament Failed");
+        }
+      }
+    }
+  }
+
+  deleteTournament(String id) async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      TournamentData tournamentData = await apiCall.deleteTournament(id);
+      if (tournamentData.status!) {
+        Utility.showToast(tournamentData.message.toString());
+        _refresh();
+      } else {
+        print(tournamentData.message!);
+      }
+    }
+  }
 }

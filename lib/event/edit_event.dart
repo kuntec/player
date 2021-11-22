@@ -31,19 +31,6 @@ class _EditEventState extends State<EditEvent> {
 
   Event? event;
 
-  // var organizerName;
-  // var number;
-  // var secondaryNumber;
-  //
-  // var eventName;
-  // var eventType;
-  // var description;
-  // var entryFees;
-  // var noOfMembers;
-  // var address;
-  // var locationLink;
-  // var otherInfo;
-
   TextEditingController eventNameController = new TextEditingController();
   TextEditingController eventTypeController = new TextEditingController();
   TextEditingController descriptionController = new TextEditingController();
@@ -77,7 +64,6 @@ class _EditEventState extends State<EditEvent> {
     textEndDateController.text = widget.event.endDate;
     textStartTimeController.text = widget.event.startTime;
     textEndTimeController.text = widget.event.endTime;
-
     noOfMembersController.text = widget.event.members;
     addressController.text = widget.event.address;
     locationLinkController.text = widget.event.locationLink;
@@ -110,6 +96,7 @@ class _EditEventState extends State<EditEvent> {
       setState(() {
         this.image = imageTemporary;
       });
+      updateEventImage(this.image!.path, widget.event);
     } on PlatformException catch (e) {
       print("Failed to pick image : $e");
     }
@@ -188,24 +175,33 @@ class _EditEventState extends State<EditEvent> {
                       height: 150,
                       fit: BoxFit.fill,
                     )
-                  : FlutterLogo(size: 100),
+                  : widget.event.image != null
+                      ? Image.network(
+                          APIResources.IMAGE_URL + widget.event.image,
+                          width: 280,
+                          height: 150,
+                          fit: BoxFit.fill,
+                        )
+                      : FlutterLogo(size: 100),
             ),
           ),
-          GestureDetector(
-            onTap: () async {
-              print("Camera Clicked");
-              // pickedFile =
-              //     await ImagePicker().getImage(source: ImageSource.gallery);
-              pickImage();
-            },
-            child: Container(
-              child: Icon(
-                Icons.camera_alt_outlined,
-                size: 30,
-                color: kBaseColor,
-              ),
-            ),
-          ),
+          isLoading == true
+              ? CircularProgressIndicator()
+              : GestureDetector(
+                  onTap: () async {
+                    print("Camera Clicked");
+                    // pickedFile =
+                    //     await ImagePicker().getImage(source: ImageSource.gallery);
+                    pickImage();
+                  },
+                  child: Container(
+                    child: Icon(
+                      Icons.camera_alt_outlined,
+                      size: 30,
+                      color: kBaseColor,
+                    ),
+                  ),
+                ),
           TextField(
             controller: eventNameController,
             decoration: InputDecoration(
@@ -398,48 +394,104 @@ class _EditEventState extends State<EditEvent> {
                 ),
               )),
           SizedBox(height: k20Margin),
-          RoundedButton(
-            title: "Create Event",
-            color: kBaseColor,
-            txtColor: Colors.white,
-            minWidth: 250,
-            onPressed: () async {
-              Utility.showToast("Update Event clicked");
-              // SharedPreferences prefs = await SharedPreferences.getInstance();
-              // var playerId = prefs.get("playerId");
-              // if (locationLink == null) locationLink = "";
-              //
-              // event = new Event();
-              // event!.playerId = playerId!.toString();
-              // event!.name = eventName.toString();
-              // event!.type = eventType.toString();
-              // event!.description = description.toString();
-              // event!.address = address.toString();
-              // event!.locationLink = locationLink.toString();
-              // event!.locationId = "1";
-              // event!.entryFees = entryFees.toString();
-              // event!.members = noOfMembers.toString();
-              // event!.startDate = textStartDateController.text;
-              // event!.endDate = textEndDateController.text;
-              // event!.startTime = textStartTimeController.text;
-              // event!.endTime = textEndTimeController.text;
-              // event!.details = otherInfo.toString();
-              //
-              // event!.organizerName = organizerName.toString();
-              // event!.number = number.toString();
-              // event!.secondaryNumber = secondaryNumber.toString();
-              //
-              // event!.createdAt = Utility.getCurrentDate();
-              // if (this.image != null) {
-              //   //updateEvent(this.image!.path, event!);
-              //   //Utility.showToast("File Selected Image");
-              // } else {
-              //   Utility.showToast("Please Select Image");
-              // }
-            },
-          ),
+          isLoading == true
+              ? CircularProgressIndicator(
+                  color: kBaseColor,
+                )
+              : RoundedButton(
+                  title: "Update Event",
+                  color: kBaseColor,
+                  txtColor: Colors.white,
+                  minWidth: 250,
+                  onPressed: () async {
+                    //Utility.showToast("Update Event clicked");
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    var playerId = prefs.get("playerId");
+
+                    event = widget.event;
+                    event!.playerId = playerId!.toString();
+                    event!.name = eventNameController.text;
+                    event!.type = eventTypeController.text;
+                    event!.description = descriptionController.text;
+                    event!.address = addressController.text;
+                    event!.locationLink = locationLinkController.text;
+                    event!.locationId = prefs.get("locationId").toString();
+                    event!.entryFees = entryFeesController.text;
+                    event!.members = noOfMembersController.text;
+                    event!.startDate = textStartDateController.text;
+                    event!.endDate = textEndDateController.text;
+                    event!.startTime = textStartTimeController.text;
+                    event!.endTime = textEndTimeController.text;
+                    event!.details = otherInfoController.text;
+
+                    event!.organizerName = organizerNameController.text;
+                    event!.number = numberController.text;
+                    event!.secondaryNumber = secondaryNumberController.text;
+
+                    event!.createdAt = Utility.getCurrentDate();
+                    updateEvent(event!);
+                    // if (this.image != null) {
+                    //   //updateEvent(this.image!.path, event!);
+                    //   //Utility.showToast("File Selected Image");
+                    // } else {
+                    //   Utility.showToast("Please Select Image");
+                    // }
+                  },
+                ),
         ],
       ),
     );
+  }
+
+  bool? isLoading = false;
+  updateEvent(Event event) async {
+    setState(() {
+      isLoading = true;
+    });
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      EventData eventData = await apiCall.updateEvent(event);
+      setState(() {
+        isLoading = false;
+      });
+      if (eventData == null) {
+        print("Event null");
+      } else {
+        if (eventData.status!) {
+          print("Event Success");
+          Utility.showToast("Event Updated Successfully");
+          Navigator.pop(context, true);
+        } else {
+          print("Event Failed");
+        }
+      }
+    }
+  }
+
+  updateEventImage(String filePath, Event event) async {
+    setState(() {
+      isLoading = true;
+    });
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      dynamic status = await apiCall.updateEventImage(filePath, event);
+      setState(() {
+        isLoading = false;
+      });
+      if (status == null) {
+        print("Event null");
+      } else {
+        if (status!) {
+          print("Event Success");
+          Utility.showToast("Event Image Updated Successfully");
+          //Navigator.pop(context);
+        } else {
+          print("Event Failed");
+        }
+      }
+    }
   }
 }

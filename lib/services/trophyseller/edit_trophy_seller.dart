@@ -1,6 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
@@ -8,18 +8,17 @@ import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/service_model.dart';
-import 'package:player/services/service_photos.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class EditTshirtSeller extends StatefulWidget {
+class EditTrophySeller extends StatefulWidget {
   dynamic service;
-  EditTshirtSeller({required this.service});
+  EditTrophySeller({required this.service});
 
   @override
-  _EditTshirtSellerState createState() => _EditTshirtSellerState();
+  _EditTrophySellerState createState() => _EditTrophySellerState();
 }
 
-class _EditTshirtSellerState extends State<EditTshirtSeller> {
+class _EditTrophySellerState extends State<EditTrophySeller> {
   File? image;
   Service? service;
   bool? isLoading = false;
@@ -37,11 +36,14 @@ class _EditTshirtSellerState extends State<EditTshirtSeller> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
     companyCtrl.text = widget.service.companyName;
     ownerNameCtrl.text = widget.service.contactName;
     contactCtrl.text = widget.service.contactNo;
-    secondaryContactCtrl.text = widget.service.secondaryNo;
+    if (widget.service.secondaryNo == null) {
+      secondaryContactCtrl.text = "";
+    } else {
+      secondaryContactCtrl.text = widget.service.secondaryNo;
+    }
 
     addressCtrl.text = widget.service.address;
     addressLinkCtrl.text = widget.service.locationLink;
@@ -53,14 +55,13 @@ class _EditTshirtSellerState extends State<EditTshirtSeller> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-//        leading: Icon(Icons.arrow_back),
-        title: Text("Edit Tshirt Seller"),
+        title: Text("Edit Trophy Seller "),
       ),
       body: SingleChildScrollView(
         child: Container(
           child: Column(
             children: [
-              addServiceForm(),
+              updateServiceForm(),
             ],
           ),
         ),
@@ -83,7 +84,7 @@ class _EditTshirtSellerState extends State<EditTshirtSeller> {
     }
   }
 
-  Widget addServiceForm() {
+  Widget updateServiceForm() {
     return Container(
       margin: EdgeInsets.all(10.0),
       child: Column(
@@ -233,9 +234,7 @@ class _EditTshirtSellerState extends State<EditTshirtSeller> {
               )),
           SizedBox(height: k20Margin),
           isLoading == true
-              ? CircularProgressIndicator(
-                  color: kBaseColor,
-                )
+              ? CircularProgressIndicator()
               : RoundedButton(
                   title: "UPDATE",
                   color: kBaseColor,
@@ -265,7 +264,6 @@ class _EditTshirtSellerState extends State<EditTshirtSeller> {
                     service!.sportName = "";
                     service!.sportId = "";
                     service!.companyName = companyCtrl.text;
-
                     updateService(service!);
                   },
                 ),

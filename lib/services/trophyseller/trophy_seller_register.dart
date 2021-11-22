@@ -22,6 +22,7 @@ class TrophySellerRegister extends StatefulWidget {
 class _TrophySellerRegisterState extends State<TrophySellerRegister> {
   File? image;
   Service? service;
+  bool? isLoading = false;
 
   var companyName;
   var address;
@@ -204,56 +205,61 @@ class _TrophySellerRegisterState extends State<TrophySellerRegister> {
                 ),
               )),
           SizedBox(height: k20Margin),
-          RoundedButton(
-            title: "ADD",
-            color: kBaseColor,
-            txtColor: Colors.white,
-            minWidth: 150,
-            onPressed: () async {
-//              if (widget.isEdit) {}
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              var playerId = prefs.get("playerId");
-              service = new Service();
+          isLoading == true
+              ? CircularProgressIndicator()
+              : RoundedButton(
+                  title: "ADD",
+                  color: kBaseColor,
+                  txtColor: Colors.white,
+                  minWidth: 150,
+                  onPressed: () async {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    var playerId = prefs.get("playerId");
+                    service = new Service();
 
-              service!.playerId = playerId!.toString();
-              service!.serviceId = widget.serviceId.toString();
-              service!.name = companyName.toString();
-              service!.address = address.toString();
-              service!.city = city.toString();
-              service!.contactName = ownerName.toString();
-              service!.contactNo = contactNo.toString();
-              service!.secondaryNo = secondaryNo.toString();
-              service!.about = details.toString();
-              service!.locationLink = addressLink.toString();
-              service!.monthlyFees = "";
-              service!.coaches = "";
-              service!.feesPerMatch = "";
-              service!.feesPerDay = "";
-              service!.experience = "";
-              service!.sportName = "";
-              service!.sportId = "";
-              service!.companyName = companyName.toString();
+                    service!.playerId = playerId!.toString();
+                    service!.serviceId = widget.serviceId.toString();
+                    service!.name = companyName.toString();
+                    service!.address = address.toString();
+                    service!.city = city.toString();
+                    service!.contactName = ownerName.toString();
+                    service!.contactNo = contactNo.toString();
+                    service!.secondaryNo = secondaryNo.toString();
+                    service!.about = details.toString();
+                    service!.locationLink = addressLink.toString();
+                    service!.monthlyFees = "";
+                    service!.coaches = "";
+                    service!.feesPerMatch = "";
+                    service!.feesPerDay = "";
+                    service!.experience = "";
+                    service!.sportName = "";
+                    service!.sportId = "";
+                    service!.companyName = companyName.toString();
 
-              if (this.image != null) {
-                addService(this.image!.path, service!);
-                // Utility.showToast("File Selected Image");
-              } else {
-                Utility.showToast("Please Select Image");
-              }
-              //  print("Create Tournament");
-            },
-          ),
+                    if (this.image != null) {
+                      addService(this.image!.path, service!);
+                    } else {
+                      Utility.showToast("Please Select Image");
+                    }
+                  },
+                ),
         ],
       ),
     );
   }
 
   addService(String filePath, Service service) async {
+    setState(() {
+      isLoading = true;
+    });
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
       dynamic id = await apiCall.addServiceData(filePath, service);
-
+      setState(() {
+        isLoading = false;
+      });
       if (id == null) {
         print("null");
         Utility.showToast("Failed");

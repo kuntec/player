@@ -22,6 +22,7 @@ class CommentatorRegister extends StatefulWidget {
 class _CommentatorRegisterState extends State<CommentatorRegister> {
   File? image;
   Service? service;
+  bool? isLoading = false;
 
   var name;
   var contact_no;
@@ -186,68 +187,71 @@ class _CommentatorRegisterState extends State<CommentatorRegister> {
                 )),
           ),
           SizedBox(height: k20Margin),
-          RoundedButton(
-            title: "ADD",
-            color: kBaseColor,
-            txtColor: Colors.white,
-            minWidth: 150,
-            onPressed: () async {
+          isLoading == true
+              ? CircularProgressIndicator(color: kBaseColor)
+              : RoundedButton(
+                  title: "ADD",
+                  color: kBaseColor,
+                  txtColor: Colors.white,
+                  minWidth: 150,
+                  onPressed: () async {
 //              if (widget.isEdit) {}
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              var playerId = prefs.get("playerId");
-              service = new Service();
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    var playerId = prefs.get("playerId");
+                    service = new Service();
 
-              service!.playerId = playerId!.toString();
-              service!.serviceId = widget.serviceId.toString();
-              service!.name = name.toString();
-              service!.address = "";
-              service!.city = city.toString();
-              service!.contactName = "";
-              service!.contactNo = contact_no.toString();
-              service!.secondaryNo = "";
-              service!.about = "";
-              service!.locationLink = "";
-              service!.monthlyFees = "";
-              service!.coaches = "";
-              service!.feesPerMatch = fees_per_match.toString();
-              service!.feesPerDay = fees_per_day.toString();
-              service!.experience = experience.toString();
-              service!.sportName = selectedSport!.sportName;
-              service!.sportId = selectedSport!.id.toString();
-              service!.companyName = "";
+                    service!.playerId = playerId!.toString();
+                    service!.serviceId = widget.serviceId.toString();
+                    service!.name = name.toString();
+                    service!.address = "";
+                    service!.city = city.toString();
+                    service!.contactName = "";
+                    service!.contactNo = contact_no.toString();
+                    service!.secondaryNo = secondaryNo.toString();
+                    service!.about = "";
+                    service!.locationLink = "";
+                    service!.monthlyFees = "";
+                    service!.coaches = "";
+                    service!.feesPerMatch = fees_per_match.toString();
+                    service!.feesPerDay = fees_per_day.toString();
+                    service!.experience = experience.toString();
+                    service!.sportName = selectedSport!.sportName;
+                    service!.sportId = selectedSport!.id.toString();
+                    service!.companyName = "";
 
-              if (this.image != null) {
-                addService(this.image!.path, service!);
-                // Utility.showToast("File Selected Image");
-              } else {
-                Utility.showToast("Please Select Image");
-              }
-              //  print("Create Tournament");
-            },
-          ),
+                    if (this.image != null) {
+                      addService(this.image!.path, service!);
+                      // Utility.showToast("File Selected Image");
+                    } else {
+                      Utility.showToast("Please Select Image");
+                    }
+                    //  print("Create Tournament");
+                  },
+                ),
         ],
       ),
     );
   }
 
   addService(String filePath, Service service) async {
+    setState(() {
+      isLoading = true;
+    });
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      dynamic status = await apiCall.addServiceData(filePath, service);
-
-      if (status == null) {
+      dynamic id = await apiCall.addServiceData(filePath, service);
+      setState(() {
+        isLoading = false;
+      });
+      if (id == null) {
         print("null");
         Utility.showToast("Failed");
       } else {
-        if (status) {
-          print("Success");
-          Utility.showToast("Service Created Successfully");
-          Navigator.pop(context);
-        } else {
-          print("Failed");
-          Utility.showToast("Failed");
-        }
+        print("Success");
+        Utility.showToast("Commentator Created Successfully");
+        Navigator.pop(context);
       }
     }
   }

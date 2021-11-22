@@ -792,6 +792,8 @@ class _AddHostState extends State<AddHost> {
     return activities;
   }
 
+  var currentSelectedActivity;
+
   hostActivityItem(dynamic activity) {
     return GestureDetector(
       onTap: () {
@@ -807,7 +809,13 @@ class _AddHostState extends State<AddHost> {
               onTap: () {
                 //Utility.showToast("Show More");
                 // showPopup();
-                _showDialog(activity);
+                // _showDialog(activity);
+                currentSelectedActivity = activity;
+                showCupertinoDialog(
+                  barrierDismissible: true,
+                  context: context,
+                  builder: createDialog,
+                );
               },
               child: Container(
                 child: Icon(
@@ -922,75 +930,133 @@ class _AddHostState extends State<AddHost> {
     );
   }
 
-  void _showDialog(dynamic activity) async {
-    return await showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: CustomButton(
-                        height: 20,
-                        fontSize: 16.0,
-                        title: "EDIT",
-                        color: kBaseColor,
-                        txtColor: Colors.white,
-                        minWidth: 80,
-                        onPressed: () async {
-                          _dismissDialog();
-                          var result = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => EditHost(
-                                        activity: activity,
-                                      )));
-                          if (result == true) {
-                            _refresh();
-                          }
-                        }),
-                  ),
-                  SizedBox(width: 20),
-                  Expanded(
-                    flex: 1,
-                    child: CustomButton(
-                        height: 20,
-                        fontSize: 16.0,
-                        title: "Cancel",
-                        color: Colors.red,
-                        txtColor: Colors.white,
-                        minWidth: 80,
-                        onPressed: () async {
-                          _dismissDialog();
-                          // participant.status = "0";
-                          // await updateParticipant(participant);
-                        }),
-                  ),
-                ],
-              );
+  Widget createDialog(BuildContext context) => CupertinoAlertDialog(
+        title: Text("Choose an option"),
+        // content: Text("Message"),
+        actions: [
+          CupertinoDialogAction(
+            child: Text(
+              "Edit",
+              style: TextStyle(color: kBaseColor),
+            ),
+            onPressed: () async {
+              Navigator.pop(context);
+
+              var result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => EditHost(
+                            activity: currentSelectedActivity,
+                          )));
+              if (result == true) {
+                _refresh();
+              }
             },
           ),
-          // actions: <Widget>[
-          //   TextButton(
-          //       onPressed: () {
-          //         _dismissDialog();
-          //       },
-          //       child: Text('Close')),
-          // ],
-        );
-      },
-    );
-  }
-
-  _dismissDialog() {
-    Navigator.pop(context);
-  }
+          CupertinoDialogAction(
+            child: Text(
+              "Delete",
+              style: TextStyle(color: Colors.red),
+            ),
+            onPressed: () async {
+              Navigator.pop(context);
+              await deleteHostActivity(currentSelectedActivity.id.toString());
+            },
+          ),
+          CupertinoDialogAction(
+            child: Text(
+              "Close",
+              style: TextStyle(color: Colors.black),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )
+        ],
+      );
+  //
+  // void _showDialog(dynamic activity) async {
+  //   return await showDialog<void>(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         content: StatefulBuilder(
+  //           builder: (BuildContext context, StateSetter setState) {
+  //             return Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //               children: [
+  //                 Expanded(
+  //                   flex: 1,
+  //                   child: CustomButton(
+  //                       height: 20,
+  //                       fontSize: 16.0,
+  //                       title: "EDIT",
+  //                       color: kBaseColor,
+  //                       txtColor: Colors.white,
+  //                       minWidth: 80,
+  //                       onPressed: () async {
+  //                         _dismissDialog();
+  //                         var result = await Navigator.push(
+  //                             context,
+  //                             MaterialPageRoute(
+  //                                 builder: (context) => EditHost(
+  //                                       activity: activity,
+  //                                     )));
+  //                         if (result == true) {
+  //                           _refresh();
+  //                         }
+  //                       }),
+  //                 ),
+  //                 SizedBox(width: 20),
+  //                 Expanded(
+  //                   flex: 1,
+  //                   child: CustomButton(
+  //                       height: 20,
+  //                       fontSize: 16.0,
+  //                       title: "DELETE",
+  //                       color: Colors.red,
+  //                       txtColor: Colors.white,
+  //                       minWidth: 80,
+  //                       onPressed: () async {
+  //                         _dismissDialog();
+  //                         await deleteHostActivity(activity.id.toString());
+  //                       }),
+  //                 ),
+  //               ],
+  //             );
+  //           },
+  //         ),
+  //         // actions: <Widget>[
+  //         //   TextButton(
+  //         //       onPressed: () {
+  //         //         _dismissDialog();
+  //         //       },
+  //         //       child: Text('Close')),
+  //         // ],
+  //       );
+  //     },
+  //   );
+  // }
+  //
+  // _dismissDialog() {
+  //   Navigator.pop(context);
+  // }
 
   _refresh() {
     setState(() {});
+  }
+
+  deleteHostActivity(String id) async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      HostActivity hostActivity = await apiCall.deleteHostActivity(id);
+      if (hostActivity.status!) {
+        Utility.showToast(hostActivity.message.toString());
+        _refresh();
+      } else {
+        print(hostActivity.message!);
+      }
+    }
   }
 }
