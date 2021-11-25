@@ -88,6 +88,7 @@ class APIResources {
   static final String ADD_BOOKING = BASE_URL + "addBooking";
   static final String ADD_BOOKING_SLOT = BASE_URL + "addBookingSlot";
   static final String GET_MY_BOOKINGS = BASE_URL + "getMyBookings";
+  static final String GET_OWNER_BOOKINGS = BASE_URL + "getOwnerBookings";
 
   //Friend
   static final String ADD_FRIEND = BASE_URL + "addFriend";

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:player/api/api_call.dart';
+import 'package:player/api/api_resources.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
@@ -10,46 +11,50 @@ import 'package:player/model/service_model.dart';
 import 'package:player/model/sport_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class HelperRegister extends StatefulWidget {
-  dynamic serviceId;
-
-  HelperRegister({this.serviceId});
+class EditHelper extends StatefulWidget {
+  dynamic service;
+  EditHelper({required this.service});
 
   @override
-  _HelperRegisterState createState() => _HelperRegisterState();
+  _EditHelperState createState() => _EditHelperState();
 }
 
-class _HelperRegisterState extends State<HelperRegister> {
+class _EditHelperState extends State<EditHelper> {
   File? image;
   Service? service;
   bool? isLoading = false;
 
-  var name;
-  var contactNo;
-  var secondaryNo;
-  var city;
-  var details;
-  var experience;
+  TextEditingController nameCtrl = new TextEditingController();
+  TextEditingController cityCtrl = new TextEditingController();
+  TextEditingController contactCtrl = new TextEditingController();
+  TextEditingController secondaryCtrl = new TextEditingController();
+  TextEditingController experienceCtrl = new TextEditingController();
+  TextEditingController detailsCtrl = new TextEditingController();
 
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   getSports();
-  // }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    nameCtrl.text = widget.service.name;
+    cityCtrl.text = widget.service.city;
+    contactCtrl.text = widget.service.contactNo;
+    secondaryCtrl.text = widget.service.secondaryNo;
+    experienceCtrl.text = widget.service.experience;
+    detailsCtrl.text = widget.service.about;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
 //        leading: Icon(Icons.arrow_back),
-        title: Text("Helper Register"),
+        title: Text("Edit Helper"),
       ),
       body: SingleChildScrollView(
         child: Container(
           child: Column(
             children: [
-              addServiceForm(),
+              updateServiceForm(),
             ],
           ),
         ),
@@ -66,17 +71,34 @@ class _HelperRegisterState extends State<HelperRegister> {
       setState(() {
         this.image = imageTemporary;
       });
+      await updatePosterImage(this.image!.path, widget.service.id.toString());
     } on PlatformException catch (e) {
       print("Failed to pick image : $e");
     }
   }
 
-  Widget addServiceForm() {
+  Widget updateServiceForm() {
     return Container(
       margin: EdgeInsets.all(10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          // GestureDetector(
+          //   onTap: () {
+          //     pickImage();
+          //   },
+          //   child: Container(
+          //     margin: EdgeInsets.all(5.0),
+          //     child: image != null
+          //         ? Image.file(
+          //             image!,
+          //             width: 150,
+          //             height: 150,
+          //             fit: BoxFit.fill,
+          //           )
+          //         : FlutterLogo(size: 100),
+          //   ),
+          // ),
           GestureDetector(
             onTap: () {
               pickImage();
@@ -86,33 +108,40 @@ class _HelperRegisterState extends State<HelperRegister> {
               child: image != null
                   ? Image.file(
                       image!,
-                      width: 150,
+                      width: 280,
                       height: 150,
                       fit: BoxFit.fill,
                     )
-                  : FlutterLogo(size: 100),
+                  : widget.service.posterImage != null
+                      ? Image.network(
+                          APIResources.IMAGE_URL + widget.service.posterImage,
+                          width: 280,
+                          height: 150,
+                          fit: BoxFit.fill,
+                        )
+                      : FlutterLogo(size: 100),
             ),
           ),
-          GestureDetector(
-            onTap: () async {
-              print("Camera Clicked");
-              // pickedFile =
-              //     await ImagePicker().getImage(source: ImageSource.gallery);
-              pickImage();
-            },
-            child: Container(
-              child: Icon(
-                Icons.camera_alt_outlined,
-                size: 30,
-                color: kBaseColor,
-              ),
-            ),
-          ),
+          isLoading == true
+              ? CircularProgressIndicator()
+              : GestureDetector(
+                  onTap: () async {
+                    print("Camera Clicked");
+                    // pickedFile =
+                    //     await ImagePicker().getImage(source: ImageSource.gallery);
+                    pickImage();
+                  },
+                  child: Container(
+                    child: Icon(
+                      Icons.camera_alt_outlined,
+                      size: 30,
+                      color: kBaseColor,
+                    ),
+                  ),
+                ),
           TextField(
             keyboardType: TextInputType.text,
-            onChanged: (value) {
-              name = value;
-            },
+            controller: nameCtrl,
             decoration: InputDecoration(
                 labelText: "Name",
                 labelStyle: TextStyle(
@@ -121,9 +150,7 @@ class _HelperRegisterState extends State<HelperRegister> {
           ),
           TextField(
             keyboardType: TextInputType.phone,
-            onChanged: (value) {
-              contactNo = value;
-            },
+            controller: contactCtrl,
             decoration: InputDecoration(
                 labelText: "Number",
                 labelStyle: TextStyle(
@@ -132,9 +159,7 @@ class _HelperRegisterState extends State<HelperRegister> {
           ),
           TextField(
             keyboardType: TextInputType.phone,
-            onChanged: (value) {
-              secondaryNo = value;
-            },
+            controller: secondaryCtrl,
             decoration: InputDecoration(
                 labelText: "Secondary Number",
                 labelStyle: TextStyle(
@@ -142,9 +167,7 @@ class _HelperRegisterState extends State<HelperRegister> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              city = value;
-            },
+            controller: cityCtrl,
             decoration: InputDecoration(
                 labelText: "City",
                 labelStyle: TextStyle(
@@ -152,9 +175,7 @@ class _HelperRegisterState extends State<HelperRegister> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              experience = value;
-            },
+            controller: experienceCtrl,
             decoration: InputDecoration(
                 labelText: "Experience",
                 labelStyle: TextStyle(
@@ -170,9 +191,7 @@ class _HelperRegisterState extends State<HelperRegister> {
                 )),
           ),
           TextFormField(
-              onChanged: (value) {
-                details = value;
-              },
+              controller: detailsCtrl,
               minLines: 3,
               maxLines: 5,
               keyboardType: TextInputType.multiline,
@@ -192,7 +211,7 @@ class _HelperRegisterState extends State<HelperRegister> {
           isLoading == true
               ? CircularProgressIndicator(color: kBaseColor)
               : RoundedButton(
-                  title: "ADD",
+                  title: "UPDATE",
                   color: kBaseColor,
                   txtColor: Colors.white,
                   minWidth: 150,
@@ -201,34 +220,27 @@ class _HelperRegisterState extends State<HelperRegister> {
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     var playerId = prefs.get("playerId");
-                    service = new Service();
+                    service = widget.service;
 
                     service!.playerId = playerId!.toString();
-                    service!.serviceId = widget.serviceId.toString();
-                    service!.name = name.toString();
+                    service!.serviceId = widget.service.serviceId.toString();
+                    service!.name = nameCtrl.text;
                     service!.address = "";
-                    service!.city = city.toString();
+                    service!.city = cityCtrl.text;
                     service!.contactName = "";
-                    service!.contactNo = contactNo.toString();
-                    service!.secondaryNo = secondaryNo.toString();
-                    service!.about = details.toString();
+                    service!.contactNo = contactCtrl.text;
+                    service!.secondaryNo = secondaryCtrl.text;
+                    service!.about = detailsCtrl.text;
                     service!.locationLink = "";
                     service!.monthlyFees = "";
                     service!.coaches = "";
                     service!.feesPerMatch = "";
                     service!.feesPerDay = "";
-                    service!.experience = experience.toString();
+                    service!.experience = experienceCtrl.text;
                     service!.sportName = "";
                     service!.sportId = "";
                     service!.companyName = "";
-
-                    if (this.image != null) {
-                      addService(this.image!.path, service!);
-                      // Utility.showToast("File Selected Image");
-                    } else {
-                      Utility.showToast("Please Select Image");
-                    }
-                    //  print("Create Tournament");
+                    updateService(service!);
                   },
                 ),
         ],
@@ -236,71 +248,51 @@ class _HelperRegisterState extends State<HelperRegister> {
     );
   }
 
-  addService(String filePath, Service service) async {
+  updateService(Service service) async {
     setState(() {
       isLoading = true;
     });
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      dynamic id = await apiCall.addServiceData(filePath, service);
+      dynamic id = await apiCall.updateServiceData(service);
       setState(() {
-        isLoading = true;
+        isLoading = false;
       });
       if (id == null) {
         print("null");
         Utility.showToast("Failed");
       } else {
-        Utility.showToast("Service Created Successfully");
-        Navigator.pop(context);
+        print("Success $id");
+        Utility.showToast("Service Updated Successfully");
+        Navigator.pop(context, true);
       }
     }
   }
 
-//   List<Data>? sports;
-//   Data? selectedSport;
-//   Future<List<Data>> getSports() async {
-//     APICall apiCall = new APICall();
-//     List<Data> list = [];
-//     bool connectivityStatus = await Utility.checkConnectivity();
-//     if (connectivityStatus) {
-//       SportData sportData = await apiCall.getSports();
-//       if (sportData.data != null) {
-//         list = sportData.data!;
-//         setState(() {
-//           sports = list;
-// //          this.selectedSport = list[0];
-//         });
-//       }
-//     }
-//     return list;
-//   }
-//
-//   Widget buildSportData(List<Data> data) {
-//     return DropdownButton<Data>(
-//       value: selectedSport != null ? selectedSport : null,
-//       hint: Text("Select Sport"),
-//       isExpanded: true,
-//       icon: const Icon(Icons.keyboard_arrow_down),
-//       iconSize: 24,
-//       elevation: 16,
-//       style: const TextStyle(color: Colors.black),
-//       underline: Container(
-//         height: 2,
-//         color: kBaseColor,
-//       ),
-//       onChanged: (Data? newValue) {
-//         // this._selectedLK = newValue!;
-//         setState(() {
-//           this.selectedSport = newValue!;
-//         });
-//       },
-//       items: data.map<DropdownMenuItem<Data>>((Data value) {
-//         return DropdownMenuItem<Data>(
-//           value: value,
-//           child: Text(value.sportName!),
-//         );
-//       }).toList(),
-//     );
-//   }
+  updatePosterImage(String filePath, String id) async {
+    setState(() {
+      isLoading = true;
+    });
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      dynamic status = await apiCall.updateServicePosterImage(filePath, id);
+      setState(() {
+        isLoading = false;
+      });
+      Utility.showToast("Poster Image Updated Successfully");
+      if (status == null) {
+        print("Poster null");
+      } else {
+        if (status!) {
+          print("Poster Success");
+          Utility.showToast("Poster Image Updated Successfully");
+          //Navigator.pop(context);
+        } else {
+          print("Poster Failed");
+        }
+      }
+    }
+  }
 }

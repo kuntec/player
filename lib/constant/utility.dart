@@ -68,4 +68,12 @@ class Utility {
   static launchCall(String number) async {
     await FlutterPhoneDirectCaller.callNumber(number);
   }
+
+  static String getTimeFormat(int time) {
+    String t = time.toString();
+    if (time < 10) {
+      t = "0" + t;
+    }
+    return t;
+  }
 }

@@ -45,13 +45,13 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
               break;
             }
           }
-          setState(() {});
+          //setState(() {});
           getTimeSlots();
         } else {
           Utility.showToast("Failed");
         }
       }
-      setState(() {});
+      //setState(() {});
     }
   }
 
@@ -193,12 +193,15 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
     );
   }
 
-  updateTimeSlots(Timeslot timeslot) async {
+  updateTimeSlots(Timeslot timeslot, int isDayStop) async {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     TimeslotData timeslotData;
     if (connectivityStatus) {
-      timeslotData = await apiCall.updateDayTimeslot(timeslot);
+      timeslotData = await apiCall.updateDayTimeslot(timeslot, isDayStop);
+      if (timeslotData.status!) {
+        getTimeSlots();
+      }
     }
   }
 
@@ -259,19 +262,20 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
         }
       }
     }
+    setState(() {});
     return timeslots;
   }
 
   slotItem(dynamic data, int index) {
-    if (data.day == 1) {
-      return Container(
-        margin: EdgeInsets.only(left: 10),
-        child: Text(
-          "${data.day}",
-          style: TextStyle(color: kBaseColor, fontSize: 18.0),
-        ),
-      );
-    }
+    // if (data.day == '1') {
+    //   return Container(
+    //     margin: EdgeInsets.only(left: 10),
+    //     child: Text(
+    //       "${data.day}",
+    //       style: TextStyle(color: kBaseColor, fontSize: 18.0),
+    //     ),
+    //   );
+    // }
     return GestureDetector(
       onTap: () {
         _showMaterialDialog(data, index);
@@ -282,7 +286,11 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
         width: 40,
         height: 40,
         decoration: kServiceBoxItem.copyWith(
-            borderRadius: BorderRadius.circular(5.0), color: Colors.white),
+          borderRadius: BorderRadius.circular(5.0),
+          color: data.bookingStatus == '0' || data.status == '0'
+              ? Colors.red
+              : Colors.white,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -298,7 +306,11 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
               margin: EdgeInsets.only(left: 10),
               child: Text(
                 "${data.startTime}",
-                style: TextStyle(color: kBaseColor, fontSize: 16.0),
+                style: TextStyle(
+                    color: data.bookingStatus == '0' || data.status == '0'
+                        ? Colors.white
+                        : kBaseColor,
+                    fontSize: 16.0),
               ),
             ),
             SizedBox(height: 10),
@@ -306,7 +318,11 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
               margin: EdgeInsets.only(left: 10),
               child: Text(
                 "\u{20B9} ${data.price}",
-                style: TextStyle(color: Colors.black87, fontSize: 16.0),
+                style: TextStyle(
+                    color: data.bookingStatus == '0' || data.status == '0'
+                        ? Colors.white
+                        : Colors.black87,
+                    fontSize: 16.0),
               ),
             ),
             SizedBox(height: 10),
@@ -315,7 +331,11 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
               margin: EdgeInsets.only(right: 5),
               child: Text(
                 "${data.noSlot} Left",
-                style: TextStyle(color: Colors.grey, fontSize: 12.0),
+                style: TextStyle(
+                    color: data.bookingStatus == '0' || data.status == '0'
+                        ? Colors.white
+                        : Colors.grey,
+                    fontSize: 12.0),
               ),
             ),
           ],
@@ -328,7 +348,7 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
     bool isTextEnabled;
     bool isStopBooking;
     bool isStopBookingDay = false;
-    if (slot.status == "1") {
+    if (slot.bookingStatus == "1") {
       isTextEnabled = false;
       isStopBooking = false;
     } else {
@@ -407,7 +427,8 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
                             value: isStopBookingDay,
                             onChanged: (value) {
                               setState(() {
-                                isStopBookingDay = value!;
+                                isStopBooking = value!;
+                                isStopBookingDay = value;
                               });
                             })
                         : SizedBox(width: 10.0),
@@ -422,8 +443,8 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
                     child: Text('Close')),
                 TextButton(
                   onPressed: () {
-                    Utility.showToast(
-                        "index = $index Price ${priceController.text}- Slot ${slotController.text} - id ${slot.id} - ${timeslots![index].price}");
+                    // Utility.showToast(
+                    //     "index = $index Price ${priceController.text}- Slot ${slotController.text} - id ${slot.id} - ${timeslots![index].price}");
 
                     for (var t in timeslots!) {
                       if (slot.id == t.id) {
@@ -437,7 +458,7 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
                         t.noSlot = slotController.text;
                         t.remainingSlot = slotController.text;
 
-                        updateTimeSlots(t);
+                        updateTimeSlots(t, 0);
                       }
                       isFirstEntry = false;
                     } else {
@@ -447,11 +468,16 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
                           t.noSlot = slotController.text;
                           t.price = priceController.text;
                           if (isStopBooking) {
-                            t.status = "0";
+                            t.bookingStatus = "0";
                           } else {
-                            t.status = "1";
+                            t.bookingStatus = "1";
                           }
-                          updateTimeSlots(t);
+                          if (isStopBookingDay) {
+                            updateTimeSlots(t, 1);
+                          } else {
+                            updateTimeSlots(t, 0);
+                          }
+                          // updateTimeSlots(t);
                           print("Time slot ${t.price}");
                         }
                       }
@@ -467,32 +493,32 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
         });
   }
 
-  void _showCupertinoDialog() async {
-    return await showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        int? selectedRadio = 0;
-        return AlertDialog(
-          content: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: List<Widget>.generate(4, (int index) {
-                  return Radio<int>(
-                    value: index,
-                    groupValue: selectedRadio,
-                    onChanged: (int? value) {
-                      setState(() => selectedRadio = value);
-                    },
-                  );
-                }),
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
+  // void _showCupertinoDialog() async {
+  //   return await showDialog<void>(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       int? selectedRadio = 0;
+  //       return AlertDialog(
+  //         content: StatefulBuilder(
+  //           builder: (BuildContext context, StateSetter setState) {
+  //             return Column(
+  //               mainAxisSize: MainAxisSize.min,
+  //               children: List<Widget>.generate(4, (int index) {
+  //                 return Radio<int>(
+  //                   value: index,
+  //                   groupValue: selectedRadio,
+  //                   onChanged: (int? value) {
+  //                     setState(() => selectedRadio = value);
+  //                   },
+  //                 );
+  //               }),
+  //             );
+  //           },
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   _dismissDialog() {
     Navigator.pop(context);

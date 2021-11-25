@@ -28,7 +28,8 @@ class _VenueScreenState extends State<VenueScreen> {
   List<Data> allSports = [];
 
   var selectedSportId = "0";
-
+  String searchString = "";
+  TextEditingController searchController = new TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
@@ -208,6 +209,26 @@ class _VenueScreenState extends State<VenueScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Container(
+                decoration: kServiceBoxItem,
+                margin: EdgeInsets.all(10),
+                child: TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      searchString = value;
+                    });
+                  },
+                  controller: searchController,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "Search",
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: kBaseColor,
+                    ),
+                  ),
+                ),
+              ),
               sportBarList(),
               myVenue(),
             ],
@@ -246,7 +267,16 @@ class _VenueScreenState extends State<VenueScreen> {
                 shrinkWrap: true,
                 itemCount: snapshot.data.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return venueItem(snapshot.data[index]);
+                  return snapshot.data[index].name
+                              .toString()
+                              .toLowerCase()
+                              .contains(searchString) ||
+                          snapshot.data[index].address
+                              .toString()
+                              .toLowerCase()
+                              .contains(searchString)
+                      ? venueItem(snapshot.data[index])
+                      : SizedBox.shrink();
                 },
               );
             }
@@ -267,14 +297,14 @@ class _VenueScreenState extends State<VenueScreen> {
   Future<List<Venue>?> getMyVenues() async {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
-    var locationId = "1";
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var locationId = prefs.getString("locationId").toString();
     if (connectivityStatus) {
       VenueData venueData =
           await apiCall.getVenue(locationId.toString(), selectedSportId);
       if (venueData.venues != null) {
         venues = venueData.venues!;
         venues = venues!.reversed.toList();
-        //setState(() {});
       }
 
       if (venueData.status!) {

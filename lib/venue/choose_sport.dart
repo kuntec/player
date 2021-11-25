@@ -83,20 +83,20 @@ class _ChooseSportState extends State<ChooseSport> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
-                height: k20Margin,
-              ),
-              Center(
-                child: Text(
-                  "Choose Sport",
-                  style: const TextStyle(
-                    color: kBaseColor,
-                    fontStyle: FontStyle.normal,
-                    fontSize: 40.0,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-              ),
+              // SizedBox(
+              //   height: k20Margin,
+              // ),
+              // Center(
+              //   child: Text(
+              //     "Choose Sport",
+              //     style: const TextStyle(
+              //       color: kBaseColor,
+              //       fontStyle: FontStyle.normal,
+              //       fontSize: 40.0,
+              //     ),
+              //     textAlign: TextAlign.left,
+              //   ),
+              // ),
               SizedBox(
                 height: 10.0,
               ),

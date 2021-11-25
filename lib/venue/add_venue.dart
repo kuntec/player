@@ -398,7 +398,7 @@ class _AddVenueState extends State<AddVenue> {
       var playerId = prefs.get("playerId");
 
       MyBookingData bookingData =
-          await apiCall.getMyBookings(playerId.toString());
+          await apiCall.getOwnerBookings(playerId.toString());
       if (bookingData.bookings != null) {
         bookings = bookingData.bookings!;
         bookings = bookings!.reversed.toList();

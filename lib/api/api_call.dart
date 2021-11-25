@@ -825,14 +825,16 @@ class APICall {
     return TimeslotData.fromJson(jsonDecode(response.body));
   }
 
-  Future<TimeslotData> updateDayTimeslot(Timeslot timeslot) async {
+  Future<TimeslotData> updateDayTimeslot(
+      Timeslot timeslot, int isDayStop) async {
     Uri url = Uri.parse(APIResources.UPDATE_DAY_TIME_SLOT);
     var header = new Map<String, String>();
     var params = new Map<String, String>();
     params['id'] = timeslot.id.toString();
     params['no_slot'] = timeslot.noSlot.toString();
     params['price'] = timeslot.price.toString();
-    params['status'] = timeslot.status.toString();
+    params['booking_status'] = timeslot.bookingStatus.toString();
+    params['day_stop'] = isDayStop.toString();
 
     HttpCall call = new HttpCall();
     http.Response response = await call.post(url, header, params);
@@ -1067,6 +1069,18 @@ class APICall {
     http.Response response = await call.post(url, header, params);
     print("Response Body: " + response.body);
     return BookingData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<MyBookingData> getOwnerBookings(String ownerId) async {
+    Uri url = Uri.parse(APIResources.GET_OWNER_BOOKINGS);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['owner_id'] = ownerId;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return MyBookingData.fromJson(jsonDecode(response.body));
   }
 
   Future<MyBookingData> getMyBookings(String playerId) async {

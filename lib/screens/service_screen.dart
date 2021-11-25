@@ -59,20 +59,20 @@ class _ServiceScreenState extends State<ServiceScreen>
         body: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(
-                height: k20Margin,
-              ),
-              Center(
-                child: Text(
-                  "Choose Your Service",
-                  style: const TextStyle(
-                    color: kBaseColor,
-                    fontStyle: FontStyle.normal,
-                    fontSize: 30.0,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-              ),
+              // SizedBox(
+              //   height: k20Margin,
+              // ),
+              // Center(
+              //   child: Text(
+              //     "Choose Your Service",
+              //     style: const TextStyle(
+              //       color: kBaseColor,
+              //       fontStyle: FontStyle.normal,
+              //       fontSize: 30.0,
+              //     ),
+              //     textAlign: TextAlign.left,
+              //   ),
+              // ),
               SizedBox(
                 height: 10.0,
               ),

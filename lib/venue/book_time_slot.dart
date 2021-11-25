@@ -72,8 +72,10 @@ class _BookTimeSlotState extends State<BookTimeSlot> {
           selectedTimeslots!.clear();
           for (var t in timeslots!) {
             int day = int.parse(t.day.toString());
-            if (day == selectedDay) {
-              selectedTimeslots!.add(t);
+            if (t.bookingStatus == "1") {
+              if (day == selectedDay) {
+                selectedTimeslots!.add(t);
+              }
             }
           }
         }
@@ -341,6 +343,10 @@ class _BookTimeSlotState extends State<BookTimeSlot> {
     // }
     return GestureDetector(
       onTap: () {
+        if (data.remainingSlot == "0") {
+          Utility.showToast("No Slot Left");
+          return;
+        }
         selectedSlot = data;
         for (int i = 0; i < bookedTimeslots!.length; i++) {
           if (bookedTimeslots![i] == selectedSlot) {

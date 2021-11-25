@@ -93,7 +93,7 @@ class _AddDetailsState extends State<AddDetails> {
                   textAlign: TextAlign.left,
                 ),
                 SizedBox(
-                  height: 10.0,
+                  height: kMargin,
                 ),
                 Container(
                   decoration: kServiceBoxItem,
@@ -117,7 +117,7 @@ class _AddDetailsState extends State<AddDetails> {
                         cursorColor: kBaseColor,
                       ),
                       SizedBox(
-                        height: k20Margin,
+                        height: kMargin,
                       ),
                       TextField(
                         controller: txtDateController,
@@ -135,39 +135,12 @@ class _AddDetailsState extends State<AddDetails> {
                               color: Colors.grey,
                             )),
                       ),
-                      // TextField(
-                      //   keyboardType: TextInputType.text,
-                      //   onChanged: (value) {
-                      //     dob = value;
-                      //   },
-                      //   style: TextStyle(
-                      //     color: Colors.black,
-                      //   ),
-                      //   decoration: InputDecoration(
-                      //       labelText: "Enter Birthday",
-                      //       labelStyle: TextStyle(
-                      //         color: Colors.grey,
-                      //       )),
-                      //   cursorColor: kBaseColor,
-                      // ),
                       SizedBox(
-                        height: k20Margin,
+                        height: kMargin,
                       ),
-                      // TextField(
-                      //   keyboardType: TextInputType.text,
-                      //   onChanged: (value) {
-                      //     gender = value;
-                      //   },
-                      //   style: TextStyle(
-                      //     color: Colors.black,
-                      //   ),
-                      //   decoration:
-                      //       kTextFieldDecoration.copyWith(hintText: 'GENDER'),
-                      //   cursorColor: kBaseColor,
-                      // ),
                       Text("Select Gender"),
                       SizedBox(
-                        height: k20Margin,
+                        height: kMargin,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -180,7 +153,7 @@ class _AddDetailsState extends State<AddDetails> {
                               setState(() {});
                             },
                           ),
-                          SizedBox(width: 10.0),
+                          SizedBox(width: kMargin),
                           GestureDetector(
                               onTap: () {
                                 gender = "Male";
@@ -195,7 +168,7 @@ class _AddDetailsState extends State<AddDetails> {
                               setState(() {});
                             },
                           ),
-                          SizedBox(width: 10.0),
+                          SizedBox(width: kMargin),
                           GestureDetector(
                               onTap: () {
                                 gender = "Female";
@@ -210,7 +183,7 @@ class _AddDetailsState extends State<AddDetails> {
                               setState(() {});
                             },
                           ),
-                          SizedBox(width: 10.0),
+                          SizedBox(width: kMargin),
                           GestureDetector(
                               onTap: () {
                                 gender = "Other";
@@ -219,6 +192,9 @@ class _AddDetailsState extends State<AddDetails> {
                               child: Text("Other")),
                         ],
                       ),
+                      SizedBox(width: kMargin),
+                      Text("Select Location"),
+                      SizedBox(width: kMargin),
                       locations != null
                           ? buildLocationData(locations!)
                           : Container(child: Text("Loading...")),
@@ -230,11 +206,6 @@ class _AddDetailsState extends State<AddDetails> {
                               txtColor: Colors.white,
                               minWidth: MediaQuery.of(context).size.width,
                               onPressed: () async {
-                                // print(name);
-                                // print(widget.phoneNumber);
-                                // print(dob);
-                                // print(gender);
-
                                 if (this.gender == null) {
                                   Utility.showToast("Please Select Gender");
                                   return;

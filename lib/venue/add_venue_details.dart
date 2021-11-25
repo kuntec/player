@@ -167,6 +167,30 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
             ),
           ),
           TextField(
+            // onChanged: (value) {
+            //   sport = value;
+            // },
+            controller: textSportController,
+            readOnly: true,
+            onTap: () async {
+              final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ChooseSport(
+                            selectedSport: selectedSport,
+                          )));
+
+              // Utility.showToast("This is selected $result");
+              selectedSport = result;
+              textSportController.text = selectedSport.sportName;
+            },
+            decoration: InputDecoration(
+                labelText: "Which Sport We can Play",
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                )),
+          ),
+          TextField(
             onChanged: (value) {
               name = value;
             },
@@ -235,7 +259,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                     color: Colors.black,
                   ),
                   decoration: InputDecoration(
-                      labelText: "Select Time",
+                      labelText: "Open Time",
                       labelStyle: TextStyle(
                         color: Colors.grey,
                       )),
@@ -255,7 +279,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                     color: Colors.black,
                   ),
                   decoration: InputDecoration(
-                      labelText: "Select Time",
+                      labelText: "Close Time",
                       labelStyle: TextStyle(
                         color: Colors.grey,
                       )),
@@ -296,7 +320,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
               members = value;
             },
             decoration: InputDecoration(
-                labelText: "Max Person Allowed",
+                labelText: "Max Person Allowed (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -331,30 +355,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                   color: Colors.grey,
                 )),
           ),
-          TextField(
-            // onChanged: (value) {
-            //   sport = value;
-            // },
-            controller: textSportController,
-            readOnly: true,
-            onTap: () async {
-              final result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ChooseSport(
-                            selectedSport: selectedSport,
-                          )));
 
-              // Utility.showToast("This is selected $result");
-              selectedSport = result;
-              textSportController.text = selectedSport.sportName;
-            },
-            decoration: InputDecoration(
-                labelText: "Which Sport We can Play",
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                )),
-          ),
           // TextField(
           //   onChanged: (value) {
           //     prizeDetails = value;
@@ -484,8 +485,8 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
           setState(() {
             isLoading = false;
           });
-          Utility.showToast(
-              "Venue Created Successfully ${addedVenue.venue!.id} ${addedVenue.venue!.name}");
+          // Utility.showToast(
+          //     "Venue Created Successfully ${addedVenue.venue!.id} ${addedVenue.venue!.name}");
 
           Navigator.pushReplacement(
               context,

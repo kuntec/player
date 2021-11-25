@@ -97,6 +97,18 @@ class _BookingInfoState extends State<BookingInfo> {
                 )),
           ),
           SizedBox(height: kMargin),
+          TextField(
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              age = value;
+            },
+            decoration: InputDecoration(
+                labelText: "Age",
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                )),
+          ),
+          SizedBox(height: kMargin),
           Center(child: Text("Gender")),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -142,20 +154,29 @@ class _BookingInfoState extends State<BookingInfo> {
                   child: Text("Female"),
                 ),
               ),
+              Expanded(
+                flex: 10,
+                child: Radio(
+                  value: "Other",
+                  groupValue: gender,
+                  onChanged: (value) {
+                    gender = value.toString();
+                    setState(() {});
+                  },
+                ),
+              ),
+              Expanded(
+                flex: 10,
+                child: GestureDetector(
+                  onTap: () {
+                    gender = "Other";
+                    setState(() {});
+                  },
+                  child: Text("Other"),
+                ),
+              ),
               SizedBox(width: 10),
             ],
-          ),
-          SizedBox(height: kMargin),
-          TextField(
-            keyboardType: TextInputType.number,
-            onChanged: (value) {
-              age = value;
-            },
-            decoration: InputDecoration(
-                labelText: "Age",
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                )),
           ),
           SizedBox(height: kMargin),
           Center(child: Text("Payment Mode")),
@@ -168,7 +189,7 @@ class _BookingInfoState extends State<BookingInfo> {
                   value: "1",
                   groupValue: paymentMode,
                   onChanged: (value) {
-                    paymentMode = value.toString();
+                    paymentMode = "0";
                     setState(() {});
                   },
                 ),
@@ -177,7 +198,7 @@ class _BookingInfoState extends State<BookingInfo> {
                 flex: 10,
                 child: GestureDetector(
                     onTap: () {
-                      paymentMode = "1";
+                      paymentMode = "0";
                       setState(() {});
                     },
                     child: Text("Online")),

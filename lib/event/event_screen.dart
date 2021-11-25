@@ -204,7 +204,7 @@ class _EventScreenState extends State<EventScreen> {
                               .toLowerCase()
                               .contains(searchString)
                       ? eventItem(snapshot.data[index])
-                      : Container();
+                      : SizedBox.shrink();
                 },
               );
             }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
+import 'package:player/components/custom_button.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
@@ -260,24 +261,71 @@ class _VenueDetailsState extends State<VenueDetails> {
   }
 
   photoItem(dynamic photo) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 10),
-      child: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.all(10.0),
-            height: 120.0,
-            width: 120.0,
-            child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-              child: Image.network(
-                APIResources.IMAGE_URL + photo.image,
-                fit: BoxFit.fill,
+    return GestureDetector(
+      onTap: () {
+        //Utility.showToast("Show Big Image");
+        _showDialog(photo);
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 10),
+        child: Column(
+          children: [
+            Container(
+              margin: EdgeInsets.all(10.0),
+              height: 120.0,
+              width: 120.0,
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                child: Image.network(
+                  APIResources.IMAGE_URL + photo.image,
+                  fit: BoxFit.fill,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
+  }
+
+  void _showDialog(photo) async {
+    return await showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 200.0,
+                    width: 200.0,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                      child: Image.network(
+                        APIResources.IMAGE_URL + photo.image,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+          // actions: <Widget>[
+          //   TextButton(
+          //       onPressed: () {
+          //         _dismissDialog();
+          //       },
+          //       child: Text('Close')),
+          // ],
+        );
+      },
+    );
+  }
+
+  _dismissDialog() {
+    Navigator.pop(context);
   }
 }

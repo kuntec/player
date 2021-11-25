@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
 import 'package:player/chat/chat_page.dart';
@@ -24,6 +25,7 @@ import 'package:player/screens/add_tournament.dart';
 import 'package:player/screens/choose_sport.dart';
 import 'package:player/screens/location_select.dart';
 import 'package:player/screens/notification_screen.dart';
+import 'package:player/screens/offer_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
@@ -198,6 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return buildImage(urlImage, index);
                 },
                 options: CarouselOptions(
+                    viewportFraction: 1,
                     height: 110,
                     autoPlay: true,
                     autoPlayInterval: Duration(seconds: 3))),
@@ -220,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget buildImage(String urlImage, int index) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 2),
+//      margin: EdgeInsets.symmetric(horizontal: 2),
       child: Image.network(
         APIResources.IMAGE_URL + urlImage,
         fit: BoxFit.cover,
@@ -280,34 +283,68 @@ class _HomeScreenState extends State<HomeScreen> {
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
-          iconCard(Icons.add, "Host Activity", 1, hostEndColor, () async {
+          iconCard(
+              Icon(
+                Icons.add,
+                color: kBaseColor,
+                size: 30,
+              ),
+              "Host Activity",
+              1,
+              hostEndColor, () async {
             var result = await Navigator.push(
                 context, MaterialPageRoute(builder: (context) => AddHost()));
             if (result == true) {
               setState(() {});
             }
-          }),
-          iconCard(Icons.people, "Friends", 2, friendEndColor, () {
+          }, false),
+          iconCard(
+              Icon(
+                Icons.people,
+                color: kBaseColor,
+                size: 30,
+              ),
+              "Friends",
+              2,
+              friendEndColor, () {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => FriendScreen()));
-          }),
-          iconCard(Icons.wine_bar, "Host Tournament", 3, tournamentEndColor,
-              () {
+          }, false),
+          iconCard(Container(), "Host Tournament", 3, tournamentEndColor, () {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => AddTournament()));
-          }),
-          iconCard(Icons.star, "Event", 4, eventEndColor, () {
+          }, true),
+          iconCard(
+              Icon(
+                Icons.star,
+                color: kBaseColor,
+                size: 30,
+              ),
+              "Event",
+              4,
+              eventEndColor, () {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => EventScreen()));
-          }),
-          iconCard(Icons.add, "Offers", 5, offerEndColor, () {}),
+          }, false),
+          iconCard(
+              Icon(
+                Icons.star,
+                color: kBaseColor,
+                size: 30,
+              ),
+              "Offers",
+              5,
+              offerEndColor, () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => OfferScreen()));
+          }, false),
         ],
       ),
     );
   }
 
-  Widget iconCard(IconData iconData, String title, int index, Color endColor,
-      dynamic onPress) {
+  Widget iconCard(Widget iconData, String title, int index, Color endColor,
+      dynamic onPress, bool isTournament) {
     return GestureDetector(
       onTap: onPress,
       child: Container(
@@ -327,17 +364,29 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration:
-                    BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                child: Icon(
-                  iconData,
-                  color: kBaseColor,
-                  size: 30,
-                ),
-              ),
+              isTournament == true
+                  ? Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                          color: Colors.white, shape: BoxShape.circle),
+                      child: Center(
+                        child: SvgPicture.asset(
+                          "assets/images/tournament.svg",
+                          height: 30,
+                          width: 30,
+                          fit: BoxFit.scaleDown,
+                          color: kBaseColor,
+                        ),
+                      ),
+                    )
+                  : Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          color: Colors.white, shape: BoxShape.circle),
+                      child: iconData,
+                    ),
               SizedBox(height: 10.0),
               Center(
                   child: Text(

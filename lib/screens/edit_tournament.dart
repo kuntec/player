@@ -236,7 +236,7 @@ class _EditTournamentState extends State<EditTournament> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        title: Text("Edit Tournament ${widget.tournament.id}"),
+        title: Text("Edit Tournament"),
       ),
       body: SingleChildScrollView(
         child: Column(

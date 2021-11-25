@@ -51,7 +51,8 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
   //     print(e);
   //   }
   // }
-
+  String searchString = "";
+  TextEditingController searchController = new TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
@@ -66,40 +67,150 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
       appBar: AppBar(
         title: Text("Select Location"),
       ),
-      body: Container(
-        margin: EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            locations != null
-                ? buildLocationData(locations!)
-                : Container(child: Text("Loading...")),
-            SizedBox(height: k20Margin),
-            isLoading
-                ? CircularProgressIndicator()
-                : RoundedButton(
-                    title: "UPDATE",
-                    color: kBaseColor,
-                    txtColor: Colors.white,
-                    minWidth: MediaQuery.of(context).size.width,
-                    onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      player!.locationId = this.selectedLocation!.id.toString();
-                      player!.city = this.selectedLocation!.name.toString();
-                      SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-                      prefs.setString(
-                          "locationId", player!.locationId.toString());
-                      prefs.setString("city", player!.city.toString());
-                      await updatePlayer();
-                    },
+      bottomSheet: Container(
+        margin: EdgeInsets.only(left: 30, right: 30),
+        child: isLoading
+            ? Container(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              )
+            : RoundedButton(
+                title: "UPDATE",
+                color: kBaseColor,
+                txtColor: Colors.white,
+                minWidth: MediaQuery.of(context).size.width,
+                onPressed: () async {
+                  setState(() {
+                    isLoading = true;
+                  });
+                  player!.locationId = this.selectedLocation!.id.toString();
+                  player!.city = this.selectedLocation!.name.toString();
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  prefs.setString("locationId", player!.locationId.toString());
+                  prefs.setString("city", player!.city.toString());
+                  await updatePlayer();
+                },
+              ),
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          margin: EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                decoration: kServiceBoxItem,
+                child: TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      searchString = value;
+                    });
+                  },
+                  controller: searchController,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "Search",
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: kBaseColor,
+                    ),
                   ),
-          ],
+                ),
+              ),
+              // locations != null
+              //     ? buildLocationData(locations!)
+              //     : Container(child: Text("Loading...")),
+              SizedBox(height: k20Margin),
+              myLocations(),
+            ],
+          ),
         ),
       ),
     ));
+  }
+
+  Widget myLocations() {
+    return Container(
+      height: 700,
+      child: FutureBuilder(
+        future: getLocation(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.data == null) {
+            return Center(
+              child: Container(
+                width: 200,
+                height: 200,
+                decoration: kServiceBoxItem,
+                child: Center(
+                    child: CircularProgressIndicator(
+                  color: kBaseColor,
+                )),
+              ),
+            );
+          }
+          if (snapshot.hasData) {
+            print("Has Data ${snapshot.data.length}");
+            if (snapshot.data.length == 0) {
+              return Container(
+                child: Center(
+                  child: Text('No Location'),
+                ),
+              );
+            } else {
+              return ListView.builder(
+                padding: EdgeInsets.only(bottom: 110),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  // return eventItem(snapshot.data[index]);
+                  return snapshot.data[index].name
+                          .toString()
+                          .toLowerCase()
+                          .contains(searchString)
+                      ? locationItem(snapshot.data[index])
+                      : SizedBox.shrink();
+                },
+              );
+            }
+          } else {
+            return Container(
+              child: Center(
+                child: Text('No Data'),
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  locationItem(dynamic location) {
+    return GestureDetector(
+      onTap: () {
+        this.currentLocation = location;
+        this.selectedLocation = location;
+        setState(() {});
+      },
+      child: Container(
+        decoration: kServiceBoxItem.copyWith(
+          borderRadius: BorderRadius.circular(5.0),
+        ),
+        margin: EdgeInsets.all(5),
+        padding: EdgeInsets.all(5),
+        child: Text(
+          location.name.toString(),
+          style: TextStyle(
+              color: currentLocation != null
+                  ? currentLocation!.name.toString() == location.name.toString()
+                      ? kBaseColor
+                      : Colors.black
+                  : Colors.black),
+        ),
+      ),
+    );
   }
 
   updatePlayer() async {
@@ -131,7 +242,7 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
   }
 
   List<Location>? locations;
-  getLocation() async {
+  Future<List<Location>?> getLocation() async {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
@@ -143,14 +254,16 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
             this.selectedLocation = l;
           }
         }
-        setState(() {});
+        //setState(() {});
       }
     } else {
       showToast(kInternet);
     }
+    return locations;
   }
 
   Location? selectedLocation;
+  Location? currentLocation;
   Widget buildLocationData(List<Location> location) {
     return DropdownButton<Location>(
       value: selectedLocation != null ? selectedLocation : null,
@@ -190,7 +303,7 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
       print("Player " + mobile.toString());
-//      showToast("Player " + phoneNumber);
+//    showToast("Player " + phoneNumber);
       PlayerData playerData = await apiCall.checkPlayer(mobile.toString());
 
       if (playerData.status!) {
@@ -198,9 +311,37 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
           player = playerData.player;
         });
 
-        getLocation();
+//        getLocation();
         //  Utility.showToast("Player Found ${playerData.player!.image}");
       }
     }
+  }
+
+  void _showDialog() async {
+    return await showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 200.0,
+                    width: 200.0,
+                    child: Text("Loading..."),
+                  ),
+                ],
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  _dismissDialog() {
+    Navigator.pop(context);
   }
 }

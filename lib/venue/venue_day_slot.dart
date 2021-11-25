@@ -46,14 +46,14 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
       } else {
         int hour = openTime!.hour;
         int minute = openTime!.minute;
-        String h = hour.toString();
-        String m = minute.toString();
-        if (hour < 10) {
-          h = "0" + h;
-        }
-        if (minute < 10) {
-          m = "0" + m;
-        }
+        String h = Utility.getTimeFormat(hour);
+        String m = Utility.getTimeFormat(minute);
+        // if (hour < 10) {
+        //   h = "0" + h;
+        // }
+        // if (minute < 10) {
+        //   m = "0" + m;
+        // }
 
         if (isOpen) {
           dayslots![index].open = "$h:$m";
@@ -227,9 +227,12 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
     DayslotData? dayslotData;
     if (connectivityStatus) {
       for (int i = 0; i < dayslots!.length; i++) {
-        dayslotData = await apiCall.updateDaySlot(
-          dayslots![i],
-        );
+        if (dayslots![i].status == "1") {
+//          print("Day slot need to update ${dayslots![i].status}");
+          dayslotData = await apiCall.updateDaySlot(
+            dayslots![i],
+          );
+        }
       }
       setState(() {
         isLoading = false;

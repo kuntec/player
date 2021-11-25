@@ -137,6 +137,7 @@ class Timeslot {
   String? _status;
   String? _daySlotId;
   String? _remainingSlot;
+  String? _bookingStatus;
   String? _bookedDay;
 
   Timeslot(
@@ -149,6 +150,7 @@ class Timeslot {
       String? noSlot,
       String? price,
       String? status,
+      String? bookingStatus,
       String? daySlotId,
       String? remainingSlot,
       String? bookedDay}) {
@@ -161,6 +163,7 @@ class Timeslot {
     this._noSlot = noSlot;
     this._price = price;
     this._status = status;
+    this._bookingStatus = bookingStatus;
     this._daySlotId = daySlotId;
     this._remainingSlot = remainingSlot;
     this._bookedDay = bookedDay;
@@ -184,6 +187,10 @@ class Timeslot {
   set price(String? price) => _price = price;
   String? get status => _status;
   set status(String? status) => _status = status;
+
+  String? get bookingStatus => _bookingStatus;
+  set bookingStatus(String? bookingStatus) => _bookingStatus = bookingStatus;
+
   String? get daySlotId => _daySlotId;
   set daySlotId(String? daySlotId) => _daySlotId = daySlotId;
   String? get remainingSlot => _remainingSlot;
@@ -202,6 +209,7 @@ class Timeslot {
     _noSlot = json['no_slot'];
     _price = json['price'];
     _status = json['status'];
+    _bookingStatus = json['booking_status'];
     _daySlotId = json['day_slot_id'];
     _remainingSlot = json['remaining_slot'];
     _bookedDay = json['booked_day'];
@@ -218,6 +226,7 @@ class Timeslot {
     data['no_slot'] = this._noSlot;
     data['price'] = this._price;
     data['status'] = this._status;
+    data['booking_status'] = this._bookingStatus;
     data['day_slot_id'] = this._daySlotId;
     data['remaining_slot'] = this._remainingSlot;
     data['booked_day'] = this._bookedDay;

@@ -641,10 +641,11 @@ class ChatPageState extends State<ChatPage> {
                     controller: listScrollController,
                   );
                 } else {
-                  return Center(child: Text("Loading1"));
+                  return Center(
+                      child: CircularProgressIndicator(color: kBaseColor));
                 }
               })
-          : Center(child: Text("Loading2")),
+          : Center(child: CircularProgressIndicator(color: kBaseColor)),
     );
   }
 }

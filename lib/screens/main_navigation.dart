@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/screens/home.dart';
 import 'package:player/screens/player_profile.dart';
@@ -40,27 +41,46 @@ class _MainNavigationState extends State<MainNavigation> {
         },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
+            icon: Container(
+              height: 20,
+              width: 20,
+              child: SvgPicture.asset("assets/images/home.svg",
+                  color: selectedIndex == 0 ? kBaseColor : Colors.black87),
             ),
             label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.wine_bar),
-            backgroundColor: kBaseColor,
+            icon: Container(
+              height: 20,
+              width: 20,
+              child: SvgPicture.asset("assets/images/tournament.svg",
+                  color: selectedIndex == 1 ? kBaseColor : Colors.black87),
+            ),
             label: "Tournament",
           ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.flag),
-              backgroundColor: kBaseColor,
+              icon: Container(
+                height: 20,
+                width: 20,
+                child: SvgPicture.asset("assets/images/ground.svg",
+                    color: selectedIndex == 2 ? kBaseColor : Colors.black87),
+              ),
               label: "Venue"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              backgroundColor: kBaseColor,
+              icon: Container(
+                height: 20,
+                width: 20,
+                child: SvgPicture.asset("assets/images/service.svg",
+                    color: selectedIndex == 3 ? kBaseColor : Colors.black87),
+              ),
               label: "Service"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              backgroundColor: kBaseColor,
+              icon: Container(
+                height: 20,
+                width: 20,
+                child: SvgPicture.asset("assets/images/profile.svg",
+                    color: selectedIndex == 4 ? kBaseColor : Colors.black87),
+              ),
               label: "Profile"),
         ],
       ),
