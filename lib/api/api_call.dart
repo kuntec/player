@@ -6,6 +6,7 @@ import 'package:player/api/http_call.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/banner_data.dart';
 import 'package:player/model/booking_data.dart';
+import 'package:player/model/conversation_data.dart';
 import 'package:player/model/dayslot_data.dart';
 import 'package:player/model/event_data.dart';
 import 'package:player/model/friend_data.dart';
@@ -62,6 +63,17 @@ class APICall {
     http.Response response = await call.post(url, header, params);
     print("Response Body: " + response.body);
     return PlayerData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<ConversationData> getMyConversation(String id) async {
+    Uri url = Uri.parse(APIResources.GET_MY_CONVERSATION);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['player1'] = id;
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return ConversationData.fromJson(jsonDecode(response.body));
   }
 
   Future<PlayerData> getPlayerById(String id) async {
@@ -1159,6 +1171,35 @@ class APICall {
     HttpCall call = new HttpCall();
     http.Response response = await call.post(url, header, params);
     print("Response Body: " + response.body);
+  }
+
+  Future<void> addConversation(
+      String player1, String player2, String message) async {
+    Uri url = Uri.parse(APIResources.ADD_CONVERSATION);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['player1'] = player1;
+    params['player2'] = player2;
+    params['message'] = message;
+    params['status'] = "0";
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+  }
+
+  Future<FriendData> updateConversationStatus(
+      String cId, String playerId) async {
+    Uri url = Uri.parse(APIResources.UPDATE_CONVERSATION_STATUS);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['c_id'] = cId;
+    params['player_id'] = playerId;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return FriendData.fromJson(jsonDecode(response.body));
   }
 
   Future<MyParticipantData> getEventParticipant(String playerId) async {

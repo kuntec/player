@@ -710,7 +710,11 @@ class _AddHostState extends State<AddHost> {
       if (time == null) {
         txtTime = "Select Time";
       } else {
-        txtTime = "${time!.hour}:${time!.minute}";
+        int hour = time!.hour;
+        int minute = time!.minute;
+        String h = Utility.getTimeFormat(hour);
+        String m = Utility.getTimeFormat(minute);
+        txtTime = "$h:$m";
       }
       txtTimeController.text = txtTime;
     });

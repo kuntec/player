@@ -430,14 +430,14 @@ class _HomePageState extends State<HomePage> {
                 Utility.closeKeyboard(context);
               }
 
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ChatPage(
-                          playerId: userChat.id.toString(),
-                          peerId: userChat.id,
-                          peerAvatar: userChat.photoUrl,
-                          peerNickname: userChat.nickname)));
+              // Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (context) => ChatPage(
+              //             playerId: userChat.id.toString(),
+              //             peerId: userChat.id,
+              //             peerAvatar: userChat.photoUrl,
+              //             peerNickname: userChat.nickname)));
             },
             style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(

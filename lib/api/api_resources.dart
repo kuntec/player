@@ -1,6 +1,6 @@
 class APIResources {
-  static final String BASE_URL = "https://lotussoft.in/player/api/";
-  static final String IMAGE_URL = "https://lotussoft.in/player/storage/app/";
+  static final String BASE_URL = "https://playerindia.in/player/api/";
+  static final String IMAGE_URL = "https://playerindia.in/player/storage/app/";
   static final String AVATAR_IMAGE =
       "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png";
 
@@ -106,6 +106,11 @@ class APIResources {
   //Notification
   static final String CHAT_NOTIFICATION = BASE_URL + "chatNotification";
 
+  static final String ADD_CONVERSATION = BASE_URL + "addConversation";
+
+  static final String GET_MY_CONVERSATION = BASE_URL + "getMyConversation";
+  static final String UPDATE_CONVERSATION_STATUS =
+      BASE_URL + "updateConversationStatus";
   //Location
 
   static final String GET_LOCATION = BASE_URL + "getLocation";

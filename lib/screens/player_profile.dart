@@ -91,7 +91,15 @@ class _PlayerProfileState extends State<PlayerProfile> {
                 //         ),
                 //       )
                 //     : profileImageUpdate(),
-                isLoading == true ? SizedBox.shrink() : profileInfo(context),
+                isLoading == true
+                    ? Container(
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: kBaseColor,
+                          ),
+                        ),
+                      )
+                    : profileInfo(context),
               ],
             ),
           ),
@@ -231,8 +239,8 @@ class _PlayerProfileState extends State<PlayerProfile> {
             padding: EdgeInsets.all(5.0),
             child: Column(
               children: [
-                profileItem("assets/images/profile.svg", "Profile", () {
-                  Navigator.push(
+                profileItem("assets/images/profile.svg", "Profile", () async {
+                  var result = await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => EditProfile(
@@ -240,6 +248,9 @@ class _PlayerProfileState extends State<PlayerProfile> {
                       ),
                     ),
                   );
+                  if (result == true) {
+                    getMyProfile();
+                  }
                 }),
                 horizontalLine(),
                 profileItem("assets/images/favorite.svg", "Favorite Sport", () {

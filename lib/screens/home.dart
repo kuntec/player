@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +10,7 @@ import 'package:player/api/api_resources.dart';
 import 'package:player/chat/chat_page.dart';
 import 'package:player/chatprovider/home_provider.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/constant/dialogbuilder.dart';
 import 'package:player/constant/firestore_constants.dart';
 import 'package:player/constant/time_ago.dart';
 import 'package:player/constant/utility.dart';
@@ -16,6 +18,7 @@ import 'package:player/event/event_screen.dart';
 import 'package:player/friends/chat_screen.dart';
 import 'package:player/friends/friend.dart';
 import 'package:player/model/banner_data.dart';
+import 'package:player/model/conversation_data.dart';
 import 'package:player/model/host_activity.dart';
 import 'package:player/model/my_sport.dart';
 import 'package:player/model/player_data.dart';
@@ -40,7 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Sports> sports = [];
   List<Data> allSports = [];
   List<Banners> banners = [];
+  List<Conversation> conversations = [];
   var city;
+  int? _notificationCount = 0;
 
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -54,10 +59,39 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     super.initState();
     homeProvider = context.read<HomeProvider>();
+
     getBanner();
     getMySports();
     getSports();
     getMyCity();
+    getConversations();
+  }
+
+  Future<List<Conversation>> getConversations() async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      int? playerId = prefs.getInt("playerId");
+      print("Player id $playerId");
+      ConversationData conversationData =
+          await apiCall.getMyConversation(playerId.toString());
+      if (conversationData.conversation != null) {
+        conversations = conversationData.conversation!;
+        conversations = conversations.reversed.toList();
+
+        for (Conversation c in conversations) {
+          for (Reply r in c.reply!) {
+            if (r.status == "0" &&
+                r.playerId.toString() != playerId.toString()) {
+              _notificationCount = _notificationCount! + 1;
+            }
+          }
+        }
+        setState(() {});
+      }
+    }
+    return conversations;
   }
 
   Future<void> getBanner() async {
@@ -110,6 +144,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
 //  void showNotification
 
+  // Future _incrementCounter() async {
+  //   return Future.delayed(Duration(seconds: 2), () {
+  //     setState(() {
+  //       _notificationCount = _notificationCount! + 1;
+  //     });
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -143,16 +185,31 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SizedBox(width: 10.0),
           GestureDetector(
-            onTap: () {
+            onTap: () async {
+              //DialogBuilder(context).showLoadingIndicator('Calculating + 1');
+              // await _incrementCounter();
+              //DialogBuilder(context).hideOpenDialog();
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => ChatScreen()));
             },
-            child: Icon(
-              Icons.message,
-              color: Colors.black,
-            ),
+            child: _notificationCount == 0
+                ? Icon(
+                    Icons.message,
+                    color: Colors.black,
+                  )
+                : Badge(
+                    position: BadgePosition.topStart(top: 5, start: 15),
+                    badgeContent: Text(
+                      '${_notificationCount}',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    child: Icon(
+                      Icons.message,
+                      color: Colors.black,
+                    ),
+                  ),
           ),
-          SizedBox(width: 10.0),
+          SizedBox(width: 20.0),
         ],
         title: GestureDetector(
           onTap: () async {
@@ -401,6 +458,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  var currentConversationId;
   hostActivityItem2(dynamic activity) {
     return GestureDetector(
       onTap: () {
@@ -408,11 +466,28 @@ class _HomeScreenState extends State<HomeScreen> {
         if (playerId.toString() == activity.playerId.toString()) {
           Utility.showToast("This is your Host Activity");
         } else {
+          for (Conversation c in conversations) {
+            // Utility.showToast("Conversation ID  ${c.id}");
+            if (c.player1!.id.toString() == playerId.toString() &&
+                c.player2!.id.toString() == activity.playerId) {
+              Utility.showToast("Conversation ID  ${c.id}");
+              currentConversationId = c.id;
+            }
+
+            if (c.player2!.id.toString() == playerId.toString() &&
+                c.player1!.id.toString() == activity.playerId) {
+              Utility.showToast("Conversation ID  ${c.id}");
+              currentConversationId = c.id;
+            }
+          }
+
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => ChatPage(
-                      playerId: activity.playerId.toString(),
+                      conversationId: currentConversationId.toString(),
+                      player1: playerId.toString(),
+                      player2: activity.playerId.toString(),
                       peerId: activity.playerFuid.toString(), // send fuid
                       peerAvatar: activity.playerImage.toString(),
                       peerNickname: activity.playerName.toString())));
@@ -725,7 +800,6 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       Utility.showToast("NO INTERNET CONNECTION");
     }
-
     return activities;
   }
 

@@ -1,11 +1,12 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
 import 'package:player/chat/chat_page.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/model/conversation_data.dart';
 import 'package:player/model/friend_data.dart';
-import 'package:player/model/player_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -101,28 +102,41 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-//  List<Player>? players;
+  List<Conversation>? conversations;
 
-  Future<List<Player>> getPlayers() async {
+  Future<List<Conversation>?> getPlayers() async {
     APICall apiCall = new APICall();
-    List<Player> list = [];
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      int? playerId = prefs.getInt("playerId");
+      playerId = prefs.getInt("playerId");
+      print("Player id $playerId");
+      ConversationData conversationData =
+          await apiCall.getMyConversation(playerId.toString());
+      if (conversationData.conversation != null) {
+        conversations = conversationData.conversation!;
+        conversations = conversations!.reversed.toList();
 
-      PlayerData playerData = await apiCall.getChatPlayer(playerId.toString());
-      if (playerData.players != null) {
-        list = playerData.players!;
+        for (Conversation c in conversations!) {
+          int count = 0;
+          for (Reply r in c.reply!) {
+            if (r.status == "0" &&
+                r.playerId.toString() != playerId.toString()) {
+              count = count + 1;
+            }
+            c.unread = count.toString();
+            print("Conversation ${c.id} count $count");
+          }
+        }
       }
     }
-    return list;
+    return conversations;
   }
 
   allPlayers() {
     return Container(
       height: 700,
-      padding: EdgeInsets.all(20.0),
+      padding: EdgeInsets.all(10.0),
       child: FutureBuilder(
         future: getPlayers(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -164,22 +178,40 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget playerItem(dynamic player) {
+  Widget playerItem(dynamic conversation) {
     return GestureDetector(
-      onTap: () {
-        // Utility.showToast(player.name.toString());
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ChatPage(
-                    playerId: player.id.toString(),
-                    peerId: player.fuid.toString(),
-                    peerAvatar: player.image.toString(),
-                    peerNickname: player.name.toString())));
+      onTap: () async {
+//        Utility.showToast(conversation.id.toString());
+        if (playerId == conversation.player1.id) {
+          var result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ChatPage(
+                      conversationId: conversation.id.toString(),
+                      player1: playerId.toString(),
+                      player2: conversation.player2.id.toString(),
+                      peerId: conversation.player2.fUid.toString(),
+                      peerAvatar: conversation.player2.image.toString(),
+                      peerNickname: conversation.player2.name.toString())));
+
+          setState(() {});
+        } else {
+          var result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ChatPage(
+                      conversationId: conversation.id.toString(),
+                      player1: playerId.toString(),
+                      player2: conversation.player1.id.toString(),
+                      peerId: conversation.player1.fUid.toString(),
+                      peerAvatar: conversation.player1.image.toString(),
+                      peerNickname: conversation.player1.name.toString())));
+          setState(() {});
+        }
       },
       child: Container(
-        margin: EdgeInsets.all(10.0),
-        decoration: kContainerBoxDecoration,
+        margin: EdgeInsets.only(bottom: 10.0),
+        decoration: kServiceBoxItem,
         // height: 200,
         child: Stack(
           children: [
@@ -187,20 +219,46 @@ class _ChatScreenState extends State<ChatScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    margin: EdgeInsets.all(10.0),
-                    height: 40.0,
-                    width: 40.0,
-                    child: player.image == null
-                        ? FlutterLogo()
-                        : ClipRRect(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(5.0)),
-                            child: Image.network(
-                              APIResources.IMAGE_URL + player.image,
-                              fit: BoxFit.fill,
+                  conversation.unread == "0"
+                      ? SizedBox.shrink()
+                      : Container(
+                          margin: EdgeInsets.all(5),
+                          alignment: Alignment.topRight,
+                          child: Badge(
+                            position: BadgePosition.topStart(top: 5, start: 5),
+                            badgeContent: Text(
+                              '${conversation.unread}',
+                              style: TextStyle(color: Colors.white),
                             ),
                           ),
+                        ),
+                  Container(
+                    margin: EdgeInsets.all(10.0),
+                    height: 50.0,
+                    width: 50.0,
+                    child: playerId == conversation.player1.id
+                        ? conversation.player2.image == null
+                            ? FlutterLogo()
+                            : ClipRRect(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5.0)),
+                                child: Image.network(
+                                  APIResources.IMAGE_URL +
+                                      conversation.player2.image,
+                                  fit: BoxFit.fill,
+                                ),
+                              )
+                        : conversation.player1.image == null
+                            ? FlutterLogo()
+                            : ClipRRect(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5.0)),
+                                child: Image.network(
+                                  APIResources.IMAGE_URL +
+                                      conversation.player1.image,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
                   ),
 //                  Row(),
                 ],
@@ -213,10 +271,20 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: [
                   SizedBox(height: 10.0),
                   Text(
-                    player.name,
+                    playerId == conversation.player1.id
+                        ? "${conversation.player2.name}"
+                        : "${conversation.player1.name}",
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 16.0,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    "${conversation.reply.last.message}",
+                    style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12.0,
                         fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 5.0),
@@ -296,7 +364,9 @@ class _ChatScreenState extends State<ChatScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => ChatPage(
-                          playerId: friend.player.id.toString(),
+                          conversationId: "",
+                          player1: playerId.toString(),
+                          player2: friend.player.id.toString(),
                           peerId: friend.player.fUid.toString(),
                           peerAvatar: friend.player.image.toString(),
                           peerNickname: friend.player.name.toString())));
@@ -353,13 +423,14 @@ class _ChatScreenState extends State<ChatScreen> {
         : SizedBox.shrink();
   }
 
+  int? playerId;
   Future<List<Friends>> listFriend() async {
     List<Friends> list = [];
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      int? playerId = prefs.getInt("playerId");
+      playerId = prefs.getInt("playerId");
       FriendData friendData = await apiCall.listFriend(playerId.toString());
       if (friendData.friend != null) {
         list = friendData.friend!;

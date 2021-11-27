@@ -15,18 +15,23 @@ import 'package:player/chatprovider/chat_provider.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/firestore_constants.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/model/friend_data.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatPage extends StatefulWidget {
-  final String playerId;
+  final String conversationId;
+  final String player1;
+  final String player2;
   final String peerId;
   final String peerAvatar;
   final String peerNickname;
 
   const ChatPage(
       {Key? key,
-      required this.playerId,
+      required this.conversationId,
+      required this.player1,
+      required this.player2,
       required this.peerId,
       required this.peerAvatar,
       required this.peerNickname})
@@ -80,6 +85,7 @@ class ChatPageState extends State<ChatPage> {
     listScrollController.addListener(_scrollListener);
 
     readLocal();
+    updateConversationStatus();
   }
 
   _scrollListener() {
@@ -177,7 +183,11 @@ class ChatPageState extends State<ChatPage> {
       listScrollController.animateTo(0,
           duration: Duration(milliseconds: 300), curve: Curves.easeOut);
 
-      await chatNotification(widget.playerId, "New Message Received", content);
+      // Add Conversation
+
+      await addConversation(widget.player1, widget.player2, content);
+
+//      await chatNotification(widget.playerId, "New Message Received", content);
     } else {
       Utility.showToast("Nothing to send");
     }
@@ -218,7 +228,7 @@ class ChatPageState extends State<ChatPage> {
     return Future.value(false);
   }
 
-  void _callPhoneNumbe(String callPhoneNumber) async {
+  void _callPhoneNumber(String callPhoneNumber) async {
     var url = 'tel://$callPhoneNumber';
     // if(await launc(url)){
     //
@@ -425,6 +435,14 @@ class ChatPageState extends State<ChatPage> {
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
       await apiCall.chatNotification(playerId, title, content);
+    }
+  }
+
+  addConversation(String player1, String player2, String message) async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      await apiCall.addConversation(player1, player2, message);
     }
   }
 
@@ -647,5 +665,19 @@ class ChatPageState extends State<ChatPage> {
               })
           : Center(child: CircularProgressIndicator(color: kBaseColor)),
     );
+  }
+
+  Future<void> updateConversationStatus() async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      FriendData friendData = await apiCall.updateConversationStatus(
+          widget.conversationId, widget.player2);
+      if (friendData.status!) {
+        print(friendData.message!);
+      } else {
+        print(friendData.message!);
+      }
+    }
   }
 }

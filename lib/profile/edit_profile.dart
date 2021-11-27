@@ -223,8 +223,7 @@ class _EditProfileState extends State<EditProfile> {
                         await SharedPreferences.getInstance();
                     prefs.setString(
                         "locationId", widget.player!.locationId.toString());
-                    prefs.setString(
-                        "city", widget.player!.locationId.toString());
+                    prefs.setString("city", widget.player!.city.toString());
                     await updatePlayer();
                   },
                 ),
@@ -243,6 +242,7 @@ class _EditProfileState extends State<EditProfile> {
         setState(() {
           isLoading = false;
         });
+        Navigator.pop(context, true);
       } else {
         setState(() {
           isLoading = false;
