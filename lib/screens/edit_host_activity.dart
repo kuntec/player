@@ -249,10 +249,12 @@ class _EditHostState extends State<EditHost> {
     if (newTime == null) return;
     setState(() {
       time = newTime;
+      String hour = Utility.getTimeFormat(time!.hour);
+      String minute = Utility.getTimeFormat(time!.minute);
       if (time == null) {
         // txtTime = "Select Time";
       } else {
-        txtTimeController.text = "${time!.hour}:${time!.minute}";
+        txtTimeController.text = "$hour:$minute";
       }
       // txtTimeController.text = txtTime;
     });

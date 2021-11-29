@@ -268,90 +268,64 @@ class _TournamentParticipantsState extends State<TournamentParticipants> {
               ],
             ),
           )
-        : SizedBox(height: 1.0);
+        : SizedBox.shrink();
   }
 
   offlineItem(dynamic participant) {
     return participant.paymentMode == "0"
-        ? Container(
-            decoration: kBoxDecor,
-            margin: EdgeInsets.all(5.0),
-            padding: EdgeInsets.all(10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      child: Text(
-                        "${participant.name}",
-                        style: TextStyle(color: Colors.black87, fontSize: 18.0),
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Container(
-                      child: Text(
-                        "${participant.number}",
-                        style: TextStyle(color: Colors.black87, fontSize: 14.0),
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Container(
-                      child: Text(
-                        "Gender: ${participant.gender}",
-                        style: TextStyle(color: Colors.black87, fontSize: 14.0),
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Container(
-                      child: Text(
-                        "Age: ${participant.age}",
-                        style: TextStyle(color: Colors.black87, fontSize: 14.0),
-                      ),
-                    ),
-                  ],
-                ),
-                participant.paymentStatus == "2"
-                    ? Container(
-                        child: Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                participant.paymentStatus = "1";
-                                await updateParticipant(participant);
-                                setState(() {});
-                              },
-                              child: Container(
-                                margin: EdgeInsets.all(5.0),
-                                child: Icon(
-                                  Icons.check_box,
-                                  color: Colors.green,
-                                  size: 25.0,
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                participant.paymentStatus = "0";
-                                await updateParticipant(participant);
-                                setState(() {});
-                              },
-                              child: Container(
-                                margin: EdgeInsets.all(5.0),
-                                child: Icon(
-                                  Icons.cancel_presentation,
-                                  color: Colors.red,
-                                  size: 25.0,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    : Container(
-                        margin: EdgeInsets.all(10.0),
+        ? GestureDetector(
+            onTap: () {
+              Utility.launchCall(participant.number);
+            },
+            child: Container(
+              decoration: kBoxDecor,
+              margin: EdgeInsets.all(5.0),
+              padding: EdgeInsets.all(10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
                         child: Text(
+                          "${participant.name}",
+                          style:
+                              TextStyle(color: Colors.black87, fontSize: 18.0),
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Container(
+                        child: Text(
+                          "${participant.number}",
+                          style:
+                              TextStyle(color: Colors.black87, fontSize: 14.0),
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Container(
+                        child: Text(
+                          "Gender: ${participant.gender}",
+                          style:
+                              TextStyle(color: Colors.black87, fontSize: 14.0),
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Container(
+                        child: Text(
+                          "Age: ${participant.age}",
+                          style:
+                              TextStyle(color: Colors.black87, fontSize: 14.0),
+                        ),
+                      ),
+                    ],
+                  ),
+                  // participant.paymentStatus == "2"
+                  //     ?
+                  Container(
+                    child: Row(
+                      children: [
+                        Text(
                           participant.paymentStatus == "0" ? "Unpaid" : "Paid",
                           style: TextStyle(
                               color: participant.paymentStatus == "0"
@@ -359,11 +333,90 @@ class _TournamentParticipantsState extends State<TournamentParticipants> {
                                   : Colors.green,
                               fontSize: 16.0),
                         ),
-                      ),
-              ],
+                        SizedBox(width: 10),
+                        // Container(
+                        //   child: Icon(
+                        //     Icons.check_box,
+                        //     color: participant.paymentStatus == "0"
+                        //         ? Colors.white
+                        //         : Colors.green,
+                        //     size: 30.0,
+                        //   ),
+                        // ),
+                        // Container(
+                        //   child: Icon(
+                        //     Icons.check_box,
+                        //     color: participant.paymentStatus == "1"
+                        //         ? Colors.white
+                        //         : Colors.red,
+                        //     size: 30.0,
+                        //   ),
+                        // ),
+                        GestureDetector(
+                          onTap: () async {
+                            participant.paymentStatus = "1";
+                            await updateParticipant(participant);
+                            setState(() {});
+                          },
+                          child: Container(
+                            decoration: kServiceBoxItem.copyWith(
+                              color: participant.paymentStatus == "0"
+                                  ? Colors.white
+                                  : Colors.green,
+                              borderRadius: BorderRadius.circular(1.0),
+                            ),
+                            child: Icon(
+                              Icons.check,
+                              color: participant.paymentStatus == "0"
+                                  ? Colors.green
+                                  : Colors.white,
+                              size: 30.0,
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            participant.paymentStatus = "0";
+                            await updateParticipant(participant);
+                            setState(() {});
+                          },
+                          child: Container(
+                            decoration: kServiceBoxItem.copyWith(
+                              color: participant.paymentStatus == "1"
+                                  ? Colors.white
+                                  : Colors.red,
+                              borderRadius: BorderRadius.circular(1.0),
+                            ),
+                            child: Icon(
+                              Icons.clear,
+                              color: participant.paymentStatus == "1"
+                                  ? Colors.red
+                                  : Colors.white,
+                              size: 30.0,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // : Container(
+                  //     margin: EdgeInsets.all(10.0),
+                  //     child: Text(
+                  //       participant.paymentStatus == "0"
+                  //           ? "Unpaid"
+                  //           : "Paid",
+                  //       style: TextStyle(
+                  //           color: participant.paymentStatus == "0"
+                  //               ? Colors.red
+                  //               : Colors.green,
+                  //           fontSize: 16.0),
+                  //     ),
+                  //   ),
+                ],
+              ),
             ),
           )
-        : SizedBox(height: 1.0);
+        : SizedBox.shrink();
   }
 
   Future<List<Participant>?> updateParticipant(Participant participant) async {

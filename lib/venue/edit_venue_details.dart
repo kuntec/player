@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:player/api/api_call.dart';
+import 'package:player/api/api_resources.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/model/sport_data.dart';
 import 'package:player/model/venue_data.dart';
 import 'package:player/venue/add_venue_slot.dart';
 import 'package:player/venue/choose_sport.dart';
@@ -13,76 +15,102 @@ import 'package:player/venue/venue_day_slot.dart';
 import 'package:player/venue/venue_facilities.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AddVenueDetails extends StatefulWidget {
-  dynamic venueItem;
-  dynamic isEdit;
-  AddVenueDetails({this.venueItem, this.isEdit});
+class EditVenueDetails extends StatefulWidget {
+  dynamic venue;
+  EditVenueDetails({required this.venue});
 
   @override
-  _AddVenueDetailsState createState() => _AddVenueDetailsState();
+  _EditVenueDetailsState createState() => _EditVenueDetailsState();
 }
 
-class _AddVenueDetailsState extends State<AddVenueDetails> {
-  File? image;
-  TimeOfDay? openTime;
-  TimeOfDay? closeTime;
+class _EditVenueDetailsState extends State<EditVenueDetails> {
+  bool? isLoading = false;
 
-  // var txtOpenTime = "Open Time";
-  // var txtCloseTime = "Close Time";
+  TextEditingController textSportController = new TextEditingController();
+
+  bool isCricket = false;
+  bool isBoxCricket = false;
 
   Venue? venue;
-  var name;
-  var description;
-  var facilities;
-  var address;
-  var members;
-  var locationLink;
-  var city;
-  var sport;
+
+  TimeOfDay? openTime;
+  TimeOfDay? closeTime;
+  File? image;
 
   List selectedFacilities = [];
   var selectedSport;
 
-  TextEditingController textFacilityController = new TextEditingController();
-  TextEditingController textSportController = new TextEditingController();
+  TextEditingController openTimeController = new TextEditingController();
+  TextEditingController closeTimeController = new TextEditingController();
 
-  TextEditingController textOpenTimeController = new TextEditingController();
-  TextEditingController textCloseTimeController = new TextEditingController();
+  TextEditingController sportCtrl = new TextEditingController();
+  TextEditingController nameCtrl = new TextEditingController();
+  TextEditingController descCtrl = new TextEditingController();
+  TextEditingController facilityCtrl = new TextEditingController();
+  TextEditingController memberCtrl = new TextEditingController();
 
-  bool? isLoading = false;
+  TextEditingController addressCtrl = new TextEditingController();
+  TextEditingController linkCtrl = new TextEditingController();
+  TextEditingController cityCtrl = new TextEditingController();
+
+  Future<List<Data>> getSports() async {
+    APICall apiCall = new APICall();
+    List<Data> data = [];
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      SportData sportData = await apiCall.getSports();
+
+      if (sportData.data != null) {
+        data.addAll(sportData.data!);
+
+        for (var s in data) {
+          if (s.id.toString() == widget.venue.sportId.toString()) {
+            this.selectedSport = s;
+          }
+        }
+        setState(() {});
+      }
+    } else {}
+    return data;
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // Utility.showToast("isEditMode ${widget.isEdit}");
+
+    openTimeController.text = widget.venue.openTime;
+    closeTimeController.text = widget.venue.closeTime;
+    //
+    sportCtrl.text = widget.venue.sport;
+    nameCtrl.text = widget.venue.name;
+    descCtrl.text = widget.venue.description;
+    facilityCtrl.text = widget.venue.facilities;
+    memberCtrl.text = widget.venue.members;
+
+    addressCtrl.text = widget.venue.address;
+    linkCtrl.text = widget.venue.locationLink;
+    cityCtrl.text = widget.venue.city;
+    textSportController.text = widget.venue.sport;
+    selectedFacilities = facilityCtrl.text.split(", ");
+    getSports();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Venue")),
-        leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(
-              Icons.arrow_back_ios,
-              color: kBaseColor,
-            )),
+        title: Text("Edit Venue"),
       ),
       body: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.all(kMargin),
-          child: Column(
-            children: [
-              addVenueForm(),
-            ],
-          ),
+        child: Column(
+          children: [
+            editVenueForm(),
+          ],
         ),
       ),
-    );
+    ));
   }
 
   Future pickImage() async {
@@ -94,6 +122,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
       setState(() {
         this.image = imageTemporary;
       });
+      updateVenueImage(this.image!.path, widget.venue!);
     } on PlatformException catch (e) {
       print("Failed to pick image : $e");
     }
@@ -110,21 +139,22 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
 
     setState(() {
       openTime = newTime;
+
       if (openTime != null) {
         int h = openTime!.hour;
         int m = openTime!.minute;
         String hour = Utility.getTimeFormat(h);
         String minute = Utility.getTimeFormat(m);
         if (isOpen) {
-          textOpenTimeController.text = "$hour:$minute";
+          openTimeController.text = "$hour:$minute";
         } else {
-          textCloseTimeController.text = "$hour:$minute";
+          closeTimeController.text = "$hour:$minute";
         }
       }
     });
   }
 
-  Widget addVenueForm() {
+  Widget editVenueForm() {
     return Container(
       margin: EdgeInsets.all(10.0),
       child: Column(
@@ -143,7 +173,14 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                       height: 150,
                       fit: BoxFit.fill,
                     )
-                  : FlutterLogo(size: 100),
+                  : widget.venue.image != null
+                      ? Image.network(
+                          APIResources.IMAGE_URL + widget.venue.image,
+                          width: 280,
+                          height: 150,
+                          fit: BoxFit.fill,
+                        )
+                      : FlutterLogo(size: 100),
             ),
           ),
           GestureDetector(
@@ -186,9 +223,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              name = value;
-            },
+            controller: nameCtrl,
             decoration: InputDecoration(
                 labelText: "Venue Name",
                 labelStyle: TextStyle(
@@ -196,9 +231,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              description = value;
-            },
+            controller: descCtrl,
             decoration: InputDecoration(
                 labelText: "Venue Description",
                 labelStyle: TextStyle(
@@ -210,7 +243,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
             // onChanged: (value) {
             //   facilities = value;
             // },
-            controller: textFacilityController,
+            controller: facilityCtrl,
             readOnly: true,
             onTap: () async {
               final result = await Navigator.push(
@@ -224,7 +257,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
               selectedFacilities = result;
               String s = selectedFacilities.join(', ');
               //print(s);
-              textFacilityController.text = s;
+              facilityCtrl.text = s;
               // ScaffoldMessenger.of(context)
               //   ..removeCurrentSnackBar()
               //   ..showSnackBar(SnackBar(content: Text('$result')));
@@ -244,7 +277,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
               Expanded(
                 flex: 1,
                 child: TextField(
-                  controller: textOpenTimeController,
+                  controller: openTimeController,
                   readOnly: true,
                   keyboardType: TextInputType.text,
                   onTap: () async {
@@ -264,7 +297,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
               Expanded(
                 flex: 1,
                 child: TextField(
-                  controller: textCloseTimeController,
+                  controller: closeTimeController,
                   readOnly: true,
                   keyboardType: TextInputType.text,
                   onTap: () async {
@@ -311,9 +344,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
             height: k20Margin,
           ),
           TextField(
-            onChanged: (value) {
-              members = value;
-            },
+            controller: memberCtrl,
             decoration: InputDecoration(
                 labelText: "Max Person Allowed (optional)",
                 labelStyle: TextStyle(
@@ -321,9 +352,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              address = value;
-            },
+            controller: addressCtrl,
             decoration: InputDecoration(
                 labelText: "Venue Address",
                 labelStyle: TextStyle(
@@ -331,9 +360,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              locationLink = value;
-            },
+            controller: linkCtrl,
             decoration: InputDecoration(
                 labelText: "Location Link",
                 labelStyle: TextStyle(
@@ -341,9 +368,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              city = value;
-            },
+            controller: cityCtrl,
             decoration: InputDecoration(
                 labelText: "Venue City",
                 labelStyle: TextStyle(
@@ -377,7 +402,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                   color: kBaseColor,
                 )
               : RoundedButton(
-                  title: "NEXT",
+                  title: "UPDATE",
                   color: kBaseColor,
                   txtColor: Colors.white,
                   minWidth: 200,
@@ -386,13 +411,12 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                         await SharedPreferences.getInstance();
                     var playerId = prefs.get("playerId");
 
-                    if (Utility.checkValidation(name.toString())) {
+                    if (Utility.checkValidation(nameCtrl.text.toString())) {
                       Utility.showToast("Please Select Name");
                       return;
                     }
 
-                    if (Utility.checkValidation(
-                        textFacilityController.text.toString())) {
+                    if (Utility.checkValidation(facilityCtrl.text.toString())) {
                       Utility.showToast("Please Select Facility");
                       return;
                     }
@@ -402,34 +426,24 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                       return;
                     }
 
-                    venue = new Venue();
+                    venue = widget.venue;
 
                     venue!.playerId = playerId!.toString();
-                    venue!.name = name.toString();
-                    venue!.description = description.toString();
-                    venue!.facilities = textFacilityController.text;
-                    venue!.openTime = textOpenTimeController.text;
-                    venue!.closeTime = textCloseTimeController.text;
-                    venue!.address = address.toString();
-                    venue!.locationLink = locationLink;
+                    venue!.name = nameCtrl.text.toString();
+                    venue!.description = descCtrl.text.toString();
+                    venue!.facilities = facilityCtrl.text;
+                    venue!.openTime = openTimeController.text;
+                    venue!.closeTime = closeTimeController.text;
+                    venue!.address = addressCtrl.text.toString();
+                    venue!.locationLink = linkCtrl.text.toString();
                     venue!.locationId = prefs.getString("locationId");
-                    venue!.members = members.toString();
-                    venue!.city = city.toString();
+                    venue!.members = memberCtrl.text.toString();
+                    venue!.city = cityCtrl.text.toString();
                     venue!.sport = selectedSport.sportName.toString();
                     venue!.sportId = selectedSport.id.toString();
                     venue!.createdAt = Utility.getCurrentDate();
 
-                    // Utility.showToast("Create Venue");
-                    if (this.image != null) {
-                      // addVenue(this.image!.path, venue!);
-                      // Utility.showToast("File Selected Image");
-                      // _onLoading();
-                      addVenue();
-                    } else {
-                      Utility.showToast("Please Select Image");
-                      return;
-                    }
-                    //  print("Create Tournament");
+                    updateVenue(venue!);
                   },
                 ),
         ],
@@ -437,64 +451,51 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
     );
   }
 
-  // void _onLoading() {
-  //   showDialog(
-  //     context: context,
-  //     barrierDismissible: false,
-  //     builder: (BuildContext context) {
-  //       return Dialog(
-  //         child: new Row(
-  //           mainAxisSize: MainAxisSize.min,
-  //           children: [
-  //             new CircularProgressIndicator(),
-  //             new Text("Loading"),
-  //           ],
-  //         ),
-  //       );
-  //     },
-  //   );
-  //   addVenue();
-  //   // new Future.delayed(new Duration(seconds: 3), () {
-  //   //   Navigator.pop(context); //pop dialog
-  //   // });
-  // }
-
-  addVenue() async {
+  updateVenue(Venue venue) async {
     setState(() {
       isLoading = true;
     });
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      VenueData addedVenue = await apiCall.addVenue(this.image!.path, venue!);
-
-      if (addedVenue == null) {
+      VenueData venueData = await apiCall.updateVenue(venue);
+      setState(() {
+        isLoading = false;
+      });
+      if (venueData == null) {
         print("Venue null");
-        Utility.showToast("Venue Null");
-        setState(() {
-          isLoading = false;
-        });
       } else {
-        if (addedVenue.venue != null) {
+        if (venueData.status!) {
           print("Venue Success");
-          setState(() {
-            isLoading = false;
-          });
-          // Utility.showToast(
-          //     "Venue Created Successfully ${addedVenue.venue!.id} ${addedVenue.venue!.name}");
-
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => VenueDaySlot(
-                        venue: addedVenue.venue,
-                      )));
+          Utility.showToast("Venue Updated Successfully");
+          Navigator.pop(context, true);
         } else {
-          setState(() {
-            isLoading = false;
-          });
           print("Venue Failed");
-          Utility.showToast("Venue Failed");
+        }
+      }
+    }
+  }
+
+  updateVenueImage(String filePath, Venue venue) async {
+    setState(() {
+      isLoading = true;
+    });
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      dynamic status = await apiCall.updateVenueImage(filePath, venue);
+      setState(() {
+        isLoading = false;
+      });
+      if (status == null) {
+        print("Venue null");
+      } else {
+        if (status!) {
+          print("Venue Success");
+          Utility.showToast("Venue Image Updated Successfully");
+          //Navigator.pop(context);
+        } else {
+          print("Venue Failed");
         }
       }
     }

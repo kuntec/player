@@ -233,6 +233,17 @@ class APICall {
     return TournamentData.fromJson(jsonDecode(response.body));
   }
 
+  Future<VenueData> deleteVenue(String id) async {
+    Uri url = Uri.parse(APIResources.DELETE_VENUE);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['id'] = id;
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return VenueData.fromJson(jsonDecode(response.body));
+  }
+
   Future<EventData> deleteEvent(String id) async {
     Uri url = Uri.parse(APIResources.DELETE_EVENT);
     var header = new Map<String, String>();
@@ -307,6 +318,7 @@ class APICall {
       FormData formData = new FormData.fromMap({
         "organizer_name": tournament.organizerName,
         "organizer_number": tournament.organizerNumber,
+        "secondary_number": tournament.secondaryNumber,
         "tournament_name": tournament.tournamentName,
         "start_date": tournament.startDate,
         "end_date": tournament.endDate,
@@ -356,6 +368,7 @@ class APICall {
     params['id'] = tournament.id.toString();
     params['organizer_name'] = tournament.organizerName!;
     params['organizer_number'] = tournament.organizerNumber!;
+    params['secondary_number'] = tournament.secondaryNumber!;
     params['tournament_name'] = tournament.tournamentName!;
     params['start_date'] = tournament.startDate!;
     params['end_date'] = tournament.endDate!;
@@ -494,6 +507,56 @@ class APICall {
       return VenueData();
     } catch (e) {}
     return VenueData();
+  }
+
+  Future<VenueData> updateVenue(Venue venue) async {
+    log("Update Venue");
+    Uri url = Uri.parse(APIResources.UPDATE_VENUE);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    log("Update Venue");
+    params['id'] = venue.id.toString();
+    params['name'] = venue.name!;
+    params['description'] = venue.description!;
+    params['open_time'] = venue.openTime!;
+    params['close_time'] = venue.closeTime!;
+    params['address'] = venue.address!;
+    params['city'] = venue.city!;
+
+    params['sport'] = venue.sport!;
+    params['sport_id'] = venue.sportId!;
+    params['location_id'] = venue.locationId!;
+    params['location_link'] = venue.locationLink!;
+    params['facilities'] = venue.facilities!;
+    params['player_id'] = venue.playerId!;
+    params['members'] = venue.members!;
+    params['created_at'] = venue.createdAt!;
+
+    HttpCall call = new HttpCall();
+
+    http.Response response = await call.post(url, header, params);
+    log("Response Body: " + response.body);
+//    return response.body;
+    return VenueData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<dynamic> updateVenueImage(filePath, Venue venue) async {
+    try {
+      FormData formData = new FormData.fromMap({
+        "id": venue.id,
+        "image": await MultipartFile.fromFile(filePath, filename: "venue")
+      });
+      Response response = await Dio().post(
+        APIResources.UPDATE_VENUE_IMAGE,
+        data: formData,
+      );
+      var responseBody = response.data;
+      print("Response Body ${responseBody['status']}");
+
+      return responseBody['status'];
+    } on DioError catch (e) {
+      return false;
+    } catch (e) {}
   }
 
   Future<VenueData> getVenue(String locationId, String sportId) async {
@@ -1128,6 +1191,19 @@ class APICall {
     params['player_id1'] = playerId1;
     params['player_id2'] = playerId2;
     params['status'] = status;
+
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return PlayerData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<PlayerData> removeFriend(String playerId1, String playerId2) async {
+    Uri url = Uri.parse(APIResources.REMOVE_FRIEND);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['player_id1'] = playerId1;
+    params['player_id2'] = playerId2;
 
     HttpCall call = new HttpCall();
     http.Response response = await call.post(url, header, params);

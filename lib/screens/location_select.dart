@@ -10,54 +10,25 @@ import 'package:player/model/player_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocationSelectScreen extends StatefulWidget {
+  dynamic player;
+  LocationSelectScreen({required this.player});
   @override
   _LocationSelectScreenState createState() => _LocationSelectScreenState();
 }
 
 class _LocationSelectScreenState extends State<LocationSelectScreen> {
   bool isLoading = false;
-  //Position? currentPosition;
 
-  // Future<void> _determinePosition() async {
-  //   bool serviceEnabled;
-  //   LocationPermission permission;
-  //
-  //   serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  //   if (!serviceEnabled) {
-  //     Utility.showToast('Please keep your location on');
-  //   }
-  //   permission = await Geolocator.checkPermission();
-  //   if (permission == LocationPermission.denied) {
-  //     permission = await Geolocator.requestPermission();
-  //     if (permission == LocationPermission.denied) {
-  //       Utility.showToast('Location Permission is denied');
-  //     }
-  //   }
-  //   if (permission == LocationPermission.deniedForever) {
-  //     Utility.showToast('Location Permission is denied forever');
-  //   }
-  //
-  //   Position position = await Geolocator.getCurrentPosition(
-  //       desiredAccuracy: LocationAccuracy.high);
-  //   try {
-  //     List<Placemark> placemarks =
-  //         await placemarkFromCoordinates(position.latitude, position.longitude);
-  //     Placemark place = placemarks[0];
-  //     setState(() {
-  //       currentPosition = position;
-  //       currentAddress = "${place.locality}";
-  //     });
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
   String searchString = "";
   TextEditingController searchController = new TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getMyProfile();
+    Location l = new Location();
+    l.id = int.parse(widget.player.locationId);
+    l.name = widget.player.city;
+    selectedLocation = l;
   }
 
   @override
@@ -84,13 +55,15 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
                   setState(() {
                     isLoading = true;
                   });
-                  player!.locationId = this.selectedLocation!.id.toString();
-                  player!.city = this.selectedLocation!.name.toString();
+                  widget.player!.locationId =
+                      this.selectedLocation!.id.toString();
+                  widget.player!.city = this.selectedLocation!.name.toString();
                   SharedPreferences prefs =
                       await SharedPreferences.getInstance();
-                  prefs.setString("locationId", player!.locationId.toString());
-                  prefs.setString("city", player!.city.toString());
-                  await updatePlayer();
+                  prefs.setString(
+                      "locationId", widget.player!.locationId.toString());
+                  prefs.setString("city", widget.player!.city.toString());
+                  await updatePlayer(widget.player);
                 },
               ),
       ),
@@ -140,13 +113,7 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
           if (snapshot.data == null) {
             return Center(
               child: Container(
-                width: 200,
-                height: 200,
-                decoration: kServiceBoxItem,
-                child: Center(
-                    child: CircularProgressIndicator(
-                  color: kBaseColor,
-                )),
+                child: Text("Loading..."),
               ),
             );
           }
@@ -190,22 +157,28 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
   locationItem(dynamic location) {
     return GestureDetector(
       onTap: () {
-        this.currentLocation = location;
+        // this.currentLocation = location;
         this.selectedLocation = location;
         setState(() {});
       },
       child: Container(
         decoration: kServiceBoxItem.copyWith(
+          color: selectedLocation != null
+              ? selectedLocation!.name.toString() == location.name.toString()
+                  ? kBaseColor
+                  : Colors.white
+              : Colors.black,
           borderRadius: BorderRadius.circular(5.0),
         ),
         margin: EdgeInsets.all(5),
-        padding: EdgeInsets.all(5),
+        padding: EdgeInsets.all(10),
         child: Text(
           location.name.toString(),
           style: TextStyle(
-              color: currentLocation != null
-                  ? currentLocation!.name.toString() == location.name.toString()
-                      ? kBaseColor
+              color: selectedLocation != null
+                  ? selectedLocation!.name.toString() ==
+                          location.name.toString()
+                      ? Colors.white
                       : Colors.black
                   : Colors.black),
         ),
@@ -213,7 +186,7 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
     );
   }
 
-  updatePlayer() async {
+  updatePlayer(player) async {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
@@ -249,12 +222,6 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
       LocationData locationData = await apiCall.getLocation();
       if (locationData.location != null) {
         locations = locationData.location;
-        for (Location l in locations!) {
-          if (l.id.toString() == player!.locationId.toString()) {
-            this.selectedLocation = l;
-          }
-        }
-        //setState(() {});
       }
     } else {
       showToast(kInternet);
@@ -263,85 +230,60 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
   }
 
   Location? selectedLocation;
-  Location? currentLocation;
-  Widget buildLocationData(List<Location> location) {
-    return DropdownButton<Location>(
-      value: selectedLocation != null ? selectedLocation : null,
-      hint: Text("Select Location"),
-      isExpanded: true,
-      icon: const Icon(Icons.keyboard_arrow_down),
-      iconSize: 24,
-      elevation: 16,
-      style: const TextStyle(color: Colors.black),
-      underline: Container(
-        height: 2,
-        color: kBaseColor,
-      ),
-      onChanged: (Location? newValue) {
-        // this._selectedLK = newValue!;
-        setState(() {
-          this.selectedLocation = newValue!;
-        });
-      },
-      items: location.map<DropdownMenuItem<Location>>((Location value) {
-        return DropdownMenuItem<Location>(
-          value: value,
-          child: Text(value.name!),
-        );
-      }).toList(),
-    );
-  }
+  // Widget buildLocationData(List<Location> location) {
+  //   return DropdownButton<Location>(
+  //     value: selectedLocation != null ? selectedLocation : null,
+  //     hint: Text("Select Location"),
+  //     isExpanded: true,
+  //     icon: const Icon(Icons.keyboard_arrow_down),
+  //     iconSize: 24,
+  //     elevation: 16,
+  //     style: const TextStyle(color: Colors.black),
+  //     underline: Container(
+  //       height: 2,
+  //       color: kBaseColor,
+  //     ),
+  //     onChanged: (Location? newValue) {
+  //       // this._selectedLK = newValue!;
+  //       setState(() {
+  //         this.selectedLocation = newValue!;
+  //       });
+  //     },
+  //     items: location.map<DropdownMenuItem<Location>>((Location value) {
+  //       return DropdownMenuItem<Location>(
+  //         value: value,
+  //         child: Text(value.name!),
+  //       );
+  //     }).toList(),
+  //   );
+  // }
 
-  Player? player;
-  getMyProfile() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var playerId = prefs.get("playerId");
-    var playerName = prefs.get("playerName");
-    var mobile = prefs.get("mobile");
-    //Utility.showToast("Player ${playerId} mobile ${mobile}");
-    APICall apiCall = new APICall();
-    bool connectivityStatus = await Utility.checkConnectivity();
-    if (connectivityStatus) {
-      print("Player " + mobile.toString());
-//    showToast("Player " + phoneNumber);
-      PlayerData playerData = await apiCall.checkPlayer(mobile.toString());
-
-      if (playerData.status!) {
-        setState(() {
-          player = playerData.player;
-        });
-
-//        getLocation();
-        //  Utility.showToast("Player Found ${playerData.player!.image}");
-      }
-    }
-  }
-
-  void _showDialog() async {
-    return await showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 200.0,
-                    width: 200.0,
-                    child: Text("Loading..."),
-                  ),
-                ],
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-
-  _dismissDialog() {
-    Navigator.pop(context);
-  }
+  //
+  // void _showDialog() async {
+  //   return await showDialog<void>(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         content: StatefulBuilder(
+  //           builder: (BuildContext context, StateSetter setState) {
+  //             return Row(
+  //               mainAxisAlignment: MainAxisAlignment.center,
+  //               children: [
+  //                 Container(
+  //                   height: 200.0,
+  //                   width: 200.0,
+  //                   child: Text("Loading..."),
+  //                 ),
+  //               ],
+  //             );
+  //           },
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
+  //
+  // _dismissDialog() {
+  //   Navigator.pop(context);
+  // }
 }

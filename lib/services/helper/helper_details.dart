@@ -35,8 +35,7 @@ class _HelperDetailState extends State<HelperDetail> {
                   widget.service.contactNo.toString()),
               itemCallDetail(context, "Secondary Number",
                   widget.service.secondaryNo.toString()),
-              itemCallDetail(
-                  context, "Address", widget.service.address.toString()),
+              itemDetail(context, "Address", widget.service.address.toString()),
               itemDetail(context, "City", widget.service.city.toString()),
               itemDetail(
                   context, "Experience", widget.service.experience.toString()),

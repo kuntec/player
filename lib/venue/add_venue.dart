@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
@@ -7,6 +8,7 @@ import 'package:player/model/my_booking_data.dart';
 import 'package:player/model/venue_data.dart';
 import 'package:player/venue/add_venue_details.dart';
 import 'package:player/venue/booked_slot.dart';
+import 'package:player/venue/edit_venue_details.dart';
 import 'package:player/venue/venue_day_slot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,13 +37,14 @@ class _AddVenueState extends State<AddVenue> {
             )),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          await Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => AddVenueDetails(
                         isEdit: false,
                       )));
+          _refresh();
         },
         child: Icon(
           Icons.add,
@@ -189,6 +192,7 @@ class _AddVenueState extends State<AddVenue> {
     return venues;
   }
 
+  var selectedVenue;
   Widget venueItem(dynamic venue) {
     return GestureDetector(
       onTap: () {
@@ -207,6 +211,32 @@ class _AddVenueState extends State<AddVenue> {
         // height: 200,
         child: Stack(
           children: [
+            GestureDetector(
+              onTap: () {
+                selectedVenue = venue;
+                showCupertinoDialog(
+                  barrierDismissible: true,
+                  context: context,
+                  builder: createDialog,
+                );
+//                Utility.showToast(venue.name.toString());
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //         builder: (context) => EditVenueDetails(
+                //               venue: venue,
+                //             )));
+              },
+              child: Container(
+                alignment: Alignment.topRight,
+                margin: EdgeInsets.all(5.0),
+                child: Icon(
+                  Icons.more_horiz,
+                  size: 20,
+                  color: kBaseColor,
+                ),
+              ),
+            ),
             Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -272,11 +302,84 @@ class _AddVenueState extends State<AddVenue> {
     );
   }
 
-  // booking() {
-  //   return Container(
-  //     child: Text("Booking"),
-  //   );
-  // }
+  Widget createDialog(BuildContext context) => CupertinoAlertDialog(
+        title: Text("Choose an option"),
+        // content: Text("Message"),
+        actions: [
+          CupertinoDialogAction(
+            child: Text(
+              "Edit",
+              style: TextStyle(color: kBaseColor),
+            ),
+            onPressed: () async {
+              Navigator.pop(context);
+
+              var result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => EditVenueDetails(
+                            venue: selectedVenue,
+                          )));
+              if (result == true) {
+                _refresh();
+              }
+            },
+          ),
+          // CupertinoDialogAction(
+          //   child: Text(
+          //     selectedTournament.status == "1"
+          //         ? "Stop Booking"
+          //         : "Restart Booking",
+          //     style: TextStyle(color: kBaseColor),
+          //   ),
+          //   onPressed: () async {
+          //     Navigator.pop(context);
+          //     selectedTournament.status == "1"
+          //         ? selectedTournament.status = "0"
+          //         : selectedTournament.status = "1";
+          //     selectedTournament.timing = "";
+          //     await updateTournament(selectedTournament);
+          //   },
+          // ),
+          CupertinoDialogAction(
+            child: Text(
+              "Delete",
+              style: TextStyle(color: Colors.red),
+            ),
+            onPressed: () async {
+              Navigator.pop(context);
+              await deleteVenue(selectedVenue.id.toString());
+            },
+          ),
+          CupertinoDialogAction(
+            child: Text(
+              "Close",
+              style: TextStyle(color: Colors.black),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )
+        ],
+      );
+
+  _refresh() {
+    setState(() {});
+  }
+
+  deleteVenue(String id) async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      VenueData venueData = await apiCall.deleteVenue(id);
+      if (venueData.status!) {
+        Utility.showToast(venueData.message.toString());
+        _refresh();
+      } else {
+        print(venueData.message!);
+      }
+    }
+  }
 
   myBookings() {
     return Container(

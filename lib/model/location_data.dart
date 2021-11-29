@@ -77,4 +77,16 @@ class Location {
     map['created_at'] = _createdAt;
     return map;
   }
+
+  set createdAt(value) {
+    _createdAt = value;
+  }
+
+  set name(value) {
+    _name = value;
+  }
+
+  set id(value) {
+    _id = value;
+  }
 }

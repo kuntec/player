@@ -144,13 +144,15 @@ class _EditEventState extends State<EditEvent> {
 
     setState(() {
       time = newTime;
+      String hour = Utility.getTimeFormat(time!.hour);
+      String minute = Utility.getTimeFormat(time!.minute);
       if (time == null) {
         //textStartTimeController.text = "Select Time";
       } else {
         if (isStart) {
-          textStartTimeController.text = "${time!.hour}:${time!.minute}";
+          textStartTimeController.text = "$hour:$minute";
         } else {
-          textEndTimeController.text = "${time!.hour}:${time!.minute}";
+          textEndTimeController.text = "$hour:$minute";
         }
       }
     });

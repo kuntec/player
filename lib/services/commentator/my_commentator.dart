@@ -36,13 +36,14 @@ class _MyCommentatorState extends State<MyCommentator> {
         title: Text("My Commentator"),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          var result = await Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => CommentatorRegister(
                         serviceId: widget.serviceId,
                       )));
+          _refresh();
         },
         backgroundColor: kBaseColor,
         child: Icon(

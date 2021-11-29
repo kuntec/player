@@ -28,13 +28,14 @@ class _MyManufacturerState extends State<MyManufacturer> {
         title: Text("My Manufacturer"),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          var result = await Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => ManufacturerRegister(
                         serviceId: widget.serviceId,
                       )));
+          _refresh();
         },
         backgroundColor: kBaseColor,
         child: Icon(

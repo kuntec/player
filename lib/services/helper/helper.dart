@@ -30,6 +30,10 @@ class _HelperState extends State<Helper> {
 //    getPlayerService();
   }
 
+  _refresh() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,21 +46,23 @@ class _HelperState extends State<Helper> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     if (isService) {
-                      Navigator.push(
+                      var result = await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => MyHelper(
                                     serviceId: widget.serviceId,
                                   )));
+                      _refresh();
                     } else {
-                      Navigator.push(
+                      var result = await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => HelperRegister(
                                     serviceId: widget.serviceId,
                                   )));
+                      _refresh();
                     }
                   },
                   child: Container(

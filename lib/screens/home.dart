@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     super.initState();
     homeProvider = context.read<HomeProvider>();
-
+    getMyProfile();
     getBanner();
     getMySports();
     getSports();
@@ -216,7 +216,8 @@ class _HomeScreenState extends State<HomeScreen> {
             var result = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => LocationSelectScreen()));
+                    builder: (context) =>
+                        LocationSelectScreen(player: player)));
             if (result) {
               getMyCity();
             }
@@ -354,7 +355,7 @@ class _HomeScreenState extends State<HomeScreen> {
             if (result == true) {
               setState(() {});
             }
-          }, false),
+          }, false, ""),
           iconCard(
               Icon(
                 Icons.people,
@@ -366,11 +367,11 @@ class _HomeScreenState extends State<HomeScreen> {
               friendEndColor, () {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => FriendScreen()));
-          }, false),
+          }, false, ""),
           iconCard(Container(), "Host Tournament", 3, tournamentEndColor, () {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => AddTournament()));
-          }, true),
+          }, true, "tournament.svg"),
           iconCard(
               Icon(
                 Icons.star,
@@ -382,26 +383,18 @@ class _HomeScreenState extends State<HomeScreen> {
               eventEndColor, () {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => EventScreen()));
-          }, false),
-          iconCard(
-              Icon(
-                Icons.star,
-                color: kBaseColor,
-                size: 30,
-              ),
-              "Offers",
-              5,
-              offerEndColor, () {
+          }, false, ""),
+          iconCard(Container(), "Offers", 5, offerEndColor, () {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => OfferScreen()));
-          }, false),
+          }, true, "offer.svg"),
         ],
       ),
     );
   }
 
   Widget iconCard(Widget iconData, String title, int index, Color endColor,
-      dynamic onPress, bool isTournament) {
+      dynamic onPress, bool isTournament, String svgName) {
     return GestureDetector(
       onTap: onPress,
       child: Container(
@@ -429,7 +422,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: Colors.white, shape: BoxShape.circle),
                       child: Center(
                         child: SvgPicture.asset(
-                          "assets/images/tournament.svg",
+                          "assets/images/${svgName}",
                           height: 30,
                           width: 30,
                           fit: BoxFit.scaleDown,
@@ -470,13 +463,13 @@ class _HomeScreenState extends State<HomeScreen> {
             // Utility.showToast("Conversation ID  ${c.id}");
             if (c.player1!.id.toString() == playerId.toString() &&
                 c.player2!.id.toString() == activity.playerId) {
-              Utility.showToast("Conversation ID  ${c.id}");
+              //  Utility.showToast("Conversation ID  ${c.id}");
               currentConversationId = c.id;
             }
 
             if (c.player2!.id.toString() == playerId.toString() &&
                 c.player1!.id.toString() == activity.playerId) {
-              Utility.showToast("Conversation ID  ${c.id}");
+              //  Utility.showToast("Conversation ID  ${c.id}");
               currentConversationId = c.id;
             }
           }
@@ -987,5 +980,30 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     } else {}
     return data;
+  }
+
+  Player? player;
+  getMyProfile() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var playerId = prefs.get("playerId");
+    var playerName = prefs.get("playerName");
+    var mobile = prefs.get("mobile");
+    //Utility.showToast("Player ${playerId} mobile ${mobile}");
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      print("Player " + mobile.toString());
+//    showToast("Player " + phoneNumber);
+      PlayerData playerData = await apiCall.checkPlayer(mobile.toString());
+
+      if (playerData.status!) {
+        setState(() {
+          player = playerData.player;
+        });
+
+//        getLocation();
+        //  Utility.showToast("Player Found ${playerData.player!.image}");
+      }
+    }
   }
 }

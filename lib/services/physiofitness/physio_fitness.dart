@@ -33,6 +33,10 @@ class _PhysioFitnessState extends State<PhysioFitness> {
     getPlayerService();
   }
 
+  _refresh() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,21 +50,23 @@ class _PhysioFitnessState extends State<PhysioFitness> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     if (isService) {
-                      Navigator.push(
+                      await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => MyPhysioFitness(
                                     serviceId: widget.serviceId,
                                   )));
+                      _refresh();
                     } else {
-                      Navigator.push(
+                      await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => PhysioFitnessRegister(
                                     serviceId: widget.serviceId,
                                   )));
+                      _refresh();
                     }
                   },
                   child: Container(

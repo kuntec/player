@@ -47,6 +47,9 @@ class APIResources {
   static final String GET_VENUE = BASE_URL + "getVenue";
   static final String GET_MY_VENUE = BASE_URL + "getMyVenue";
   static final String ADD_VENUE = BASE_URL + "addVenue";
+  static final String UPDATE_VENUE = BASE_URL + "updateVenue";
+  static final String DELETE_VENUE = BASE_URL + "deleteVenue";
+  static final String UPDATE_VENUE_IMAGE = BASE_URL + "updateVenueImage";
 
   static final String GET_TIMESLOT = BASE_URL + "getTimeslot";
   static final String ADD_TIMESLOT = BASE_URL + "addTimeslot";
@@ -93,6 +96,7 @@ class APIResources {
   //Friend
   static final String ADD_FRIEND = BASE_URL + "addFriend";
   static final String UPDATE_FRIEND = BASE_URL + "updateFriend";
+  static final String REMOVE_FRIEND = BASE_URL + "removeFriend";
   static final String LIST_FRIENDS = BASE_URL + "listFriends";
   static final String GET_CHAT_PLAYER = BASE_URL + "getChatPlayer";
   static final String GET_FRIEND_REQUEST = BASE_URL + "getFriendRequest";

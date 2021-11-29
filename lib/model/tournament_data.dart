@@ -218,6 +218,7 @@ class Tournament {
   Tournament({
     String? organizerName,
     String? organizerNumber,
+    String? secondaryNumber,
     String? tournamentName,
     String? startDate,
     String? endDate,
@@ -246,6 +247,7 @@ class Tournament {
   }) {
     _organizerName = organizerName;
     _organizerNumber = organizerNumber;
+    _secondaryNumber = secondaryNumber;
     _tournamentName = tournamentName;
     _startDate = startDate;
     _endDate = endDate;
@@ -278,6 +280,7 @@ class Tournament {
   Tournament.fromJson(dynamic json) {
     _organizerName = json['organizer_name'];
     _organizerNumber = json['organizer_number'];
+    _secondaryNumber = json['secondary_number'];
     _tournamentName = json['tournament_name'];
     _startDate = json['start_date'];
     _endDate = json['end_date'];
@@ -308,6 +311,7 @@ class Tournament {
   }
   String? _organizerName;
   String? _organizerNumber;
+  String? _secondaryNumber;
   String? _tournamentName;
   String? _startDate;
   String? _endDate;
@@ -338,6 +342,7 @@ class Tournament {
 
   String? get organizerName => _organizerName;
   String? get organizerNumber => _organizerNumber;
+  String? get secondaryNumber => _secondaryNumber;
   String? get tournamentName => _tournamentName;
   String? get startDate => _startDate;
   String? get endDate => _endDate;
@@ -370,6 +375,7 @@ class Tournament {
     final map = <String, dynamic>{};
     map['organizer_name'] = _organizerName;
     map['organizer_number'] = _organizerNumber;
+    map['secondary_number'] = _secondaryNumber;
     map['tournament_name'] = _tournamentName;
     map['start_date'] = _startDate;
     map['end_date'] = _endDate;
@@ -474,6 +480,10 @@ class Tournament {
 
   set organizerNumber(String? value) {
     _organizerNumber = value;
+  }
+
+  set secondaryNumber(String? value) {
+    _secondaryNumber = value;
   }
 
   set organizerName(String? value) {

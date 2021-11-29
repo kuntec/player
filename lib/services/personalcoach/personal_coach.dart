@@ -169,6 +169,10 @@ class _PersonalCoachState extends State<PersonalCoach> {
     );
   }
 
+  _refresh() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -181,21 +185,23 @@ class _PersonalCoachState extends State<PersonalCoach> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     if (isService) {
-                      Navigator.push(
+                      var result = await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => MyPersonalCoach(
                                     serviceId: widget.serviceId,
                                   )));
+                      _refresh();
                     } else {
-                      Navigator.push(
+                      var result = await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => PersonalCoachRegister(
                                     serviceId: widget.serviceId,
                                   )));
+                      _refresh();
                     }
                   },
                   child: Container(

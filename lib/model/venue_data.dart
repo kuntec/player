@@ -83,6 +83,7 @@ class Venue {
     String? image,
     String? sportId,
     String? members,
+    String? onwards,
     int? id,
   }) {
     _name = name;
@@ -100,6 +101,7 @@ class Venue {
     _image = image;
     _sportId = sportId;
     _members = members;
+    _onwards = onwards;
     _id = id;
   }
 
@@ -119,6 +121,7 @@ class Venue {
     _image = json['image'];
     _sportId = json['sport_id'];
     _members = json['members'];
+    _onwards = json['onwards'];
     _id = json['id'];
   }
   String? _name;
@@ -136,6 +139,7 @@ class Venue {
   String? _image;
   String? _sportId;
   String? _members;
+  String? _onwards;
   int? _id;
 
   String? get name => _name;
@@ -153,6 +157,7 @@ class Venue {
   String? get image => _image;
   String? get sportId => _sportId;
   String? get members => _members;
+  String? get onwards => _onwards;
   int? get id => _id;
 
   Map<String, dynamic> toJson() {
@@ -172,8 +177,13 @@ class Venue {
     map['image'] = _image;
     map['sport_id'] = _sportId;
     map['members'] = _members;
+    map['onwards'] = _onwards;
     map['id'] = _id;
     return map;
+  }
+
+  set onwards(value) {
+    _onwards = value;
   }
 
   set id(int? value) {

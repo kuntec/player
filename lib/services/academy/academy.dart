@@ -165,6 +165,10 @@ class _AcademyState extends State<Academy> {
     );
   }
 
+  _refresh() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -184,21 +188,23 @@ class _AcademyState extends State<Academy> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     if (isService) {
-                      Navigator.push(
+                      var result = await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => MyAcademy(
                                     serviceId: widget.serviceId,
                                   )));
+                      _refresh();
                     } else {
-                      Navigator.push(
+                      var result = await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => AcademyRegister(
                                     serviceId: widget.serviceId,
                                   )));
+                      _refresh();
                     }
                   },
                   child: Container(

@@ -30,6 +30,10 @@ class _SportMarketState extends State<SportMarket> {
     getPlayerService();
   }
 
+  _refresh() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,21 +46,23 @@ class _SportMarketState extends State<SportMarket> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     if (isService) {
-                      Navigator.push(
+                      await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => MySportMarket(
                                     serviceId: widget.serviceId,
                                   )));
+                      _refresh();
                     } else {
-                      Navigator.push(
+                      await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => SportMarketRegister(
                                     serviceId: widget.serviceId,
                                   )));
+                      _refresh();
                     }
                   },
                   child: Container(

@@ -38,13 +38,14 @@ class _MyPhysioFitnessState extends State<MyPhysioFitness> {
         title: Text("My Physio Fitness"),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          await Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => PhysioFitnessRegister(
                         serviceId: widget.serviceId,
                       )));
+          _refresh();
         },
         backgroundColor: kBaseColor,
         child: Icon(

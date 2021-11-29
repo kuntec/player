@@ -38,13 +38,14 @@ class _MyHelperState extends State<MyHelper> {
         title: Text("My Helper"),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          var result = await Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => HelperRegister(
                         serviceId: widget.serviceId,
                       )));
+          _refresh();
         },
         backgroundColor: kBaseColor,
         child: Icon(

@@ -52,6 +52,10 @@ class _EventScreenState extends State<EventScreen> {
     setState(() {});
   }
 
+  _refresh() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,11 +67,12 @@ class _EventScreenState extends State<EventScreen> {
             child: Row(
               children: [
                 GestureDetector(
-                  onTap: () {
-                    Navigator.push(
+                  onTap: () async {
+                    var result = await Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => EventRegister()));
+                    _refresh();
                   },
                   child: Container(
                     margin: EdgeInsets.all(5),
@@ -92,29 +97,6 @@ class _EventScreenState extends State<EventScreen> {
                     ),
                   ),
                 ),
-                // Container(
-                //   decoration: kServiceBoxItem.copyWith(
-                //     color: kBaseColor,
-                //     borderRadius: BorderRadius.circular(5.0),
-                //   ),
-                //   child: TextButton.icon(
-                //     onPressed: () {
-                //       Navigator.push(
-                //           context,
-                //           MaterialPageRoute(
-                //               builder: (context) => EventRegister()));
-                //     },
-                //     icon: Icon(
-                //       isEvent ? Icons.star : Icons.add,
-                //       color: Colors.white,
-                //       size: 15,
-                //     ),
-                //     label: Text(
-                //       isEvent ? "My Events" : "Register",
-                //       style: TextStyle(color: Colors.white, fontSize: 12.0),
-                //     ),
-                //   ),
-                // )
               ],
             ),
           ),
@@ -151,21 +133,6 @@ class _EventScreenState extends State<EventScreen> {
     );
   }
 
-  // Widget myEventList() {
-  //   return Container(
-  //     child: events != null
-  //         ? ListView.builder(
-  //             padding: EdgeInsets.only(bottom: 110),
-  //             scrollDirection: Axis.vertical,
-  //             shrinkWrap: true,
-  //             itemCount: events!.length,
-  //             itemBuilder: (BuildContext context, int index) {
-  //               return eventItem(events![index]);
-  //             },
-  //           )
-  //         : Center(child: Text("Loading")),
-  //   );
-  // }
   Widget myEvent() {
     return Container(
       height: 700,

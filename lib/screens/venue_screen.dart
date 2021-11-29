@@ -169,6 +169,11 @@ class _VenueScreenState extends State<VenueScreen> {
     );
   }
 
+  _refresh() {
+//    Utility.showToast("refreshing..");
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -181,14 +186,15 @@ class _VenueScreenState extends State<VenueScreen> {
               child: Row(
                 children: [
                   TextButton.icon(
-                    onPressed: () {
+                    onPressed: () async {
                       // Navigator.push(
                       //     context,
                       //     MaterialPageRoute(
                       //         builder: (context) => VenueRegister()));
 
-                      Navigator.push(context,
+                      await Navigator.push(context,
                           MaterialPageRoute(builder: (context) => AddVenue()));
+                      _refresh();
                     },
                     icon: Icon(
                       Icons.add,
@@ -230,7 +236,7 @@ class _VenueScreenState extends State<VenueScreen> {
                 ),
               ),
               sportBarList(),
-              myVenue(),
+              allVenue(),
             ],
           ),
         ),
@@ -238,12 +244,12 @@ class _VenueScreenState extends State<VenueScreen> {
     );
   }
 
-  myVenue() {
+  allVenue() {
     return Container(
       height: 700,
       padding: EdgeInsets.all(10.0),
       child: FutureBuilder(
-        future: getMyVenues(),
+        future: getAllVenues(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.data == null) {
             return Container(
@@ -294,7 +300,7 @@ class _VenueScreenState extends State<VenueScreen> {
 
   List<Venue>? venues;
 
-  Future<List<Venue>?> getMyVenues() async {
+  Future<List<Venue>?> getAllVenues() async {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -322,7 +328,7 @@ class _VenueScreenState extends State<VenueScreen> {
   Widget venueItem(dynamic venue) {
     return GestureDetector(
       onTap: () {
-        // Utility.showToast("ID ${venue.id}");
+        //Utility.showToast("ID ${venue.id}");
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -446,7 +452,7 @@ class _VenueScreenState extends State<VenueScreen> {
                         padding: EdgeInsets.only(
                             top: 5.0, bottom: 5.0, right: 15.0, left: 15.0),
                         child: Text(
-                          "\u{20B9} 1000",
+                          "\u{20B9} ${venue.onwards} Onwards",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12.0,

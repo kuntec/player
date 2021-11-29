@@ -21,6 +21,10 @@ class MyAcademy extends StatefulWidget {
 }
 
 class _MyAcademyState extends State<MyAcademy> {
+  _refresh() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,13 +32,14 @@ class _MyAcademyState extends State<MyAcademy> {
         title: Text("My Academy"),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          var result = await Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => AcademyRegister(
                         serviceId: widget.serviceId,
                       )));
+          _refresh();
         },
         backgroundColor: kBaseColor,
         child: Icon(
@@ -291,10 +296,6 @@ class _MyAcademyState extends State<MyAcademy> {
           )
         ],
       );
-
-  _refresh() {
-    setState(() {});
-  }
 
   deleteService(String id) async {
     APICall apiCall = new APICall();

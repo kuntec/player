@@ -167,6 +167,10 @@ class _CommentatorState extends State<Commentator> {
     );
   }
 
+  _refresh() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -179,21 +183,23 @@ class _CommentatorState extends State<Commentator> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     if (isService) {
-                      Navigator.push(
+                      var result = await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => MyCommentator(
                                     serviceId: widget.serviceId,
                                   )));
+                      _refresh();
                     } else {
-                      Navigator.push(
+                      var result = await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => CommentatorRegister(
                                     serviceId: widget.serviceId,
                                   )));
+                      _refresh();
                     }
                   },
                   child: Container(

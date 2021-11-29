@@ -166,7 +166,7 @@ class _ChooseSportState extends State<ChooseSport> {
         margin: EdgeInsets.all(10.0),
         width: 130,
         height: 130,
-        decoration: kContainerBox.copyWith(
+        decoration: kServiceBoxItem.copyWith(
             color: currentSelectedSport == data.id ? kBaseColor : Colors.white),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

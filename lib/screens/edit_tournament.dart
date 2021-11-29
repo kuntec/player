@@ -49,7 +49,8 @@ class _EditTournamentState extends State<EditTournament> {
 
   TextEditingController noOverCtrl = new TextEditingController();
   TextEditingController orgNameCtrl = new TextEditingController();
-  TextEditingController orgNumberCtrl = new TextEditingController();
+  TextEditingController primNumberCtrl = new TextEditingController();
+  TextEditingController secNumberCtrl = new TextEditingController();
   TextEditingController tournamentNameCtrl = new TextEditingController();
   TextEditingController entryFeesCtrl = new TextEditingController();
   TextEditingController noMemberCtrl = new TextEditingController();
@@ -138,13 +139,15 @@ class _EditTournamentState extends State<EditTournament> {
 
     setState(() {
       time = newTime;
+      String hour = Utility.getTimeFormat(time!.hour);
+      String minute = Utility.getTimeFormat(time!.minute);
       if (time == null) {
         //textStartTimeController.text = "Select Time";
       } else {
         if (isStart) {
-          textStartTimeController.text = "${time!.hour}:${time!.minute}";
+          textStartTimeController.text = "$hour:$minute";
         } else {
-          textEndTimeController.text = "${time!.hour}:${time!.minute}";
+          textEndTimeController.text = "$hour:$minute";
         }
       }
     });
@@ -214,7 +217,8 @@ class _EditTournamentState extends State<EditTournament> {
 
     noOverCtrl.text = widget.tournament.noOfOvers;
     orgNameCtrl.text = widget.tournament.organizerName;
-    orgNumberCtrl.text = widget.tournament.organizerNumber;
+    primNumberCtrl.text = widget.tournament.organizerNumber;
+    secNumberCtrl.text = widget.tournament.secondaryNumber;
     tournamentNameCtrl.text = widget.tournament.tournamentName;
     entryFeesCtrl.text = widget.tournament.entryFees;
     noMemberCtrl.text = widget.tournament.noOfMembers;
@@ -359,9 +363,18 @@ class _EditTournamentState extends State<EditTournament> {
           ),
           TextField(
             keyboardType: TextInputType.phone,
-            controller: orgNumberCtrl,
+            controller: primNumberCtrl,
             decoration: InputDecoration(
-                labelText: "Organizer Number",
+                labelText: "Primary Number",
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                )),
+          ),
+          TextField(
+            keyboardType: TextInputType.phone,
+            controller: secNumberCtrl,
+            decoration: InputDecoration(
+                labelText: "Secondary Number",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -589,7 +602,8 @@ class _EditTournamentState extends State<EditTournament> {
                     tournament = widget.tournament;
                     tournament!.playerId = playerId!.toString();
                     tournament!.organizerName = orgNameCtrl.text;
-                    tournament!.organizerNumber = orgNumberCtrl.text;
+                    tournament!.organizerNumber = primNumberCtrl.text;
+                    tournament!.secondaryNumber = secNumberCtrl.text;
                     tournament!.tournamentName = tournamentNameCtrl.text;
                     tournament!.startDate = textStartDateController.text;
                     tournament!.endDate = textEndDateController.text;

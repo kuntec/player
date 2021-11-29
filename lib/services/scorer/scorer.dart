@@ -167,6 +167,10 @@ class _ScorerState extends State<Scorer> {
     );
   }
 
+  _refresh() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -179,21 +183,23 @@ class _ScorerState extends State<Scorer> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     if (isService) {
-                      Navigator.push(
+                      await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => MyScorer(
                                     serviceId: widget.serviceId,
                                   )));
+                      _refresh();
                     } else {
-                      Navigator.push(
+                      await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => ScorerRegister(
                                     serviceId: widget.serviceId,
                                   )));
+                      _refresh();
                     }
                   },
                   child: Container(

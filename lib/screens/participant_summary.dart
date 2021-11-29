@@ -57,7 +57,7 @@ class _ParticipantSummaryState extends State<ParticipantSummary> {
                   name = value;
                 },
                 decoration: InputDecoration(
-                    labelText: "Enter Your Name",
+                    labelText: "Enter Your Name *",
                     labelStyle: TextStyle(
                       color: Colors.grey,
                     )),
@@ -69,7 +69,19 @@ class _ParticipantSummaryState extends State<ParticipantSummary> {
                   number = value;
                 },
                 decoration: InputDecoration(
-                    labelText: "Contact Number",
+                    labelText: "Contact Number *",
+                    labelStyle: TextStyle(
+                      color: Colors.grey,
+                    )),
+              ),
+              SizedBox(height: kMargin),
+              TextField(
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  age = value;
+                },
+                decoration: InputDecoration(
+                    labelText: "Age  *",
                     labelStyle: TextStyle(
                       color: Colors.grey,
                     )),
@@ -120,20 +132,29 @@ class _ParticipantSummaryState extends State<ParticipantSummary> {
                       child: Text("Female"),
                     ),
                   ),
+                  Expanded(
+                    flex: 10,
+                    child: Radio(
+                      value: "Other",
+                      groupValue: gender,
+                      onChanged: (value) {
+                        gender = value.toString();
+                        setState(() {});
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    flex: 10,
+                    child: GestureDetector(
+                      onTap: () {
+                        gender = "Other";
+                        setState(() {});
+                      },
+                      child: Text("Other"),
+                    ),
+                  ),
                   SizedBox(width: 10),
                 ],
-              ),
-              SizedBox(height: kMargin),
-              TextField(
-                keyboardType: TextInputType.number,
-                onChanged: (value) {
-                  age = value;
-                },
-                decoration: InputDecoration(
-                    labelText: "Age",
-                    labelStyle: TextStyle(
-                      color: Colors.grey,
-                    )),
               ),
               SizedBox(height: kMargin),
               Center(child: Text("Payment Mode")),
@@ -146,7 +167,9 @@ class _ParticipantSummaryState extends State<ParticipantSummary> {
                       value: "1",
                       groupValue: paymentMode,
                       onChanged: (value) {
-                        paymentMode = value.toString();
+                        // uncomment this line for online mode activation
+                        // paymentMode = value.toString();
+                        paymentMode = "0";
                         setState(() {});
                       },
                     ),
@@ -155,7 +178,9 @@ class _ParticipantSummaryState extends State<ParticipantSummary> {
                     flex: 10,
                     child: GestureDetector(
                         onTap: () {
-                          paymentMode = "1";
+                          // uncomment this line for online mode activation
+                          // paymentMode = "1";
+                          paymentMode = "0";
                           setState(() {});
                         },
                         child: Text("Online")),
@@ -233,7 +258,7 @@ class _ParticipantSummaryState extends State<ParticipantSummary> {
                     participant!.gender = gender.toString();
                     participant!.paymentId = "";
                     participant!.paymentMode = paymentMode.toString();
-                    participant!.paymentStatus = "2";
+                    participant!.paymentStatus = "0";
                     participant!.eventId = widget.event.id.toString();
                     participant!.amount = amount.toString();
 

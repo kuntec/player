@@ -39,7 +39,8 @@ class _AddTournamentState extends State<AddTournament> {
   Tournament? tournament;
 
   var organizerName;
-  var organizerNumber;
+  var primaryNumber;
+  var secondaryNumber;
   var tournamentName;
   var entryFees;
   var noOfMembers;
@@ -327,10 +328,21 @@ class _AddTournamentState extends State<AddTournament> {
           TextField(
             keyboardType: TextInputType.phone,
             onChanged: (value) {
-              organizerNumber = value;
+              primaryNumber = value;
             },
             decoration: InputDecoration(
-                labelText: "Organizer Number",
+                labelText: "Primary Number",
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                )),
+          ),
+          TextField(
+            keyboardType: TextInputType.phone,
+            onChanged: (value) {
+              secondaryNumber = value;
+            },
+            decoration: InputDecoration(
+                labelText: "Secondary Number",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -574,7 +586,8 @@ class _AddTournamentState extends State<AddTournament> {
                     tournament = new Tournament();
                     tournament!.playerId = playerId!.toString();
                     tournament!.organizerName = organizerName.toString();
-                    tournament!.organizerNumber = organizerNumber.toString();
+                    tournament!.organizerNumber = primaryNumber.toString();
+                    tournament!.secondaryNumber = secondaryNumber.toString();
                     tournament!.tournamentName = tournamentName.toString();
                     tournament!.startDate = textStartDateController.text;
                     tournament!.endDate = textEndDateController.text;
@@ -709,13 +722,15 @@ class _AddTournamentState extends State<AddTournament> {
 
     setState(() {
       time = newTime;
+      String hour = Utility.getTimeFormat(time!.hour);
+      String minute = Utility.getTimeFormat(time!.minute);
       if (time == null) {
         //textStartTimeController.text = "Select Time";
       } else {
         if (isStart) {
-          textStartTimeController.text = "${time!.hour}:${time!.minute}";
+          textStartTimeController.text = "$hour:$minute";
         } else {
-          textEndTimeController.text = "${time!.hour}:${time!.minute}";
+          textEndTimeController.text = "$hour:$minute";
         }
       }
     });
@@ -852,8 +867,8 @@ class _AddTournamentState extends State<AddTournament> {
           children: [
             GestureDetector(
               onTap: () {
-                // Utility.showToast("hi");
                 selectedTournament = tournament;
+//                Utility.showToast("hi ${selectedTournament.secondaryNumber}");
                 // _showDialog(tournament);
                 showCupertinoDialog(
                   barrierDismissible: true,

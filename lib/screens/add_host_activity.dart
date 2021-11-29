@@ -5,6 +5,7 @@ import 'package:player/api/api_resources.dart';
 import 'package:player/components/custom_button.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/constant/time_ago.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/host_activity.dart';
 import 'package:player/model/looking_for_data.dart';
@@ -14,13 +15,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AddHost extends StatefulWidget {
   const AddHost({Key? key}) : super(key: key);
-
   @override
   _AddHostState createState() => _AddHostState();
 }
 
 class _AddHostState extends State<AddHost> {
-//  late String valueChoose;
+  //  late String valueChoose;
   // List sports = [
   //   "Cricket",
   //   "Football",
@@ -283,7 +283,8 @@ class _AddHostState extends State<AddHost> {
                                 shrinkWrap: true,
                                 itemCount: snapshot.data.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  return hostActivityItem(snapshot.data[index]);
+                                  return hostActivityItem2(
+                                      snapshot.data[index]);
                                 },
                               );
                             }
@@ -707,14 +708,12 @@ class _AddHostState extends State<AddHost> {
     if (newTime == null) return;
     setState(() {
       time = newTime;
+      String hour = Utility.getTimeFormat(time!.hour);
+      String minute = Utility.getTimeFormat(time!.minute);
       if (time == null) {
         txtTime = "Select Time";
       } else {
-        int hour = time!.hour;
-        int minute = time!.minute;
-        String h = Utility.getTimeFormat(hour);
-        String m = Utility.getTimeFormat(minute);
-        txtTime = "$h:$m";
+        txtTime = "$hour:$minute";
       }
       txtTimeController.text = txtTime;
     });
@@ -926,6 +925,171 @@ class _AddHostState extends State<AddHost> {
                   activity.sportName,
                   style: TextStyle(color: Colors.white, fontSize: 14.0),
                 ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  hostActivityItem2(dynamic activity) {
+    return GestureDetector(
+      onTap: () {
+        Utility.showToast("Activity To Chat ${activity.playerName}");
+      },
+      child: Container(
+        margin: EdgeInsets.all(10.0),
+        decoration: kServiceBoxItem,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            //image column
+            Expanded(
+              flex: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(5.0),
+//                  padding: EdgeInsets.all(5.0),
+                    height: 85.0,
+                    width: 85.0,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Image.network(
+                        activity.playerImage == null
+                            ? APIResources.AVATAR_IMAGE
+                            : APIResources.IMAGE_URL + activity.playerImage,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    child: Center(
+                      child: Text(
+                        TimeAgo.timeAgoSinceDate(activity.createdAt),
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 10.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            //info Column
+            Expanded(
+              flex: 7,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //SizedBox(height: 5.0),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 7,
+                        child: Container(
+                          height: 20,
+                          child: Text(
+                            activity.playerName,
+                            style: TextStyle(
+                              color: kBaseColor,
+                              fontSize: 16.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: kBaseColor,
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(10.0),
+                                bottomLeft: Radius.circular(10.0),
+                              )),
+                          width: 90,
+                          height: 30,
+                          child: Center(
+                            child: Text(
+                              activity.sportName,
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 12.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Looking For: ${activity.lookingFor}",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Location: ${activity.area}",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Time: ${activity.timing}",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Date: ${activity.startDate}",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    activity.ballType != null
+                        ? "Ball Type: ${activity.ballType} "
+                        : "",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  GestureDetector(
+                    onTap: () {
+                      //Utility.showToast("Show More");
+                      // showPopup();
+                      // _showDialog(activity);
+                      currentSelectedActivity = activity;
+                      showCupertinoDialog(
+                        barrierDismissible: true,
+                        context: context,
+                        builder: createDialog,
+                      );
+                    },
+                    child: Container(
+                      alignment: Alignment.bottomRight,
+                      child: Icon(
+                        Icons.more_vert,
+                        color: kBaseColor,
+                        size: 20.0,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

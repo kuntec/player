@@ -35,6 +35,10 @@ class _UmpireState extends State<Umpire> {
     getPlayerService();
   }
 
+  _refresh() {
+    setState(() {});
+  }
+
   Future<List<Sports>> getMySports() async {
     APICall apiCall = new APICall();
     // List<Data> data = [];
@@ -178,21 +182,23 @@ class _UmpireState extends State<Umpire> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     if (isService) {
-                      Navigator.push(
+                      await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => MyUmpire(
                                     serviceId: widget.serviceId,
                                   )));
+                      _refresh();
                     } else {
-                      Navigator.push(
+                      await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => UmpireRegister(
                                     serviceId: widget.serviceId,
                                   )));
+                      _refresh();
                     }
                   },
                   child: Container(

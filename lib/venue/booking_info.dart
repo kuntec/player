@@ -189,6 +189,8 @@ class _BookingInfoState extends State<BookingInfo> {
                   value: "1",
                   groupValue: paymentMode,
                   onChanged: (value) {
+                    // uncomment this line for online mode activation
+                    // paymentMode = value.toString();
                     paymentMode = "0";
                     setState(() {});
                   },
@@ -198,6 +200,8 @@ class _BookingInfoState extends State<BookingInfo> {
                 flex: 10,
                 child: GestureDetector(
                     onTap: () {
+                      // uncomment this line for online mode activation
+                      // paymentMode = "0";
                       paymentMode = "0";
                       setState(() {});
                     },

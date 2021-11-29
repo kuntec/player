@@ -36,13 +36,14 @@ class _MyPersonalCoachState extends State<MyPersonalCoach> {
         title: Text("My Personal Coach"),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          var result = await Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => PersonalCoachRegister(
                         serviceId: widget.serviceId,
                       )));
+          _refresh();
         },
         backgroundColor: kBaseColor,
         child: Icon(

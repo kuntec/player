@@ -9,6 +9,7 @@ import 'package:player/api/api_resources.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/model/friend_data.dart';
 import 'package:player/model/player_data.dart';
 import 'package:player/profile/edit_profile.dart';
 import 'package:player/profile/favorite_sport.dart';
@@ -216,7 +217,9 @@ class _PlayerProfileState extends State<PlayerProfile> {
                         SizedBox(height: kMargin),
                         Container(
                           child: Text(
-                            "100 Friends",
+                            friendCount == 1 || friendCount == 0
+                                ? "$friendCount Friend"
+                                : "$friendCount Friends",
                             style: TextStyle(
                               fontSize: 14.0,
                               color: Colors.white,
@@ -576,8 +579,36 @@ class _PlayerProfileState extends State<PlayerProfile> {
           player = playerData.player;
           isLoading = false;
         });
+
+        listFriend();
         //  Utility.showToast("Player Found ${playerData.player!.image}");
       }
     }
+  }
+
+  var friendCount = 0;
+  Future<List<Friends>> listFriend() async {
+    setState(() {
+      isLoading = true;
+    });
+    List<Friends> list = [];
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      FriendData friendData = await apiCall.listFriend(player!.id.toString());
+      if (friendData.friend != null) {
+        list = friendData.friend!;
+        friendCount = list.length;
+      }
+      if (friendData.status!) {
+        print(friendData.message!);
+      } else {
+        print(friendData.message!);
+      }
+    }
+    setState(() {
+      isLoading = false;
+    });
+    return list;
   }
 }

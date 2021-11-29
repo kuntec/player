@@ -88,7 +88,7 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               RoundedButton(
-                title: "Upload Photos",
+                title: "+ Upload Photos",
                 color: kBaseColor,
                 txtColor: Colors.white,
                 minWidth: MediaQuery.of(context).size.width,

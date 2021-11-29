@@ -30,13 +30,14 @@ class _MySportMarketState extends State<MySportMarket> {
         title: Text("My Sport Market"),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          await Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => SportMarketRegister(
                         serviceId: widget.serviceId,
                       )));
+          _refresh();
         },
         backgroundColor: kBaseColor,
         child: Icon(

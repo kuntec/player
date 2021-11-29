@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
 import 'package:player/components/custom_button.dart';
@@ -19,6 +20,62 @@ class VenueDetails extends StatefulWidget {
 
 class _VenueDetailsState extends State<VenueDetails> {
   bool? isPhotoSelected = false;
+
+  List selectedFacilities = [];
+
+  List facilities = [
+    "24/7",
+    "Artificial Turf",
+    "Ball Boy",
+    "Cafe",
+    "Drinking Water",
+    "Flood Lights",
+    "Locker Room",
+    "Parking",
+    "Rental Equipment",
+    "Seating Lounge",
+    "Showers",
+    "Sound System",
+    "Sport Shop",
+    "Steam",
+    "Walking Track",
+    "Warm Up",
+    "Washroom",
+    "Air Conditioning",
+    "Wi-Fi",
+    "Coach",
+  ];
+  List facilityIcons = [
+    "two.svg",
+    "artificial_turf.svg",
+    "ball_boy.svg",
+    "cafe.svg",
+    "drinking_water.svg",
+    "flood_lights.svg",
+    "locker_room.svg",
+    "parking.svg",
+    "rental_equipment.svg",
+    "seating_lounge.svg",
+    "shower.svg",
+    "sound_system.svg",
+    "sport_shop.svg",
+    "steam.svg",
+    "walking_track.svg",
+    "warm_up.svg",
+    "washroom.svg",
+    "ac.svg",
+    "wifi.svg",
+    "coach.svg",
+  ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    selectedFacilities = widget.venue.facilities.split(", ");
+    print("Length : ${selectedFacilities.length}");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,24 +176,21 @@ class _VenueDetailsState extends State<VenueDetails> {
     return Container(
       child: Column(
         children: [
+          itemDetail(context, "Sport", widget.venue.sport.toString()),
           itemDetail(context, "Venue Name", widget.venue.name.toString()),
-          itemDetail(
-              context, "Venue Location", widget.venue.address.toString()),
+          itemDetail(context, "Venue Description",
+              widget.venue.description.toString()),
           itemDetail(context, "Open Time", widget.venue.openTime.toString()),
           itemDetail(context, "Close Time", widget.venue.closeTime.toString()),
-          itemDetail(context, "Sport", widget.venue.sport.toString()),
+          itemDetail(
+              context, "Max Person Allowed", widget.venue.members.toString()),
+          itemDetail(context, "Venue Address", widget.venue.address.toString()),
+          itemDetail(
+              context, "Location Link", widget.venue.locationLink.toString()),
+          itemDetail(context, "Venue City", widget.venue.city.toString()),
           itemDetail(context, "Facilities", widget.venue.facilities.toString()),
-          // itemDetail(context, "Address", widget.service.address.toString()),
-          // itemDetail(
-          //     context, "Address Link", widget.service.locationLink.toString()),
-          // itemDetail(context, "City", widget.service.city.toString()),
-          // itemDetail(
-          //     context, "Owner Name", widget.service.contactName.toString()),
-          // itemCallDetail(
-          //     context, "Contact Number", widget.service.contactNo.toString()),
-          // itemCallDetail(context, "Secondary Number",
-          //     widget.service.secondaryNo.toString()),
-          // itemDetail(context, "About Academy", widget.service.about.toString()),
+          itemDetail(context, "Price",
+              "\u{20B9} ${widget.venue.onwards.toString()} onwards"),
           SizedBox(height: k20Margin),
           RoundedButton(
               title: "Proceed To Book",
@@ -157,6 +211,60 @@ class _VenueDetailsState extends State<VenueDetails> {
       ),
     );
   }
+
+  // showFacilities() {
+  //   return Container(
+  //     height: 400,
+  //     child: ListView.builder(
+  //         padding: EdgeInsets.only(bottom: 100),
+  //         itemCount: selectedFacilities.length,
+  //         itemBuilder: (BuildContext context, int index) {
+  //           return facilityItem(selectedFacilities[index], index);
+  //           // return ListTile(
+  //           //     leading: Icon(Icons.list),
+  //           //     trailing: Text(
+  //           //       "GFG",
+  //           //       style: TextStyle(color: Colors.green, fontSize: 15),
+  //           //     ),
+  //           //     title: Text("List item $index"));
+  //         }),
+  //   );
+  // }
+  //
+  // facilityItem(String item, int index) {
+  //   return GestureDetector(
+  //     onTap: () {},
+  //     child: Container(
+  //       margin: EdgeInsets.all(10.0),
+  //       padding: EdgeInsets.all(10.0),
+  //       decoration: kContainerBoxDecoration.copyWith(color: Colors.white),
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //         children: [
+  //           Expanded(
+  //               flex: 2,
+  //               child: Container(
+  //                   height: 30,
+  //                   width: 30,
+  //                   child: SvgPicture.asset(
+  //                       facilities.any((element) => element == item)
+  //                           ? "assets/images/${facilityIcons[facilities.indexOf(item)]}"
+  //                           : "",
+  //                       color: Colors.grey))),
+  //           Expanded(
+  //             flex: 8,
+  //             child: Container(
+  //               child: Text(
+  //                 item,
+  //                 style: TextStyle(color: Colors.grey),
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget photoDetails() {
     return Container(

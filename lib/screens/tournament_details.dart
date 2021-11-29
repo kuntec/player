@@ -48,19 +48,45 @@ class _TournamentDetailsState extends State<TournamentDetails> {
                 ),
               ),
               itemDetail(
-                  context, "Tournament Name", widget.tournament.tournamentName),
-              itemDetail(context, "Address", widget.tournament.address),
+                  context, "Sport", widget.tournament.sportName.toString()),
+              widget.tournament.sportName.toString().toLowerCase() == "cricket"
+                  ? itemDetail(context, "Tournament Category",
+                      widget.tournament.tournamentCategory.toString())
+                  : SizedBox.shrink(),
+              widget.tournament.sportName.toString().toLowerCase() == "cricket"
+                  ? itemDetail(context, "Ball Type",
+                      widget.tournament.ballType.toString())
+                  : SizedBox.shrink(),
+              widget.tournament.sportName.toString().toLowerCase() == "cricket"
+                  ? itemDetail(context, "No of Overs",
+                      widget.tournament.noOfOvers.toString())
+                  : SizedBox.shrink(),
               itemDetail(
-                  context, "Contact Number", widget.tournament.organizerNumber),
+                  context, "Organizer Name", widget.tournament.organizerName),
+              itemCallDetail(
+                  context, "Primary Number", widget.tournament.organizerNumber),
+              itemCallDetail(context, "Secondary Number",
+                  widget.tournament.secondaryNumber),
+              itemDetail(
+                  context, "Tournament Name", widget.tournament.tournamentName),
               itemDetail(context, "Start Date", widget.tournament.startDate),
               itemDetail(context, "End Date", widget.tournament.endDate),
               itemDetail(context, "Entry Fees",
                   "\u{20B9} ${widget.tournament.entryFees}"),
+              itemDetail(context, "Start Time", widget.tournament.startTime),
+              itemDetail(context, "End Time", widget.tournament.endTime),
+              itemDetail(context, "End Time", widget.tournament.endTime),
+              itemDetail(
+                  context, "No of Team Members", widget.tournament.noOfMembers),
+              itemDetail(
+                  context, "Age Requirement", widget.tournament.ageLimit),
+              itemDetail(
+                  context, "Tournament Address", widget.tournament.address),
+              itemDetail(
+                  context, "Location Link", widget.tournament.locationLink),
               itemDetail(context, "Prize", widget.tournament.prizeDetails),
               itemDetail(
-                  context, "Sport", widget.tournament.sportName.toString()),
-              itemDetail(
-                  context, "Status", widget.tournament.status.toString()),
+                  context, "Other Information", widget.tournament.otherInfo),
               SizedBox(height: k20Margin),
               widget.tournament.status.toString() == "0"
                   ? Container(

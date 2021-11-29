@@ -29,13 +29,14 @@ class _MyTshirtSellerState extends State<MyTshirtSeller> {
         title: Text("My T-shirt Seller"),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          await Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => TshirtSellerRegister(
                         serviceId: widget.serviceId,
                       )));
+          _refresh();
         },
         backgroundColor: kBaseColor,
         child: Icon(

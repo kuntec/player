@@ -6,6 +6,39 @@ import 'package:flutter/material.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/service_model.dart';
 
+Widget itemDetail2(BuildContext context, String title, String value) {
+  return Container(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: kMargin),
+        Text(
+          title,
+          style: TextStyle(color: kBaseColor, fontSize: 16.0),
+        ),
+        SizedBox(height: kMargin),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(5.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+              )
+            ],
+          ),
+          padding: EdgeInsets.all(10.0),
+          width: MediaQuery.of(context).size.width,
+          child: Text(
+            value,
+            style: TextStyle(color: kBlack, fontSize: 16.0),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 Widget itemDetail(BuildContext context, String title, String value) {
   return Container(
     child: Column(
@@ -18,8 +51,14 @@ Widget itemDetail(BuildContext context, String title, String value) {
         ),
         SizedBox(height: kMargin),
         Container(
-          decoration: kServiceBoxItem.copyWith(
+          decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.circular(5.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+              )
+            ],
           ),
           padding: EdgeInsets.all(10.0),
           width: MediaQuery.of(context).size.width,
@@ -45,8 +84,14 @@ Widget itemCallDetail(BuildContext context, String title, String value) {
         ),
         SizedBox(height: kMargin),
         Container(
-          decoration: kServiceBoxItem.copyWith(
+          decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.circular(5.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+              )
+            ],
           ),
           padding: EdgeInsets.all(5.0),
           width: MediaQuery.of(context).size.width,

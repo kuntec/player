@@ -273,37 +273,92 @@ class _FriendScreenState extends State<FriendScreen> {
                               ),
                       )
                     : player.friend.status == "0"
-                        ? Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: kBaseColor,
-                                width: 0,
+                        ? Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: kBaseColor,
+                                    width: 0,
+                                  ),
+                                ),
+                                padding: EdgeInsets.all(5),
+                                child: Text(
+                                  "Requested",
+                                  style: TextStyle(
+                                    color: kBaseColor,
+                                    fontSize: 12.0,
+                                  ),
+                                ),
                               ),
-                            ),
-                            padding: EdgeInsets.all(5),
-                            child: Text(
-                              "Requested",
-                              style: TextStyle(
-                                color: kBaseColor,
-                                fontSize: 12.0,
+                              SizedBox(height: 5),
+                              GestureDetector(
+                                onTap: () {
+                                  removeFriend(
+                                      myPlayerId, player.id.toString());
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.red,
+                                      width: 0,
+                                    ),
+                                  ),
+                                  padding: EdgeInsets.all(5),
+                                  child: Text(
+                                    "Cancel",
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12.0,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           )
-                        : Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: kBaseColor,
-                                width: 0,
+                        : Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: kBaseColor,
+                                    width: 0,
+                                  ),
+                                ),
+                                padding: EdgeInsets.all(5),
+                                child: Text(
+                                  "Friend",
+                                  style: TextStyle(
+                                    color: kBaseColor,
+                                    fontSize: 12.0,
+                                  ),
+                                ),
                               ),
-                            ),
-                            padding: EdgeInsets.all(5),
-                            child: Text(
-                              "Friend",
-                              style: TextStyle(
-                                color: kBaseColor,
-                                fontSize: 12.0,
+                              SizedBox(height: 5),
+                              GestureDetector(
+                                onTap: () {
+                                  removeFriend(
+                                      myPlayerId, player.id.toString());
+                                  Utility.showToast("Unfriend");
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.red,
+                                      width: 0,
+                                    ),
+                                  ),
+                                  padding: EdgeInsets.all(5),
+                                  child: Text(
+                                    "UnFriend",
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12.0,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
               ],
             ),
@@ -501,7 +556,7 @@ class _FriendScreenState extends State<FriendScreen> {
             flex: 3,
             child: GestureDetector(
               onTap: () async {
-                updateFriend(myPlayerId, friend.player.id.toString(), "2");
+                removeFriend(myPlayerId, friend.player.id.toString());
                 Utility.showToast("Cancel");
               },
               child: Container(
@@ -631,6 +686,32 @@ class _FriendScreenState extends State<FriendScreen> {
     if (connectivityStatus) {
       PlayerData playerData =
           await apiCall.updateFriend(playerId1, playerId2, status);
+      setState(() {
+        isLoading = false;
+      });
+      if (playerData.status!) {
+        print(playerData.message!);
+
+        Utility.showToast(playerData.message!);
+        setState(() {
+          isLoading = false;
+        });
+        // Navigator.pop(context, true);
+      } else {
+        print(playerData.message!);
+        Utility.showToast(playerData.message!);
+      }
+    }
+  }
+
+  removeFriend(String playerId1, String playerId2) async {
+    setState(() {
+      isLoading = true;
+    });
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      PlayerData playerData = await apiCall.removeFriend(playerId1, playerId2);
       setState(() {
         isLoading = false;
       });

@@ -167,6 +167,10 @@ class _ManufacturerState extends State<Manufacturer> {
     );
   }
 
+  _refresh() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -186,21 +190,23 @@ class _ManufacturerState extends State<Manufacturer> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     if (isService) {
-                      Navigator.push(
+                      var result = await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => MyManufacturer(
                                     serviceId: widget.serviceId,
                                   )));
+                      _refresh();
                     } else {
-                      Navigator.push(
+                      var result = await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => ManufacturerRegister(
                                     serviceId: widget.serviceId,
                                   )));
+                      _refresh();
                     }
                   },
                   child: Container(
