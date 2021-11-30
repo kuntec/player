@@ -168,10 +168,9 @@ class _TournamentScreenState extends State<TournamentScreen> {
         future: getTournaments(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.data == null) {
-            return Container(
-              child: Center(
-                child: Text('Loading....'),
-              ),
+            return Center(
+              child: Container(
+                  child: CircularProgressIndicator(color: kBaseColor)),
             );
           }
           if (snapshot.hasData) {

@@ -66,7 +66,7 @@ class _PlayerProfileState extends State<PlayerProfile> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        title: Text("Player"),
+        title: Text("Profile"),
         actions: [
           // RoundedButton(
           //   title: "Logout",
@@ -93,12 +93,10 @@ class _PlayerProfileState extends State<PlayerProfile> {
                 //       )
                 //     : profileImageUpdate(),
                 isLoading == true
-                    ? Container(
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            color: kBaseColor,
-                          ),
-                        ),
+                    ? Center(
+                        child: Container(
+                            child:
+                                CircularProgressIndicator(color: kBaseColor)),
                       )
                     : profileInfo(context),
               ],

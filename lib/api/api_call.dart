@@ -1117,6 +1117,7 @@ class APICall {
     params['player_id'] = booking.playerId!;
     params['sport_id'] = booking.sportId!;
     params['venue_id'] = booking.venueId!;
+    params['owner_id'] = booking.ownerId!;
     params['payment_mode'] = booking.paymentMode!;
     params['payment_status'] = booking.paymentStatus!;
     params['booking_status'] = booking.bookingStatus!;
@@ -1257,6 +1258,7 @@ class APICall {
     params['player1'] = player1;
     params['player2'] = player2;
     params['message'] = message;
+    params['created_at'] = DateTime.now().toString();
     params['status'] = "0";
 
     HttpCall call = new HttpCall();

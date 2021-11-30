@@ -273,7 +273,6 @@ class _BookingInfoState extends State<BookingInfo> {
                 booking!.name = name.toString();
                 booking!.playerId = playerId.toString();
                 booking!.bookingStatus = "1";
-
                 booking!.number = number.toString();
                 booking!.age = age.toString();
                 booking!.gender = gender.toString();
@@ -282,6 +281,7 @@ class _BookingInfoState extends State<BookingInfo> {
                 booking!.amount = total.toString();
                 booking!.sportId = widget.venue.id.toString();
                 booking!.venueId = widget.venue.id.toString();
+                booking!.ownerId = widget.venue.playerId.toString();
 
                 var result = await Navigator.push(
                     context,

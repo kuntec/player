@@ -25,6 +25,20 @@ class _AddVenuePhotosState extends State<AddVenuePhotos> {
     return Scaffold(
       appBar: AppBar(
         title: Center(child: Text("Venue Photos")),
+        actions: [
+          GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                margin: EdgeInsets.only(right: 5),
+                child: Icon(
+                  Icons.check,
+                  size: 30,
+                  color: kBaseColor,
+                ),
+              )),
+        ],
         leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
@@ -39,7 +53,17 @@ class _AddVenuePhotosState extends State<AddVenuePhotos> {
           margin: EdgeInsets.all(kMargin),
           child: Column(
             children: [
-              addVenueForm(),
+              RoundedButton(
+                  title: "Add More Photos",
+                  color: kBaseColor,
+                  onPressed: () {
+                    pickImage();
+                  },
+                  minWidth: 250,
+                  txtColor: Colors.white),
+              SizedBox(height: k20Margin),
+              Container(),
+              myPhotos(),
             ],
           ),
         ),
@@ -64,223 +88,27 @@ class _AddVenuePhotosState extends State<AddVenuePhotos> {
     }
   }
 
-  Widget addVenueForm() {
-    return Container(
-      margin: EdgeInsets.all(10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // GestureDetector(
-          //   onTap: () {
-          //     pickImage();
-          //   },
-          //   child: Container(
-          //     margin: EdgeInsets.all(5.0),
-          //     child: image != null
-          //         ? Image.file(
-          //             image!,
-          //             width: 280,
-          //             height: 150,
-          //             fit: BoxFit.fill,
-          //           )
-          //         : FlutterLogo(size: 100),
-          //   ),
-          // ),
-          RoundedButton(
-              title: "Add More Photos",
-              color: kBaseColor,
-              onPressed: () {
-                pickImage();
-              },
-              minWidth: 250,
-              txtColor: Colors.white),
-          SizedBox(height: k20Margin),
-          // GestureDetector(
-          //   onTap: () async {
-          //     print("Camera Clicked");
-          //     // pickedFile =
-          //     //     await ImagePicker().getImage(source: ImageSource.gallery);
-          //     pickImage();
-          //   },
-          //   child: Container(
-          //     child: Icon(
-          //       Icons.camera_alt_outlined,
-          //       size: 30,
-          //       color: kBaseColor,
-          //     ),
-          //   ),
-          // ),
-          Container(),
-          myPhotos(),
-          // TextField(
-          //   onChanged: (value) {
-          //     // venueName = value;
-          //   },
-          //   decoration: InputDecoration(
-          //       labelText: "Venue Name",
-          //       labelStyle: TextStyle(
-          //         color: Colors.grey,
-          //       )),
-          // ),
-          // TextField(
-          //   onChanged: (value) {
-          //     // venueDescription = value;
-          //   },
-          //   decoration: InputDecoration(
-          //       labelText: "Venue Description",
-          //       labelStyle: TextStyle(
-          //         color: Colors.grey,
-          //       )),
-          // ),
-          // TextField(
-          //   onChanged: (value) {
-          //     tournamentName = value;
-          //   },
-          //   decoration: InputDecoration(
-          //       labelText: "Tournament Name",
-          //       labelStyle: TextStyle(
-          //         color: Colors.grey,
-          //       )),
-          // ),
-          // SizedBox(
-          //   height: k20Margin,
-          // ),
-          // Container(
-          //     child: Row(
-          //   children: [
-          //     Expanded(
-          //       flex: 1,
-          //       child: GestureDetector(
-          //         onTap: () {
-          //           pickTime(context, true);
-          //         },
-          //         child: Text(
-          //           txtOpenTime,
-          //         ),
-          //       ),
-          //     ),
-          //     SizedBox(
-          //       width: 20.0,
-          //     ),
-          //     Expanded(
-          //       flex: 1,
-          //       child: GestureDetector(
-          //         onTap: () {
-          //           pickTime(context, false);
-          //         },
-          //         child: Text(
-          //           txtCloseTime,
-          //         ),
-          //       ),
-          //     ),
-          //
-          //   ],
-          // )),
-          // Container(
-          //   child: Row(
-          //     children: [
-          //       Expanded(
-          //         flex: 1,
-          //         child: TextField(
-          //           onChanged: (value) {
-          //             //entryFees = value;
-          //           },
-          //           decoration: InputDecoration(
-          //               labelText: "Venue Location",
-          //               labelStyle: TextStyle(
-          //                 color: Colors.grey,
-          //               )),
-          //         ),
-          //       ),
-          //       SizedBox(
-          //         width: 20.0,
-          //       ),
-          //       Expanded(
-          //         flex: 1,
-          //         child: GestureDetector(
-          //           onTap: () {
-          //             pickTime(context);
-          //           },
-          //           child: Text(
-          //             txtTime,
-          //           ),
-          //         ),
-          //       ),
-          //       // Expanded(
-          //       //   flex: 1,
-          //       //   child: TextField(
-          //       //     decoration: InputDecoration(
-          //       //         labelText: "Timing (From to To)",
-          //       //         labelStyle: TextStyle(
-          //       //           color: Colors.grey,
-          //       //         )),
-          //       //   ),
-          //       // ),
-          //     ],
-          //   ),
-          // ),
-          // TextField(
-          //   onChanged: (value) {
-          //     //noOfMembers = value;
-          //   },
-          //   decoration: InputDecoration(
-          //       labelText: "Venue Location",
-          //       labelStyle: TextStyle(
-          //         color: Colors.grey,
-          //       )),
-          // ),
-          // TextField(
-          //   onChanged: (value) {
-          //     // ageLimit = value;
-          //   },
-          //   decoration: InputDecoration(
-          //       labelText: "Venue City",
-          //       labelStyle: TextStyle(
-          //         color: Colors.grey,
-          //       )),
-          // ),
-          // TextField(
-          //   onChanged: (value) {
-          //     // address = value;
-          //   },
-          //   decoration: InputDecoration(
-          //       labelText: "Which Sport We can Play",
-          //       labelStyle: TextStyle(
-          //         color: Colors.grey,
-          //       )),
-          // ),
-          // TextField(
-          //   onChanged: (value) {
-          //     prizeDetails = value;
-          //   },
-          //   decoration: InputDecoration(
-          //       labelText: "Prize Details",
-          //       labelStyle: TextStyle(
-          //         color: Colors.grey,
-          //       )),
-          // ),
-          // TextField(
-          //   onChanged: (value) {
-          //     otherInfo = value;
-          //   },
-          //   decoration: InputDecoration(
-          //       labelText: "Any Other Information",
-          //       labelStyle: TextStyle(
-          //         color: Colors.grey,
-          //       )),
-          // ),
-          //SizedBox(height: k20Margin),
-          // RoundedButton(
-          //   title: "NEXT",
-          //   color: kBaseColor,
-          //   txtColor: Colors.white,
-          //   minWidth: 250,
-          //   onPressed: () async {},
-          // ),
-        ],
-      ),
-    );
-  }
+  // Widget addVenueForm() {
+  //   return Container(
+  //     margin: EdgeInsets.all(10.0),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.center,
+  //       children: [
+  //         RoundedButton(
+  //             title: "Add More Photos",
+  //             color: kBaseColor,
+  //             onPressed: () {
+  //               pickImage();
+  //             },
+  //             minWidth: 250,
+  //             txtColor: Colors.white),
+  //         SizedBox(height: k20Margin),
+  //         Container(),
+  //         myPhotos(),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   addVenuePhoto(String filePath) async {
     APICall apiCall = new APICall();
@@ -321,11 +149,7 @@ class _AddVenuePhotosState extends State<AddVenuePhotos> {
           }
           if (snapshot.hasData) {
             print("Has Data ${snapshot.data.length}");
-            // return Container(
-            //   child: Center(
-            //     child: Text('Yes Data ${snapshot.data}'),
-            //   ),
-            // );
+
             if (snapshot.data.length == 0) {
               return Container(
                 child: Center(
@@ -333,15 +157,22 @@ class _AddVenuePhotosState extends State<AddVenuePhotos> {
                 ),
               );
             } else {
-              return ListView.builder(
-                padding: EdgeInsets.only(bottom: 250),
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: snapshot.data.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return photoItem(snapshot.data[index]);
-                },
-              );
+              return GridView.builder(
+                  itemCount: snapshot.data!.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2),
+                  itemBuilder: (context, index) {
+                    return photoItem(snapshot.data![index]);
+                  });
+              // return ListView.builder(
+              //   padding: EdgeInsets.only(bottom: 250),
+              //   scrollDirection: Axis.vertical,
+              //   shrinkWrap: true,
+              //   itemCount: snapshot.data.length,
+              //   itemBuilder: (BuildContext context, int index) {
+              //     return photoItem(snapshot.data[index]);
+              //   },
+              // );
             }
 
             // return GridView.builder(
@@ -391,13 +222,11 @@ class _AddVenuePhotosState extends State<AddVenuePhotos> {
 
   photoItem(dynamic photo) {
     return Container(
-      margin: EdgeInsets.only(bottom: 10),
       child: Column(
         children: [
           Container(
-            margin: EdgeInsets.all(10.0),
-            height: 200.0,
-            width: 200.0,
+            height: 120.0,
+            width: 120.0,
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
               child: Image.network(
@@ -410,14 +239,25 @@ class _AddVenuePhotosState extends State<AddVenuePhotos> {
             onTap: () async {
               await deleteVenuePhoto(photo.id.toString());
             },
-            child: Expanded(
-              flex: 1,
+            child: Container(
               child: Icon(
                 Icons.delete_forever,
                 color: kBaseColor,
               ),
             ),
-          )
+          ),
+          // GestureDetector(
+          //   onTap: () async {
+          //     await deleteVenuePhoto(photo.id.toString());
+          //   },
+          //   child: Expanded(
+          //     flex: 1,
+          //     child: Icon(
+          //       Icons.delete_forever,
+          //       color: kBaseColor,
+          //     ),
+          //   ),
+          // )
         ],
       ),
     );

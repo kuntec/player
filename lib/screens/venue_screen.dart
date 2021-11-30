@@ -215,26 +215,26 @@ class _VenueScreenState extends State<VenueScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                decoration: kServiceBoxItem,
-                margin: EdgeInsets.all(10),
-                child: TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      searchString = value;
-                    });
-                  },
-                  controller: searchController,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Search",
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: kBaseColor,
-                    ),
-                  ),
-                ),
-              ),
+              // Container(
+              //   decoration: kServiceBoxItem,
+              //   margin: EdgeInsets.all(10),
+              //   child: TextField(
+              //     onChanged: (value) {
+              //       setState(() {
+              //         searchString = value;
+              //       });
+              //     },
+              //     controller: searchController,
+              //     decoration: InputDecoration(
+              //       border: InputBorder.none,
+              //       hintText: "Search",
+              //       prefixIcon: Icon(
+              //         Icons.search,
+              //         color: kBaseColor,
+              //       ),
+              //     ),
+              //   ),
+              // ),
               sportBarList(),
               allVenue(),
             ],
@@ -252,10 +252,9 @@ class _VenueScreenState extends State<VenueScreen> {
         future: getAllVenues(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.data == null) {
-            return Container(
-              child: Center(
-                child: Text('Loading....'),
-              ),
+            return Center(
+              child: Container(
+                  child: CircularProgressIndicator(color: kBaseColor)),
             );
           }
           if (snapshot.hasData) {

@@ -450,6 +450,7 @@ class _AddVenueState extends State<AddVenue> {
                 fontSize: 14.0,
               ),
             ),
+            SizedBox(height: 5),
             Text(
               "Number: ${booking.number}",
               style: TextStyle(
@@ -457,6 +458,7 @@ class _AddVenueState extends State<AddVenue> {
                 fontSize: 14.0,
               ),
             ),
+            SizedBox(height: 5),
             Text(
               "No of Slots: ${booking.slots.length}",
               style: TextStyle(
@@ -464,6 +466,7 @@ class _AddVenueState extends State<AddVenue> {
                 fontSize: 14.0,
               ),
             ),
+            SizedBox(height: 5),
             Text(
               "Venue: ${booking.venue.name}",
               style: TextStyle(
@@ -471,6 +474,7 @@ class _AddVenueState extends State<AddVenue> {
                 fontSize: 14.0,
               ),
             ),
+            SizedBox(height: 5),
             Text(
               "Person allowed: ${booking.venue.members}",
               style: TextStyle(
@@ -478,6 +482,7 @@ class _AddVenueState extends State<AddVenue> {
                 fontSize: 14.0,
               ),
             ),
+            SizedBox(height: 5),
             Text(
               "Date: ${booking.createdAt}",
               style: TextStyle(

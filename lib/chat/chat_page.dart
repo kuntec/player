@@ -55,6 +55,7 @@ class ChatPageState extends State<ChatPage> {
   String peerAvatar;
   String peerNickname;
   late String currentUserId;
+  late String currentPlayerName;
 
   List<QueryDocumentSnapshot> listMessage = new List.from([]);
 
@@ -118,6 +119,7 @@ class ChatPageState extends State<ChatPage> {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     currentUserId = prefs.getString("fuid")!;
+    currentPlayerName = prefs.getString("playerName")!;
     print("Current User ID Found ${currentUserId}");
     if (currentUserId.hashCode <= peerId.hashCode) {
       groupChatId = '$currentUserId-$peerId';
@@ -187,7 +189,8 @@ class ChatPageState extends State<ChatPage> {
 
       await addConversation(widget.player1, widget.player2, content);
 
-//      await chatNotification(widget.playerId, "New Message Received", content);
+      await chatNotification(widget.player2,
+          "New Message Received From $currentPlayerName", content);
     } else {
       Utility.showToast("Nothing to send");
     }
@@ -258,17 +261,17 @@ class ChatPageState extends State<ChatPage> {
             Container(
                 height: 40,
                 width: 40,
-                child: peerAvatar == ""
-                    ? FlutterLogo()
-                    : CachedNetworkImage(
-                        imageUrl: APIResources.IMAGE_URL + peerAvatar,
-                        fit: BoxFit.cover,
-                        imageBuilder: (context, imageProvider) => CircleAvatar(
-                          backgroundColor: Colors.white,
-                          backgroundImage: imageProvider,
-                        ),
-                        errorWidget: (context, url, error) => FlutterLogo(),
-                      )),
+                child: CachedNetworkImage(
+                  imageUrl: peerAvatar == ""
+                      ? APIResources.AVATAR_IMAGE
+                      : APIResources.IMAGE_URL + peerAvatar,
+                  fit: BoxFit.cover,
+                  imageBuilder: (context, imageProvider) => CircleAvatar(
+                    backgroundColor: Colors.white,
+                    backgroundImage: imageProvider,
+                  ),
+                  errorWidget: (context, url, error) => FlutterLogo(),
+                )),
             Container(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(

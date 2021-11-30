@@ -31,6 +31,7 @@ import 'package:player/screens/notification_screen.dart';
 import 'package:player/screens/offer_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
+import 'package:getwidget/getwidget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -189,8 +190,9 @@ class _HomeScreenState extends State<HomeScreen> {
               //DialogBuilder(context).showLoadingIndicator('Calculating + 1');
               // await _incrementCounter();
               //DialogBuilder(context).hideOpenDialog();
-              Navigator.push(context,
+              await Navigator.push(context,
                   MaterialPageRoute(builder: (context) => ChatScreen()));
+              getConversations();
             },
             child: _notificationCount == 0
                 ? Icon(
@@ -258,7 +260,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   return buildImage(urlImage, index);
                 },
                 options: CarouselOptions(
-                    viewportFraction: 1,
+                    //viewportFraction: 1,
+                    //enlargeCenterPage: true,
                     height: 110,
                     autoPlay: true,
                     autoPlayInterval: Duration(seconds: 3))),
@@ -289,6 +292,38 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Widget buildBanner() {
+  //   return Container(
+  //     height: 110,
+  //     width: double.infinity,
+  //     child: GFCarousel(
+  //       items: banners.map(
+  //         (item) {
+  //           return Container(
+  //             margin: EdgeInsets.all(8.0),
+  //             child: ClipRRect(
+  //               borderRadius: BorderRadius.all(Radius.circular(5.0)),
+  //               child: Image.network(
+  //                   APIResources.IMAGE_URL + item.imgUrl.toString(),
+  //                   fit: BoxFit.cover,
+  //                   width: 1000.0),
+  //             ),
+  //           );
+  //         },
+  //       ).toList(),
+  //       onPageChanged: (index) {
+  //         setState(() {
+  //           index;
+  //         });
+  //       },
+  //     ),
+  //   );
+  // }
+
+  _refresh() {
+    setState(() {});
+  }
+
   Widget hostActivity() {
     return Container(
       height: 300,
@@ -297,10 +332,9 @@ class _HomeScreenState extends State<HomeScreen> {
         future: getHostActivity(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.data == null) {
-            return Container(
-              child: Center(
-                child: Text('Loading...'),
-              ),
+            return Center(
+              child: Container(
+                  child: CircularProgressIndicator(color: kBaseColor)),
             );
           }
           if (snapshot.hasData) {

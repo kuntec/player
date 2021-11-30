@@ -94,7 +94,10 @@ class _ServiceScreenState extends State<ServiceScreen>
                     } else if (snapshot.hasError) {
                       return Text("Error");
                     }
-                    return Text("Loading...");
+                    return Center(
+                      child: Container(
+                          child: CircularProgressIndicator(color: kBaseColor)),
+                    );
                   },
                 ),
               ),

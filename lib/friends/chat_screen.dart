@@ -1,9 +1,11 @@
 import 'package:badges/badges.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
 import 'package:player/chat/chat_page.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/constant/time_ago.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/conversation_data.dart';
 import 'package:player/model/friend_data.dart';
@@ -141,10 +143,9 @@ class _ChatScreenState extends State<ChatScreen> {
         future: getPlayers(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.data == null) {
-            return Container(
-              child: Center(
-                child: Text('Loading....'),
-              ),
+            return Center(
+              child: Container(
+                  child: CircularProgressIndicator(color: kBaseColor)),
             );
           }
           if (snapshot.hasData) {
@@ -210,14 +211,75 @@ class _ChatScreenState extends State<ChatScreen> {
         }
       },
       child: Container(
-        margin: EdgeInsets.only(bottom: 10.0),
         decoration: kServiceBoxItem,
-        // height: 200,
-        child: Stack(
+        margin: EdgeInsets.only(bottom: 10),
+        child: Row(
           children: [
-            Container(
+            Expanded(
+              flex: 2,
+              child: Container(
+                margin: EdgeInsets.all(10),
+                height: 50,
+                width: 50,
+                child: playerId == conversation.player1.id
+                    ? CachedNetworkImage(
+                        imageUrl: conversation.player2.image == null
+                            ? APIResources.AVATAR_IMAGE
+                            : APIResources.IMAGE_URL +
+                                conversation.player2.image,
+                        fit: BoxFit.cover,
+                        imageBuilder: (context, imageProvider) => CircleAvatar(
+                          backgroundColor: Colors.white,
+                          backgroundImage: imageProvider,
+                        ),
+                        errorWidget: (context, url, error) => FlutterLogo(),
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: conversation.player1.image == null
+                            ? APIResources.AVATAR_IMAGE
+                            : APIResources.IMAGE_URL +
+                                conversation.player1.image,
+                        fit: BoxFit.cover,
+                        imageBuilder: (context, imageProvider) => CircleAvatar(
+                          backgroundColor: Colors.white,
+                          backgroundImage: imageProvider,
+                        ),
+                        errorWidget: (context, url, error) => FlutterLogo(),
+                      ),
+              ),
+            ),
+            Expanded(
+              flex: 6,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    child: Text(
+                      playerId == conversation.player1.id
+                          ? "${conversation.player2.name}"
+                          : "${conversation.player1.name}",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  Container(
+                    child: Text(
+                      "${conversation.reply.last.message}",
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Column(
                 children: [
                   conversation.unread == "0"
                       ? SizedBox.shrink()
@@ -232,68 +294,122 @@ class _ChatScreenState extends State<ChatScreen> {
                             ),
                           ),
                         ),
-                  Container(
-                    margin: EdgeInsets.all(10.0),
-                    height: 50.0,
-                    width: 50.0,
-                    child: playerId == conversation.player1.id
-                        ? conversation.player2.image == null
-                            ? FlutterLogo()
-                            : ClipRRect(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5.0)),
-                                child: Image.network(
-                                  APIResources.IMAGE_URL +
-                                      conversation.player2.image,
-                                  fit: BoxFit.fill,
-                                ),
-                              )
-                        : conversation.player1.image == null
-                            ? FlutterLogo()
-                            : ClipRRect(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5.0)),
-                                child: Image.network(
-                                  APIResources.IMAGE_URL +
-                                      conversation.player1.image,
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                  ),
-//                  Row(),
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(left: 70.0, right: 5.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 10.0),
-                  Text(
-                    playerId == conversation.player1.id
-                        ? "${conversation.player2.name}"
-                        : "${conversation.player1.name}",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold),
-                  ),
                   SizedBox(height: 5),
-                  Text(
-                    "${conversation.reply.last.message}",
-                    style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 5.0),
+                  Container(
+                    child: Text(
+                      "${TimeAgo.timeAgoSinceDate(conversation.reply.last.createdAt.toString())}",
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 10.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  )
                 ],
               ),
             ),
+            // conversation.unread == "1"
+            //     ? SizedBox.shrink()
+            //     : Expanded(
+            //         flex: 1,
+            //         child: Container(
+            //           margin: EdgeInsets.all(5),
+            //           alignment: Alignment.topRight,
+            //           child: Badge(
+            //             position: BadgePosition.topStart(top: 5, start: 5),
+            //             badgeContent: Text(
+            //               '${conversation.unread}',
+            //               style: TextStyle(color: Colors.white),
+            //             ),
+            //           ),
+            //         ),
+            //       ),
           ],
         ),
       ),
+      // child: Container(
+      //   margin: EdgeInsets.only(bottom: 10.0),
+      //   decoration: kServiceBoxItem,
+      //   // height: 200,
+      //   child: Stack(
+      //     children: [
+      //       Container(
+      //         child: Column(
+      //           crossAxisAlignment: CrossAxisAlignment.start,
+      //           children: [
+      //             conversation.unread == "1"
+      //                 ? SizedBox.shrink()
+      //                 : Container(
+      //                     margin: EdgeInsets.all(5),
+      //                     alignment: Alignment.topRight,
+      //                     child: Badge(
+      //                       position: BadgePosition.topStart(top: 5, start: 5),
+      //                       badgeContent: Text(
+      //                         '${conversation.unread}',
+      //                         style: TextStyle(color: Colors.white),
+      //                       ),
+      //                     ),
+      //                   ),
+      //             Container(
+      //               margin: EdgeInsets.all(10.0),
+      //               height: 50.0,
+      //               width: 50.0,
+      //               child: playerId == conversation.player1.id
+      //                   ? conversation.player2.image == null
+      //                       ? FlutterLogo()
+      //                       : ClipRRect(
+      //                           borderRadius:
+      //                               BorderRadius.all(Radius.circular(5.0)),
+      //                           child: Image.network(
+      //                             APIResources.IMAGE_URL +
+      //                                 conversation.player2.image,
+      //                             fit: BoxFit.fill,
+      //                           ),
+      //                         )
+      //                   : conversation.player1.image == null
+      //                       ? FlutterLogo()
+      //                       : ClipRRect(
+      //                           borderRadius:
+      //                               BorderRadius.all(Radius.circular(5.0)),
+      //                           child: Image.network(
+      //                             APIResources.IMAGE_URL +
+      //                                 conversation.player1.image,
+      //                             fit: BoxFit.fill,
+      //                           ),
+      //                         ),
+      //             ),
+      //           ],
+      //         ),
+      //       ),
+      //       Container(
+      //         margin: EdgeInsets.only(left: 70.0, right: 5.0),
+      //         child: Column(
+      //           crossAxisAlignment: CrossAxisAlignment.start,
+      //           children: [
+      //             SizedBox(height: 10.0),
+      //             Text(
+      //               playerId == conversation.player1.id
+      //                   ? "${conversation.player2.name}"
+      //                   : "${conversation.player1.name}",
+      //               style: TextStyle(
+      //                   color: Colors.black,
+      //                   fontSize: 16.0,
+      //                   fontWeight: FontWeight.bold),
+      //             ),
+      //             SizedBox(height: 5),
+      //             Text(
+      //               "${conversation.reply.last.message}",
+      //               style: TextStyle(
+      //                   color: Colors.grey,
+      //                   fontSize: 12.0,
+      //                   fontWeight: FontWeight.bold),
+      //             ),
+      //             SizedBox(height: 5.0),
+      //           ],
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      // ),
     );
   }
 
@@ -318,10 +434,9 @@ class _ChatScreenState extends State<ChatScreen> {
         future: listFriend(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.data == null) {
-            return Container(
-              child: Center(
-                child: Text('Loading....'),
-              ),
+            return Center(
+              child: Container(
+                  child: CircularProgressIndicator(color: kBaseColor)),
             );
           }
           if (snapshot.hasData) {

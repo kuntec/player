@@ -172,6 +172,7 @@ class Booking {
     String? playerId,
     String? sportId,
     String? venueId,
+    String? ownerId,
     String? paymentMode,
     String? paymentStatus,
     String? bookingStatus,
@@ -185,6 +186,7 @@ class Booking {
     _playerId = playerId;
     _sportId = sportId;
     _venueId = venueId;
+    _ownerId = ownerId;
     _paymentMode = paymentMode;
     _paymentStatus = paymentStatus;
     _bookingStatus = bookingStatus;
@@ -200,6 +202,7 @@ class Booking {
     _playerId = json['player_id'];
     _sportId = json['sport_id'];
     _venueId = json['venue_id'];
+    _ownerId = json['owner_id'];
     _paymentMode = json['payment_mode'];
     _paymentStatus = json['payment_status'];
     _bookingStatus = json['booking_status'];
@@ -213,6 +216,7 @@ class Booking {
   String? _playerId;
   String? _sportId;
   String? _venueId;
+  String? _ownerId;
   String? _paymentMode;
   String? _paymentStatus;
   String? _bookingStatus;
@@ -226,6 +230,7 @@ class Booking {
   String? get playerId => _playerId;
   String? get sportId => _sportId;
   String? get venueId => _venueId;
+  String? get ownerId => _ownerId;
   String? get paymentMode => _paymentMode;
   String? get paymentStatus => _paymentStatus;
   String? get bookingStatus => _bookingStatus;
@@ -241,6 +246,7 @@ class Booking {
     map['player_id'] = _playerId;
     map['sport_id'] = _sportId;
     map['venue_id'] = _venueId;
+    map['owner_id'] = _ownerId;
     map['payment_mode'] = _paymentMode;
     map['payment_status'] = _paymentStatus;
     map['booking_status'] = _bookingStatus;
@@ -271,6 +277,10 @@ class Booking {
 
   set venueId(String? value) {
     _venueId = value;
+  }
+
+  set ownerId(String? value) {
+    _ownerId = value;
   }
 
   set sportId(String? value) {

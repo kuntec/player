@@ -81,8 +81,10 @@ class _BookedSlotState extends State<BookedSlot> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("Date : ${slot.bookingDate.toString()}"),
+          SizedBox(height: 5),
           Text("Start Time : ${slot.startTime.toString()}"),
-          Text("Price : ${slot.price.toString()}"),
+          SizedBox(height: 5),
+          Text("Price : \u{20B9} ${slot.price.toString()}"),
         ],
       ),
     );
