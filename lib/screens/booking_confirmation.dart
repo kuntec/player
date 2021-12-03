@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class BookingConfirmation extends StatefulWidget {
-  const BookingConfirmation({Key? key}) : super(key: key);
+  dynamic status;
+  BookingConfirmation({required this.status});
 
   @override
   _BookingConfirmationState createState() => _BookingConfirmationState();
@@ -10,6 +11,8 @@ class BookingConfirmation extends StatefulWidget {
 class _BookingConfirmationState extends State<BookingConfirmation> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      body: Container(),
+    );
   }
 }

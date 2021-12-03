@@ -31,7 +31,7 @@ class _SportMarketState extends State<SportMarket> {
   }
 
   _refresh() {
-    setState(() {});
+    getPlayerService();
   }
 
   @override
@@ -186,8 +186,10 @@ class _SportMarketState extends State<SportMarket> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      ServiceModel serviceModel =
-          await apiCall.getServiceDataId(widget.serviceId, "0");
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var locationId = prefs.get("locationId");
+      ServiceModel serviceModel = await apiCall.getServiceDataId(
+          widget.serviceId, "0", locationId.toString());
       if (serviceModel.services != null) {
         services = serviceModel.services!;
         services = services!.reversed.toList();

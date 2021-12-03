@@ -192,13 +192,15 @@ class _EventRegisterState extends State<EventRegister> {
 
     setState(() {
       time = newTime;
+      String hour = Utility.getTimeFormat(time!.hour);
+      String minute = Utility.getTimeFormat(time!.minute);
       if (time == null) {
         //textStartTimeController.text = "Select Time";
       } else {
         if (isStart) {
-          textStartTimeController.text = "${time!.hour}:${time!.minute}";
+          textStartTimeController.text = "$hour:$minute";
         } else {
-          textEndTimeController.text = "${time!.hour}:${time!.minute}";
+          textEndTimeController.text = "$hour:$minute";
         }
       }
     });
@@ -372,7 +374,7 @@ class _EventRegisterState extends State<EventRegister> {
               noOfMembers = value;
             },
             decoration: InputDecoration(
-                labelText: "members",
+                labelText: "members allowed per entry fee",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),

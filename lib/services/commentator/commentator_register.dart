@@ -24,13 +24,13 @@ class _CommentatorRegisterState extends State<CommentatorRegister> {
   Service? service;
   bool? isLoading = false;
 
-  var name;
-  var contact_no;
-  var secondaryNo;
-  var city;
-  var fees_per_match;
-  var fees_per_day;
-  var experience;
+  TextEditingController nameCtrl = new TextEditingController();
+  TextEditingController contactCtrl = new TextEditingController();
+  TextEditingController secondaryCtrl = new TextEditingController();
+  TextEditingController experienceCtrl = new TextEditingController();
+  TextEditingController feesPerDayCtrl = new TextEditingController();
+  TextEditingController cityCtrl = new TextEditingController();
+  TextEditingController feesPerMatchCtrl = new TextEditingController();
 
   @override
   void initState() {
@@ -115,73 +115,59 @@ class _CommentatorRegisterState extends State<CommentatorRegister> {
               : Container(child: Text("Loading...")),
           TextField(
             keyboardType: TextInputType.text,
-            onChanged: (value) {
-              name = value;
-            },
+            controller: nameCtrl,
             decoration: InputDecoration(
-                labelText: "Name",
+                labelText: "Name *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
             keyboardType: TextInputType.phone,
-            onChanged: (value) {
-              contact_no = value;
-            },
+            controller: contactCtrl,
             decoration: InputDecoration(
-                labelText: "Number",
+                labelText: "Number *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
             keyboardType: TextInputType.phone,
-            onChanged: (value) {
-              secondaryNo = value;
-            },
+            controller: secondaryCtrl,
             decoration: InputDecoration(
-                labelText: "Secondary Number",
+                labelText: "Secondary Number (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              city = value;
-            },
+            controller: cityCtrl,
             decoration: InputDecoration(
-                labelText: "City",
+                labelText: "City *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              fees_per_match = value;
-            },
+            controller: feesPerMatchCtrl,
             decoration: InputDecoration(
-                labelText: "Fees per match",
+                labelText: "Fees per match *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              fees_per_day = value;
-            },
+            controller: feesPerDayCtrl,
             decoration: InputDecoration(
-                labelText: "Fees Per Day",
+                labelText: "Fees Per Day *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              experience = value;
-            },
+            controller: experienceCtrl,
             decoration: InputDecoration(
-                labelText: "Commentary Experience",
+                labelText: "Commentary Experience *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -195,27 +181,66 @@ class _CommentatorRegisterState extends State<CommentatorRegister> {
                   txtColor: Colors.white,
                   minWidth: 150,
                   onPressed: () async {
-//              if (widget.isEdit) {}
+                    if (selectedSport == null) {
+                      Utility.showValidationToast("Please Select Sport");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(nameCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Name");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(contactCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Number");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(cityCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter City");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        feesPerMatchCtrl.text.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Fees Per Match");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        feesPerDayCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Fees Per Day");
+                      return;
+                    }
+                    if (Utility.checkValidation(
+                        experienceCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Experience");
+                      return;
+                    }
+
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     var playerId = prefs.get("playerId");
+                    var locationId = prefs.get("locationId");
                     service = new Service();
 
+                    service!.locationId = locationId!.toString();
                     service!.playerId = playerId!.toString();
                     service!.serviceId = widget.serviceId.toString();
-                    service!.name = name.toString();
+                    service!.name = nameCtrl.text.toString();
                     service!.address = "";
-                    service!.city = city.toString();
+                    service!.city = cityCtrl.text.toString();
                     service!.contactName = "";
-                    service!.contactNo = contact_no.toString();
-                    service!.secondaryNo = secondaryNo.toString();
+                    service!.contactNo = contactCtrl.text.toString();
+                    service!.secondaryNo = secondaryCtrl.text.toString();
                     service!.about = "";
                     service!.locationLink = "";
                     service!.monthlyFees = "";
                     service!.coaches = "";
-                    service!.feesPerMatch = fees_per_match.toString();
-                    service!.feesPerDay = fees_per_day.toString();
-                    service!.experience = experience.toString();
+                    service!.feesPerMatch = feesPerMatchCtrl.text.toString();
+                    service!.feesPerDay = feesPerDayCtrl.text.toString();
+                    service!.experience = experienceCtrl.text.toString();
                     service!.sportName = selectedSport!.sportName;
                     service!.sportId = selectedSport!.id.toString();
                     service!.companyName = "";
@@ -278,7 +303,7 @@ class _CommentatorRegisterState extends State<CommentatorRegister> {
   Widget buildSportData(List<Data> data) {
     return DropdownButton<Data>(
       value: selectedSport != null ? selectedSport : null,
-      hint: Text("Select Sport"),
+      hint: Text("Select Sport  *"),
       isExpanded: true,
       icon: const Icon(Icons.keyboard_arrow_down),
       iconSize: 24,

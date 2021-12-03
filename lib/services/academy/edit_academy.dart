@@ -68,15 +68,21 @@ class _EditAcademyState extends State<EditAcademy> {
     super.initState();
     nameCtrl.text = widget.service.name;
     addressCtrl.text = widget.service.address;
-    addressLinkCtrl.text = widget.service.locationLink;
+    widget.service.locationLink == null
+        ? addressLinkCtrl.text = ""
+        : addressLinkCtrl.text = widget.service.locationLink;
     cityCtrl.text = widget.service.city;
     ownerNameCtrl.text = widget.service.contactName;
     contactCtrl.text = widget.service.contactNo;
-    secondaryCtrl.text = widget.service.secondaryNo;
+    widget.service.secondaryNo == null
+        ? secondaryCtrl.text = ""
+        : secondaryCtrl.text = widget.service.secondaryNo;
     monthlyFeesCtrl.text = widget.service.monthlyFees;
     coachesCtrl.text = widget.service.coaches;
     textFacilityController.text = widget.service.experience;
-    detailsCtrl.text = widget.service.about;
+    widget.service.about == null
+        ? detailsCtrl.text = ""
+        : detailsCtrl.text = widget.service.about;
     selectedFacilities = textFacilityController.text.split(", ");
     print("Facilities ${selectedFacilities}");
     getSports();
@@ -353,11 +359,52 @@ class _EditAcademyState extends State<EditAcademy> {
                       // Utility.showToast(
                       //     "Selected Sport ${selectedSport!.sportName} - ${selectedSport!.id}");
                     }
+
+                    if (Utility.checkValidation(nameCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Academy Name");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(addressCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Address");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(cityCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter City");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        ownerNameCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Owner Name");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(contactCtrl.text.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Contact Number");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        monthlyFeesCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Monthly Fees");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(coachesCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Coaches");
+                      return;
+                    }
+
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     var playerId = prefs.get("playerId");
+                    var locationId = prefs.get("locationId");
                     service = widget.service;
 
+                    service!.locationId = locationId!.toString();
                     service!.playerId = playerId!.toString();
                     service!.serviceId = widget.service.serviceId.toString();
                     service!.name = nameCtrl.text;

@@ -5,6 +5,7 @@ import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/participant_data.dart';
+import 'package:player/screens/booking_confirmation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PaymentScreen extends StatefulWidget {
@@ -95,7 +96,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
         if (participantData.status!) {
           print("Participant Success");
           Utility.showToast("Participant Added Successfully");
-          Navigator.pop(context, true);
+          var result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => BookingConfirmation(status: true)));
+          if (result == true) {
+            Navigator.pop(context, true);
+          }
         } else {
           print("Participant Failed");
         }

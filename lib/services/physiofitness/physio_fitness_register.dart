@@ -23,13 +23,14 @@ class _PhysioFitnessRegisterState extends State<PhysioFitnessRegister> {
   Service? service;
   bool? isLoading = false;
 
-  var name;
-  var address;
-  var city;
-  var contactNo;
-  var secondaryNo;
-  var experience;
-  var details;
+  TextEditingController nameCtrl = new TextEditingController();
+  TextEditingController addressCtrl = new TextEditingController();
+  TextEditingController contactCtrl = new TextEditingController();
+  TextEditingController secondaryCtrl = new TextEditingController();
+  TextEditingController experienceCtrl = new TextEditingController();
+  TextEditingController cityCtrl = new TextEditingController();
+  TextEditingController detailsCtrl = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,64 +103,52 @@ class _PhysioFitnessRegisterState extends State<PhysioFitnessRegister> {
           ),
           TextField(
             keyboardType: TextInputType.text,
-            onChanged: (value) {
-              name = value;
-            },
+            controller: nameCtrl,
             decoration: InputDecoration(
-                labelText: "Name",
+                labelText: "Name *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
             keyboardType: TextInputType.phone,
-            onChanged: (value) {
-              contactNo = value;
-            },
+            controller: contactCtrl,
             decoration: InputDecoration(
-                labelText: "Contact Number",
+                labelText: "Primary Number *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
             keyboardType: TextInputType.phone,
-            onChanged: (value) {
-              secondaryNo = value;
-            },
+            controller: secondaryCtrl,
             decoration: InputDecoration(
-                labelText: "Secondary Number",
+                labelText: "Secondary Number (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
             keyboardType: TextInputType.text,
-            onChanged: (value) {
-              address = value;
-            },
+            controller: addressCtrl,
             decoration: InputDecoration(
-                labelText: "Address",
+                labelText: "Address (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              city = value;
-            },
+            controller: cityCtrl,
             decoration: InputDecoration(
-                labelText: "City",
+                labelText: "City *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              experience = value;
-            },
+            controller: experienceCtrl,
             decoration: InputDecoration(
-                labelText: "Experience",
+                labelText: "Experience *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -167,15 +156,13 @@ class _PhysioFitnessRegisterState extends State<PhysioFitnessRegister> {
           TextField(
             enabled: false,
             decoration: InputDecoration(
-                labelText: "More Details",
+                labelText: "More Details (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextFormField(
-              onChanged: (value) {
-                details = value;
-              },
+              controller: detailsCtrl,
               minLines: 3,
               maxLines: 5,
               keyboardType: TextInputType.multiline,
@@ -200,30 +187,53 @@ class _PhysioFitnessRegisterState extends State<PhysioFitnessRegister> {
                   txtColor: Colors.white,
                   minWidth: 150,
                   onPressed: () async {
-//              if (widget.isEdit) {}
+                    if (Utility.checkValidation(contactCtrl.text.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Primary Contact Number");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(nameCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Company Name");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(cityCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter City");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        experienceCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Experience");
+                      return;
+                    }
+
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     var playerId = prefs.get("playerId");
+                    var locationId = prefs.get("locationId");
                     service = new Service();
 
+                    service!.locationId = locationId!.toString();
                     service!.playerId = playerId!.toString();
                     service!.serviceId = widget.serviceId.toString();
-                    service!.name = name.toString();
-                    service!.address = address.toString();
-                    service!.city = city.toString();
+                    service!.name = nameCtrl.text.toString();
+                    service!.address = addressCtrl.text.toString();
+                    service!.city = cityCtrl.text.toString();
                     service!.contactName = "";
-                    service!.contactNo = contactNo.toString();
-                    service!.secondaryNo = secondaryNo.toString();
-                    service!.about = details.toString();
+                    service!.contactNo = contactCtrl.text.toString();
+                    service!.secondaryNo = secondaryCtrl.text.toString();
+                    service!.about = detailsCtrl.text.toString();
                     service!.locationLink = "";
                     service!.monthlyFees = "";
                     service!.coaches = "";
                     service!.feesPerMatch = "";
                     service!.feesPerDay = "";
-                    service!.experience = experience.toString();
+                    service!.experience = experienceCtrl.text.toString();
                     service!.sportName = "";
                     service!.sportId = "";
-                    service!.companyName = name.toString();
+                    service!.companyName = nameCtrl.text.toString();
 
                     if (this.image != null) {
                       addService(this.image!.path, service!);

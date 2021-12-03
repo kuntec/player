@@ -243,6 +243,7 @@ class Service {
     String? sportId,
     String? sportName,
     String? createdAt,
+    String? locationId,
     int? id,
   }) {
     _serviceId = serviceId;
@@ -265,6 +266,7 @@ class Service {
     _sportId = sportId;
     _sportName = sportName;
     _createdAt = createdAt;
+    _locationId = locationId;
     _id = id;
   }
 
@@ -289,6 +291,7 @@ class Service {
     _sportId = json['sport_id'];
     _sportName = json['sport_name'];
     _createdAt = json['created_at'];
+    _locationId = json['location_id'];
     _id = json['id'];
   }
   String? _serviceId;
@@ -311,8 +314,10 @@ class Service {
   String? _sportId;
   String? _sportName;
   String? _createdAt;
+  String? _locationId;
   int? _id;
 
+  String? get locationId => _locationId;
   String? get serviceId => _serviceId;
   String? get playerId => _playerId;
   String? get name => _name;
@@ -357,91 +362,96 @@ class Service {
     map['sport_id'] = _sportId;
     map['sport_name'] = _sportName;
     map['created_at'] = _createdAt;
+    map['location_id'] = _locationId;
     map['id'] = _id;
     return map;
   }
 
-  set sportId(String? value) {
+  set locationId(value) {
+    _locationId = value;
+  }
+
+  set sportId(value) {
     _sportId = value;
   }
 
-  set id(int? value) {
+  set id(value) {
     _id = value;
   }
 
-  set createdAt(String? value) {
+  set createdAt(value) {
     _createdAt = value;
   }
 
-  set companyName(String? value) {
+  set companyName(value) {
     _companyName = value;
   }
 
-  set experience(String? value) {
+  set experience(value) {
     _experience = value;
   }
 
-  set feesPerDay(String? value) {
+  set feesPerDay(value) {
     _feesPerDay = value;
   }
 
-  set feesPerMatch(String? value) {
+  set feesPerMatch(value) {
     _feesPerMatch = value;
   }
 
-  set coaches(String? value) {
+  set coaches(value) {
     _coaches = value;
   }
 
-  set monthlyFees(String? value) {
+  set monthlyFees(value) {
     _monthlyFees = value;
   }
 
-  set locationLink(String? value) {
+  set locationLink(value) {
     _locationLink = value;
   }
 
-  set about(String? value) {
+  set about(value) {
     _about = value;
   }
 
-  set secondaryNo(String? value) {
+  set secondaryNo(value) {
     _secondaryNo = value;
   }
 
-  set contactNo(String? value) {
+  set contactNo(value) {
     _contactNo = value;
   }
 
-  set contactName(String? value) {
+  set contactName(value) {
     _contactName = value;
   }
 
-  set city(String? value) {
+  set city(value) {
     _city = value;
   }
 
-  set address(String? value) {
+  set address(value) {
     _address = value;
   }
 
-  set posterImage(String? value) {
+  set posterImage(value) {
     _posterImage = value;
   }
 
-  set name(String? value) {
+  set name(value) {
     _name = value;
   }
 
-  set playerId(String? value) {
+  set playerId(value) {
     _playerId = value;
   }
 
-  set serviceId(String? value) {
+  set serviceId(value) {
     _serviceId = value;
   }
 
-  set sportName(String? value) {
+  set sportName(value) {
     _sportName = value;
   }
 }

@@ -28,19 +28,19 @@ class _AcademyRegisterState extends State<AcademyRegister> {
   Service? service;
   bool? isLoading = false;
 
-  var academyName;
-  var address;
-  var addressLink;
-  var city;
-  var ownerName;
-  var contactNumber;
-  var secondaryNumber;
-  var monthlyFees;
-  var coaches;
-  var about;
+  TextEditingController nameCtrl = new TextEditingController();
+  TextEditingController addressCtrl = new TextEditingController();
+  TextEditingController addressLinkCtrl = new TextEditingController();
+  TextEditingController cityCtrl = new TextEditingController();
+  TextEditingController ownerNameCtrl = new TextEditingController();
+  TextEditingController contactCtrl = new TextEditingController();
+  TextEditingController secondaryCtrl = new TextEditingController();
+  TextEditingController monthlyFeesCtrl = new TextEditingController();
+  TextEditingController coachesCtrl = new TextEditingController();
+  TextEditingController textFacilityController = new TextEditingController();
+  TextEditingController detailsCtrl = new TextEditingController();
 
   List selectedFacilities = [];
-  TextEditingController textFacilityController = new TextEditingController();
 
   Future<List<Data>> getSports() async {
     APICall apiCall = new APICall();
@@ -149,7 +149,7 @@ class _AcademyRegisterState extends State<AcademyRegister> {
               child: image != null
                   ? Image.file(
                       image!,
-                      width: 280,
+                      width: 150,
                       height: 150,
                       fit: BoxFit.fill,
                     )
@@ -177,73 +177,59 @@ class _AcademyRegisterState extends State<AcademyRegister> {
               : Container(child: Text("Loading...")),
           SizedBox(height: kMargin),
           TextField(
-            onChanged: (value) {
-              academyName = value;
-            },
+            controller: nameCtrl,
             decoration: InputDecoration(
-                labelText: "Academy Name",
+                labelText: "Academy Name *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              address = value;
-            },
+            controller: addressCtrl,
             decoration: InputDecoration(
-                labelText: "Address",
+                labelText: "Address *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              addressLink = value;
-            },
+            controller: addressLinkCtrl,
             decoration: InputDecoration(
-                labelText: "Address Link",
+                labelText: "Address Link (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              city = value;
-            },
+            controller: cityCtrl,
             decoration: InputDecoration(
-                labelText: "City",
+                labelText: "City *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              ownerName = value;
-            },
+            controller: ownerNameCtrl,
             decoration: InputDecoration(
-                labelText: "Owner Name",
+                labelText: "Owner Name *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              contactNumber = value;
-            },
+            controller: contactCtrl,
             keyboardType: TextInputType.phone,
             decoration: InputDecoration(
-                labelText: "Contact Number",
+                labelText: "Contact Number *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              secondaryNumber = value;
-            },
+            controller: secondaryCtrl,
             keyboardType: TextInputType.phone,
             decoration: InputDecoration(
-                labelText: "Secondary Number",
+                labelText: "Secondary Number (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -269,21 +255,17 @@ class _AcademyRegisterState extends State<AcademyRegister> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              monthlyFees = value;
-            },
+            controller: monthlyFeesCtrl,
             decoration: InputDecoration(
-                labelText: "Monthly Fees",
+                labelText: "Monthly Fees *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              coaches = value;
-            },
+            controller: coachesCtrl,
             decoration: InputDecoration(
-                labelText: "Coaches",
+                labelText: "Coaches *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -292,14 +274,12 @@ class _AcademyRegisterState extends State<AcademyRegister> {
             alignment: Alignment.topLeft,
             margin: EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
-              "About Academy",
+              "About Academy (optional)",
               style: TextStyle(color: Colors.grey),
             ),
           ),
           TextFormField(
-              onChanged: (value) {
-                about = value;
-              },
+              controller: detailsCtrl,
               minLines: 3,
               maxLines: 5,
               keyboardType: TextInputType.multiline,
@@ -325,29 +305,70 @@ class _AcademyRegisterState extends State<AcademyRegister> {
                   minWidth: 150,
                   onPressed: () async {
                     if (selectedSport == null) {
-                      Utility.showToast("Please Select Sport");
+                      Utility.showValidationToast("Please Select Sport");
                       return;
                     } else {
                       // Utility.showToast(
                       //     "Selected Sport ${selectedSport!.sportName} - ${selectedSport!.id}");
                     }
+
+                    if (Utility.checkValidation(nameCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Academy Name");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(addressCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Address");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(cityCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter City");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        ownerNameCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Owner Name");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(contactCtrl.text.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Contact Number");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        monthlyFeesCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Monthly Fees");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(coachesCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Coaches");
+                      return;
+                    }
+
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     var playerId = prefs.get("playerId");
+                    var locationId = prefs.get("locationId");
                     service = new Service();
 
+                    service!.locationId = locationId!.toString();
                     service!.playerId = playerId!.toString();
                     service!.serviceId = widget.serviceId.toString();
-                    service!.name = academyName.toString();
-                    service!.address = address.toString();
-                    service!.city = city.toString();
-                    service!.contactName = ownerName.toString();
-                    service!.contactNo = contactNumber.toString();
-                    service!.secondaryNo = secondaryNumber.toString();
-                    service!.about = about.toString();
-                    service!.locationLink = addressLink.toString();
-                    service!.monthlyFees = monthlyFees.toString();
-                    service!.coaches = coaches.toString();
+                    service!.name = nameCtrl.text.toString();
+                    service!.address = addressCtrl.text.toString();
+                    service!.city = cityCtrl.text.toString();
+                    service!.contactName = ownerNameCtrl.text.toString();
+                    service!.contactNo = contactCtrl.text.toString();
+                    service!.secondaryNo = secondaryCtrl.text.toString();
+                    service!.about = detailsCtrl.text.toString();
+                    service!.locationLink = addressLinkCtrl.text.toString();
+                    service!.monthlyFees = monthlyFeesCtrl.text.toString();
+                    service!.coaches = coachesCtrl.text.toString();
                     service!.feesPerMatch = "";
                     service!.feesPerDay = "";
                     service!.experience = textFacilityController.text;
@@ -359,7 +380,7 @@ class _AcademyRegisterState extends State<AcademyRegister> {
                       addService(this.image!.path, service!);
                       // Utility.showToast("File Selected Image");
                     } else {
-                      Utility.showToast("Please Select Image");
+                      Utility.showValidationToast("Please Select Image");
                     }
                   },
                 ),
@@ -386,7 +407,7 @@ class _AcademyRegisterState extends State<AcademyRegister> {
       } else {
         print("Success");
         Utility.showToast("Service Created Successfully");
-        var result = Navigator.push(
+        var result = Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) => ServicePhotos(serviceDataId: id)));

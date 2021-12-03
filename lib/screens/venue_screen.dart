@@ -23,6 +23,7 @@ class VenueScreen extends StatefulWidget {
 
 class _VenueScreenState extends State<VenueScreen> {
   int selectedIndex = 1;
+  bool isMyVenue = false;
   List<Sports> sports = [];
 
   List<Data> allSports = [];
@@ -36,6 +37,33 @@ class _VenueScreenState extends State<VenueScreen> {
     super.initState();
     getMySports();
     getSports();
+  }
+
+  _refresh() {
+    getMyVenues();
+  }
+
+  Future getMyVenues() async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var playerId = prefs.get("playerId");
+
+      VenueData venueData = await apiCall.getMyVenue(playerId.toString());
+      if (venueData.venues != null) {}
+      if (venueData.status!) {
+        isMyVenue = true;
+      } else {
+        isMyVenue = false;
+        print(venueData.message!);
+      }
+      if (venueData.status!) {
+      } else {
+        print(venueData.message!);
+      }
+    }
+    setState(() {});
   }
 
   Future<List<Sports>> getMySports() async {
@@ -169,11 +197,6 @@ class _VenueScreenState extends State<VenueScreen> {
     );
   }
 
-  _refresh() {
-//    Utility.showToast("refreshing..");
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -185,26 +208,56 @@ class _VenueScreenState extends State<VenueScreen> {
             Container(
               child: Row(
                 children: [
-                  TextButton.icon(
-                    onPressed: () async {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => VenueRegister()));
-
+                  GestureDetector(
+                    onTap: () async {
                       await Navigator.push(context,
                           MaterialPageRoute(builder: (context) => AddVenue()));
                       _refresh();
                     },
-                    icon: Icon(
-                      Icons.add,
-                      color: kBaseColor,
+                    child: Container(
+                      margin: EdgeInsets.all(5),
+                      decoration: kServiceBoxItem.copyWith(
+                        color: kBaseColor,
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      padding: EdgeInsets.all(5),
+                      child: Row(
+                        children: [
+                          Icon(
+                            isMyVenue ? Icons.person : Icons.add,
+                            color: Colors.white,
+                            size: 15,
+                          ),
+                          SizedBox(width: 5),
+                          Text(
+                            isMyVenue ? "My Venue" : "Register",
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 12.0),
+                          ),
+                        ],
+                      ),
                     ),
-                    label: Text(
-                      "Register",
-                      style: TextStyle(color: kBaseColor),
-                    ),
-                  )
+                  ),
+                  // TextButton.icon(
+                  //   onPressed: () async {
+                  //     // Navigator.push(
+                  //     //     context,
+                  //     //     MaterialPageRoute(
+                  //     //         builder: (context) => VenueRegister()));
+                  //
+                  //     await Navigator.push(context,
+                  //         MaterialPageRoute(builder: (context) => AddVenue()));
+                  //     _refresh();
+                  //   },
+                  //   icon: Icon(
+                  //     Icons.add,
+                  //     color: kBaseColor,
+                  //   ),
+                  //   label: Text(
+                  //     "Register",
+                  //     style: TextStyle(color: kBaseColor),
+                  //   ),
+                  // )
                 ],
               ),
             ),

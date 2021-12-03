@@ -27,11 +27,11 @@ class _HelperState extends State<Helper> {
   void initState() {
     // TODO: implement initState
     super.initState();
-//    getPlayerService();
+    getPlayerService();
   }
 
   _refresh() {
-    setState(() {});
+    getPlayerService();
   }
 
   @override
@@ -185,19 +185,12 @@ class _HelperState extends State<Helper> {
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      var playerId = prefs.get("playerId");
-      ServiceModel serviceModel =
-          await apiCall.getServiceDataId(widget.serviceId, "0");
+      var locationId = prefs.get("locationId");
+      ServiceModel serviceModel = await apiCall.getServiceDataId(
+          widget.serviceId, "0", locationId.toString());
       if (serviceModel.services != null) {
         services = serviceModel.services!;
         services = services!.reversed.toList();
-
-        for (var s in services!) {
-          if (s.playerId.toString() == playerId.toString()) {
-            isService = true;
-          }
-        }
-        setState(() {});
       }
 
       if (serviceModel.status!) {
@@ -264,7 +257,7 @@ class _HelperState extends State<Helper> {
                   SizedBox(height: 5.0),
                   SizedBox(height: 5.0),
                   Text(
-                    "Contact: ${service.contactNo}",
+                    "Experience: ${service.experience}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 12.0,

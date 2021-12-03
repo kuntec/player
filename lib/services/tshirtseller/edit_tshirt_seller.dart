@@ -54,7 +54,7 @@ class _EditTshirtSellerState extends State<EditTshirtSeller> {
     return Scaffold(
       appBar: AppBar(
 //        leading: Icon(Icons.arrow_back),
-        title: Text("Edit Tshirt Seller"),
+        title: Text("Edit T-shirt Seller"),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -149,7 +149,7 @@ class _EditTshirtSellerState extends State<EditTshirtSeller> {
             keyboardType: TextInputType.text,
             controller: companyCtrl,
             decoration: InputDecoration(
-                labelText: "Company Name",
+                labelText: "Company Name *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -157,7 +157,7 @@ class _EditTshirtSellerState extends State<EditTshirtSeller> {
           TextField(
             controller: ownerNameCtrl,
             decoration: InputDecoration(
-                labelText: "Seller Name",
+                labelText: "Seller Name *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -166,7 +166,7 @@ class _EditTshirtSellerState extends State<EditTshirtSeller> {
             keyboardType: TextInputType.phone,
             controller: contactCtrl,
             decoration: InputDecoration(
-                labelText: "Contact Number",
+                labelText: "Primary Number *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -175,7 +175,7 @@ class _EditTshirtSellerState extends State<EditTshirtSeller> {
             keyboardType: TextInputType.phone,
             controller: secondaryContactCtrl,
             decoration: InputDecoration(
-                labelText: "Secondary Number",
+                labelText: "Secondary Number (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -184,7 +184,7 @@ class _EditTshirtSellerState extends State<EditTshirtSeller> {
             keyboardType: TextInputType.text,
             controller: addressCtrl,
             decoration: InputDecoration(
-                labelText: "Address",
+                labelText: "Address *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -193,7 +193,7 @@ class _EditTshirtSellerState extends State<EditTshirtSeller> {
             keyboardType: TextInputType.text,
             controller: addressLinkCtrl,
             decoration: InputDecoration(
-                labelText: "Address Link",
+                labelText: "Address Link (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -201,7 +201,7 @@ class _EditTshirtSellerState extends State<EditTshirtSeller> {
           TextField(
             controller: cityCtrl,
             decoration: InputDecoration(
-                labelText: "City",
+                labelText: "City *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -209,7 +209,7 @@ class _EditTshirtSellerState extends State<EditTshirtSeller> {
           TextField(
             enabled: false,
             decoration: InputDecoration(
-                labelText: "More Details",
+                labelText: "More Details (optinal)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -242,11 +242,40 @@ class _EditTshirtSellerState extends State<EditTshirtSeller> {
                   txtColor: Colors.white,
                   minWidth: 150,
                   onPressed: () async {
+                    if (Utility.checkValidation(companyCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Company Name");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(contactCtrl.text.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Primary Contact Number");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(cityCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter City");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(addressCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Address");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        ownerNameCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Seller Name");
+                      return;
+                    }
+
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     var playerId = prefs.get("playerId");
+                    var locationId = prefs.get("locationId");
                     service = widget.service;
 
+                    service!.locationId = locationId!.toString();
                     service!.playerId = playerId!.toString();
                     service!.serviceId = widget.service.serviceId.toString();
                     service!.name = companyCtrl.text;

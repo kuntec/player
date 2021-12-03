@@ -23,6 +23,7 @@ import 'package:player/model/host_activity.dart';
 import 'package:player/model/my_sport.dart';
 import 'package:player/model/player_data.dart';
 import 'package:player/model/sport_data.dart';
+import 'package:player/providers/banner_model.dart';
 import 'package:player/screens/add_host_activity.dart';
 import 'package:player/screens/add_tournament.dart';
 import 'package:player/screens/choose_sport.dart';
@@ -60,8 +61,12 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     super.initState();
     homeProvider = context.read<HomeProvider>();
+
+    final bannerMdl = Provider.of<BannerModel>(context, listen: false);
+    bannerMdl.getBannerData(context);
+
     getMyProfile();
-    getBanner();
+    //getBanner();
     getMySports();
     getSports();
     getMyCity();
@@ -155,22 +160,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bannerMdl = Provider.of<BannerModel>(context);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        // leading: GestureDetector(
-        //   onTap: () async {
-        //     var result = await Navigator.push(
-        //         context,
-        //         MaterialPageRoute(
-        //             builder: (context) => LocationSelectScreen()));
-        //     getMyCity();
-        //   },
-        //   child: Icon(
-        //     Icons.location_pin,
-        //     color: kBaseColor,
-        //   ),
-        // ),
         actions: [
           GestureDetector(
             onTap: () {
@@ -220,9 +213,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 MaterialPageRoute(
                     builder: (context) =>
                         LocationSelectScreen(player: player)));
-            if (result) {
-              getMyCity();
-            }
+            // if (result) {
+            getMyCity();
+            // }
           },
           child: Row(
             children: [
@@ -242,44 +235,42 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: [banner(), homeButtonBar(), sportBarList(), hostActivity()],
+          children: [
+            bannerMdl.loading == true
+                ? CircularProgressIndicator(
+                    color: kBaseColor,
+                  )
+                : banner(bannerMdl),
+            homeButtonBar(),
+            sportBarList(),
+            hostActivity()
+          ],
         ),
       ),
     );
   }
 
-  Widget banner() {
-    return banners.length == 0
+  Widget banner(dynamic bannerMdl) {
+    return bannerMdl.bannerData == null
         ? SizedBox.shrink()
-        : Container(
-            margin: EdgeInsets.all(5),
-            child: CarouselSlider.builder(
-                itemCount: banners.length,
-                itemBuilder: (context, index, realIndex) {
-                  final urlImage = banners[index].imgUrl.toString();
-                  return buildImage(urlImage, index);
-                },
-                options: CarouselOptions(
-                    //viewportFraction: 1,
-                    //enlargeCenterPage: true,
-                    height: 110,
-                    autoPlay: true,
-                    autoPlayInterval: Duration(seconds: 3))),
-          );
-    // : Container(
-    //     height: 115,
-    //     padding: EdgeInsets.all(10.0),
-    //     child: ClipRRect(
-    //       borderRadius: BorderRadius.circular(15.0),
-    //       child: Image(
-    //         image: AssetImage(
-    //           'assets/images/dream11.png',
-    //         ),
-    //         fit: BoxFit.cover,
-    //         width: MediaQuery.of(context).size.width,
-    //       ),
-    //     ),
-    //   );
+        : bannerMdl.bannerData.banners.length == 0
+            ? SizedBox.shrink()
+            : Container(
+                margin: EdgeInsets.all(5),
+                child: CarouselSlider.builder(
+                    itemCount: bannerMdl.bannerData.banners.length,
+                    itemBuilder: (context, index, realIndex) {
+                      final urlImage =
+                          bannerMdl.bannerData.banners[index].imgUrl.toString();
+                      return buildImage(urlImage, index);
+                    },
+                    options: CarouselOptions(
+                        //viewportFraction: 1,
+                        //enlargeCenterPage: true,
+                        height: 110,
+                        autoPlay: true,
+                        autoPlayInterval: Duration(seconds: 3))),
+              );
   }
 
   Widget buildImage(String urlImage, int index) {
@@ -291,34 +282,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-  // Widget buildBanner() {
-  //   return Container(
-  //     height: 110,
-  //     width: double.infinity,
-  //     child: GFCarousel(
-  //       items: banners.map(
-  //         (item) {
-  //           return Container(
-  //             margin: EdgeInsets.all(8.0),
-  //             child: ClipRRect(
-  //               borderRadius: BorderRadius.all(Radius.circular(5.0)),
-  //               child: Image.network(
-  //                   APIResources.IMAGE_URL + item.imgUrl.toString(),
-  //                   fit: BoxFit.cover,
-  //                   width: 1000.0),
-  //             ),
-  //           );
-  //         },
-  //       ).toList(),
-  //       onPageChanged: (index) {
-  //         setState(() {
-  //           index;
-  //         });
-  //       },
-  //     ),
-  //   );
-  // }
 
   _refresh() {
     setState(() {});
@@ -661,139 +624,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-//   getPlayerById(String id) async {
-//     APICall apiCall = new APICall();
-//     bool connectivityStatus = await Utility.checkConnectivity();
-//     if (connectivityStatus) {
-//       PlayerData playerData = await apiCall.getPlayerById(id);
-//
-//       if (playerData.status!) {
-// //        Utility.showToast("Player Found ${playerData.player!.name}");
-//         // Utility.showToast("Player FUID ${playerData.player!.fuid}");
-//
-//       }
-//     }
-//   }
-
-//   hostActivityItem(dynamic activity) {
-//     return GestureDetector(
-//       onTap: () {
-//         Utility.showToast("${activity.sportName}");
-//       },
-//       child: Container(
-//         margin: EdgeInsets.all(5.0),
-//         decoration: kContainerBoxDecoration,
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.end,
-//           children: [
-//             Container(
-//               decoration: BoxDecoration(
-//                   color: kBaseColor,
-//                   borderRadius: BorderRadius.only(
-//                     bottomRight: Radius.circular(10.0),
-//                     topLeft: Radius.circular(10.0),
-//                     topRight: Radius.circular(10.0),
-//                   )),
-//               width: 90,
-//               height: 35,
-//               child: Center(
-//                 child: Text(
-//                   selectedSportId == "0"
-//                       ? activity.sportName
-//                       : activity.lookingForValue,
-//                   style: TextStyle(color: Colors.white, fontSize: 15.0),
-//                 ),
-//               ),
-//             ),
-//             Row(
-//               crossAxisAlignment: CrossAxisAlignment.center,
-//               children: [
-//                 Expanded(
-//                   flex: 4,
-//                   child: Container(
-//                     margin: EdgeInsets.all(5.0),
-// //                  padding: EdgeInsets.all(5.0),
-//                     height: 85.0,
-//                     width: 85.0,
-//                     child: ClipRRect(
-//                       borderRadius: BorderRadius.circular(10.0),
-//                       child: Image.network(
-//                         playerImage == null
-//                             ? APIResources.AVATAR_IMAGE
-//                             : APIResources.IMAGE_URL + playerImage,
-//                         //fit: BoxFit.cover,
-//                       ),
-//                     ),
-//                   ),
-//                 ),
-//                 Expanded(
-//                   flex: 6,
-//                   child: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     mainAxisAlignment: MainAxisAlignment.start,
-//                     children: [
-//                       SizedBox(height: 10.0),
-//                       Text(
-//                         activity.playerName,
-//                         style: TextStyle(
-//                           color: kBaseColor,
-//                           fontSize: 16.0,
-//                         ),
-//                       ),
-//                       SizedBox(height: 10.0),
-//                       Text(
-//                         "Looking For: ${activity.lookingFor}",
-//                         style: TextStyle(
-//                           color: Colors.grey.shade900,
-//                           fontSize: 12.0,
-//                         ),
-//                       ),
-//                       SizedBox(height: 5.0),
-//                       Text(
-//                         "Location: ${activity.area}",
-//                         style: TextStyle(
-//                           color: Colors.grey.shade900,
-//                           fontSize: 12.0,
-//                         ),
-//                       ),
-//                       SizedBox(height: 5.0),
-//                       Text(
-//                         "Time: ${activity.timing}",
-//                         style: TextStyle(
-//                           color: Colors.grey.shade900,
-//                           fontSize: 12.0,
-//                         ),
-//                       ),
-//                       SizedBox(height: 5.0),
-//                       Text(
-//                         "Date: ${activity.startDate}",
-//                         style: TextStyle(
-//                           color: Colors.grey.shade900,
-//                           fontSize: 12.0,
-//                         ),
-//                       ),
-//                       SizedBox(height: 5.0),
-//                       Text(
-//                         activity.ballType != null
-//                             ? "Ball Type: ${activity.ballType} "
-//                             : "",
-//                         style: TextStyle(
-//                           color: Colors.grey.shade900,
-//                           fontSize: 12.0,
-//                         ),
-//                       ),
-//                       SizedBox(height: 5.0),
-//                     ],
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
   var playerId;
   var playerImage;
   var locationId;
@@ -829,58 +659,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     return activities;
   }
-
-  // Widget sportBar() {
-  //   return Container(
-  //     padding: EdgeInsets.all(5.0),
-  //     child: FutureBuilder(
-  //       future: getMySports(),
-  //       builder: (BuildContext context, AsyncSnapshot snapshot) {
-  //         if (snapshot.data == null) {
-  //           return Container(
-  //             child: Center(
-  //               child: Text('Loading....'),
-  //             ),
-  //           );
-  //         }
-  //         if (snapshot.hasData) {
-  //           print("Has Data ${snapshot.data.length}");
-  //           return Container(
-  //             decoration: BoxDecoration(
-  //               color: Colors.white,
-  //               borderRadius: BorderRadius.circular(10.0),
-  //               border: Border.all(
-  //                 width: 1.0,
-  //                 color: Colors.grey,
-  //               ),
-  //               boxShadow: [
-  //                 BoxShadow(
-  //                   color: Colors.black12,
-  //                   offset: Offset(0, 2),
-  //                   blurRadius: 6.0,
-  //                 )
-  //               ],
-  //             ),
-  //             height: 60,
-  //             child: ListView.builder(
-  //               scrollDirection: Axis.horizontal,
-  //               itemCount: snapshot.data.length,
-  //               itemBuilder: (BuildContext context, int index) {
-  //                 return sportChip(snapshot.data[index]);
-  //               },
-  //             ),
-  //           );
-  //         } else {
-  //           return Container(
-  //             child: Center(
-  //               child: Text('No Data'),
-  //             ),
-  //           );
-  //         }
-  //       },
-  //     ),
-  //   );
-  // }
 
   Widget sportBarList() {
     return sports != null

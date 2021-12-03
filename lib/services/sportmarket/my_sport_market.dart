@@ -288,6 +288,7 @@ class _MySportMarketState extends State<MySportMarket> {
       ServiceData serviceData = await apiCall.deleteService(id);
       if (serviceData.status!) {
         Utility.showToast(serviceData.message.toString());
+        services!.clear();
         _refresh();
       } else {
         print(serviceData.message!);

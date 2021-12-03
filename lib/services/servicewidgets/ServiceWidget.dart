@@ -5,8 +5,9 @@ import 'package:player/constant/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/service_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-Widget itemDetail2(BuildContext context, String title, String value) {
+Widget itemLinkDetail(BuildContext context, String title, String value) {
   return Container(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,9 +30,17 @@ Widget itemDetail2(BuildContext context, String title, String value) {
           ),
           padding: EdgeInsets.all(10.0),
           width: MediaQuery.of(context).size.width,
-          child: Text(
-            value,
-            style: TextStyle(color: kBlack, fontSize: 16.0),
+          child: GestureDetector(
+            onTap: () {
+              launch(value);
+            },
+            child: Text(
+              value,
+              style: TextStyle(
+                  decoration: TextDecoration.underline,
+                  color: Colors.blue,
+                  fontSize: 16.0),
+            ),
           ),
         ),
       ],
@@ -132,6 +141,23 @@ Widget posterImage(BuildContext context, String url) {
       child: Image.network(
         APIResources.IMAGE_URL + url,
         fit: BoxFit.cover,
+      ),
+    ),
+  );
+}
+
+Widget posterImage2(BuildContext context, String url) {
+  return Container(
+    decoration: kServiceBoxItem.copyWith(
+      borderRadius: BorderRadius.circular(5.0),
+    ),
+    height: 150.0,
+    width: 150,
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(10.0),
+      child: Image.network(
+        APIResources.IMAGE_URL + url,
+        fit: BoxFit.fill,
       ),
     ),
   );

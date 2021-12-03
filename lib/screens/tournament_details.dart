@@ -75,14 +75,13 @@ class _TournamentDetailsState extends State<TournamentDetails> {
                   "\u{20B9} ${widget.tournament.entryFees}"),
               itemDetail(context, "Start Time", widget.tournament.startTime),
               itemDetail(context, "End Time", widget.tournament.endTime),
-              itemDetail(context, "End Time", widget.tournament.endTime),
               itemDetail(
                   context, "No of Team Members", widget.tournament.noOfMembers),
               itemDetail(
                   context, "Age Requirement", widget.tournament.ageLimit),
               itemDetail(
                   context, "Tournament Address", widget.tournament.address),
-              itemDetail(
+              itemLinkDetail(
                   context, "Location Link", widget.tournament.locationLink),
               itemDetail(context, "Prize", widget.tournament.prizeDetails),
               itemDetail(

@@ -31,6 +31,9 @@ const kBlack = Color(0xff000000);
 
 const kInternet = "No Internet Connection, Please connect to Internet";
 
+const kServices =
+    '{"status":true,"message":"Services Found","services":[{"id":2,"name":"Trophy Sellers","icon":"services\/phiS6WmggXtuf2Vq6hxd4qdlGMUUy4HgkIu33QdB.png","service_order":"1"},{"id":8,"name":"Sports Market","icon":"services\/2b5ZuhHKWNyGfXLwgTTrYOcpamECX2PXt4Fpe5bb.png","service_order":"2"},{"id":7,"name":"T-shirt Sellers","icon":"services\/FnC5bRyDjWst0I8tnSOInGopM8jTXwuvONl7Jwlk.png","service_order":"3"},{"id":4,"name":"Scorers","icon":"services\/PJ4zR7EDsD9pLN5N01UTDTXj2VbMlUVRmDkyoZOF.png","service_order":"4"},{"id":9,"name":"Umpires","icon":"services\/uHnI9rjhd0sgyDTg4AcU7vtHETzaie2fuCuHOX6N.png","service_order":"5"},{"id":11,"name":"Commentator","icon":"services\/XH9TPOt9f8Vi75uk6YBPtUUDgABcrBCu5OS9YNxz.png","service_order":"6"},{"id":6,"name":"Academy","icon":"services\/O5nQzP5dokjZ3DQoUhrCJYsRZMjcI7rBhtfFd358.png","service_order":"7"},{"id":13,"name":"Item Rental","icon":"services\/9dvJ3WraVPbemUIoPF10t6NHnGU8quaavWaFIe2U.png","service_order":"8"},{"id":12,"name":"Helpers","icon":"services\/subcgT2E4xeE4PnT1qGrI3atJ3yWr3EZCI3mWc5q.png","service_order":"9"},{"id":3,"name":"Manufacturers","icon":"services\/tR9JCGom2V9BNCnUh97glByKwpaavwfjsjTs7Jxn.png","service_order":"10"},{"id":1,"name":"Personal Coach","icon":"services\/J7cUfpqV0lh5Mu4Vs1B80doSU9XY4p9XFpQZZmcn.png","service_order":"11"},{"id":10,"name":"Physio & Fitness","icon":"services\/HXbuBWNH017vQe47qgQ70Z4LwecItVgYl7GGnuq3.png","service_order":"12"}]}';
+
 const kTitleLargeWhite = TextStyle(
   color: Colors.white,
   fontWeight: FontWeight.bold,

@@ -11,6 +11,7 @@ import 'package:player/chatprovider/auth_provider.dart';
 import 'package:player/chatprovider/chat_provider.dart';
 import 'package:player/chatprovider/home_provider.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/providers/banner_model.dart';
 import 'package:player/screens/add_host_activity.dart';
 import 'package:player/screens/home.dart';
 import 'package:player/screens/location_select.dart';
@@ -52,6 +53,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider<BannerModel>(create: (_) => BannerModel()),
+//        ChangeNotifierProvider<ServiceModel>(create: (_) => ServiceModel()),
         ChangeNotifierProvider(
           create: (_) => AuthProvider(
             firebaseAuth: FirebaseAuth.instance,

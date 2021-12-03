@@ -34,7 +34,7 @@ class _PhysioFitnessState extends State<PhysioFitness> {
   }
 
   _refresh() {
-    setState(() {});
+    getPlayerService();
   }
 
   @override
@@ -188,8 +188,10 @@ class _PhysioFitnessState extends State<PhysioFitness> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      ServiceModel serviceModel =
-          await apiCall.getServiceDataId(widget.serviceId, "0");
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var locationId = prefs.get("locationId");
+      ServiceModel serviceModel = await apiCall.getServiceDataId(
+          widget.serviceId, "0", locationId.toString());
       if (serviceModel.services != null) {
         services = serviceModel.services!;
         services = services!.reversed.toList();
@@ -259,7 +261,7 @@ class _PhysioFitnessState extends State<PhysioFitness> {
                   SizedBox(height: 5.0),
                   SizedBox(height: 5.0),
                   Text(
-                    "Contact: ${service.contactNo}",
+                    "Experience: ${service.experience}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 14.0,
@@ -267,7 +269,7 @@ class _PhysioFitnessState extends State<PhysioFitness> {
                   ),
                   SizedBox(height: 5.0),
                   Text(
-                    "City: ${service.city}",
+                    "Address: ${service.address}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 14.0,

@@ -146,7 +146,7 @@ class _EditSportMarketState extends State<EditSportMarket> {
             keyboardType: TextInputType.text,
             controller: nameCtrl,
             decoration: InputDecoration(
-                labelText: "Shop Name",
+                labelText: "Shop Name *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -155,7 +155,7 @@ class _EditSportMarketState extends State<EditSportMarket> {
             keyboardType: TextInputType.text,
             controller: addressCtrl,
             decoration: InputDecoration(
-                labelText: "Address",
+                labelText: "Address *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -164,7 +164,7 @@ class _EditSportMarketState extends State<EditSportMarket> {
             keyboardType: TextInputType.text,
             controller: addressLinkCtrl,
             decoration: InputDecoration(
-                labelText: "Address Link",
+                labelText: "Address Link (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -172,7 +172,7 @@ class _EditSportMarketState extends State<EditSportMarket> {
           TextField(
             controller: cityCtrl,
             decoration: InputDecoration(
-                labelText: "City",
+                labelText: "City *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -180,7 +180,7 @@ class _EditSportMarketState extends State<EditSportMarket> {
           TextField(
             controller: ownerNameCtrl,
             decoration: InputDecoration(
-                labelText: "Owner Name",
+                labelText: "Owner Name *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -189,7 +189,7 @@ class _EditSportMarketState extends State<EditSportMarket> {
             keyboardType: TextInputType.phone,
             controller: contactCtrl,
             decoration: InputDecoration(
-                labelText: "Contact Number",
+                labelText: "Primary Number *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -198,7 +198,7 @@ class _EditSportMarketState extends State<EditSportMarket> {
             keyboardType: TextInputType.phone,
             controller: secondaryContactCtrl,
             decoration: InputDecoration(
-                labelText: "Secondary Number",
+                labelText: "Secondary Number (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -206,7 +206,7 @@ class _EditSportMarketState extends State<EditSportMarket> {
           TextField(
             enabled: false,
             decoration: InputDecoration(
-                labelText: "Details of Shop",
+                labelText: "Details of Shop (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -239,12 +239,41 @@ class _EditSportMarketState extends State<EditSportMarket> {
                   txtColor: Colors.white,
                   minWidth: 150,
                   onPressed: () async {
-//              if (widget.isEdit) {}
+                    if (Utility.checkValidation(nameCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Company Name");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(contactCtrl.text.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Primary Contact Number");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(cityCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter City");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(addressCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Address");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        ownerNameCtrl.text.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Fees Per Match");
+                      return;
+                    }
+
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     var playerId = prefs.get("playerId");
+                    var locationId = prefs.get("locationId");
                     service = widget.service;
 
+                    service!.locationId = locationId!.toString();
                     service!.playerId = playerId!.toString();
                     service!.serviceId = widget.service.serviceId.toString();
                     service!.name = nameCtrl.text;

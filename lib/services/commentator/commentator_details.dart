@@ -26,9 +26,9 @@ class _CommentatorDetailState extends State<CommentatorDetail> {
           margin: EdgeInsets.all(10.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              posterImage(context, widget.service.posterImage),
+              posterImage2(context, widget.service.posterImage),
               SizedBox(height: kMargin),
               itemDetail(context, "Sport", widget.service.sportName.toString()),
               itemDetail(context, "Name", widget.service.name.toString()),
@@ -41,7 +41,7 @@ class _CommentatorDetailState extends State<CommentatorDetail> {
                   widget.service.feesPerMatch.toString()),
               itemDetail(context, "Fees Per Day",
                   widget.service.feesPerDay.toString()),
-              itemDetail(context, "Commentry Experience",
+              itemDetail(context, "Commentary Experience",
                   widget.service.experience.toString()),
             ],
           ),

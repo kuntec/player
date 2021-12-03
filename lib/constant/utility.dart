@@ -44,7 +44,7 @@ class Utility {
   }
 
   static bool checkValidation(String value) {
-    if (value.trim() == "" || value == null || value.isEmpty) {
+    if (value.trim() == "" || value.isEmpty) {
       return true;
     }
     return false;
@@ -60,6 +60,16 @@ class Utility {
       msg: msg,
 //    gravity: ToastGravity.CENTER,
       backgroundColor: kBaseColor,
+      textColor: Colors.white,
+      toastLength: Toast.LENGTH_LONG,
+    );
+  }
+
+  static void showValidationToast(String msg) {
+    Fluttertoast.showToast(
+      msg: msg,
+//      gravity: ToastGravity.CENTER_LEFT,
+      backgroundColor: Colors.red,
       textColor: Colors.white,
       toastLength: Toast.LENGTH_LONG,
     );

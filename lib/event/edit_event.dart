@@ -325,7 +325,7 @@ class _EditEventState extends State<EditEvent> {
           TextField(
             controller: noOfMembersController,
             decoration: InputDecoration(
-                labelText: "members",
+                labelText: "members allowed per entry fee",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),

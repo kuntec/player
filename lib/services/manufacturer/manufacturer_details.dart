@@ -27,10 +27,10 @@ class _ManufacturerDetailsState extends State<ManufacturerDetails> {
           margin: EdgeInsets.all(10.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: kMargin),
-              posterImage(context, widget.service.posterImage),
+              posterImage2(context, widget.service.posterImage),
               SizedBox(height: k20Margin),
               Container(
                 margin: EdgeInsets.only(left: 10, right: 10),
@@ -106,7 +106,7 @@ class _ManufacturerDetailsState extends State<ManufacturerDetails> {
         children: [
           itemDetail(context, "Name", widget.service.name.toString()),
           itemDetail(context, "Address", widget.service.address.toString()),
-          itemDetail(
+          itemLinkDetail(
               context, "Address Link", widget.service.locationLink.toString()),
           itemDetail(context, "City", widget.service.city.toString()),
           itemDetail(

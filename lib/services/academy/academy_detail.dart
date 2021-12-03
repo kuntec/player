@@ -106,16 +106,28 @@ class _AcademyDetailState extends State<AcademyDetail> {
         children: [
           itemDetail(context, "Name", widget.service.name.toString()),
           itemDetail(context, "Address", widget.service.address.toString()),
-          itemDetail(
-              context, "Address Link", widget.service.locationLink.toString()),
+          widget.service.locationLink == null
+              ? SizedBox.shrink()
+              : itemLinkDetail(context, "Address Link",
+                  widget.service.locationLink.toString()),
           itemDetail(context, "City", widget.service.city.toString()),
           itemDetail(
               context, "Owner Name", widget.service.contactName.toString()),
           itemCallDetail(
               context, "Contact Number", widget.service.contactNo.toString()),
-          itemCallDetail(context, "Secondary Number",
-              widget.service.secondaryNo.toString()),
-          itemDetail(context, "About Academy", widget.service.about.toString()),
+          widget.service.secondaryNo == null
+              ? SizedBox.shrink()
+              : itemCallDetail(context, "Secondary Number",
+                  widget.service.secondaryNo.toString()),
+          itemDetail(
+              context, "Facilities", widget.service.experience.toString()),
+          itemDetail(
+              context, "Monthly Fees", widget.service.monthlyFees.toString()),
+          itemDetail(context, "Coaches", widget.service.coaches.toString()),
+          widget.service.about.toString() == 'null'
+              ? SizedBox.shrink()
+              : itemDetail(
+                  context, "About Academy", widget.service.about.toString()),
         ],
       ),
     );

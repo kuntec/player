@@ -26,14 +26,14 @@ class _ManufacturerRegisterState extends State<ManufacturerRegister> {
   Data? selectedSport;
   List<Data>? sports;
 
-  var companyName;
-  var address;
-  var city;
-  var addressLink;
-  var ownerName;
-  var contactNo;
-  var secondaryNo;
-  var details;
+  TextEditingController companyCtrl = new TextEditingController();
+  TextEditingController addressCtrl = new TextEditingController();
+  TextEditingController cityCtrl = new TextEditingController();
+  TextEditingController addressLinkCtrl = new TextEditingController();
+  TextEditingController ownerNameCtrl = new TextEditingController();
+  TextEditingController contactCtrl = new TextEditingController();
+  TextEditingController secondaryCtrl = new TextEditingController();
+  TextEditingController detailsCtrl = new TextEditingController();
 
   Future<List<Data>> getSports() async {
     APICall apiCall = new APICall();
@@ -171,75 +171,61 @@ class _ManufacturerRegisterState extends State<ManufacturerRegister> {
           SizedBox(height: kMargin),
           TextField(
             keyboardType: TextInputType.text,
-            onChanged: (value) {
-              companyName = value;
-            },
+            controller: companyCtrl,
             decoration: InputDecoration(
-                labelText: "Company Name",
+                labelText: "Company Name *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              ownerName = value;
-            },
+            controller: ownerNameCtrl,
             decoration: InputDecoration(
-                labelText: "Seller Name",
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                )),
-          ),
-          TextField(
-            keyboardType: TextInputType.phone,
-            onChanged: (value) {
-              contactNo = value;
-            },
-            decoration: InputDecoration(
-                labelText: "Contact Number",
+                labelText: "Seller Name *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
             keyboardType: TextInputType.phone,
-            onChanged: (value) {
-              secondaryNo = value;
-            },
+            controller: contactCtrl,
             decoration: InputDecoration(
-                labelText: "Secondary Number",
+                labelText: "Contact Number *",
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                )),
+          ),
+          TextField(
+            keyboardType: TextInputType.phone,
+            controller: secondaryCtrl,
+            decoration: InputDecoration(
+                labelText: "Secondary Number (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
             keyboardType: TextInputType.text,
-            onChanged: (value) {
-              address = value;
-            },
+            controller: addressCtrl,
             decoration: InputDecoration(
-                labelText: "Address",
+                labelText: "Address *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
             keyboardType: TextInputType.text,
-            onChanged: (value) {
-              addressLink = value;
-            },
+            controller: addressLinkCtrl,
             decoration: InputDecoration(
-                labelText: "Address Link",
+                labelText: "Address Link (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              city = value;
-            },
+            controller: cityCtrl,
             decoration: InputDecoration(
-                labelText: "City",
+                labelText: "City *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -247,15 +233,13 @@ class _ManufacturerRegisterState extends State<ManufacturerRegister> {
           TextField(
             enabled: false,
             decoration: InputDecoration(
-                labelText: "More Details",
+                labelText: "More Details (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextFormField(
-              onChanged: (value) {
-                details = value;
-              },
+              controller: detailsCtrl,
               minLines: 3,
               maxLines: 5,
               keyboardType: TextInputType.multiline,
@@ -278,21 +262,53 @@ class _ManufacturerRegisterState extends State<ManufacturerRegister> {
             txtColor: Colors.white,
             minWidth: 150,
             onPressed: () async {
-//              if (widget.isEdit) {}
+              if (selectedSport == null) {
+                Utility.showValidationToast("Please Select Sport");
+                return;
+              }
+
+              if (Utility.checkValidation(companyCtrl.text.toString())) {
+                Utility.showValidationToast("Please Enter Company Name");
+                return;
+              }
+
+              if (Utility.checkValidation(addressCtrl.text.toString())) {
+                Utility.showValidationToast("Please Enter Address");
+                return;
+              }
+
+              if (Utility.checkValidation(cityCtrl.text.toString())) {
+                Utility.showValidationToast("Please Enter City");
+                return;
+              }
+
+              if (Utility.checkValidation(ownerNameCtrl.text.toString())) {
+                Utility.showValidationToast("Please Enter Owner Name");
+                return;
+              }
+
+              if (Utility.checkValidation(contactCtrl.text.toString())) {
+                Utility.showValidationToast(
+                    "Please Enter Primary Contact Number");
+                return;
+              }
+
               SharedPreferences prefs = await SharedPreferences.getInstance();
               var playerId = prefs.get("playerId");
+              var locationId = prefs.get("locationId");
               service = new Service();
 
+              service!.locationId = locationId!.toString();
               service!.playerId = playerId!.toString();
               service!.serviceId = widget.serviceId.toString();
-              service!.name = companyName.toString();
-              service!.address = address.toString();
-              service!.city = city.toString();
-              service!.contactName = ownerName.toString();
-              service!.contactNo = contactNo.toString();
-              service!.secondaryNo = secondaryNo.toString();
-              service!.about = details.toString();
-              service!.locationLink = addressLink.toString();
+              service!.name = companyCtrl.text.toString();
+              service!.address = addressCtrl.text.toString();
+              service!.city = cityCtrl.text.toString();
+              service!.contactName = ownerNameCtrl.text.toString();
+              service!.contactNo = contactCtrl.text.toString();
+              service!.secondaryNo = secondaryCtrl.text.toString();
+              service!.about = detailsCtrl.text.toString();
+              service!.locationLink = addressLinkCtrl.text.toString();
               service!.monthlyFees = "";
               service!.coaches = "";
               service!.feesPerMatch = "";
@@ -300,7 +316,7 @@ class _ManufacturerRegisterState extends State<ManufacturerRegister> {
               service!.experience = "";
               service!.sportName = selectedSport!.sportName;
               service!.sportId = selectedSport!.id.toString();
-              service!.companyName = companyName.toString();
+              service!.companyName = companyCtrl.text.toString();
 
               if (this.image != null) {
                 addService(this.image!.path, service!);

@@ -241,11 +241,39 @@ class _EditTrophySellerState extends State<EditTrophySeller> {
                   txtColor: Colors.white,
                   minWidth: 150,
                   onPressed: () async {
+                    if (Utility.checkValidation(companyCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Company Name");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(contactCtrl.text.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Primary Contact Number");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(cityCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter City");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(addressCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Address");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        ownerNameCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Seller Name");
+                      return;
+                    }
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     var playerId = prefs.get("playerId");
+                    var locationId = prefs.get("locationId");
                     service = widget.service;
 
+                    service!.locationId = locationId!.toString();
                     service!.playerId = playerId!.toString();
                     service!.serviceId = widget.service.serviceId.toString();
                     service!.name = companyCtrl.text;

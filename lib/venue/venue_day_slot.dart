@@ -227,12 +227,12 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
     DayslotData? dayslotData;
     if (connectivityStatus) {
       for (int i = 0; i < dayslots!.length; i++) {
-        if (dayslots![i].status == "1") {
-//          print("Day slot need to update ${dayslots![i].status}");
-          dayslotData = await apiCall.updateDaySlot(
-            dayslots![i],
-          );
-        }
+//        if (dayslots![i].status == "1") {
+//        print("Day slot need to update ${dayslots![i].status}");
+        dayslotData = await apiCall.updateDaySlot(
+          dayslots![i],
+        );
+//        }
       }
       setState(() {
         isLoading = false;

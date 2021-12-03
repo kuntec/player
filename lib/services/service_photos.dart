@@ -25,6 +25,20 @@ class _ServicePhotosState extends State<ServicePhotos> {
       appBar: AppBar(
 //        leading: Icon(Icons.arrow_back),
         title: Text("Photos"),
+        actions: [
+          GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                margin: EdgeInsets.only(right: 5),
+                child: Icon(
+                  Icons.check,
+                  size: 30,
+                  color: kBaseColor,
+                ),
+              )),
+        ],
       ),
       body: SingleChildScrollView(
         child: Container(

@@ -374,6 +374,7 @@ class _AddVenueState extends State<AddVenue> {
       VenueData venueData = await apiCall.deleteVenue(id);
       if (venueData.status!) {
         Utility.showToast(venueData.message.toString());
+        venues!.clear();
         _refresh();
       } else {
         print(venueData.message!);

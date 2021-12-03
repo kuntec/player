@@ -201,7 +201,7 @@ class _EditPersonalCoachState extends State<EditPersonalCoach> {
             keyboardType: TextInputType.text,
             controller: nameCtrl,
             decoration: InputDecoration(
-                labelText: "Name",
+                labelText: "Name *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -210,7 +210,7 @@ class _EditPersonalCoachState extends State<EditPersonalCoach> {
             keyboardType: TextInputType.phone,
             controller: contactCtrl,
             decoration: InputDecoration(
-                labelText: "Contact Number",
+                labelText: "Contact Number *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -219,7 +219,7 @@ class _EditPersonalCoachState extends State<EditPersonalCoach> {
             keyboardType: TextInputType.phone,
             controller: secondaryCtrl,
             decoration: InputDecoration(
-                labelText: "Secondary Number",
+                labelText: "Secondary Number (optinal)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -228,7 +228,7 @@ class _EditPersonalCoachState extends State<EditPersonalCoach> {
             keyboardType: TextInputType.text,
             controller: addressCtrl,
             decoration: InputDecoration(
-                labelText: "Address",
+                labelText: "Address *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -236,7 +236,7 @@ class _EditPersonalCoachState extends State<EditPersonalCoach> {
           TextField(
             controller: cityCtrl,
             decoration: InputDecoration(
-                labelText: "City",
+                labelText: "City *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -244,7 +244,7 @@ class _EditPersonalCoachState extends State<EditPersonalCoach> {
           TextField(
             controller: experienceCtrl,
             decoration: InputDecoration(
-                labelText: "Experience",
+                labelText: "Experience *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -252,7 +252,7 @@ class _EditPersonalCoachState extends State<EditPersonalCoach> {
           TextField(
             enabled: false,
             decoration: InputDecoration(
-                labelText: "More Details",
+                labelText: "More Details (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -283,12 +283,44 @@ class _EditPersonalCoachState extends State<EditPersonalCoach> {
                   txtColor: Colors.white,
                   minWidth: 150,
                   onPressed: () async {
-//              if (widget.isEdit) {}
+                    if (selectedSport == null) {
+                      Utility.showValidationToast("Please Select Sport");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(nameCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Company Name");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(addressCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Address");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(cityCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter City");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        experienceCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Experience");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(contactCtrl.text.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Primary Contact Number");
+                      return;
+                    }
+
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     var playerId = prefs.get("playerId");
+                    var locationId = prefs.get("locationId");
                     service = widget.service;
-
+                    service!.locationId = locationId!.toString();
                     service!.playerId = playerId!.toString();
                     service!.serviceId = widget.service.serviceId.toString();
                     service!.name = nameCtrl.text;

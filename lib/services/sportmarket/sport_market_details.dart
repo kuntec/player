@@ -26,13 +26,13 @@ class _SportMarketDetailState extends State<SportMarketDetail> {
           margin: EdgeInsets.all(10.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              posterImage(context, widget.service.posterImage),
+              posterImage2(context, widget.service.posterImage),
               SizedBox(height: kMargin),
               itemDetail(context, "Name", widget.service.name.toString()),
               itemDetail(context, "Address", widget.service.address.toString()),
-              itemDetail(context, "Address Link",
+              itemLinkDetail(context, "Address Link",
                   widget.service.locationLink.toString()),
               itemDetail(context, "City", widget.service.city.toString()),
               itemDetail(

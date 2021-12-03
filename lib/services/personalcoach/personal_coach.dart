@@ -38,6 +38,10 @@ class _PersonalCoachState extends State<PersonalCoach> {
     getPlayerService();
   }
 
+  _refresh() {
+    getPlayerService();
+  }
+
   Future<List<Sports>> getMySports() async {
     APICall apiCall = new APICall();
     // List<Data> data = [];
@@ -167,10 +171,6 @@ class _PersonalCoachState extends State<PersonalCoach> {
         ),
       ),
     );
-  }
-
-  _refresh() {
-    setState(() {});
   }
 
   @override
@@ -325,8 +325,10 @@ class _PersonalCoachState extends State<PersonalCoach> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var locationId = prefs.get("locationId");
       ServiceModel serviceModel = await apiCall.getServiceDataId(
-          widget.serviceId, selectedSportId.toString());
+          widget.serviceId, selectedSportId.toString(), locationId.toString());
       if (serviceModel.services != null) {
         services = serviceModel.services!;
         services = services!.reversed.toList();
@@ -397,7 +399,7 @@ class _PersonalCoachState extends State<PersonalCoach> {
                                   service.name,
                                   style: TextStyle(
                                     color: kBaseColor,
-                                    fontSize: 14.0,
+                                    fontSize: 16.0,
                                   ),
                                 ),
                               ),
@@ -434,7 +436,7 @@ class _PersonalCoachState extends State<PersonalCoach> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Contact Number: ${service.contactNo}",
+                                "Experience: ${service.experience}",
                                 style: TextStyle(
                                   color: Colors.grey.shade900,
                                   fontSize: 12.0,

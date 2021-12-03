@@ -34,6 +34,10 @@ class _AcademyState extends State<Academy> {
     getPlayerService();
   }
 
+  _refresh() {
+    getPlayerService();
+  }
+
   Future<List<Sports>> getMySports() async {
     APICall apiCall = new APICall();
     // List<Data> data = [];
@@ -163,10 +167,6 @@ class _AcademyState extends State<Academy> {
         ),
       ),
     );
-  }
-
-  _refresh() {
-    setState(() {});
   }
 
   @override
@@ -329,12 +329,14 @@ class _AcademyState extends State<Academy> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var playerId = prefs.get("playerId");
+      var locationId = prefs.get("locationId");
       ServiceModel serviceModel = await apiCall.getServiceDataId(
-          widget.serviceId, selectedSportId.toString());
+          widget.serviceId, selectedSportId.toString(), locationId.toString());
       if (serviceModel.services != null) {
         services = serviceModel.services!;
         services = services!.reversed.toList();
-        //setState(() {});
       }
 
       if (serviceModel.status!) {
@@ -363,8 +365,9 @@ class _AcademyState extends State<Academy> {
         margin: EdgeInsets.only(bottom: 10.0),
         decoration: kServiceBoxItem,
         width: MediaQuery.of(context).size.width,
-        height: 120.0,
+        height: 100.0,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
               flex: 3,
@@ -402,7 +405,7 @@ class _AcademyState extends State<Academy> {
                                   service.name,
                                   style: TextStyle(
                                     color: kBaseColor,
-                                    fontSize: 14.0,
+                                    fontSize: 16.0,
                                   ),
                                 ),
                               ),
@@ -439,7 +442,7 @@ class _AcademyState extends State<Academy> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Contact Number: ${service.contactNo}",
+                                "Facilities: ${service.experience}",
                                 style: TextStyle(
                                   color: Colors.grey.shade900,
                                   fontSize: 12.0,
@@ -453,14 +456,14 @@ class _AcademyState extends State<Academy> {
                                   fontSize: 12.0,
                                 ),
                               ),
-                              SizedBox(height: 5.0),
-                              Text(
-                                "City: ${service.city}",
-                                style: TextStyle(
-                                  color: Colors.grey.shade900,
-                                  fontSize: 12.0,
-                                ),
-                              ),
+                              // SizedBox(height: 5.0),
+                              // Text(
+                              //   "City: ${service.city}",
+                              //   style: TextStyle(
+                              //     color: Colors.grey.shade900,
+                              //     fontSize: 12.0,
+                              //   ),
+                              // ),
                             ],
                           ),
                         )),

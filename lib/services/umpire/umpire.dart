@@ -36,7 +36,7 @@ class _UmpireState extends State<Umpire> {
   }
 
   _refresh() {
-    setState(() {});
+    getPlayerService();
   }
 
   Future<List<Sports>> getMySports() async {
@@ -315,8 +315,10 @@ class _UmpireState extends State<Umpire> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var locationId = prefs.get("locationId");
       ServiceModel serviceModel = await apiCall.getServiceDataId(
-          widget.serviceId, selectedSportId.toString());
+          widget.serviceId, selectedSportId.toString(), locationId.toString());
       if (serviceModel.services != null) {
         services = serviceModel.services!;
         services = services!.reversed.toList();
@@ -349,7 +351,7 @@ class _UmpireState extends State<Umpire> {
         margin: EdgeInsets.only(bottom: 10.0),
         decoration: kServiceBoxItem,
         width: MediaQuery.of(context).size.width,
-        height: 120.0,
+        height: 100.0,
         child: Row(
           children: [
             Expanded(
@@ -388,7 +390,7 @@ class _UmpireState extends State<Umpire> {
                                   service.name,
                                   style: TextStyle(
                                     color: kBaseColor,
-                                    fontSize: 14.0,
+                                    fontSize: 16.0,
                                   ),
                                 ),
                               ),
@@ -425,7 +427,7 @@ class _UmpireState extends State<Umpire> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Contact Number: ${service.contactNo}",
+                                "Experience: ${service.experience}",
                                 style: TextStyle(
                                   color: Colors.grey.shade900,
                                   fontSize: 12.0,

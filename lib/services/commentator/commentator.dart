@@ -36,6 +36,10 @@ class _CommentatorState extends State<Commentator> {
     getPlayerService();
   }
 
+  _refresh() {
+    getPlayerService();
+  }
+
   Future<List<Sports>> getMySports() async {
     APICall apiCall = new APICall();
     // List<Data> data = [];
@@ -165,10 +169,6 @@ class _CommentatorState extends State<Commentator> {
         ),
       ),
     );
-  }
-
-  _refresh() {
-    setState(() {});
   }
 
   @override
@@ -323,12 +323,13 @@ class _CommentatorState extends State<Commentator> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var locationId = prefs.get("locationId");
       ServiceModel serviceModel = await apiCall.getServiceDataId(
-          widget.serviceId, selectedSportId.toString());
+          widget.serviceId, selectedSportId.toString(), locationId.toString());
       if (serviceModel.services != null) {
         services = serviceModel.services!;
         services = services!.reversed.toList();
-        //setState(() {});
       }
 
       if (serviceModel.status!) {
@@ -357,7 +358,7 @@ class _CommentatorState extends State<Commentator> {
         margin: EdgeInsets.only(bottom: 10.0),
         decoration: kServiceBoxItem,
         width: MediaQuery.of(context).size.width,
-        height: 120.0,
+        height: 100.0,
         child: Row(
           children: [
             Expanded(
@@ -396,7 +397,7 @@ class _CommentatorState extends State<Commentator> {
                                   service.name,
                                   style: TextStyle(
                                     color: kBaseColor,
-                                    fontSize: 14.0,
+                                    fontSize: 16.0,
                                   ),
                                 ),
                               ),
@@ -433,15 +434,7 @@ class _CommentatorState extends State<Commentator> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Contact Number: ${service.contactNo}",
-                                style: TextStyle(
-                                  color: Colors.grey.shade900,
-                                  fontSize: 12.0,
-                                ),
-                              ),
-                              SizedBox(height: 5.0),
-                              Text(
-                                "Address: ${service.address}",
+                                "Experience: ${service.experience}",
                                 style: TextStyle(
                                   color: Colors.grey.shade900,
                                   fontSize: 12.0,

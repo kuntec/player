@@ -156,7 +156,7 @@ class _EditScorerState extends State<EditScorer> {
             keyboardType: TextInputType.text,
             controller: nameCtrl,
             decoration: InputDecoration(
-                labelText: "Name",
+                labelText: "Name *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -165,7 +165,7 @@ class _EditScorerState extends State<EditScorer> {
             keyboardType: TextInputType.phone,
             controller: contactCtrl,
             decoration: InputDecoration(
-                labelText: "Number",
+                labelText: "Primary Number *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -174,7 +174,7 @@ class _EditScorerState extends State<EditScorer> {
             keyboardType: TextInputType.phone,
             controller: secondaryCtrl,
             decoration: InputDecoration(
-                labelText: "Secondary Number",
+                labelText: "Secondary Number (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -182,7 +182,7 @@ class _EditScorerState extends State<EditScorer> {
           TextField(
             controller: cityCtrl,
             decoration: InputDecoration(
-                labelText: "City",
+                labelText: "City *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -190,7 +190,7 @@ class _EditScorerState extends State<EditScorer> {
           TextField(
             controller: feesPerMatchCtrl,
             decoration: InputDecoration(
-                labelText: "Fees per match",
+                labelText: "Fees per match *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -198,7 +198,7 @@ class _EditScorerState extends State<EditScorer> {
           TextField(
             controller: feesPerDayCtrl,
             decoration: InputDecoration(
-                labelText: "Fees Per Day",
+                labelText: "Fees Per Day *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -206,7 +206,7 @@ class _EditScorerState extends State<EditScorer> {
           TextField(
             controller: experienceCtrl,
             decoration: InputDecoration(
-                labelText: "Scoring Experience",
+                labelText: "Scoring Experience *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -220,12 +220,48 @@ class _EditScorerState extends State<EditScorer> {
                   txtColor: Colors.white,
                   minWidth: 150,
                   onPressed: () async {
-//              if (widget.isEdit) {}
+                    if (Utility.checkValidation(nameCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Company Name");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(contactCtrl.text.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Primary Contact Number");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(cityCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter City");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        experienceCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Experience");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        feesPerMatchCtrl.text.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Fees Per Match");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        feesPerDayCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Fees Per Day");
+                      return;
+                    }
+
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     var playerId = prefs.get("playerId");
+                    var locationId = prefs.get("locationId");
                     service = widget.service;
 
+                    service!.locationId = locationId!.toString();
                     service!.playerId = playerId!.toString();
                     service!.serviceId = widget.service.serviceId.toString();
                     service!.name = nameCtrl.text;

@@ -23,14 +23,15 @@ class _SportMarketRegisterState extends State<SportMarketRegister> {
   File? image;
   Service? service;
   bool? isLoading = false;
-  var shopName;
-  var address;
-  var addressLink;
-  var city;
-  var ownerName;
-  var contactNo;
-  var secondaryNo;
-  var detailOfShop;
+
+  TextEditingController nameCtrl = new TextEditingController();
+  TextEditingController ownerNameCtrl = new TextEditingController();
+  TextEditingController contactCtrl = new TextEditingController();
+  TextEditingController secondaryContactCtrl = new TextEditingController();
+  TextEditingController addressCtrl = new TextEditingController();
+  TextEditingController addressLinkCtrl = new TextEditingController();
+  TextEditingController cityCtrl = new TextEditingController();
+  TextEditingController detailsCtrl = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -104,75 +105,61 @@ class _SportMarketRegisterState extends State<SportMarketRegister> {
           ),
           TextField(
             keyboardType: TextInputType.text,
-            onChanged: (value) {
-              shopName = value;
-            },
+            controller: nameCtrl,
             decoration: InputDecoration(
-                labelText: "Shop Name",
+                labelText: "Shop Name *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
             keyboardType: TextInputType.text,
-            onChanged: (value) {
-              address = value;
-            },
+            controller: addressCtrl,
             decoration: InputDecoration(
-                labelText: "Address",
+                labelText: "Address *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
             keyboardType: TextInputType.text,
-            onChanged: (value) {
-              addressLink = value;
-            },
+            controller: addressLinkCtrl,
             decoration: InputDecoration(
-                labelText: "Address Link",
+                labelText: "Address Link (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              city = value;
-            },
+            controller: cityCtrl,
             decoration: InputDecoration(
-                labelText: "City",
+                labelText: "City *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              ownerName = value;
-            },
+            controller: ownerNameCtrl,
             decoration: InputDecoration(
-                labelText: "Owner Name",
+                labelText: "Owner Name *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
             keyboardType: TextInputType.phone,
-            onChanged: (value) {
-              contactNo = value;
-            },
+            controller: contactCtrl,
             decoration: InputDecoration(
-                labelText: "Contact Number",
+                labelText: "Contact Number *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextField(
             keyboardType: TextInputType.phone,
-            onChanged: (value) {
-              secondaryNo = value;
-            },
+            controller: secondaryContactCtrl,
             decoration: InputDecoration(
-                labelText: "Secondary Number",
+                labelText: "Secondary Number (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -180,15 +167,13 @@ class _SportMarketRegisterState extends State<SportMarketRegister> {
           TextField(
             enabled: false,
             decoration: InputDecoration(
-                labelText: "Details of Shop",
+                labelText: "Details of Shop (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
           TextFormField(
-              onChanged: (value) {
-                detailOfShop = value;
-              },
+              controller: detailsCtrl,
               minLines: 3,
               maxLines: 5,
               keyboardType: TextInputType.multiline,
@@ -215,22 +200,51 @@ class _SportMarketRegisterState extends State<SportMarketRegister> {
                   txtColor: Colors.white,
                   minWidth: 150,
                   onPressed: () async {
-//              if (widget.isEdit) {}
+                    if (Utility.checkValidation(nameCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Company Name");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(contactCtrl.text.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Primary Contact Number");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(cityCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter City");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(addressCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Address");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        ownerNameCtrl.text.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Fees Per Match");
+                      return;
+                    }
+
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     var playerId = prefs.get("playerId");
+                    var locationId = prefs.get("locationId");
                     service = new Service();
 
+                    service!.locationId = locationId!.toString();
                     service!.playerId = playerId!.toString();
                     service!.serviceId = widget.serviceId.toString();
-                    service!.name = shopName.toString();
-                    service!.address = address.toString();
-                    service!.city = city.toString();
-                    service!.contactName = ownerName.toString();
-                    service!.contactNo = contactNo.toString();
-                    service!.secondaryNo = secondaryNo.toString();
-                    service!.about = detailOfShop.toString();
-                    service!.locationLink = addressLink.toString();
+                    service!.name = nameCtrl.text.toString();
+                    service!.address = addressCtrl.text.toString();
+                    service!.city = cityCtrl.text.toString();
+                    service!.contactName = ownerNameCtrl.text.toString();
+                    service!.contactNo = contactCtrl.text.toString();
+                    service!.secondaryNo = secondaryContactCtrl.text.toString();
+                    service!.about = detailsCtrl.text.toString();
+                    service!.locationLink = addressLinkCtrl.text.toString();
                     service!.monthlyFees = "";
                     service!.coaches = "";
                     service!.feesPerMatch = "";

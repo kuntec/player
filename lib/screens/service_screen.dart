@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
@@ -32,6 +34,14 @@ class _ServiceScreenState extends State<ServiceScreen>
 
   String selectedServiceId = "";
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // final serviceMdl = Provider.of<ServiceModel>(context, listen: false);
+    // services = serviceMdl.getServiceData(context);
+  }
+
   // List serviceScreens = [
   //   PersonalCoach(),
   //   TrophySeller(),
@@ -64,7 +74,7 @@ class _ServiceScreenState extends State<ServiceScreen>
               // ),
               // Center(
               //   child: Text(
-              //     "Choose Your Service",
+              //     "Choose Your Service  ",
               //     style: const TextStyle(
               //       color: kBaseColor,
               //       fontStyle: FontStyle.normal,
@@ -73,12 +83,12 @@ class _ServiceScreenState extends State<ServiceScreen>
               //     textAlign: TextAlign.left,
               //   ),
               // ),
-              SizedBox(
-                height: 10.0,
-              ),
+              // SizedBox(
+              //   height: 10.0,
+              // ),
               Container(
                 height: 700,
-                child: FutureBuilder<List<Services>>(
+                child: FutureBuilder<List<Services>?>(
                   future: getService(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
@@ -101,82 +111,12 @@ class _ServiceScreenState extends State<ServiceScreen>
                   },
                 ),
               ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //   children: [
-              //     iconCard(Icons.store, "Sport Market"),
-              //     iconCard(Icons.school, "Academy"),
-              //   ],
-              // ),
-              // SizedBox(height: 20.0),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //   children: [
-              //     iconCard(Icons.people, "Umpires"),
-              //     iconCard(Icons.person, "Scorer"),
-              //   ],
-              // ),
-              // SizedBox(height: 20.0),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //   children: [
-              //     iconCard(Icons.speaker_phone, "Commentator"),
-              //     iconCard(Icons.wine_bar, "Item Rental"),
-              //   ],
-              // ),
-              // SizedBox(height: 20.0),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //   children: [
-              //     iconCard(Icons.store, "Trophy Sellers"),
-              //     iconCard(Icons.precision_manufacturing, "Manufacturers"),
-              //   ],
-              // ),
-              // SizedBox(height: 20.0),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //   children: [
-              //     iconCard(Icons.store, "T-Shirt Sellers"),
-              //     iconCard(Icons.person, "Personal Coach"),
-              //   ],
-              // ),
-              // SizedBox(height: 20.0),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //   children: [
-              //     iconCard(Icons.wine_bar, "Events"),
-              //     iconCard(Icons.person, "Physio and Fitness Trainer"),
-              //   ],
-              // ),
             ],
           ),
         ),
       ),
     );
   }
-
-  // Widget iconCard(IconData iconData, String title) {
-  //   return Container(
-  //     decoration: kContainerBoxDecoration,
-  //     height: 100,
-  //     width: 100,
-  //     child: Column(
-  //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //       children: [
-  //         Icon(
-  //           iconData,
-  //           color: kAppColor,
-  //           size: 60,
-  //         ),
-  //         Center(
-  //             child: Text(
-  //           title,
-  //           textAlign: TextAlign.center,
-  //         ))
-  //       ],
-  //     ),
-  //   );
-  // }
 
   Widget serviceCard(dynamic service) {
     return GestureDetector(
@@ -333,12 +273,16 @@ class _ServiceScreenState extends State<ServiceScreen>
     List<Services> data = [];
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      ServiceData serviceData = await apiCall.getService();
-
+      //ServiceData serviceData = await apiCall.getService();
+      ServiceData serviceData = ServiceData.fromJson(jsonDecode(kServices));
       if (serviceData.services != null) {
         data.addAll(serviceData.services!);
       }
     } else {}
     return data;
+  }
+
+  getLocalService() async {
+    return ServiceData.fromJson(jsonDecode(kServices));
   }
 }

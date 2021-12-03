@@ -26,9 +26,9 @@ class _ScorerDetailState extends State<ScorerDetail> {
           margin: EdgeInsets.all(10.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              posterImage(context, widget.service.posterImage),
+              posterImage2(context, widget.service.posterImage),
               SizedBox(height: kMargin),
               itemDetail(context, "Sport", widget.service.sportName.toString()),
               itemDetail(context, "Name", widget.service.name.toString()),

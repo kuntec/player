@@ -26,9 +26,9 @@ class _PersonalCoachDetailState extends State<PersonalCoachDetail> {
           margin: EdgeInsets.all(10.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              posterImage(context, widget.service.posterImage),
+              posterImage2(context, widget.service.posterImage),
               SizedBox(height: kMargin),
               itemDetail(context, "Sport", widget.service.sportName.toString()),
               itemDetail(context, "Name", widget.service.name.toString()),
@@ -36,8 +36,7 @@ class _PersonalCoachDetailState extends State<PersonalCoachDetail> {
                   widget.service.contactNo.toString()),
               itemCallDetail(context, "Secondary Number",
                   widget.service.secondaryNo.toString()),
-              itemCallDetail(
-                  context, "Address", widget.service.address.toString()),
+              itemDetail(context, "Address", widget.service.address.toString()),
               itemDetail(context, "City", widget.service.city.toString()),
               itemDetail(
                   context, "Experience", widget.service.experience.toString()),

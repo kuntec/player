@@ -108,14 +108,14 @@ class _EditHelperState extends State<EditHelper> {
               child: image != null
                   ? Image.file(
                       image!,
-                      width: 280,
+                      width: 150,
                       height: 150,
                       fit: BoxFit.fill,
                     )
                   : widget.service.posterImage != null
                       ? Image.network(
                           APIResources.IMAGE_URL + widget.service.posterImage,
-                          width: 280,
+                          width: 150,
                           height: 150,
                           fit: BoxFit.fill,
                         )
@@ -143,7 +143,7 @@ class _EditHelperState extends State<EditHelper> {
             keyboardType: TextInputType.text,
             controller: nameCtrl,
             decoration: InputDecoration(
-                labelText: "Name",
+                labelText: "Name *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -152,7 +152,7 @@ class _EditHelperState extends State<EditHelper> {
             keyboardType: TextInputType.phone,
             controller: contactCtrl,
             decoration: InputDecoration(
-                labelText: "Number",
+                labelText: "Primary Number *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -161,7 +161,7 @@ class _EditHelperState extends State<EditHelper> {
             keyboardType: TextInputType.phone,
             controller: secondaryCtrl,
             decoration: InputDecoration(
-                labelText: "Secondary Number",
+                labelText: "Secondary Number (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -169,7 +169,7 @@ class _EditHelperState extends State<EditHelper> {
           TextField(
             controller: cityCtrl,
             decoration: InputDecoration(
-                labelText: "City",
+                labelText: "City *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -177,7 +177,7 @@ class _EditHelperState extends State<EditHelper> {
           TextField(
             controller: experienceCtrl,
             decoration: InputDecoration(
-                labelText: "Experience",
+                labelText: "Experience *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -185,7 +185,7 @@ class _EditHelperState extends State<EditHelper> {
           TextField(
             enabled: false,
             decoration: InputDecoration(
-                labelText: "More Details",
+                labelText: "More Details (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -216,12 +216,29 @@ class _EditHelperState extends State<EditHelper> {
                   txtColor: Colors.white,
                   minWidth: 150,
                   onPressed: () async {
-//              if (widget.isEdit) {}
+                    if (Utility.checkValidation(nameCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Name");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(contactCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Number");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(cityCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter City");
+                      return;
+                    }
+
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     var playerId = prefs.get("playerId");
+                    var locationId = prefs.get("locationId");
+
                     service = widget.service;
 
+                    service!.locationId = locationId!.toString();
                     service!.playerId = playerId!.toString();
                     service!.serviceId = widget.service.serviceId.toString();
                     service!.name = nameCtrl.text;

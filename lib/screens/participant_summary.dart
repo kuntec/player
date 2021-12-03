@@ -270,7 +270,7 @@ class _ParticipantSummaryState extends State<ParticipantSummary> {
                                   event: widget.event,
                                 )));
                     if (result == true) {
-                      print("poping summary");
+                      print("popping summary");
                       Navigator.pop(context);
                     }
                   },

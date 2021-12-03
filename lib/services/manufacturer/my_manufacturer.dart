@@ -253,6 +253,7 @@ class _MyManufacturerState extends State<MyManufacturer> {
       ServiceData serviceData = await apiCall.deleteService(id);
       if (serviceData.status!) {
         Utility.showToast(serviceData.message.toString());
+        services!.clear();
         _refresh();
       } else {
         print(serviceData.message!);

@@ -205,15 +205,7 @@ class _MyScorerState extends State<MyScorer> {
                   ),
                   SizedBox(height: 5.0),
                   Text(
-                    "Contact Number: ${service.contactNo}",
-                    style: TextStyle(
-                      color: Colors.grey.shade900,
-                      fontSize: 12.0,
-                    ),
-                  ),
-                  SizedBox(height: 5.0),
-                  Text(
-                    "Address: ${service.address}",
+                    "Experience: ${service.experience}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 12.0,
@@ -292,6 +284,7 @@ class _MyScorerState extends State<MyScorer> {
       ServiceData serviceData = await apiCall.deleteService(id);
       if (serviceData.status!) {
         Utility.showToast(serviceData.message.toString());
+        services!.clear();
         _refresh();
       } else {
         print(serviceData.message!);

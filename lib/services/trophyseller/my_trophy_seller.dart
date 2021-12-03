@@ -227,6 +227,7 @@ class _MyTrophySellerState extends State<MyTrophySeller> {
             ),
             onPressed: () async {
               Navigator.pop(context);
+              //Utility.showToast(services!.length.toString());
               await deleteService(selectedService.id.toString());
             },
           ),
@@ -253,6 +254,7 @@ class _MyTrophySellerState extends State<MyTrophySeller> {
       ServiceData serviceData = await apiCall.deleteService(id);
       if (serviceData.status!) {
         Utility.showToast(serviceData.message.toString());
+        services!.clear();
         _refresh();
       } else {
         print(serviceData.message!);
@@ -272,6 +274,7 @@ class _MyTrophySellerState extends State<MyTrophySeller> {
           widget.serviceId.toString(), playerId.toString());
       if (serviceModel.services != null) {
         services = serviceModel.services!;
+        services = services!.reversed.toList();
       }
 
       if (serviceModel.status!) {

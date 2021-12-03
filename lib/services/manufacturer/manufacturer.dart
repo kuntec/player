@@ -36,6 +36,10 @@ class _ManufacturerState extends State<Manufacturer> {
     getPlayerService();
   }
 
+  _refresh() {
+    getPlayerService();
+  }
+
   Future<List<Sports>> getMySports() async {
     APICall apiCall = new APICall();
     // List<Data> data = [];
@@ -165,10 +169,6 @@ class _ManufacturerState extends State<Manufacturer> {
         ),
       ),
     );
-  }
-
-  _refresh() {
-    setState(() {});
   }
 
   @override
@@ -330,12 +330,13 @@ class _ManufacturerState extends State<Manufacturer> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var locationId = prefs.get("locationId");
       ServiceModel serviceModel = await apiCall.getServiceDataId(
-          widget.serviceId, selectedSportId.toString());
+          widget.serviceId, selectedSportId.toString(), locationId.toString());
       if (serviceModel.services != null) {
         services = serviceModel.services!;
         services = services!.reversed.toList();
-        //setState(() {});
       }
 
       if (serviceModel.status!) {

@@ -147,7 +147,7 @@ class _EditPhysioFitnessState extends State<EditPhysioFitness> {
             keyboardType: TextInputType.text,
             controller: nameCtrl,
             decoration: InputDecoration(
-                labelText: "Name",
+                labelText: "Name *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -156,7 +156,7 @@ class _EditPhysioFitnessState extends State<EditPhysioFitness> {
             keyboardType: TextInputType.phone,
             controller: contactCtrl,
             decoration: InputDecoration(
-                labelText: "Contact Number",
+                labelText: "Primary Number *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -165,7 +165,7 @@ class _EditPhysioFitnessState extends State<EditPhysioFitness> {
             keyboardType: TextInputType.phone,
             controller: secondaryCtrl,
             decoration: InputDecoration(
-                labelText: "Secondary Number",
+                labelText: "Secondary Number  (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -174,7 +174,7 @@ class _EditPhysioFitnessState extends State<EditPhysioFitness> {
             keyboardType: TextInputType.text,
             controller: addressCtrl,
             decoration: InputDecoration(
-                labelText: "Address",
+                labelText: "Address  (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -182,7 +182,7 @@ class _EditPhysioFitnessState extends State<EditPhysioFitness> {
           TextField(
             controller: cityCtrl,
             decoration: InputDecoration(
-                labelText: "City",
+                labelText: "City *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -190,7 +190,7 @@ class _EditPhysioFitnessState extends State<EditPhysioFitness> {
           TextField(
             controller: experienceCtrl,
             decoration: InputDecoration(
-                labelText: "Experience",
+                labelText: "Experience *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -198,7 +198,7 @@ class _EditPhysioFitnessState extends State<EditPhysioFitness> {
           TextField(
             enabled: false,
             decoration: InputDecoration(
-                labelText: "More Details",
+                labelText: "More Details (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -229,12 +229,35 @@ class _EditPhysioFitnessState extends State<EditPhysioFitness> {
                   txtColor: Colors.white,
                   minWidth: 150,
                   onPressed: () async {
-//              if (widget.isEdit) {}
+                    if (Utility.checkValidation(contactCtrl.text.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Primary Contact Number");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(nameCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Company Name");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(cityCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter City");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        experienceCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Experience");
+                      return;
+                    }
+
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     var playerId = prefs.get("playerId");
+                    var locationId = prefs.get("locationId");
                     service = widget.service;
 
+                    service!.locationId = locationId!.toString();
                     service!.playerId = playerId!.toString();
                     service!.serviceId = widget.service.serviceId.toString();
                     service!.name = nameCtrl.text;

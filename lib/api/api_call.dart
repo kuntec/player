@@ -671,12 +671,13 @@ class APICall {
   }
 
   Future<ServiceModel> getServiceDataId(
-      String serviceId, String sportId) async {
+      String serviceId, String sportId, String locationId) async {
     Uri url = Uri.parse(APIResources.GET_SERVICEDATA_ID);
     var header = new Map<String, String>();
     var params = new Map<String, String>();
     params['service_id'] = serviceId;
     params['sport_id'] = sportId;
+    params['location_id'] = locationId;
 
     HttpCall call = new HttpCall();
     http.Response response = await call.post(url, header, params);
@@ -702,6 +703,7 @@ class APICall {
     print("add service data");
     try {
       FormData formData = new FormData.fromMap({
+        "location_id": service.locationId,
         "service_id": service.serviceId,
         "player_id": service.playerId,
         "name": service.name,
@@ -747,6 +749,7 @@ class APICall {
     var params = new Map<String, String>();
 
     params['id'] = service.id.toString();
+    params['location_id'] = service.locationId.toString();
     params['service_id'] = service.serviceId.toString();
     params['player_id'] = service.playerId!;
     params['name'] = service.name!;

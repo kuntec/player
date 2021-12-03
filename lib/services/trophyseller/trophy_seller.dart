@@ -32,7 +32,7 @@ class _TrophySellerState extends State<TrophySeller> {
   }
 
   _refresh() {
-    setState(() {});
+    getPlayerService();
   }
 
   @override
@@ -185,11 +185,13 @@ class _TrophySellerState extends State<TrophySeller> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      ServiceModel serviceModel =
-          await apiCall.getServiceDataId(widget.serviceId, "0");
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var locationId = prefs.get("locationId");
+      ServiceModel serviceModel = await apiCall.getServiceDataId(
+          widget.serviceId, "0", locationId.toString());
       if (serviceModel.services != null) {
         services = serviceModel.services!;
-        //setState(() {});
+        services = services!.reversed.toList();
       }
 
       if (serviceModel.status!) {

@@ -33,7 +33,7 @@ class _TshirtSellerState extends State<TshirtSeller> {
   }
 
   _refresh() {
-    setState(() {});
+    getPlayerService();
   }
 
   @override
@@ -186,8 +186,10 @@ class _TshirtSellerState extends State<TshirtSeller> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      ServiceModel serviceModel =
-          await apiCall.getServiceDataId(widget.serviceId, "0");
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var locationId = prefs.get("locationId");
+      ServiceModel serviceModel = await apiCall.getServiceDataId(
+          widget.serviceId, "0", locationId.toString());
       if (serviceModel.services != null) {
         services = serviceModel.services!;
         services = services!.reversed.toList();
@@ -219,7 +221,7 @@ class _TshirtSellerState extends State<TshirtSeller> {
       child: Container(
         margin: EdgeInsets.all(10.0),
 //      padding: EdgeInsets.only(bottom: 10.0),
-        decoration: kContainerBoxDecoration,
+        decoration: kServiceBoxItem,
         // height: 200,
         child: Stack(
           children: [

@@ -19,16 +19,16 @@ class _HelperDetailState extends State<HelperDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Personal Coach"),
+        title: Text("Helper"),
       ),
       body: SingleChildScrollView(
         child: Container(
           margin: EdgeInsets.all(10.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              posterImage(context, widget.service.posterImage),
+              posterImage2(context, widget.service.posterImage),
               SizedBox(height: kMargin),
               itemDetail(context, "Name", widget.service.name.toString()),
               itemCallDetail(context, "Contact Number",
