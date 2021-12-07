@@ -180,7 +180,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
               textSportController.text = selectedSport.sportName;
             },
             decoration: InputDecoration(
-                labelText: "Which Sport We can Play",
+                labelText: "Which Sport We can Play *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -190,7 +190,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
               name = value;
             },
             decoration: InputDecoration(
-                labelText: "Venue Name",
+                labelText: "Venue Name *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -230,7 +230,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
               //   ..showSnackBar(SnackBar(content: Text('$result')));
             },
             decoration: InputDecoration(
-                labelText: "Venue Facilities",
+                labelText: "Venue Facilities *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -254,7 +254,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                     color: Colors.black,
                   ),
                   decoration: InputDecoration(
-                      labelText: "Open Time",
+                      labelText: "Open Time *",
                       labelStyle: TextStyle(
                         color: Colors.grey,
                       )),
@@ -274,7 +274,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                     color: Colors.black,
                   ),
                   decoration: InputDecoration(
-                      labelText: "Close Time",
+                      labelText: "Close Time *",
                       labelStyle: TextStyle(
                         color: Colors.grey,
                       )),
@@ -325,7 +325,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
               address = value;
             },
             decoration: InputDecoration(
-                labelText: "Venue Address",
+                labelText: "Venue Address *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -335,7 +335,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
               locationLink = value;
             },
             decoration: InputDecoration(
-                labelText: "Location Link",
+                labelText: "Location Link (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -345,7 +345,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
               city = value;
             },
             decoration: InputDecoration(
-                labelText: "Venue City",
+                labelText: "Venue City *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -387,18 +387,40 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                     var playerId = prefs.get("playerId");
 
                     if (Utility.checkValidation(name.toString())) {
-                      Utility.showToast("Please Select Name");
+                      Utility.showValidationToast("Please Enter Name");
                       return;
                     }
 
                     if (Utility.checkValidation(
                         textFacilityController.text.toString())) {
-                      Utility.showToast("Please Select Facility");
+                      Utility.showValidationToast("Please Select Facility");
                       return;
                     }
 
                     if (selectedSport == null) {
-                      Utility.showToast("Please Select Sport");
+                      Utility.showValidationToast("Please Select Sport");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        textOpenTimeController.text.toString())) {
+                      Utility.showValidationToast("Please Select Open Time");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        textCloseTimeController.text.toString())) {
+                      Utility.showValidationToast("Please Select Close Time");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(address.toString())) {
+                      Utility.showValidationToast("Please Enter Address");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(city.toString())) {
+                      Utility.showValidationToast("Please Enter City");
                       return;
                     }
 

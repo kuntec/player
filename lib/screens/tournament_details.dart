@@ -29,6 +29,33 @@ class _TournamentDetailsState extends State<TournamentDetails> {
               color: kBaseColor,
             )),
       ),
+      bottomSheet: widget.tournament.status.toString() == "0"
+          ? Container(
+              margin: EdgeInsets.only(left: k20Margin, right: k20Margin),
+              child: RoundedButton(
+                title: "Booking Closed",
+                color: kBaseColor,
+                txtColor: Colors.white,
+                minWidth: MediaQuery.of(context).size.width,
+                onPressed: () {},
+              ),
+            )
+          : Container(
+              margin: EdgeInsets.only(left: k20Margin, right: k20Margin),
+              child: RoundedButton(
+                title: "Proceed To Book",
+                color: kBaseColor,
+                txtColor: Colors.white,
+                minWidth: MediaQuery.of(context).size.width,
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ParticipantSummary(
+                              event: widget.tournament, isEvent: false)));
+                },
+              ),
+            ),
       body: SingleChildScrollView(
         child: Container(
           margin: EdgeInsets.all(10.0),
@@ -54,8 +81,10 @@ class _TournamentDetailsState extends State<TournamentDetails> {
                       widget.tournament.tournamentCategory.toString())
                   : SizedBox.shrink(),
               widget.tournament.sportName.toString().toLowerCase() == "cricket"
-                  ? itemDetail(context, "Ball Type",
-                      widget.tournament.ballType.toString())
+                  ? widget.tournament.ballType == null
+                      ? SizedBox.shrink()
+                      : itemDetail(context, "Ball Type",
+                          widget.tournament.ballType.toString())
                   : SizedBox.shrink(),
               widget.tournament.sportName.toString().toLowerCase() == "cricket"
                   ? itemDetail(context, "No of Overs",
@@ -65,8 +94,11 @@ class _TournamentDetailsState extends State<TournamentDetails> {
                   context, "Organizer Name", widget.tournament.organizerName),
               itemCallDetail(
                   context, "Primary Number", widget.tournament.organizerNumber),
-              itemCallDetail(context, "Secondary Number",
-                  widget.tournament.secondaryNumber),
+              widget.tournament.secondaryNumber == null ||
+                      widget.tournament.secondaryNumber == "null"
+                  ? SizedBox.shrink()
+                  : itemCallDetail(context, "Secondary Number",
+                      widget.tournament.secondaryNumber),
               itemDetail(
                   context, "Tournament Name", widget.tournament.tournamentName),
               itemDetail(context, "Start Date", widget.tournament.startDate),
@@ -75,48 +107,61 @@ class _TournamentDetailsState extends State<TournamentDetails> {
                   "\u{20B9} ${widget.tournament.entryFees}"),
               itemDetail(context, "Start Time", widget.tournament.startTime),
               itemDetail(context, "End Time", widget.tournament.endTime),
-              itemDetail(
-                  context, "No of Team Members", widget.tournament.noOfMembers),
-              itemDetail(
-                  context, "Age Requirement", widget.tournament.ageLimit),
+              widget.tournament.noOfMembers == null
+                  ? SizedBox.shrink()
+                  : itemDetail(context, "No of Team Members",
+                      widget.tournament.noOfMembers),
+              widget.tournament.ageLimit == null
+                  ? SizedBox.shrink()
+                  : itemDetail(
+                      context, "Age Requirement", widget.tournament.ageLimit),
               itemDetail(
                   context, "Tournament Address", widget.tournament.address),
-              itemLinkDetail(
-                  context, "Location Link", widget.tournament.locationLink),
-              itemDetail(context, "Prize", widget.tournament.prizeDetails),
-              itemDetail(
-                  context, "Other Information", widget.tournament.otherInfo),
-              SizedBox(height: k20Margin),
-              widget.tournament.status.toString() == "0"
-                  ? Container(
-                      margin:
-                          EdgeInsets.only(left: k20Margin, right: k20Margin),
-                      child: RoundedButton(
-                        title: "Booking Closed",
-                        color: kBaseColor,
-                        txtColor: Colors.white,
-                        minWidth: MediaQuery.of(context).size.width,
-                        onPressed: () {},
-                      ),
-                    )
-                  : Container(
-                      margin:
-                          EdgeInsets.only(left: k20Margin, right: k20Margin),
-                      child: RoundedButton(
-                        title: "Proceed To Book",
-                        color: kBaseColor,
-                        txtColor: Colors.white,
-                        minWidth: MediaQuery.of(context).size.width,
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ParticipantSummary(
-                                      event: widget.tournament,
-                                      isEvent: false)));
-                        },
-                      ),
-                    ),
+              widget.tournament.locationLink == null
+                  ? SizedBox.shrink()
+                  : itemLinkDetail(
+                      context, "Location Link", widget.tournament.locationLink),
+              widget.tournament.prizeDetails == null ||
+                      widget.tournament.prizeDetails == "null"
+                  ? SizedBox.shrink()
+                  : itemDetail(
+                      context, "Prize", widget.tournament.prizeDetails),
+              widget.tournament.otherInfo == null ||
+                      widget.tournament.otherInfo == "null"
+                  ? SizedBox.shrink()
+                  : itemDetail(context, "Other Information",
+                      widget.tournament.otherInfo),
+              SizedBox(height: 50),
+              // widget.tournament.status.toString() == "0"
+              //     ? Container(
+              //         margin:
+              //             EdgeInsets.only(left: k20Margin, right: k20Margin),
+              //         child: RoundedButton(
+              //           title: "Booking Closed",
+              //           color: kBaseColor,
+              //           txtColor: Colors.white,
+              //           minWidth: MediaQuery.of(context).size.width,
+              //           onPressed: () {},
+              //         ),
+              //       )
+              //     : Container(
+              //         margin:
+              //             EdgeInsets.only(left: k20Margin, right: k20Margin),
+              //         child: RoundedButton(
+              //           title: "Proceed To Book",
+              //           color: kBaseColor,
+              //           txtColor: Colors.white,
+              //           minWidth: MediaQuery.of(context).size.width,
+              //           onPressed: () {
+              //             Navigator.push(
+              //                 context,
+              //                 MaterialPageRoute(
+              //                     builder: (context) => ParticipantSummary(
+              //                         event: widget.tournament,
+              //                         isEvent: false)));
+              //           },
+              //         ),
+              //       ),
             ],
           ),
         ),

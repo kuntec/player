@@ -23,51 +23,6 @@ class _VenueDetailsState extends State<VenueDetails> {
 
   List selectedFacilities = [];
 
-  List facilities = [
-    "24/7",
-    "Artificial Turf",
-    "Ball Boy",
-    "Cafe",
-    "Drinking Water",
-    "Flood Lights",
-    "Locker Room",
-    "Parking",
-    "Rental Equipment",
-    "Seating Lounge",
-    "Showers",
-    "Sound System",
-    "Sport Shop",
-    "Steam",
-    "Walking Track",
-    "Warm Up",
-    "Washroom",
-    "Air Conditioning",
-    "Wi-Fi",
-    "Coach",
-  ];
-  List facilityIcons = [
-    "two.svg",
-    "artificial_turf.svg",
-    "ball_boy.svg",
-    "cafe.svg",
-    "drinking_water.svg",
-    "flood_lights.svg",
-    "locker_room.svg",
-    "parking.svg",
-    "rental_equipment.svg",
-    "seating_lounge.svg",
-    "shower.svg",
-    "sound_system.svg",
-    "sport_shop.svg",
-    "steam.svg",
-    "walking_track.svg",
-    "warm_up.svg",
-    "washroom.svg",
-    "ac.svg",
-    "wifi.svg",
-    "coach.svg",
-  ];
-
   @override
   void initState() {
     // TODO: implement initState
@@ -178,17 +133,25 @@ class _VenueDetailsState extends State<VenueDetails> {
         children: [
           itemDetail(context, "Sport", widget.venue.sport.toString()),
           itemDetail(context, "Venue Name", widget.venue.name.toString()),
-          itemDetail(context, "Venue Description",
-              widget.venue.description.toString()),
+          widget.venue.description == null
+              ? SizedBox.shrink()
+              : itemDetail(context, "Venue Description",
+                  widget.venue.description.toString()),
           itemDetail(context, "Open Time", widget.venue.openTime.toString()),
           itemDetail(context, "Close Time", widget.venue.closeTime.toString()),
           itemDetail(
               context, "Max Person Allowed", widget.venue.members.toString()),
           itemDetail(context, "Venue Address", widget.venue.address.toString()),
-          itemDetail(
-              context, "Location Link", widget.venue.locationLink.toString()),
+          widget.venue.locationLink == null ||
+                  widget.venue.locationLink == "null"
+              ? SizedBox.shrink()
+              : itemDetail(context, "Location Link",
+                  widget.venue.locationLink.toString()),
           itemDetail(context, "Venue City", widget.venue.city.toString()),
-          itemDetail(context, "Facilities", widget.venue.facilities.toString()),
+          widget.venue.facilities == null
+              ? SizedBox.shrink()
+              : itemDetail(
+                  context, "Facilities", widget.venue.facilities.toString()),
           itemDetail(context, "Price",
               "\u{20B9} ${widget.venue.onwards.toString()} onwards"),
           SizedBox(height: k20Margin),

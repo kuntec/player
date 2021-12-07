@@ -207,7 +207,7 @@ class _EditEventState extends State<EditEvent> {
           TextField(
             controller: eventNameController,
             decoration: InputDecoration(
-                labelText: "Event Name",
+                labelText: "Event Name *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -215,7 +215,7 @@ class _EditEventState extends State<EditEvent> {
           TextField(
             controller: eventTypeController,
             decoration: InputDecoration(
-                labelText: "Event Type",
+                labelText: "Event Type *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -243,7 +243,7 @@ class _EditEventState extends State<EditEvent> {
                   },
                   controller: textStartDateController,
                   decoration: InputDecoration(
-                      labelText: "Start Date",
+                      labelText: "Start Date *",
                       labelStyle: TextStyle(
                         color: Colors.grey,
                       )),
@@ -261,7 +261,7 @@ class _EditEventState extends State<EditEvent> {
                   },
                   controller: textEndDateController,
                   decoration: InputDecoration(
-                      labelText: "End Date",
+                      labelText: "End Date *",
                       labelStyle: TextStyle(
                         color: Colors.grey,
                       )),
@@ -277,7 +277,7 @@ class _EditEventState extends State<EditEvent> {
                   child: TextField(
                     controller: entryFeesController,
                     decoration: InputDecoration(
-                        labelText: "Entry Fees",
+                        labelText: "Entry Fees *",
                         labelStyle: TextStyle(
                           color: Colors.grey,
                         )),
@@ -295,7 +295,7 @@ class _EditEventState extends State<EditEvent> {
                     },
                     controller: textStartTimeController,
                     decoration: InputDecoration(
-                        labelText: "Start Time",
+                        labelText: "Start Time *",
                         labelStyle: TextStyle(
                           color: Colors.grey,
                         )),
@@ -313,7 +313,7 @@ class _EditEventState extends State<EditEvent> {
                     },
                     controller: textEndTimeController,
                     decoration: InputDecoration(
-                        labelText: "End Time",
+                        labelText: "End Time *",
                         labelStyle: TextStyle(
                           color: Colors.grey,
                         )),
@@ -325,7 +325,7 @@ class _EditEventState extends State<EditEvent> {
           TextField(
             controller: noOfMembersController,
             decoration: InputDecoration(
-                labelText: "members allowed per entry fee",
+                labelText: "members allowed per entry fee *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -333,7 +333,7 @@ class _EditEventState extends State<EditEvent> {
           TextField(
             controller: addressController,
             decoration: InputDecoration(
-                labelText: "Location (Address)",
+                labelText: "Location (Address) *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -341,7 +341,7 @@ class _EditEventState extends State<EditEvent> {
           TextField(
             controller: locationLinkController,
             decoration: InputDecoration(
-                labelText: "Location Link",
+                labelText: "Location Link (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -349,7 +349,7 @@ class _EditEventState extends State<EditEvent> {
           TextField(
             controller: organizerNameController,
             decoration: InputDecoration(
-                labelText: "Organizer Name",
+                labelText: "Organizer Name *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -357,7 +357,7 @@ class _EditEventState extends State<EditEvent> {
           TextField(
             controller: numberController,
             decoration: InputDecoration(
-                labelText: "Primary Number",
+                labelText: "Primary Number *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -365,7 +365,7 @@ class _EditEventState extends State<EditEvent> {
           TextField(
             controller: secondaryNumberController,
             decoration: InputDecoration(
-                labelText: "Secondary Number",
+                labelText: "Secondary Number (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -373,7 +373,7 @@ class _EditEventState extends State<EditEvent> {
           TextField(
             enabled: false,
             decoration: InputDecoration(
-                labelText: "Other Information",
+                labelText: "Other Information (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -406,7 +406,72 @@ class _EditEventState extends State<EditEvent> {
                   txtColor: Colors.white,
                   minWidth: 250,
                   onPressed: () async {
-                    //Utility.showToast("Update Event clicked");
+                    if (Utility.checkValidation(
+                        eventNameController.text.toString())) {
+                      Utility.showValidationToast("Please Enter Event Name");
+                      return;
+                    }
+                    if (Utility.checkValidation(
+                        eventTypeController.text.toString())) {
+                      Utility.showValidationToast("Please Enter Event Type");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        addressController.text.toString())) {
+                      Utility.showValidationToast("Please Enter Address");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        entryFeesController.text.toString())) {
+                      Utility.showValidationToast("Please Enter Entry Fees");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        noOfMembersController.text.toString())) {
+                      Utility.showValidationToast("Please Enter No of Members");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        organizerNameController.text.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Organizer Name");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        numberController.text.toString())) {
+                      Utility.showValidationToast("Please Enter Number");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        textStartDateController.text.toString())) {
+                      Utility.showValidationToast("Please Enter Start Date");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        textEndDateController.text.toString())) {
+                      Utility.showValidationToast("Please Enter End Date");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        textStartTimeController.text.toString())) {
+                      Utility.showValidationToast("Please Enter Start Time");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        textEndTimeController.text.toString())) {
+                      Utility.showValidationToast("Please Enter End Time");
+                      return;
+                    }
+
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     var playerId = prefs.get("playerId");

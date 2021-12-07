@@ -26,6 +26,7 @@ import 'package:player/model/sport_data.dart';
 import 'package:player/providers/banner_model.dart';
 import 'package:player/screens/add_host_activity.dart';
 import 'package:player/screens/add_tournament.dart';
+import 'package:player/screens/booking_confirmation.dart';
 import 'package:player/screens/choose_sport.dart';
 import 'package:player/screens/location_select.dart';
 import 'package:player/screens/notification_screen.dart';
@@ -177,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Colors.black,
             ),
           ),
-          SizedBox(width: 10.0),
+          SizedBox(width: 20.0),
           GestureDetector(
             onTap: () async {
               //DialogBuilder(context).showLoadingIndicator('Calculating + 1');

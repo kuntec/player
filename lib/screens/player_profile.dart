@@ -111,7 +111,7 @@ class _PlayerProfileState extends State<PlayerProfile> {
     return GestureDetector(
       onTap: callback,
       child: Container(
-        padding: EdgeInsets.all(5),
+        padding: EdgeInsets.all(15),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -215,9 +215,11 @@ class _PlayerProfileState extends State<PlayerProfile> {
                         SizedBox(height: kMargin),
                         Container(
                           child: Text(
-                            friendCount == 1 || friendCount == 0
-                                ? "$friendCount Friend"
-                                : "$friendCount Friends",
+                            friendCount == 0
+                                ? "No Friends"
+                                : friendCount == 1
+                                    ? "$friendCount Friend"
+                                    : "$friendCount Friends",
                             style: TextStyle(
                               fontSize: 14.0,
                               color: Colors.white,
@@ -304,6 +306,9 @@ class _PlayerProfileState extends State<PlayerProfile> {
                 horizontalLine(),
                 profileItem(
                     "assets/images/share.svg", "Share with Friends", () {}),
+                horizontalLine(),
+                profileItem(
+                    "assets/images/share.svg", "About Player App", () {}),
               ],
             ),
           ),

@@ -163,16 +163,22 @@ class _ParticipantSummaryState extends State<ParticipantSummary> {
                 children: [
                   Expanded(
                     flex: 10,
-                    child: Radio(
-                      value: "1",
-                      groupValue: paymentMode,
-                      onChanged: (value) {
-                        // uncomment this line for online mode activation
-                        // paymentMode = value.toString();
-                        paymentMode = "0";
-                        setState(() {});
-                      },
+                    child: Container(
+                      child: Icon(
+                        Icons.circle_outlined,
+                        color: Colors.grey,
+                      ),
                     ),
+                    // child: Radio(
+                    //   value: "1",
+                    //   groupValue: paymentMode,
+                    //   onChanged: (value) {
+                    //     // uncomment this line for online mode activation
+                    //     // paymentMode = value.toString();
+                    //     paymentMode = "0";
+                    //     setState(() {});
+                    //   },
+                    // ),
                   ),
                   Expanded(
                     flex: 10,
@@ -180,10 +186,13 @@ class _ParticipantSummaryState extends State<ParticipantSummary> {
                         onTap: () {
                           // uncomment this line for online mode activation
                           // paymentMode = "1";
-                          paymentMode = "0";
-                          setState(() {});
+                          // paymentMode = "0";
+                          // setState(() {});
                         },
-                        child: Text("Online")),
+                        child: Text(
+                          "Online",
+                          style: TextStyle(color: Colors.grey),
+                        )),
                   ),
                   Expanded(
                     flex: 10,
@@ -209,6 +218,10 @@ class _ParticipantSummaryState extends State<ParticipantSummary> {
                   SizedBox(width: 10),
                 ],
               ),
+              SizedBox(height: kMargin),
+              Center(
+                  child:
+                      Text("Online Payment Mode is Currently Not Available")),
               SizedBox(height: k20Margin),
               Container(
                 margin: EdgeInsets.only(left: k20Margin, right: k20Margin),

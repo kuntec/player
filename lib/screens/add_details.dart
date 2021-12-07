@@ -110,7 +110,7 @@ class _AddDetailsState extends State<AddDetails> {
                           color: Colors.black,
                         ),
                         decoration: InputDecoration(
-                            labelText: "Name",
+                            labelText: "Name *",
                             labelStyle: TextStyle(
                               color: Colors.grey,
                             )),
@@ -130,7 +130,7 @@ class _AddDetailsState extends State<AddDetails> {
                           color: Colors.black,
                         ),
                         decoration: InputDecoration(
-                            labelText: "Enter Birthday",
+                            labelText: "Enter Birthday *",
                             labelStyle: TextStyle(
                               color: Colors.grey,
                             )),
@@ -138,7 +138,7 @@ class _AddDetailsState extends State<AddDetails> {
                       SizedBox(
                         height: kMargin,
                       ),
-                      Text("Select Gender"),
+                      Text("Select Gender *"),
                       SizedBox(
                         height: kMargin,
                       ),
@@ -193,7 +193,7 @@ class _AddDetailsState extends State<AddDetails> {
                         ],
                       ),
                       SizedBox(width: kMargin),
-                      Text("Select Location"),
+                      Text("Select Location *"),
                       SizedBox(width: kMargin),
                       locations != null
                           ? buildLocationData(locations!)
@@ -206,13 +206,26 @@ class _AddDetailsState extends State<AddDetails> {
                               txtColor: Colors.white,
                               minWidth: MediaQuery.of(context).size.width,
                               onPressed: () async {
+                                if (Utility.checkValidation(name)) {
+                                  Utility.showValidationToast(
+                                      "Please Enter Name");
+                                  return;
+                                }
+                                if (Utility.checkValidation(
+                                    txtDateController.text)) {
+                                  Utility.showValidationToast(
+                                      "Please Select Date of Birth");
+                                  return;
+                                }
                                 if (this.gender == null) {
-                                  Utility.showToast("Please Select Gender");
+                                  Utility.showValidationToast(
+                                      "Please Select Gender");
                                   return;
                                 }
 
                                 if (this.selectedLocation == null) {
-                                  Utility.showToast("Please Select Location");
+                                  Utility.showValidationToast(
+                                      "Please Select Location");
                                   return;
                                 }
 

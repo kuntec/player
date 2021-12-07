@@ -294,7 +294,7 @@ class _AddTournamentState extends State<AddTournament> {
               setState(() {});
             },
             decoration: InputDecoration(
-                labelText: "Select Sport",
+                labelText: "Select Sport *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -320,7 +320,7 @@ class _AddTournamentState extends State<AddTournament> {
               organizerName = value;
             },
             decoration: InputDecoration(
-                labelText: "Organizer Name",
+                labelText: "Organizer Name *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -331,7 +331,7 @@ class _AddTournamentState extends State<AddTournament> {
               primaryNumber = value;
             },
             decoration: InputDecoration(
-                labelText: "Primary Number",
+                labelText: "Primary Number *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -342,7 +342,7 @@ class _AddTournamentState extends State<AddTournament> {
               secondaryNumber = value;
             },
             decoration: InputDecoration(
-                labelText: "Secondary Number",
+                labelText: "Secondary Number (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -352,7 +352,7 @@ class _AddTournamentState extends State<AddTournament> {
               tournamentName = value;
             },
             decoration: InputDecoration(
-                labelText: "Tournament Name",
+                labelText: "Tournament Name *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -372,7 +372,7 @@ class _AddTournamentState extends State<AddTournament> {
                   },
                   controller: textStartDateController,
                   decoration: InputDecoration(
-                      labelText: "Start Date",
+                      labelText: "Start Date *",
                       labelStyle: TextStyle(
                         color: Colors.grey,
                       )),
@@ -398,7 +398,7 @@ class _AddTournamentState extends State<AddTournament> {
                   },
                   controller: textEndDateController,
                   decoration: InputDecoration(
-                      labelText: "End Date",
+                      labelText: "End Date *",
                       labelStyle: TextStyle(
                         color: Colors.grey,
                       )),
@@ -416,7 +416,7 @@ class _AddTournamentState extends State<AddTournament> {
                       entryFees = value;
                     },
                     decoration: InputDecoration(
-                        labelText: "Entry Fees",
+                        labelText: "Entry Fees *",
                         labelStyle: TextStyle(
                           color: Colors.grey,
                         )),
@@ -434,7 +434,7 @@ class _AddTournamentState extends State<AddTournament> {
                     },
                     controller: textStartTimeController,
                     decoration: InputDecoration(
-                        labelText: "Start Time",
+                        labelText: "Start Time *",
                         labelStyle: TextStyle(
                           color: Colors.grey,
                         )),
@@ -452,7 +452,7 @@ class _AddTournamentState extends State<AddTournament> {
                     },
                     controller: textEndTimeController,
                     decoration: InputDecoration(
-                        labelText: "End Time",
+                        labelText: "End Time *",
                         labelStyle: TextStyle(
                           color: Colors.grey,
                         )),
@@ -486,7 +486,7 @@ class _AddTournamentState extends State<AddTournament> {
               address = value;
             },
             decoration: InputDecoration(
-                labelText: "Tournament Location (Address)",
+                labelText: "Tournament Location (Address)  *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -496,7 +496,7 @@ class _AddTournamentState extends State<AddTournament> {
               locationLink = value;
             },
             decoration: InputDecoration(
-                labelText: "Location Link",
+                labelText: "Location Link (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -504,7 +504,7 @@ class _AddTournamentState extends State<AddTournament> {
           TextField(
             readOnly: true,
             decoration: InputDecoration(
-                labelText: "Prize Details",
+                labelText: "Prize Details (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -531,7 +531,7 @@ class _AddTournamentState extends State<AddTournament> {
           TextField(
             readOnly: true,
             decoration: InputDecoration(
-                labelText: "Any Other Information",
+                labelText: "Any Other Information (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -581,6 +581,61 @@ class _AddTournamentState extends State<AddTournament> {
                     }
                     if (locationLink == null) {
                       locationLink = "";
+                    }
+
+                    if (selectedSport == null) {
+                      Utility.showValidationToast("Please Select Sport");
+                      return;
+                    }
+
+                    if (organizerName == null ||
+                        Utility.checkValidation(organizerName.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Organizer Name");
+                      return;
+                    }
+
+                    if (primaryNumber == null ||
+                        Utility.checkValidation(primaryNumber.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Primary Number");
+                      return;
+                    }
+
+                    if (tournamentName == null ||
+                        Utility.checkValidation(tournamentName.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Tournament Name");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        textStartDateController.text.toString())) {
+                      Utility.showValidationToast("Please Enter Start Date");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        textEndDateController.text.toString())) {
+                      Utility.showValidationToast("Please Enter End Date");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(entryFees.toString())) {
+                      Utility.showValidationToast("Please Enter Entry Fees");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        textStartTimeController.text.toString())) {
+                      Utility.showValidationToast("Please Enter Start Time");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        textEndTimeController.text.toString())) {
+                      Utility.showValidationToast("Please Enter End Time");
+                      return;
                     }
 
                     tournament = new Tournament();

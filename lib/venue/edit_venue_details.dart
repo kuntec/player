@@ -84,12 +84,21 @@ class _EditVenueDetailsState extends State<EditVenueDetails> {
     //
     sportCtrl.text = widget.venue.sport;
     nameCtrl.text = widget.venue.name;
-    descCtrl.text = widget.venue.description;
-    facilityCtrl.text = widget.venue.facilities;
-    memberCtrl.text = widget.venue.members;
+    widget.venue.description == null
+        ? descCtrl.text = ""
+        : descCtrl.text = widget.venue.description;
+    widget.venue.facilities == null
+        ? facilityCtrl.text = ""
+        : facilityCtrl.text = widget.venue.facilities;
+
+    widget.venue.members == null
+        ? memberCtrl.text = ""
+        : memberCtrl.text = widget.venue.members;
 
     addressCtrl.text = widget.venue.address;
-    linkCtrl.text = widget.venue.locationLink;
+    widget.venue.locationLink == null
+        ? linkCtrl.text = ""
+        : linkCtrl.text = widget.venue.locationLink;
     cityCtrl.text = widget.venue.city;
     textSportController.text = widget.venue.sport;
     selectedFacilities = facilityCtrl.text.split(", ");

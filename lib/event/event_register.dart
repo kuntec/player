@@ -248,7 +248,7 @@ class _EventRegisterState extends State<EventRegister> {
               eventName = value;
             },
             decoration: InputDecoration(
-                labelText: "Event Name",
+                labelText: "Event Name *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -258,7 +258,7 @@ class _EventRegisterState extends State<EventRegister> {
               eventType = value;
             },
             decoration: InputDecoration(
-                labelText: "Event Type",
+                labelText: "Event Type *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -288,7 +288,7 @@ class _EventRegisterState extends State<EventRegister> {
                   },
                   controller: textStartDateController,
                   decoration: InputDecoration(
-                      labelText: "Start Date",
+                      labelText: "Start Date *",
                       labelStyle: TextStyle(
                         color: Colors.grey,
                       )),
@@ -306,7 +306,7 @@ class _EventRegisterState extends State<EventRegister> {
                   },
                   controller: textEndDateController,
                   decoration: InputDecoration(
-                      labelText: "End Date",
+                      labelText: "End Date *",
                       labelStyle: TextStyle(
                         color: Colors.grey,
                       )),
@@ -324,7 +324,7 @@ class _EventRegisterState extends State<EventRegister> {
                       entryFees = value;
                     },
                     decoration: InputDecoration(
-                        labelText: "Entry Fees",
+                        labelText: "Entry Fees *",
                         labelStyle: TextStyle(
                           color: Colors.grey,
                         )),
@@ -342,7 +342,7 @@ class _EventRegisterState extends State<EventRegister> {
                     },
                     controller: textStartTimeController,
                     decoration: InputDecoration(
-                        labelText: "Start Time",
+                        labelText: "Start Time *",
                         labelStyle: TextStyle(
                           color: Colors.grey,
                         )),
@@ -360,7 +360,7 @@ class _EventRegisterState extends State<EventRegister> {
                     },
                     controller: textEndTimeController,
                     decoration: InputDecoration(
-                        labelText: "End Time",
+                        labelText: "End Time *",
                         labelStyle: TextStyle(
                           color: Colors.grey,
                         )),
@@ -374,7 +374,7 @@ class _EventRegisterState extends State<EventRegister> {
               noOfMembers = value;
             },
             decoration: InputDecoration(
-                labelText: "members allowed per entry fee",
+                labelText: "members allowed per entry fee *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -384,7 +384,7 @@ class _EventRegisterState extends State<EventRegister> {
               address = value;
             },
             decoration: InputDecoration(
-                labelText: "Location (Address)",
+                labelText: "Location (Address) *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -394,7 +394,7 @@ class _EventRegisterState extends State<EventRegister> {
               locationLink = value;
             },
             decoration: InputDecoration(
-                labelText: "Location Link",
+                labelText: "Location Link (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -404,7 +404,7 @@ class _EventRegisterState extends State<EventRegister> {
               organizerName = value;
             },
             decoration: InputDecoration(
-                labelText: "Organizer Name",
+                labelText: "Organizer Name *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -415,7 +415,7 @@ class _EventRegisterState extends State<EventRegister> {
               number = value;
             },
             decoration: InputDecoration(
-                labelText: "Primary Number",
+                labelText: "Primary Number *",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -426,7 +426,7 @@ class _EventRegisterState extends State<EventRegister> {
               secondaryNumber = value;
             },
             decoration: InputDecoration(
-                labelText: "Secondary Number",
+                labelText: "Secondary Number (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -434,7 +434,7 @@ class _EventRegisterState extends State<EventRegister> {
           TextField(
             enabled: false,
             decoration: InputDecoration(
-                labelText: "Other Information",
+                labelText: "Other Information (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -469,7 +469,70 @@ class _EventRegisterState extends State<EventRegister> {
                   txtColor: Colors.white,
                   minWidth: 250,
                   onPressed: () async {
-                    //Utility.showToast("Event clicked");
+                    if (eventName == null ||
+                        Utility.checkValidation(eventName)) {
+                      Utility.showValidationToast("Please Enter Event Name");
+                      return;
+                    }
+                    if (eventType == null ||
+                        Utility.checkValidation(eventType)) {
+                      Utility.showValidationToast("Please Enter Event Type");
+                      return;
+                    }
+
+                    if (address == null || Utility.checkValidation(address)) {
+                      Utility.showValidationToast("Please Enter Address");
+                      return;
+                    }
+
+                    if (entryFees == null ||
+                        Utility.checkValidation(entryFees)) {
+                      Utility.showValidationToast("Please Enter Entry Fees");
+                      return;
+                    }
+
+                    if (noOfMembers == null ||
+                        Utility.checkValidation(noOfMembers)) {
+                      Utility.showValidationToast("Please Enter No of Members");
+                      return;
+                    }
+
+                    if (organizerName == null ||
+                        Utility.checkValidation(organizerName)) {
+                      Utility.showValidationToast(
+                          "Please Enter Organizer Name");
+                      return;
+                    }
+
+                    if (number == null || Utility.checkValidation(number)) {
+                      Utility.showValidationToast("Please Enter Number");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        textStartDateController.text.toString())) {
+                      Utility.showValidationToast("Please Enter Start Date");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        textEndDateController.text.toString())) {
+                      Utility.showValidationToast("Please Enter End Date");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        textStartTimeController.text.toString())) {
+                      Utility.showValidationToast("Please Enter Start Time");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        textEndTimeController.text.toString())) {
+                      Utility.showValidationToast("Please Enter End Time");
+                      return;
+                    }
+
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     var playerId = prefs.get("playerId");

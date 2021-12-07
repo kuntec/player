@@ -4,6 +4,7 @@ import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/booking_data.dart';
 import 'package:player/model/timeslot_data.dart';
+import 'package:player/screens/booking_confirmation.dart';
 
 class BookingSummary extends StatefulWidget {
   dynamic booking;
@@ -217,7 +218,11 @@ class _BookingSummaryState extends State<BookingSummary> {
         if (bookingData.status!) {
           print("Slots Success");
           Utility.showToast("Booking Added Successfully");
-          Navigator.pop(context, true);
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => BookingConfirmation(status: true)));
+          // Navigator.pop(context, true);
         } else {
           print("Slots Failed");
         }

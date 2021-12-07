@@ -390,7 +390,7 @@ class _AddHostState extends State<AddHost> {
                               color: Colors.black,
                             ),
                             decoration: InputDecoration(
-                                labelText: "Area",
+                                labelText: "Area *",
                                 labelStyle: TextStyle(
                                   color: Colors.grey,
                                 )),
@@ -407,7 +407,7 @@ class _AddHostState extends State<AddHost> {
                               color: Colors.black,
                             ),
                             decoration: InputDecoration(
-                                labelText: "Select Date",
+                                labelText: "Select Date *",
                                 labelStyle: TextStyle(
                                   color: Colors.grey,
                                 )),
@@ -423,7 +423,7 @@ class _AddHostState extends State<AddHost> {
                               color: Colors.black,
                             ),
                             decoration: InputDecoration(
-                                labelText: "Select Time",
+                                labelText: "Select Time *",
                                 labelStyle: TextStyle(
                                   color: Colors.grey,
                                 )),
@@ -514,7 +514,8 @@ class _AddHostState extends State<AddHost> {
                                   minWidth: MediaQuery.of(context).size.width,
                                   onPressed: () async {
                                     if (this.selectedSport == null) {
-                                      Utility.showToast("Please Select Sport");
+                                      Utility.showValidationToast(
+                                          "Please Select Sport");
                                       return;
                                     }
 
@@ -524,7 +525,7 @@ class _AddHostState extends State<AddHost> {
                                             .toLowerCase() ==
                                         "cricket") {
                                       if (ballType == null) {
-                                        Utility.showToast(
+                                        Utility.showValidationToast(
                                             "Please Select Ball Type");
                                         return;
                                       }
@@ -536,16 +537,19 @@ class _AddHostState extends State<AddHost> {
 
                                     if (area == null ||
                                         area.toString().trim() == "") {
-                                      Utility.showToast("Please Select Area");
+                                      Utility.showValidationToast(
+                                          "Please Select Area");
                                       return;
                                     }
 
                                     if (date == null) {
-                                      Utility.showToast("Please Select Date");
+                                      Utility.showValidationToast(
+                                          "Please Select Date");
                                       return;
                                     }
                                     if (time == null) {
-                                      Utility.showToast("Please Select Time");
+                                      Utility.showValidationToast(
+                                          "Please Select Time");
                                       return;
                                     }
 
@@ -582,7 +586,7 @@ class _AddHostState extends State<AddHost> {
                                       lookingForValue = "Join";
                                     } else {
                                       if (this._selectedLK == null) {
-                                        Utility.showToast(
+                                        Utility.showValidationToast(
                                             "Please Select Looking For");
                                         return;
                                       }

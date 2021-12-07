@@ -437,14 +437,14 @@ class _EditHostState extends State<EditHost> {
                   minWidth: MediaQuery.of(context).size.width,
                   onPressed: () async {
                     if (this.selectedSport == null) {
-                      Utility.showToast("Please Select Sport");
+                      Utility.showValidationToast("Please Select Sport");
                       return;
                     }
 
                     if (this.selectedSport!.sportName!.toLowerCase() ==
                         "cricket") {
                       if (ballTypeValue == null) {
-                        Utility.showToast("Please Select Ball Type");
+                        Utility.showValidationToast("Please Select Ball Type");
                         return;
                       }
                     } else {
@@ -454,16 +454,16 @@ class _EditHostState extends State<EditHost> {
                     }
 
                     if (txtAreaController.text.isEmpty) {
-                      Utility.showToast("Please Select Area");
+                      Utility.showValidationToast("Please Select Area");
                       return;
                     }
 
                     if (txtDateController.text.isEmpty) {
-                      Utility.showToast("Please Select Date");
+                      Utility.showValidationToast("Please Select Date");
                       return;
                     }
                     if (txtTimeController.text.isEmpty) {
-                      Utility.showToast("Please Select Time");
+                      Utility.showValidationToast("Please Select Time");
                       return;
                     }
 
@@ -506,8 +506,8 @@ class _EditHostState extends State<EditHost> {
                     sportId = this.selectedSport!.id!;
                     sportName = this.selectedSport!.sportName!;
 
-                    // startDate = txtDate;
-                    // timing = txtTime;
+                    //startDate = txtDate;
+                    //timing = txtTime;
                     createdAt = DateTime.now().toString();
 
                     activity = widget.activity;

@@ -316,7 +316,7 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
           dayslots!.add(d);
         }
 
-        Utility.showToast("initialize days");
+        // Utility.showToast("initialize days");
       }
       setState(() {});
     }

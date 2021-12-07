@@ -218,15 +218,26 @@ class _EditTournamentState extends State<EditTournament> {
     noOverCtrl.text = widget.tournament.noOfOvers;
     orgNameCtrl.text = widget.tournament.organizerName;
     primNumberCtrl.text = widget.tournament.organizerNumber;
-    secNumberCtrl.text = widget.tournament.secondaryNumber;
+    widget.tournament.secondaryNumber == null ||
+            widget.tournament.secondaryNumber == "null"
+        ? secNumberCtrl.text = ""
+        : secNumberCtrl.text = widget.tournament.secondaryNumber;
     tournamentNameCtrl.text = widget.tournament.tournamentName;
     entryFeesCtrl.text = widget.tournament.entryFees;
     noMemberCtrl.text = widget.tournament.noOfMembers;
     ageCtrl.text = widget.tournament.ageLimit;
     addressCtrl.text = widget.tournament.address;
-    linkCtrl.text = widget.tournament.locationLink;
-    prizeCtrl.text = widget.tournament.prizeDetails;
-    detailsCtrl.text = widget.tournament.otherInfo;
+    widget.tournament.locationLink == null ||
+            widget.tournament.locationLink == "null"
+        ? secNumberCtrl.text = ""
+        : linkCtrl.text = widget.tournament.locationLink;
+    widget.tournament.prizeDetails == null ||
+            widget.tournament.prizeDetails == "null"
+        ? secNumberCtrl.text = ""
+        : prizeCtrl.text = widget.tournament.prizeDetails;
+    widget.tournament.otherInfo == null || widget.tournament.otherInfo == "null"
+        ? secNumberCtrl.text = ""
+        : detailsCtrl.text = widget.tournament.otherInfo;
     ballTypeValue = widget.tournament.ballType;
     tournamentCategoryValue = widget.tournament.tournamentCategory;
     textSportController.text = widget.tournament.sportName;
