@@ -33,14 +33,18 @@ class _PhysioFitnessDetailState extends State<PhysioFitnessDetail> {
               itemDetail(context, "Name", widget.service.name.toString()),
               itemCallDetail(context, "Contact Number",
                   widget.service.contactNo.toString()),
-              itemCallDetail(context, "Secondary Number",
-                  widget.service.secondaryNo.toString()),
+              widget.service.secondaryNo == null
+                  ? SizedBox.shrink()
+                  : itemCallDetail(context, "Secondary Number",
+                      widget.service.secondaryNo.toString()),
               itemDetail(context, "Address", widget.service.address.toString()),
               itemDetail(context, "City", widget.service.city.toString()),
               itemDetail(
                   context, "Experience", widget.service.experience.toString()),
-              itemDetail(context, "Additional Details",
-                  widget.service.about.toString()),
+              widget.service.about == null
+                  ? SizedBox.shrink()
+                  : itemDetail(context, "Additional Details",
+                      widget.service.about.toString()),
             ],
           ),
         ),

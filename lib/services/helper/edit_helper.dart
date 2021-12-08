@@ -38,9 +38,17 @@ class _EditHelperState extends State<EditHelper> {
     nameCtrl.text = widget.service.name;
     cityCtrl.text = widget.service.city;
     contactCtrl.text = widget.service.contactNo;
-    secondaryCtrl.text = widget.service.secondaryNo;
+    if (widget.service.secondaryNo == null) {
+      secondaryCtrl.text = "";
+    } else {
+      secondaryCtrl.text = widget.service.secondaryNo;
+    }
     experienceCtrl.text = widget.service.experience;
-    detailsCtrl.text = widget.service.about;
+    if (widget.service.about == null) {
+      detailsCtrl.text = "";
+    } else {
+      detailsCtrl.text = widget.service.about;
+    }
   }
 
   @override
@@ -231,6 +239,12 @@ class _EditHelperState extends State<EditHelper> {
                       return;
                     }
 
+                    if (Utility.checkValidation(
+                        experienceCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Experience");
+                      return;
+                    }
+
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     var playerId = prefs.get("playerId");
@@ -272,17 +286,15 @@ class _EditHelperState extends State<EditHelper> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      dynamic id = await apiCall.updateServiceData(service);
+      ServiceModel serviceModel = await apiCall.updateServiceData(service);
       setState(() {
         isLoading = false;
       });
-      if (id == null) {
-        print("null");
-        Utility.showToast("Failed");
-      } else {
-        print("Success $id");
+      if (serviceModel.status!) {
         Utility.showToast("Service Updated Successfully");
         Navigator.pop(context, true);
+      } else {
+        Utility.showValidationToast("Something Went Wrong");
       }
     }
   }

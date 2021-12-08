@@ -32,17 +32,23 @@ class _SportMarketDetailState extends State<SportMarketDetail> {
               SizedBox(height: kMargin),
               itemDetail(context, "Name", widget.service.name.toString()),
               itemDetail(context, "Address", widget.service.address.toString()),
-              itemLinkDetail(context, "Address Link",
-                  widget.service.locationLink.toString()),
+              widget.service.locationLink == null
+                  ? SizedBox.shrink()
+                  : itemLinkDetail(context, "Address Link",
+                      widget.service.locationLink.toString()),
               itemDetail(context, "City", widget.service.city.toString()),
               itemDetail(
                   context, "Owner Name", widget.service.contactName.toString()),
               itemCallDetail(context, "Contact Number",
                   widget.service.contactNo.toString()),
-              itemCallDetail(context, "Secondary Number",
-                  widget.service.secondaryNo.toString()),
-              itemDetail(
-                  context, "Details of Shop", widget.service.about.toString()),
+              widget.service.secondaryNo == null
+                  ? SizedBox.shrink()
+                  : itemCallDetail(context, "Secondary Number",
+                      widget.service.secondaryNo.toString()),
+              widget.service.about == null
+                  ? SizedBox.shrink()
+                  : itemDetail(context, "Details of Shop",
+                      widget.service.about.toString()),
             ],
           ),
         ),

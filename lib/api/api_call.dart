@@ -699,7 +699,7 @@ class APICall {
     return ServiceModel.fromJson(jsonDecode(response.body));
   }
 
-  Future<dynamic> addServiceData(filePath, Service service) async {
+  Future<ServiceModel> addServiceData(filePath, Service service) async {
     print("add service data");
     try {
       FormData formData = new FormData.fromMap({
@@ -726,24 +726,35 @@ class APICall {
         "image": await MultipartFile.fromFile(filePath, filename: "servicedata")
       });
 
-      Response response = await Dio().post(
+      Response<String> response = await Dio().post(
         APIResources.ADD_SERVICEDATA,
         data: formData,
       );
-      print("add service data1");
-      var responseBody = response.data;
-      print("Response Body ${responseBody['status']}");
-      print("Service New ID ${responseBody['service']['id']}");
-      return responseBody['service']['id'];
+
+      String responseBody = response.data.toString();
+      print("ServiceData Response Body ${responseBody.toString()}");
+
+      return ServiceModel.fromJson(jsonDecode(responseBody.toString()));
     } on DioError catch (e) {
-      print("Response Body NO FOUND");
-      return false;
-    } catch (e) {
-      print("Something Wrong ${e.toString()}");
-    }
+      print("DioError Body ${e.toString()}");
+      return ServiceModel();
+    } catch (e) {}
+    return ServiceModel();
+
+    //   print("add service data1");
+    //   var responseBody = response.data;
+    //   print("Response Body ${responseBody['status']}");
+    //   print("Service New ID ${responseBody['service']['id']}");
+    //   return responseBody['service']['id'];
+    // } on DioError catch (e) {
+    //   print("Response Body NO FOUND");
+    //   return false;
+    // } catch (e) {
+    //   print("Something Wrong ${e.toString()}");
+    // }
   }
 
-  Future<ServiceData> updateServiceData(Service service) async {
+  Future<ServiceModel> updateServiceData(Service service) async {
     Uri url = Uri.parse(APIResources.UPDATE_SERVICEDATA);
     var header = new Map<String, String>();
     var params = new Map<String, String>();
@@ -776,7 +787,7 @@ class APICall {
     HttpCall call = new HttpCall();
     http.Response response = await call.post(url, header, params);
     print("Response Body: " + response.body);
-    return ServiceData.fromJson(jsonDecode(response.body));
+    return ServiceModel.fromJson(jsonDecode(response.body));
   }
 
   Future<dynamic> updateServicePosterImage(filePath, String id) async {

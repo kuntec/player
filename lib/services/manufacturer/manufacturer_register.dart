@@ -25,6 +25,7 @@ class _ManufacturerRegisterState extends State<ManufacturerRegister> {
   Service? service;
   Data? selectedSport;
   List<Data>? sports;
+  bool? isLoading = false;
 
   TextEditingController companyCtrl = new TextEditingController();
   TextEditingController addressCtrl = new TextEditingController();
@@ -256,107 +257,109 @@ class _ManufacturerRegisterState extends State<ManufacturerRegister> {
                 ),
               )),
           SizedBox(height: k20Margin),
-          RoundedButton(
-            title: "ADD",
-            color: kBaseColor,
-            txtColor: Colors.white,
-            minWidth: 150,
-            onPressed: () async {
-              if (selectedSport == null) {
-                Utility.showValidationToast("Please Select Sport");
-                return;
-              }
+          isLoading == true
+              ? CircularProgressIndicator(color: kBaseColor)
+              : RoundedButton(
+                  title: "ADD",
+                  color: kBaseColor,
+                  txtColor: Colors.white,
+                  minWidth: 150,
+                  onPressed: () async {
+                    if (selectedSport == null) {
+                      Utility.showValidationToast("Please Select Sport");
+                      return;
+                    }
 
-              if (Utility.checkValidation(companyCtrl.text.toString())) {
-                Utility.showValidationToast("Please Enter Company Name");
-                return;
-              }
+                    if (Utility.checkValidation(companyCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Company Name");
+                      return;
+                    }
 
-              if (Utility.checkValidation(addressCtrl.text.toString())) {
-                Utility.showValidationToast("Please Enter Address");
-                return;
-              }
+                    if (Utility.checkValidation(addressCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Address");
+                      return;
+                    }
 
-              if (Utility.checkValidation(cityCtrl.text.toString())) {
-                Utility.showValidationToast("Please Enter City");
-                return;
-              }
+                    if (Utility.checkValidation(cityCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter City");
+                      return;
+                    }
 
-              if (Utility.checkValidation(ownerNameCtrl.text.toString())) {
-                Utility.showValidationToast("Please Enter Owner Name");
-                return;
-              }
+                    if (Utility.checkValidation(
+                        ownerNameCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Owner Name");
+                      return;
+                    }
 
-              if (Utility.checkValidation(contactCtrl.text.toString())) {
-                Utility.showValidationToast(
-                    "Please Enter Primary Contact Number");
-                return;
-              }
+                    if (Utility.checkValidation(contactCtrl.text.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Primary Contact Number");
+                      return;
+                    }
 
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              var playerId = prefs.get("playerId");
-              var locationId = prefs.get("locationId");
-              service = new Service();
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    var playerId = prefs.get("playerId");
+                    var locationId = prefs.get("locationId");
+                    service = new Service();
 
-              service!.locationId = locationId!.toString();
-              service!.playerId = playerId!.toString();
-              service!.serviceId = widget.serviceId.toString();
-              service!.name = companyCtrl.text.toString();
-              service!.address = addressCtrl.text.toString();
-              service!.city = cityCtrl.text.toString();
-              service!.contactName = ownerNameCtrl.text.toString();
-              service!.contactNo = contactCtrl.text.toString();
-              service!.secondaryNo = secondaryCtrl.text.toString();
-              service!.about = detailsCtrl.text.toString();
-              service!.locationLink = addressLinkCtrl.text.toString();
-              service!.monthlyFees = "";
-              service!.coaches = "";
-              service!.feesPerMatch = "";
-              service!.feesPerDay = "";
-              service!.experience = "";
-              service!.sportName = selectedSport!.sportName;
-              service!.sportId = selectedSport!.id.toString();
-              service!.companyName = companyCtrl.text.toString();
+                    service!.locationId = locationId!.toString();
+                    service!.playerId = playerId!.toString();
+                    service!.serviceId = widget.serviceId.toString();
+                    service!.name = companyCtrl.text.toString();
+                    service!.address = addressCtrl.text.toString();
+                    service!.city = cityCtrl.text.toString();
+                    service!.contactName = ownerNameCtrl.text.toString();
+                    service!.contactNo = contactCtrl.text.toString();
+                    service!.secondaryNo = secondaryCtrl.text.toString();
+                    service!.about = detailsCtrl.text.toString();
+                    service!.locationLink = addressLinkCtrl.text.toString();
+                    service!.monthlyFees = "";
+                    service!.coaches = "";
+                    service!.feesPerMatch = "";
+                    service!.feesPerDay = "";
+                    service!.experience = "";
+                    service!.sportName = selectedSport!.sportName;
+                    service!.sportId = selectedSport!.id.toString();
+                    service!.companyName = companyCtrl.text.toString();
 
-              if (this.image != null) {
-                addService(this.image!.path, service!);
-                // Utility.showToast("File Selected Image");
-              } else {
-                Utility.showToast("Please Select Image");
-              }
-              //  print("Create Tournament");
-            },
-          ),
+                    if (this.image != null) {
+                      addService(this.image!.path, service!);
+                      // Utility.showToast("File Selected Image");
+                    } else {
+                      Utility.showToast("Please Select Image");
+                    }
+                    //  print("Create Tournament");
+                  },
+                ),
         ],
       ),
     );
   }
 
   addService(String filePath, Service service) async {
+    setState(() {
+      isLoading = true;
+    });
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      dynamic id = await apiCall.addServiceData(filePath, service);
+      ServiceModel serviceModel =
+          await apiCall.addServiceData(filePath, service);
+      setState(() {
+        isLoading = false;
+      });
 
-      if (id == null) {
-        print("null");
-        Utility.showToast("Failed");
+      if (serviceModel.status!) {
+        print("Success");
+        Utility.showToast("Service Created Successfully");
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    ServicePhotos(serviceDataId: serviceModel.service!.id)));
       } else {
-        if (id > 0) {
-          print("Success");
-          Utility.showToast("Service Created Successfully");
-          // Navigator.pop(context);
-          var result = Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ServicePhotos(serviceDataId: id)));
-          if (result == true) {
-            Utility.showToast("Result $result");
-          }
-        } else {
-          print("Failed");
-          Utility.showToast("Failed");
-        }
+        Utility.showValidationToast("Something Went Wrong");
       }
     }
   }

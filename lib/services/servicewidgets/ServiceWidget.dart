@@ -5,6 +5,7 @@ import 'package:player/constant/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/service_model.dart';
+import 'package:player/services/service_photos.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 Widget itemLinkDetail(BuildContext context, String title, String value) {
@@ -162,3 +163,23 @@ Widget posterImage2(BuildContext context, String url) {
     ),
   );
 }
+
+// addService(BuildContext context, String filePath, Service service) async {
+//   APICall apiCall = new APICall();
+//   bool connectivityStatus = await Utility.checkConnectivity();
+//   if (connectivityStatus) {
+//     ServiceModel serviceModel = await apiCall.addServiceData(filePath, service);
+//     if (!serviceModel.status!) {
+//       print("null");
+//       Utility.showToast("Failed");
+//     } else {
+//       print("Success");
+//       Utility.showToast("Service Created Successfully");
+//       var result = Navigator.pushReplacement(
+//           context,
+//           MaterialPageRoute(
+//               builder: (context) =>
+//                   ServicePhotos(serviceDataId: serviceModel.service.id)));
+//     }
+//   }
+// }

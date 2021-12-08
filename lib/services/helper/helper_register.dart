@@ -200,6 +200,12 @@ class _HelperRegisterState extends State<HelperRegister> {
                       return;
                     }
 
+                    if (Utility.checkValidation(
+                        experienceCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Experience");
+                      return;
+                    }
+
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     var playerId = prefs.get("playerId");
@@ -247,16 +253,17 @@ class _HelperRegisterState extends State<HelperRegister> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      dynamic id = await apiCall.addServiceData(filePath, service);
+      ServiceModel serviceModel =
+          await apiCall.addServiceData(filePath, service);
       setState(() {
-        isLoading = true;
+        isLoading = false;
       });
-      if (id == null) {
-        print("null");
-        Utility.showToast("Failed");
-      } else {
-        Utility.showToast("Service Created Successfully");
+      if (serviceModel.status!) {
+        print("Success");
+        Utility.showToast("Helper Created Successfully");
         Navigator.pop(context);
+      } else {
+        Utility.showValidationToast("Something Went Wrong");
       }
     }
   }

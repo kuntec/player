@@ -40,9 +40,17 @@ class _EditPersonalCoachState extends State<EditPersonalCoach> {
     addressCtrl.text = widget.service.address;
     cityCtrl.text = widget.service.city;
     contactCtrl.text = widget.service.contactNo;
-    secondaryCtrl.text = widget.service.secondaryNo;
+    if (widget.service.secondaryNo == null) {
+      secondaryCtrl.text = "";
+    } else {
+      secondaryCtrl.text = widget.service.secondaryNo;
+    }
     experienceCtrl.text = widget.service.experience;
-    detailsCtrl.text = widget.service.about;
+    if (widget.service.about == null) {
+      detailsCtrl.text = "";
+    } else {
+      detailsCtrl.text = widget.service.about;
+    }
     getSports();
   }
 
@@ -219,7 +227,7 @@ class _EditPersonalCoachState extends State<EditPersonalCoach> {
             keyboardType: TextInputType.phone,
             controller: secondaryCtrl,
             decoration: InputDecoration(
-                labelText: "Secondary Number (optinal)",
+                labelText: "Secondary Number (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
@@ -293,6 +301,12 @@ class _EditPersonalCoachState extends State<EditPersonalCoach> {
                       return;
                     }
 
+                    if (Utility.checkValidation(contactCtrl.text.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Primary Contact Number");
+                      return;
+                    }
+
                     if (Utility.checkValidation(addressCtrl.text.toString())) {
                       Utility.showValidationToast("Please Enter Address");
                       return;
@@ -309,12 +323,6 @@ class _EditPersonalCoachState extends State<EditPersonalCoach> {
                       return;
                     }
 
-                    if (Utility.checkValidation(contactCtrl.text.toString())) {
-                      Utility.showValidationToast(
-                          "Please Enter Primary Contact Number");
-                      return;
-                    }
-
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     var playerId = prefs.get("playerId");
@@ -323,22 +331,22 @@ class _EditPersonalCoachState extends State<EditPersonalCoach> {
                     service!.locationId = locationId!.toString();
                     service!.playerId = playerId!.toString();
                     service!.serviceId = widget.service.serviceId.toString();
-                    service!.name = nameCtrl.text;
-                    service!.address = addressCtrl.text;
-                    service!.city = cityCtrl.text;
+                    service!.name = nameCtrl.text.toString();
+                    service!.address = addressCtrl.text.toString();
+                    service!.city = cityCtrl.text.toString();
                     service!.contactName = "";
-                    service!.contactNo = contactCtrl.text;
-                    service!.secondaryNo = secondaryCtrl.text;
-                    service!.about = detailsCtrl.text;
+                    service!.contactNo = contactCtrl.text.toString();
+                    service!.secondaryNo = secondaryCtrl.text.toString();
+                    service!.about = detailsCtrl.text.toString();
                     service!.locationLink = "";
                     service!.monthlyFees = "";
                     service!.coaches = "";
                     service!.feesPerMatch = "";
                     service!.feesPerDay = "";
-                    service!.experience = experienceCtrl.text;
+                    service!.experience = experienceCtrl.text.toString();
                     service!.sportName = selectedSport!.sportName.toString();
                     service!.sportId = selectedSport!.id.toString();
-                    service!.companyName = nameCtrl.text;
+                    service!.companyName = nameCtrl.text.toString();
 
                     updateService(service!);
                   },
@@ -355,17 +363,15 @@ class _EditPersonalCoachState extends State<EditPersonalCoach> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      dynamic id = await apiCall.updateServiceData(service);
+      ServiceModel serviceModel = await apiCall.updateServiceData(service);
       setState(() {
         isLoading = false;
       });
-      if (id == null) {
-        print("null");
-        Utility.showToast("Failed");
-      } else {
-        print("Success $id");
+      if (serviceModel.status!) {
         Utility.showToast("Service Updated Successfully");
         Navigator.pop(context, true);
+      } else {
+        Utility.showValidationToast("Something Went Wrong");
       }
     }
   }

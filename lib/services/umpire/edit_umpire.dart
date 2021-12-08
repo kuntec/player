@@ -38,11 +38,11 @@ class _EditUmpireState extends State<EditUmpire> {
     super.initState();
     nameCtrl.text = widget.service.name;
     contactCtrl.text = widget.service.contactNo;
-    if (widget.service.secondaryNo == null) {
-      secondaryCtrl.text = "";
-    } else {
-      secondaryCtrl.text = widget.service.secondaryNo;
-    }
+
+    widget.service.secondaryNo == null
+        ? secondaryCtrl.text = ""
+        : secondaryCtrl.text = widget.service.secondaryNo;
+
     experienceCtrl.text = widget.service.experience;
 
     feesPerDayCtrl.text = widget.service.feesPerDay;
@@ -261,19 +261,19 @@ class _EditUmpireState extends State<EditUmpire> {
                     service!.locationId = locationId!.toString();
                     service!.playerId = playerId!.toString();
                     service!.serviceId = widget.service.serviceId.toString();
-                    service!.name = nameCtrl.text;
+                    service!.name = nameCtrl.text.toString();
                     service!.address = "";
-                    service!.city = cityCtrl.text;
+                    service!.city = cityCtrl.text.toString();
                     service!.contactName = "";
-                    service!.contactNo = contactCtrl.text;
-                    service!.secondaryNo = secondaryCtrl.text;
+                    service!.contactNo = contactCtrl.text.toString();
+                    service!.secondaryNo = secondaryCtrl.text.toString();
                     service!.about = "";
                     service!.locationLink = "";
                     service!.monthlyFees = "";
                     service!.coaches = "";
-                    service!.feesPerMatch = feesPerMatchCtrl.text;
-                    service!.feesPerDay = feesPerDayCtrl.text;
-                    service!.experience = experienceCtrl.text;
+                    service!.feesPerMatch = feesPerMatchCtrl.text.toString();
+                    service!.feesPerDay = feesPerDayCtrl.text.toString();
+                    service!.experience = experienceCtrl.text.toString();
                     service!.sportName = selectedSport!.sportName;
                     service!.sportId = selectedSport!.id.toString();
                     service!.companyName = "";
@@ -344,17 +344,15 @@ class _EditUmpireState extends State<EditUmpire> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      dynamic id = await apiCall.updateServiceData(service);
+      ServiceModel serviceModel = await apiCall.updateServiceData(service);
       setState(() {
         isLoading = false;
       });
-      if (id == null) {
-        print("null");
-        Utility.showToast("Failed");
-      } else {
-        print("Success $id");
+      if (serviceModel.status!) {
         Utility.showToast("Service Updated Successfully");
         Navigator.pop(context, true);
+      } else {
+        Utility.showValidationToast("Something Went Wrong");
       }
     }
   }

@@ -273,29 +273,21 @@ class _TshirtSellerRegisterState extends State<TshirtSellerRegister> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      dynamic id = await apiCall.addServiceData(filePath, service);
+      ServiceModel serviceModel =
+          await apiCall.addServiceData(filePath, service);
       setState(() {
         isLoading = false;
       });
-      if (id == null) {
-        print("null");
-        Utility.showToast("Failed");
+      if (serviceModel.status!) {
+        Utility.showToast("Service Created Successfully");
+        // Navigator.pop(context);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    ServicePhotos(serviceDataId: serviceModel.service!.id)));
       } else {
-        if (id > 0) {
-          print("Success");
-          Utility.showToast("Service Created Successfully");
-          // Navigator.pop(context);
-          var result = await Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ServicePhotos(serviceDataId: id)));
-          if (result == true) {
-            Utility.showToast("Result $result");
-          }
-        } else {
-          print("Failed");
-          Utility.showToast("Failed");
-        }
+        Utility.showValidationToast("Something Went Wrong");
       }
     }
   }

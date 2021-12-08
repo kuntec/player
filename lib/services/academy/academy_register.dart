@@ -10,6 +10,7 @@ import 'package:player/model/service_model.dart';
 import 'package:player/model/service_photo.dart';
 import 'package:player/model/sport_data.dart';
 import 'package:player/services/service_photos.dart';
+import 'package:player/services/servicewidgets/ServiceWidget.dart';
 import 'package:player/venue/venue_facilities.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -371,7 +372,8 @@ class _AcademyRegisterState extends State<AcademyRegister> {
                     service!.coaches = coachesCtrl.text.toString();
                     service!.feesPerMatch = "";
                     service!.feesPerDay = "";
-                    service!.experience = textFacilityController.text;
+                    service!.experience =
+                        textFacilityController.text.toString();
                     service!.sportName = selectedSport!.sportName;
                     service!.sportId = selectedSport!.id.toString();
                     service!.companyName = "";
@@ -396,24 +398,22 @@ class _AcademyRegisterState extends State<AcademyRegister> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      dynamic id = await apiCall.addServiceData(filePath, service);
+      ServiceModel serviceModel =
+          await apiCall.addServiceData(filePath, service);
       setState(() {
         isLoading = false;
       });
 
-      if (id == null) {
-        print("null");
-        Utility.showToast("Failed");
-      } else {
+      if (serviceModel.status!) {
         print("Success");
         Utility.showToast("Service Created Successfully");
-        var result = Navigator.pushReplacement(
+        Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => ServicePhotos(serviceDataId: id)));
-        if (result == true) {
-          Utility.showToast("Result $result");
-        }
+                builder: (context) =>
+                    ServicePhotos(serviceDataId: serviceModel.service!.id)));
+      } else {
+        Utility.showValidationToast("Something Went Wrong");
       }
     }
   }

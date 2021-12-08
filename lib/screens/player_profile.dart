@@ -16,6 +16,7 @@ import 'package:player/profile/favorite_sport.dart';
 import 'package:player/profile/my_bookings.dart';
 import 'package:player/profile/my_events.dart';
 import 'package:player/profile/my_tournaments.dart';
+import 'package:player/screens/contact_us.dart';
 import 'package:player/screens/login.dart';
 import 'package:get/get.dart';
 import 'package:player/services/servicewidgets/ServiceWidget.dart';
@@ -30,28 +31,17 @@ class PlayerProfile extends StatefulWidget {
   _PlayerProfileState createState() => _PlayerProfileState();
 }
 
-class _PlayerProfileState extends State<PlayerProfile> {
+class _PlayerProfileState extends State<PlayerProfile>
+    with AutomaticKeepAliveClientMixin<PlayerProfile> {
   final ProfileController profilerController = Get.put(ProfileController());
 
   File? file;
   Player? player;
   bool? isLoading = false;
-  // Future selectFile() async {
-  //   final result = await FilePicker.platform.pickFiles(allowMultiple: false);
-  //   if (result == null) return;
-  //   final path = result.files.single.path!;
-  //   setState(() {
-  //     file = File(path);
-  //     print(file!.path);
-  //   });
-  // }
-  //
-  // uploadFile() {
-  //   if (file == null) return;
-  //   final fileName = basename(file!.path);
-  //   final destination = 'files/$fileName';
-  // }
 
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
   @override
   void initState() {
     // TODO: implement initState
@@ -307,8 +297,14 @@ class _PlayerProfileState extends State<PlayerProfile> {
                 profileItem(
                     "assets/images/share.svg", "Share with Friends", () {}),
                 horizontalLine(),
-                profileItem(
-                    "assets/images/share.svg", "About Player App", () {}),
+                profileItem("assets/images/share.svg", "Contact Us", () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ContactUs(),
+                    ),
+                  );
+                }),
               ],
             ),
           ),

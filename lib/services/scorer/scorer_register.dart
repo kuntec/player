@@ -263,17 +263,17 @@ class _ScorerRegisterState extends State<ScorerRegister> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      dynamic status = await apiCall.addServiceData(filePath, service);
+      ServiceModel serviceModel =
+          await apiCall.addServiceData(filePath, service);
       setState(() {
         isLoading = false;
       });
-      if (status == null) {
-        print("null");
-        Utility.showToast("Failed");
-      } else {
+      if (serviceModel.status!) {
         print("Success");
         Utility.showToast("Service Created Successfully");
         Navigator.pop(context);
+      } else {
+        Utility.showValidationToast("Something Went Wrong");
       }
     }
   }

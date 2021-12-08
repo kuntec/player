@@ -34,8 +34,10 @@ class _CommentatorDetailState extends State<CommentatorDetail> {
               itemDetail(context, "Name", widget.service.name.toString()),
               itemCallDetail(context, "Contact Number",
                   widget.service.contactNo.toString()),
-              itemCallDetail(context, "Secondary Number",
-                  widget.service.secondaryNo.toString()),
+              widget.service.secondaryNo == null
+                  ? SizedBox.shrink()
+                  : itemCallDetail(context, "Secondary Number",
+                      widget.service.secondaryNo.toString()),
               itemDetail(context, "City", widget.service.city.toString()),
               itemDetail(context, "Fees Per Match",
                   widget.service.feesPerMatch.toString()),

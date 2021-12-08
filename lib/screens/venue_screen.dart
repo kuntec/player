@@ -21,7 +21,12 @@ class VenueScreen extends StatefulWidget {
   _VenueScreenState createState() => _VenueScreenState();
 }
 
-class _VenueScreenState extends State<VenueScreen> {
+class _VenueScreenState extends State<VenueScreen>
+    with AutomaticKeepAliveClientMixin<VenueScreen> {
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
+
   int selectedIndex = 1;
   bool isMyVenue = false;
   List<Sports> sports = [];
@@ -263,33 +268,14 @@ class _VenueScreenState extends State<VenueScreen> {
             ),
           ],
         ),
-        body: SingleChildScrollView(
+        body: Container(
+          height: MediaQuery.of(context).size.height,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Container(
-              //   decoration: kServiceBoxItem,
-              //   margin: EdgeInsets.all(10),
-              //   child: TextField(
-              //     onChanged: (value) {
-              //       setState(() {
-              //         searchString = value;
-              //       });
-              //     },
-              //     controller: searchController,
-              //     decoration: InputDecoration(
-              //       border: InputBorder.none,
-              //       hintText: "Search",
-              //       prefixIcon: Icon(
-              //         Icons.search,
-              //         color: kBaseColor,
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              sportBarList(),
-              allVenue(),
+              Expanded(flex: 1, child: sportBarList()),
+              Expanded(flex: 8, child: allVenue()),
             ],
           ),
         ),
@@ -320,7 +306,7 @@ class _VenueScreenState extends State<VenueScreen> {
               );
             } else {
               return ListView.builder(
-                padding: EdgeInsets.only(bottom: 200),
+                padding: EdgeInsets.only(bottom: 20),
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 itemCount: snapshot.data.length,
@@ -333,7 +319,7 @@ class _VenueScreenState extends State<VenueScreen> {
                               .toString()
                               .toLowerCase()
                               .contains(searchString)
-                      ? venueItem(snapshot.data[index])
+                      ? venueItem2(snapshot.data[index])
                       : SizedBox.shrink();
                 },
               );
@@ -375,6 +361,136 @@ class _VenueScreenState extends State<VenueScreen> {
       Utility.showToast("NO INTERNET CONNECTION");
     }
     return venues;
+  }
+
+  Widget venueItem2(dynamic venue) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => VenueDetails(
+                      venue: venue,
+                    )));
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 10.0),
+        decoration: kServiceBoxItem,
+        child: Stack(
+          children: [
+            Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(10.0),
+                    height: 110.0,
+                    width: 110.0,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      child: Image.network(
+                        APIResources.IMAGE_URL + venue.image,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 130.0, right: 5.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 7,
+                        child: Container(
+                          height: 20,
+                          child: Text(
+                            venue.name,
+                            style: TextStyle(
+                              color: kBaseColor,
+                              fontSize: 16.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: kBaseColor,
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(10.0),
+                                bottomLeft: Radius.circular(10.0),
+                              )),
+                          width: 90,
+                          height: 30,
+                          child: Center(
+                            child: Text(
+                              venue.sport,
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 12.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Address: ${venue.address}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Hours: ${venue.openTime} to ${venue.closeTime}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Phone: ${venue.openTime}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        decoration: kServiceBoxItem.copyWith(
+                          color: kBaseColor,
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                        ),
+                        padding: EdgeInsets.only(
+                            top: 5.0, bottom: 5.0, right: 15.0, left: 15.0),
+                        child: Text(
+                          "\u{20B9} ${venue.onwards} Onwards",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12.0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget venueItem(dynamic venue) {

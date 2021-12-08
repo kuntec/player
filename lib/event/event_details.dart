@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:player/api/api_resources.dart';
 import 'package:player/components/rounded_button.dart';
@@ -29,6 +30,33 @@ class _EventDetailsState extends State<EventDetails> {
               color: kBaseColor,
             )),
       ),
+      bottomSheet: widget.event.status.toString() == "0"
+          ? Container(
+              margin: EdgeInsets.only(left: k20Margin, right: k20Margin),
+              child: RoundedButton(
+                title: "Booking Closed",
+                color: kBaseColor,
+                txtColor: Colors.white,
+                minWidth: MediaQuery.of(context).size.width,
+                onPressed: () {},
+              ),
+            )
+          : Container(
+              margin: EdgeInsets.only(left: k20Margin, right: k20Margin),
+              child: RoundedButton(
+                title: "Proceed To Book",
+                color: kBaseColor,
+                txtColor: Colors.white,
+                minWidth: MediaQuery.of(context).size.width,
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ParticipantSummary(
+                              event: widget.event, isEvent: true)));
+                },
+              ),
+            ),
       body: SingleChildScrollView(
         child: Container(
           margin: EdgeInsets.all(10.0),
@@ -56,44 +84,55 @@ class _EventDetailsState extends State<EventDetails> {
               itemDetail(context, "Entry Fees",
                   "\u{20B9} ${widget.event.entryFees} / ${widget.event.members} person"),
               itemDetail(context, "Address", widget.event.address),
-              itemLinkDetail(
-                  context, "Location Link", widget.event.locationLink),
+              widget.event.locationLink == null
+                  ? SizedBox.shrink()
+                  : itemLinkDetail(
+                      context, "Location Link", widget.event.locationLink),
               itemDetail(context, "Organizer Name", widget.event.organizerName),
               itemCallDetail(context, "Contact Number", widget.event.number),
-              itemCallDetail(
-                  context, "Secondary Number", widget.event.secondaryNumber),
-              itemDetail(context, "Description", widget.event.description),
-              itemDetail(context, "Details", widget.event.details),
-              SizedBox(height: k20Margin),
-              widget.event.status.toString() == "0"
-                  ? Container(
-                      margin:
-                          EdgeInsets.only(left: k20Margin, right: k20Margin),
-                      child: RoundedButton(
-                        title: "Booking Closed",
-                        color: kBaseColor,
-                        txtColor: Colors.white,
-                        minWidth: MediaQuery.of(context).size.width,
-                        onPressed: () {},
-                      ),
-                    )
-                  : Container(
-                      margin:
-                          EdgeInsets.only(left: k20Margin, right: k20Margin),
-                      child: RoundedButton(
-                        title: "Proceed To Book",
-                        color: kBaseColor,
-                        txtColor: Colors.white,
-                        minWidth: MediaQuery.of(context).size.width,
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ParticipantSummary(
-                                      event: widget.event, isEvent: true)));
-                        },
-                      ),
-                    ),
+              widget.event.secondaryNumber == null ||
+                      widget.event.secondaryNumber == "null"
+                  ? SizedBox.shrink()
+                  : itemCallDetail(context, "Secondary Number",
+                      widget.event.secondaryNumber),
+              widget.event.description == null ||
+                      widget.event.description == "null"
+                  ? SizedBox.shrink()
+                  : itemDetail(
+                      context, "Description", widget.event.description),
+              widget.event.details == null || widget.event.details == "null"
+                  ? SizedBox.shrink()
+                  : itemDetail(context, "Details", widget.event.details),
+              SizedBox(height: 100),
+              // widget.event.status.toString() == "0"
+              //     ? Container(
+              //         margin:
+              //             EdgeInsets.only(left: k20Margin, right: k20Margin),
+              //         child: RoundedButton(
+              //           title: "Booking Closed",
+              //           color: kBaseColor,
+              //           txtColor: Colors.white,
+              //           minWidth: MediaQuery.of(context).size.width,
+              //           onPressed: () {},
+              //         ),
+              //       )
+              //     : Container(
+              //         margin:
+              //             EdgeInsets.only(left: k20Margin, right: k20Margin),
+              //         child: RoundedButton(
+              //           title: "Proceed To Book",
+              //           color: kBaseColor,
+              //           txtColor: Colors.white,
+              //           minWidth: MediaQuery.of(context).size.width,
+              //           onPressed: () {
+              //             Navigator.push(
+              //                 context,
+              //                 MaterialPageRoute(
+              //                     builder: (context) => ParticipantSummary(
+              //                         event: widget.event, isEvent: true)));
+              //           },
+              //         ),
+              //       ),
             ],
           ),
         ),

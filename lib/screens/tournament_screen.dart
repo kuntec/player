@@ -18,7 +18,11 @@ class TournamentScreen extends StatefulWidget {
   _TournamentScreenState createState() => _TournamentScreenState();
 }
 
-class _TournamentScreenState extends State<TournamentScreen> {
+class _TournamentScreenState extends State<TournamentScreen>
+    with AutomaticKeepAliveClientMixin<TournamentScreen> {
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
   int selectedIndex = 1;
   List<Sports> sports = [];
 
@@ -35,123 +39,17 @@ class _TournamentScreenState extends State<TournamentScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-//         bottomNavigationBar: BottomNavigationBar(
-//           type: BottomNavigationBarType.fixed,
-//           currentIndex: selectedIndex,
-//           selectedItemColor: kAppColor,
-// //        backgroundColor: Colors.grey,
-//           showSelectedLabels: false,
-//           showUnselectedLabels: false,
-//           unselectedItemColor: Colors.black38,
-//           onTap: (index) {
-//             setState(() {
-//               selectedIndex = index;
-//             });
-//           },
-//           items: [
-//             BottomNavigationBarItem(
-//               icon: Icon(
-//                 Icons.home,
-//                 color: kAppColor,
-//               ),
-//               label: "",
-//             ),
-//             BottomNavigationBarItem(
-//               icon: Icon(Icons.wine_bar),
-//               backgroundColor: kAppColor,
-//               label: "",
-//             ),
-//             BottomNavigationBarItem(
-//               icon: Icon(Icons.flag),
-//               backgroundColor: kAppColor,
-//               label: "",
-//             ),
-//             BottomNavigationBarItem(
-//                 icon: Icon(Icons.settings),
-//                 backgroundColor: kAppColor,
-//                 label: ""),
-//             BottomNavigationBarItem(
-//                 icon: Icon(Icons.person),
-//                 backgroundColor: kAppColor,
-//                 label: "Home"),
-//           ],
-//         ),
         appBar: AppBar(
-//        leading: Icon(Icons.arrow_back),
           title: Text("TOURNAMENTS"),
-          // actions: [
-          //   Container(
-          //     margin: EdgeInsets.all(10),
-          //     decoration: BoxDecoration(
-          //       borderRadius: BorderRadius.circular(15.0),
-          //       color: Colors.white,
-          //     ),
-          //     width: 100,
-          //     height: 300,
-          //     child: Center(
-          //       child: Text(
-          //         "My Games",
-          //         style: TextStyle(color: kAppColor, fontWeight: FontWeight.bold),
-          //       ),
-          //     ),
-          //   )
-          // ],
         ),
-        body: SingleChildScrollView(
+        body: Container(
+          height: MediaQuery.of(context).size.height,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image(
-              //   image: AssetImage(
-              //     'assets/images/banner.jpg',
-              //   ),
-              //   width: MediaQuery.of(context).size.width,
-              // ),
-              SizedBox(height: 10),
-              //buttonBar(),
-              //sportBar(),
-              sportBarList(),
-              allTournaments(),
-              SizedBox(height: 10),
-
-              // Expanded(flex: 1, child: sportBar()),
-              // SizedBox(height: 10),
-              // Expanded(
-              //   flex: 1,
-              //   child: allTournaments(),
-              // ),
-
-              // activityItem(
-              //   "CRICKET",
-              //   "Player Premier League",
-              //   "Start Date : 20/10/2021",
-              //   "",
-              //   "Rs. 500",
-              // ),
-              // activityItem(
-              //   "FOOTBAL",
-              //   "Football Premier League",
-              //   "Start Date : 06/11/2021",
-              //   "End Date : 15/11/2021",
-              //   "Rs. 1250",
-              // ),
-              // activityItem(
-              //   "FOOTBALL",
-              //   "Sagar Shah",
-              //   "Looking For : Player to Join",
-              //   "Waghodia",
-              //   "10/10/2021",
-              //   "8:00PM",
-              // ),
-              // activityItem(
-              //   "VOLLEYBALL",
-              //   "Smit Patel",
-              //   "Looking For : Opponent Team",
-              //   "Gotri",
-              //   "12/11/2021",
-              //   "8:00AM",
-              // ),
+              Expanded(flex: 1, child: sportBarList()),
+              Expanded(flex: 8, child: allTournaments()),
             ],
           ),
         ),
@@ -163,7 +61,6 @@ class _TournamentScreenState extends State<TournamentScreen> {
     return Container(
       height: 700,
       padding: EdgeInsets.all(10.0),
-      margin: EdgeInsets.only(bottom: 100),
       child: FutureBuilder(
         future: getTournaments(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -183,7 +80,7 @@ class _TournamentScreenState extends State<TournamentScreen> {
               );
             } else {
               return ListView.builder(
-                padding: EdgeInsets.only(bottom: 150),
+                padding: EdgeInsets.only(bottom: 20),
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 itemCount: snapshot.data.length,
@@ -218,12 +115,9 @@ class _TournamentScreenState extends State<TournamentScreen> {
       if (tournamentData.tournaments != null) {
         tournaments = tournamentData.tournaments!;
         tournaments = tournaments!.reversed.toList();
-        //setState(() {});
       }
 
       if (tournamentData.status!) {
-        //print(hostActivity.message!);
-        //  Navigator.pop(context);
       } else {
         print(tournamentData.message!);
       }
@@ -246,9 +140,7 @@ class _TournamentScreenState extends State<TournamentScreen> {
       },
       child: Container(
         margin: EdgeInsets.only(bottom: 10.0),
-//      padding: EdgeInsets.only(bottom: 10.0),
         decoration: kServiceBoxItem,
-        // height: 200,
         child: Stack(
           children: [
             Container(
@@ -376,217 +268,6 @@ class _TournamentScreenState extends State<TournamentScreen> {
     );
   }
 
-  // Widget tournamentItem(dynamic tournament) {
-  //   return GestureDetector(
-  //     onTap: () {
-  //       Navigator.push(
-  //           context,
-  //           MaterialPageRoute(
-  //               builder: (context) => TournamentDetails(
-  //                     tournament: tournament,
-  //                   )));
-  //     },
-  //     child: Container(
-  //       margin: EdgeInsets.all(10.0),
-  //       decoration: kContainerBoxDecoration,
-  //       // height: 150,
-  //       child: Stack(
-  //         alignment: Alignment.bottomRight,
-  //         children: [
-  //           Container(
-  //             child: Column(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: [
-  //                 ClipRRect(
-  //                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
-  //                   child: Image.network(
-  //                     APIResources.IMAGE_URL + tournament.image,
-  //                     fit: BoxFit.fill,
-  //                   ),
-  //                 ),
-  //                 SizedBox(height: 20),
-  //                 Container(
-  //                   margin: EdgeInsets.only(left: 10.0),
-  //                   child: Column(
-  //                     crossAxisAlignment: CrossAxisAlignment.start,
-  //                     children: [
-  //                       Text(
-  //                         tournament.tournamentName,
-  //                         style: TextStyle(color: kBaseColor, fontSize: 18.0),
-  //                       ),
-  //                       SizedBox(height: 5),
-  //                       Text(
-  //                         "Start Date : ${tournament.startDate}",
-  //                         style: TextStyle(color: Colors.black, fontSize: 14.0),
-  //                       ),
-  //                       SizedBox(height: 5),
-  //                       Text(
-  //                         "Location : ${tournament.address}",
-  //                         style: TextStyle(color: Colors.black, fontSize: 14.0),
-  //                       ),
-  //                       SizedBox(height: 10),
-  //                     ],
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //           Positioned(
-  //             bottom: 50,
-  //             right: 20,
-  //             child: Container(
-  //               child: Text(
-  //                 tournament.prizeDetails,
-  //                 style: TextStyle(color: kBaseColor, fontSize: 18.0),
-  //               ),
-  //             ),
-  //           ),
-  //           Container(
-  //             decoration: BoxDecoration(
-  //                 color: kBaseColor,
-  //                 borderRadius: BorderRadius.only(
-  //                   topLeft: Radius.circular(15.0),
-  //                   bottomRight: Radius.circular(15.0),
-  //                 )),
-  //             width: 100,
-  //             height: 40,
-  //             child: Center(
-  //               child: Text(
-  //                 tournament.sportName,
-  //                 style: TextStyle(color: Colors.white, fontSize: 16.0),
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // Widget sportBar() {
-  //   return Container(
-  //     margin: EdgeInsets.all(10.0),
-  //     padding: EdgeInsets.all(10.0),
-  //     decoration: kContainerBoxDecoration,
-  //     child: Row(
-  //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //       children: [
-  //         sportSelectBar("All", true),
-  //         sportSelectBar("Cricket", false),
-  //         sportSelectBar("Football", false),
-  //         sportSelectBar("Others +", false),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Widget sportBar() {
-  //   // return Container(
-  //   //   height: 100,
-  //   //   child: ListView.builder(
-  //   //     scrollDirection: Axis.horizontal,
-  //   //     itemCount: 10,
-  //   //     itemBuilder: (BuildContext context, int index) => Container(
-  //   //       height: 50,
-  //   //       width: 50,
-  //   //       child: sportChip(sports[0]),
-  //   //     ),
-  //   //   ),
-  //   // );
-  //   return Container(
-  //     padding: EdgeInsets.all(5.0),
-  //     child: FutureBuilder(
-  //       future: getMySports(),
-  //       builder: (BuildContext context, AsyncSnapshot snapshot) {
-  //         if (snapshot.data == null) {
-  //           return Container(
-  //             child: Center(
-  //               child: Text('Loading....'),
-  //             ),
-  //           );
-  //         }
-  //         if (snapshot.hasData) {
-  //           print("Has Data ${snapshot.data.length}");
-  //           return Container(
-  //             decoration: kContainerBox,
-  //             height: 70,
-  //             child: ListView.builder(
-  //               scrollDirection: Axis.horizontal,
-  //               itemCount: snapshot.data.length,
-  //               itemBuilder: (BuildContext context, int index) {
-  //                 return sportChip(snapshot.data[index]);
-  //               },
-  //             ),
-  //           );
-  //           // return ListView.builder(
-  //           //   scrollDirection: Axis.horizontal,
-  //           //   itemCount: snapshot.data.length,
-  //           //   itemBuilder: (BuildContext context, int index) {
-  //           //     return sportChip(snapshot.data[index]);
-  //           //   },
-  //           // );
-  //         } else {
-  //           return Container(
-  //             child: Center(
-  //               child: Text('No Data'),
-  //             ),
-  //           );
-  //         }
-  //       },
-  //     ),
-  //   );
-  // }
-  //
-  // Widget sportChip(sport) {
-  //   return GestureDetector(
-  //     onTap: () {
-  //       print("Selected sport ${sport.sportId} ${sport.sportName} ");
-  //       selectedSportId = sport.sportId.toString();
-  //       setState(() {});
-  //     },
-  //     child: Container(
-  //       decoration: BoxDecoration(
-  //         borderRadius: BorderRadius.circular(10.0),
-  //         border: Border.all(
-  //           width: 1.0,
-  //           color: sport.sportId.toString() == selectedSportId
-  //               ? kBaseColor
-  //               : Colors.white,
-  //         ),
-  //         color: sport.sportId.toString() == selectedSportId
-  //             ? kBaseColor
-  //             : Colors.white,
-  //       ),
-  //       margin: EdgeInsets.all(10.0),
-  //       padding: EdgeInsets.all(10.0),
-  //
-  //       child: Center(
-  //         child: Text(
-  //           sport.sportName,
-  //           style: TextStyle(
-  //               color: sport.sportId.toString() == selectedSportId
-  //                   ? Colors.white
-  //                   : Colors.black,
-  //               fontSize: 14.0),
-  //         ),
-  //       ),
-  //       // margin: EdgeInsets.all(10.0),
-  //       // child: Center(
-  //       //   child: Chip(
-  //       //     label: Center(
-  //       //       child: Text(
-  //       //         sport.sportName,
-  //       //         style: TextStyle(color: Colors.white),
-  //       //       ),
-  //       //     ),
-  //       //     backgroundColor: kBaseColor,
-  //       //     elevation: 6.0,
-  //       //   ),
-  //       // ),
-  //     ),
-  //   );
-  // }
-
   Widget sportBarList() {
     return sports != null
         ? Container(
@@ -624,14 +305,12 @@ class _TournamentScreenState extends State<TournamentScreen> {
           for (int i = 0; i < allSports.length; i++) {
             bool status = false;
             for (int j = 0; j < sports.length; j++) {
-              // print("Checking for ${allSports[i].sportName}");
               if (allSports[i].sportName == sports[j].sportName) {
                 status = false;
-                // print("Found ${allSports[i].sportName}");
+
                 break;
               } else {
                 status = true;
-                //  print("Not Found ${allSports[i].sportName}");
               }
             }
             if (status) {
@@ -679,34 +358,6 @@ class _TournamentScreenState extends State<TournamentScreen> {
 
   var selectedSportId = "0";
 
-  // Widget sportSelectBar(String title, bool status) {
-  //   return GestureDetector(
-  //     onTap: () {
-  //       print("Clicked $title");
-  //       selectedSportId = "6";
-  //     },
-  //     child: Container(
-  //       child: Column(
-  //         mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //         children: [
-  //           Text(
-  //             title,
-  //           ),
-  //           if (status)
-  //             SizedBox(
-  //               height: 5.0,
-  //               child: Container(
-  //                 height: 5.0,
-  //                 width: 10.0,
-  //                 color: kAppColor,
-  //               ),
-  //             )
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
   Future<List<Sports>> getMySports() async {
     APICall apiCall = new APICall();
     // List<Data> data = [];
@@ -747,133 +398,4 @@ class _TournamentScreenState extends State<TournamentScreen> {
     } else {}
     return data;
   }
-//
-//   Widget activityItem(String sport, String tournament, String startDate,
-//       String endDate, String price) {
-//     return Container(
-//       margin: EdgeInsets.all(5.0),
-//       padding: EdgeInsets.all(5.0),
-// //      decoration: kContainerBoxDecoration,
-//       child: Stack(
-//         children: [
-//           Column(
-//             children: [
-//               Container(
-//                 padding: EdgeInsets.all(0),
-//                 margin: EdgeInsets.only(top: 10.0),
-//                 decoration: BoxDecoration(
-//                   color: kAppColor,
-//                   borderRadius: BorderRadius.circular(5.0),
-//                 ),
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     Container(
-//                       // height: 50.0,
-//                       // width: 50.0,
-//                       child: Image(
-//                         image: AssetImage("assets/images/ground.jpg"),
-//                       ),
-//                     ),
-//                     // Container(
-//                     //   margin: EdgeInsets.only(left: 100.0),
-//                     //   child: Column(
-//                     //     crossAxisAlignment: CrossAxisAlignment.start,
-//                     //     children: [
-//                     //       Text(
-//                     //         name,
-//                     //         style:
-//                     //             TextStyle(color: Colors.white, fontSize: 18.0),
-//                     //       ),
-//                     //       ListTile(
-//                     //         contentPadding: EdgeInsets.all(0),
-//                     //         title: Text(
-//                     //           looking,
-//                     //           style: TextStyle(
-//                     //               color: Colors.white, fontSize: 14.0),
-//                     //         ),
-//                     //       ),
-//                     //     ],
-//                     //   ),
-//                     // ),
-//                     SizedBox(height: 10),
-//                     Row(
-//                       children: [
-//                         SizedBox(width: 10),
-//                         Expanded(
-//                           child: Column(
-//                             crossAxisAlignment: CrossAxisAlignment.start,
-//                             children: [
-//                               Text(
-//                                 tournament,
-//                                 style: TextStyle(
-//                                     color: Colors.white, fontSize: 18.0),
-//                               ),
-//                               SizedBox(height: 5),
-//                               Text(
-//                                 startDate,
-//                                 style: TextStyle(
-//                                     color: Colors.white, fontSize: 14.0),
-//                               ),
-//                               SizedBox(height: 5),
-//                               Text(
-//                                 endDate,
-//                                 style: TextStyle(
-//                                     color: Colors.white, fontSize: 14.0),
-//                               ),
-//                               SizedBox(height: 5),
-//                             ],
-//                           ),
-//                         ),
-//                         Expanded(
-//                           child: Column(
-//                             children: [
-//                               Text(
-//                                 price,
-//                                 style: TextStyle(
-//                                     color: Colors.white, fontSize: 20.0),
-//                               ),
-//                               SizedBox(height: 10.0),
-//                               Container(
-//                                 alignment: Alignment.bottomRight,
-//                                 margin: EdgeInsets.only(right: 5.0),
-//                                 child: Text(
-//                                   "tap for details",
-//                                   style: TextStyle(
-//                                       color: Colors.white, fontSize: 10.0),
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           ),
-//           Container(
-//             margin: EdgeInsets.only(left: 15.0),
-// //            padding: EdgeInsets.all(2.0),
-//             height: 30.0,
-//             width: 90.0,
-//             decoration: BoxDecoration(
-//               borderRadius: BorderRadius.circular(10.0),
-//               image: DecorationImage(
-//                 image: AssetImage("assets/images/banner.jpg"),
-//                 fit: BoxFit.cover,
-//               ),
-//             ),
-//             child: Center(
-//               child: Text(
-//                 sport,
-//                 style: TextStyle(color: Colors.white, fontSize: 14.0),
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
 }

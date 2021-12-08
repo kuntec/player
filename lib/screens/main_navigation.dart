@@ -15,6 +15,10 @@ class MainNavigation extends StatefulWidget {
 }
 
 class _MainNavigationState extends State<MainNavigation> {
+  var _selectedPageIndex;
+  late List<Widget> _pages;
+  late PageController _pageController;
+
   int selectedIndex = 0;
   final screens = [
     HomeScreen(),
@@ -23,10 +27,39 @@ class _MainNavigationState extends State<MainNavigation> {
     ServiceScreen(),
     PlayerProfile()
   ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _selectedPageIndex = 0;
+    _pages = [
+      HomeScreen(),
+      TournamentScreen(),
+      VenueScreen(),
+      ServiceScreen(),
+      PlayerProfile()
+    ];
+
+    _pageController = PageController(initialPage: _selectedPageIndex);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _pageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: screens[selectedIndex],
+//      body: screens[selectedIndex],
+      body: PageView(
+        controller: _pageController,
+        physics: NeverScrollableScrollPhysics(),
+        children: _pages,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
 //        backgroundColor: Colors.grey,
@@ -37,6 +70,8 @@ class _MainNavigationState extends State<MainNavigation> {
         onTap: (index) {
           setState(() {
             selectedIndex = index;
+            _selectedPageIndex = index;
+            _pageController.jumpToPage(_selectedPageIndex);
           });
         },
         items: [

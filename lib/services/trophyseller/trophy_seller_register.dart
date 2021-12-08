@@ -6,6 +6,7 @@ import 'package:player/api/api_call.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/model/service_data.dart';
 import 'package:player/model/service_model.dart';
 import 'package:player/services/service_photos.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,6 +33,13 @@ class _TrophySellerRegisterState extends State<TrophySellerRegister> {
   TextEditingController addressLinkCtrl = new TextEditingController();
   TextEditingController cityCtrl = new TextEditingController();
   TextEditingController detailsCtrl = new TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -233,14 +241,14 @@ class _TrophySellerRegisterState extends State<TrophySellerRegister> {
                     service!.locationId = locationId!.toString();
                     service!.playerId = playerId!.toString();
                     service!.serviceId = widget.serviceId.toString();
-                    service!.name = companyCtrl.toString();
-                    service!.address = addressCtrl.toString();
-                    service!.city = cityCtrl.toString();
-                    service!.contactName = ownerNameCtrl.toString();
-                    service!.contactNo = contactCtrl.toString();
-                    service!.secondaryNo = secondaryContactCtrl.toString();
-                    service!.about = detailsCtrl.toString();
-                    service!.locationLink = addressLinkCtrl.toString();
+                    service!.name = companyCtrl.text.toString();
+                    service!.address = addressCtrl.text.toString();
+                    service!.city = cityCtrl.text.toString();
+                    service!.contactName = ownerNameCtrl.text.toString();
+                    service!.contactNo = contactCtrl.text.toString();
+                    service!.secondaryNo = secondaryContactCtrl.text.toString();
+                    service!.about = detailsCtrl.text.toString();
+                    service!.locationLink = addressLinkCtrl.text.toString();
                     service!.monthlyFees = "";
                     service!.coaches = "";
                     service!.feesPerMatch = "";
@@ -248,7 +256,7 @@ class _TrophySellerRegisterState extends State<TrophySellerRegister> {
                     service!.experience = "";
                     service!.sportName = "";
                     service!.sportId = "";
-                    service!.companyName = companyCtrl.toString();
+                    service!.companyName = companyCtrl.text.toString();
 
                     if (this.image != null) {
                       addService(this.image!.path, service!);
@@ -269,21 +277,21 @@ class _TrophySellerRegisterState extends State<TrophySellerRegister> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      dynamic id = await apiCall.addServiceData(filePath, service);
+      ServiceModel serviceModel =
+          await apiCall.addServiceData(filePath, service);
       setState(() {
         isLoading = false;
       });
-      if (id == null) {
-        print("null");
-        Utility.showToast("Failed");
-      } else {
-        print("Success $id");
+      if (serviceModel.status!) {
         Utility.showToast("Service Created Successfully");
         // Navigator.pop(context);
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => ServicePhotos(serviceDataId: id)));
+                builder: (context) =>
+                    ServicePhotos(serviceDataId: serviceModel.service!.id)));
+      } else {
+        Utility.showValidationToast("Something Went Wrong");
       }
     }
   }

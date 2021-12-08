@@ -102,31 +102,36 @@ class _EventScreenState extends State<EventScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
+      body: Container(
+        height: MediaQuery.of(context).size.height,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              decoration: kServiceBoxItem,
-              margin: EdgeInsets.all(10),
-              child: TextField(
-                onChanged: (value) {
-                  setState(() {
-                    searchString = value;
-                  });
-                },
-                controller: searchController,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: "Search",
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: kBaseColor,
+            Expanded(
+              flex: 1,
+              child: Container(
+                decoration: kServiceBoxItem,
+                margin: EdgeInsets.all(10),
+                child: TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      searchString = value;
+                    });
+                  },
+                  controller: searchController,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "Search",
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: kBaseColor,
+                    ),
                   ),
                 ),
               ),
             ),
-            myEvent(),
+            Expanded(flex: 8, child: myEvent()),
           ],
         ),
       ),
@@ -156,7 +161,7 @@ class _EventScreenState extends State<EventScreen> {
               );
             } else {
               return ListView.builder(
-                padding: EdgeInsets.only(bottom: 110),
+                padding: EdgeInsets.only(bottom: 20),
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 itemCount: snapshot.data.length,
@@ -262,14 +267,14 @@ class _EventScreenState extends State<EventScreen> {
                         fontSize: 16.0,
                         fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 10.0),
-                  Text(
-                    event.address,
-                    style: TextStyle(
-                      color: Colors.grey.shade900,
-                      fontSize: 12.0,
-                    ),
-                  ),
+                  // SizedBox(height: 10.0),
+                  // Text(
+                  //   event.address,
+                  //   style: TextStyle(
+                  //     color: Colors.grey.shade900,
+                  //     fontSize: 12.0,
+                  //   ),
+                  // ),
                   SizedBox(height: 5.0),
                   Text(
                     "Start Date: ${event.startDate}",

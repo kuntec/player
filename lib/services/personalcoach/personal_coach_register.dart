@@ -209,6 +209,12 @@ class _PersonalCoachRegisterState extends State<PersonalCoachRegister> {
                       return;
                     }
 
+                    if (Utility.checkValidation(contactCtrl.text.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Primary Contact Number");
+                      return;
+                    }
+
                     if (Utility.checkValidation(addressCtrl.text.toString())) {
                       Utility.showValidationToast("Please Enter Address");
                       return;
@@ -222,12 +228,6 @@ class _PersonalCoachRegisterState extends State<PersonalCoachRegister> {
                     if (Utility.checkValidation(
                         experienceCtrl.text.toString())) {
                       Utility.showValidationToast("Please Enter Experience");
-                      return;
-                    }
-
-                    if (Utility.checkValidation(contactCtrl.text.toString())) {
-                      Utility.showValidationToast(
-                          "Please Enter Primary Contact Number");
                       return;
                     }
 
@@ -278,17 +278,17 @@ class _PersonalCoachRegisterState extends State<PersonalCoachRegister> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      dynamic status = await apiCall.addServiceData(filePath, service);
+      ServiceModel serviceModel =
+          await apiCall.addServiceData(filePath, service);
       setState(() {
         isLoading = false;
       });
-      if (status == null) {
-        print("null");
-        Utility.showToast("Failed");
-      } else {
+      if (serviceModel.status!) {
         print("Success");
         Utility.showToast("Service Created Successfully");
         Navigator.pop(context);
+      } else {
+        Utility.showValidationToast("Something Went Wrong");
       }
     }
   }

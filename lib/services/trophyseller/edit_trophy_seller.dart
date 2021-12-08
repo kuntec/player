@@ -44,11 +44,21 @@ class _EditTrophySellerState extends State<EditTrophySeller> {
     } else {
       secondaryContactCtrl.text = widget.service.secondaryNo;
     }
-
     addressCtrl.text = widget.service.address;
-    addressLinkCtrl.text = widget.service.locationLink;
+
+    if (widget.service.locationLink == null) {
+      addressLinkCtrl.text = "";
+    } else {
+      addressLinkCtrl.text = widget.service.locationLink;
+    }
+
     cityCtrl.text = widget.service.city;
-    detailsCtrl.text = widget.service.about;
+
+    if (widget.service.about == null) {
+      detailsCtrl.text = "";
+    } else {
+      detailsCtrl.text = widget.service.about;
+    }
   }
 
   @override
@@ -276,14 +286,14 @@ class _EditTrophySellerState extends State<EditTrophySeller> {
                     service!.locationId = locationId!.toString();
                     service!.playerId = playerId!.toString();
                     service!.serviceId = widget.service.serviceId.toString();
-                    service!.name = companyCtrl.text;
-                    service!.address = addressCtrl.text;
-                    service!.city = cityCtrl.text;
-                    service!.contactName = ownerNameCtrl.text;
-                    service!.contactNo = contactCtrl.text;
-                    service!.secondaryNo = secondaryContactCtrl.text;
-                    service!.about = detailsCtrl.text;
-                    service!.locationLink = addressLinkCtrl.text;
+                    service!.name = companyCtrl.text.toString();
+                    service!.address = addressCtrl.text.toString();
+                    service!.city = cityCtrl.text.toString();
+                    service!.contactName = ownerNameCtrl.text.toString();
+                    service!.contactNo = contactCtrl.text.toString();
+                    service!.secondaryNo = secondaryContactCtrl.text.toString();
+                    service!.about = detailsCtrl.text.toString();
+                    service!.locationLink = addressLinkCtrl.text.toString();
                     service!.monthlyFees = "";
                     service!.coaches = "";
                     service!.feesPerMatch = "";
@@ -291,7 +301,7 @@ class _EditTrophySellerState extends State<EditTrophySeller> {
                     service!.experience = "";
                     service!.sportName = "";
                     service!.sportId = "";
-                    service!.companyName = companyCtrl.text;
+                    service!.companyName = companyCtrl.text.toString();
                     updateService(service!);
                   },
                 ),
@@ -307,17 +317,15 @@ class _EditTrophySellerState extends State<EditTrophySeller> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      dynamic id = await apiCall.updateServiceData(service);
+      ServiceModel serviceModel = await apiCall.updateServiceData(service);
       setState(() {
         isLoading = false;
       });
-      if (id == null) {
-        print("null");
-        Utility.showToast("Failed");
-      } else {
-        print("Success $id");
+      if (serviceModel.status!) {
         Utility.showToast("Service Updated Successfully");
         Navigator.pop(context, true);
+      } else {
+        Utility.showValidationToast("Something Went Wrong");
       }
     }
   }

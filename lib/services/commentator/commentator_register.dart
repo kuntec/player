@@ -266,17 +266,17 @@ class _CommentatorRegisterState extends State<CommentatorRegister> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      dynamic id = await apiCall.addServiceData(filePath, service);
+      ServiceModel serviceModel =
+          await apiCall.addServiceData(filePath, service);
       setState(() {
         isLoading = false;
       });
-      if (id == null) {
-        print("null");
-        Utility.showToast("Failed");
-      } else {
+      if (serviceModel.status!) {
         print("Success");
         Utility.showToast("Commentator Created Successfully");
         Navigator.pop(context);
+      } else {
+        Utility.showValidationToast("Something Went Wrong");
       }
     }
   }

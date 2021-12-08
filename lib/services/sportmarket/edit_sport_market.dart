@@ -54,12 +54,27 @@ class _EditSportMarketState extends State<EditSportMarket> {
     nameCtrl.text = widget.service.name;
     ownerNameCtrl.text = widget.service.contactName;
     contactCtrl.text = widget.service.contactNo;
-    secondaryContactCtrl.text = widget.service.secondaryNo;
+    if (widget.service.secondaryNo == null) {
+      secondaryContactCtrl.text = "";
+    } else {
+      secondaryContactCtrl.text = widget.service.secondaryNo;
+    }
 
     addressCtrl.text = widget.service.address;
-    addressLinkCtrl.text = widget.service.locationLink;
+
+    if (widget.service.locationLink == null) {
+      addressLinkCtrl.text = "";
+    } else {
+      addressLinkCtrl.text = widget.service.locationLink;
+    }
+
     cityCtrl.text = widget.service.city;
-    detailsCtrl.text = widget.service.about;
+
+    if (widget.service.about == null) {
+      detailsCtrl.text = "";
+    } else {
+      detailsCtrl.text = widget.service.about;
+    }
   }
 
   @override
@@ -240,7 +255,13 @@ class _EditSportMarketState extends State<EditSportMarket> {
                   minWidth: 150,
                   onPressed: () async {
                     if (Utility.checkValidation(nameCtrl.text.toString())) {
-                      Utility.showValidationToast("Please Enter Company Name");
+                      Utility.showValidationToast("Please Enter Shop Name");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        ownerNameCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Owner Name");
                       return;
                     }
 
@@ -260,13 +281,6 @@ class _EditSportMarketState extends State<EditSportMarket> {
                       return;
                     }
 
-                    if (Utility.checkValidation(
-                        ownerNameCtrl.text.toString())) {
-                      Utility.showValidationToast(
-                          "Please Enter Fees Per Match");
-                      return;
-                    }
-
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     var playerId = prefs.get("playerId");
@@ -276,14 +290,14 @@ class _EditSportMarketState extends State<EditSportMarket> {
                     service!.locationId = locationId!.toString();
                     service!.playerId = playerId!.toString();
                     service!.serviceId = widget.service.serviceId.toString();
-                    service!.name = nameCtrl.text;
-                    service!.address = addressCtrl.text;
-                    service!.city = cityCtrl.text;
-                    service!.contactName = ownerNameCtrl.text;
-                    service!.contactNo = contactCtrl.text;
-                    service!.secondaryNo = secondaryContactCtrl.text;
-                    service!.about = detailsCtrl.text;
-                    service!.locationLink = addressLinkCtrl.text;
+                    service!.name = nameCtrl.text.toString();
+                    service!.address = addressCtrl.text.toString();
+                    service!.city = cityCtrl.text.toString();
+                    service!.contactName = ownerNameCtrl.text.toString();
+                    service!.contactNo = contactCtrl.text.toString();
+                    service!.secondaryNo = secondaryContactCtrl.text.toString();
+                    service!.about = detailsCtrl.text.toString();
+                    service!.locationLink = addressLinkCtrl.text.toString();
                     service!.monthlyFees = "";
                     service!.coaches = "";
                     service!.feesPerMatch = "";
@@ -307,17 +321,15 @@ class _EditSportMarketState extends State<EditSportMarket> {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
-      dynamic id = await apiCall.updateServiceData(service);
+      ServiceModel serviceModel = await apiCall.updateServiceData(service);
       setState(() {
         isLoading = false;
       });
-      if (id == null) {
-        print("null");
-        Utility.showToast("Failed");
-      } else {
-        print("Success $id");
+      if (serviceModel.status!) {
         Utility.showToast("Service Updated Successfully");
         Navigator.pop(context, true);
+      } else {
+        Utility.showValidationToast("Something Went Wrong");
       }
     }
   }

@@ -42,7 +42,12 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with AutomaticKeepAliveClientMixin<HomeScreen> {
+  bool keepAlive = false;
+
+  @override
+  bool get wantKeepAlive => true;
   List<Sports> sports = [];
   List<Data> allSports = [];
   List<Banners> banners = [];
@@ -56,6 +61,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   late HomeProvider homeProvider;
 //  late String currentUserId;
+
+  Future disposePageAfter(int time) async {
+    keepAlive = true;
+    updateKeepAlive();
+    await Future.delayed(Duration(seconds: time));
+    keepAlive = false;
+    updateKeepAlive();
+  }
 
   @override
   void initState() {
@@ -72,7 +85,13 @@ class _HomeScreenState extends State<HomeScreen> {
     getSports();
     getMyCity();
     getConversations();
+
+    disposePageAfter(20);
   }
+
+  // _refresh() {
+  //   setState(() {});
+  // }
 
   Future<List<Conversation>> getConversations() async {
     APICall apiCall = new APICall();
@@ -196,7 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 : Badge(
                     position: BadgePosition.topStart(top: 5, start: 15),
                     badgeContent: Text(
-                      '${_notificationCount}',
+                      '$_notificationCount',
                       style: TextStyle(color: Colors.white),
                     ),
                     child: Icon(
@@ -282,10 +301,6 @@ class _HomeScreenState extends State<HomeScreen> {
         fit: BoxFit.cover,
       ),
     );
-  }
-
-  _refresh() {
-    setState(() {});
   }
 
   Widget hostActivity() {
@@ -605,16 +620,28 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontSize: 12.0,
                     ),
                   ),
+                  activity.ballType != null
+                      ? SizedBox(height: 5.0)
+                      : SizedBox.shrink(),
+                  activity.ballType != null
+                      ? Text(
+                          "Ball Type: ${activity.ballType}",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 12.0,
+                          ),
+                        )
+                      : SizedBox.shrink(),
                   SizedBox(height: 5.0),
-                  Text(
-                    activity.ballType != null
-                        ? "Ball Type: ${activity.ballType} "
-                        : "",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12.0,
-                    ),
-                  ),
+                  activity.roleOfPlayer != null
+                      ? Text(
+                          "Role of Player: ${activity.roleOfPlayer}",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 12.0,
+                          ),
+                        )
+                      : SizedBox.shrink(),
                   SizedBox(height: 5.0),
                 ],
               ),
