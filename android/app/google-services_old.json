@@ -14,22 +14,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "540013542337-8ifv5t524ti214l5lchhfudgls3dc14v.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.player.player",
-            "certificate_hash": "ab9b7e5a8d3cdb46aede681bef5dd0039365921b"
-          }
-        },
-        {
-          "client_id": "540013542337-bigbkjeta9lhi4cv0a1pnq5e6h6ohbkk.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.player.player",
-            "certificate_hash": "eba972ae57dec657ffdd6f7c18d42ba54b747d55"
-          }
-        },
-        {
           "client_id": "540013542337-m3aau853bj6i7cm2r0co0l2v72sbhj69.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -53,13 +37,6 @@
             {
               "client_id": "540013542337-q98usdefp5penredgnvakge8lugcdsps.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "540013542337-m140sqqbfe47f5l725qrconsm42cld0e.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.player.player"
-              }
             }
           ]
         }

@@ -140,7 +140,7 @@ class _TrophySellerRegisterState extends State<TrophySellerRegister> {
             keyboardType: TextInputType.phone,
             controller: secondaryContactCtrl,
             decoration: InputDecoration(
-                labelText: "Secondary Number (optinal)",
+                labelText: "Secondary Number (optional)",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),

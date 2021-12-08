@@ -131,7 +131,7 @@ class _EventScreenState extends State<EventScreen> {
                 ),
               ),
             ),
-            Expanded(flex: 8, child: myEvent()),
+            Expanded(flex: 9, child: myEvent()),
           ],
         ),
       ),
@@ -278,6 +278,14 @@ class _EventScreenState extends State<EventScreen> {
                   SizedBox(height: 5.0),
                   Text(
                     "Start Date: ${event.startDate}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Time: ${event.startTime} - ${event.endTime}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 12.0,

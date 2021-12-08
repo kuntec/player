@@ -263,6 +263,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       textFieldAlignment: MainAxisAlignment.spaceAround,
                       fieldStyle: FieldStyle.underline,
                       obscureText: true,
+                      onChanged: (pin) {},
                       onCompleted: (pin) {
                         print("Completed: " + pin);
                         otpController.text = pin;

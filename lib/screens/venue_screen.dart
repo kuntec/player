@@ -441,6 +441,15 @@ class _VenueScreenState extends State<VenueScreen>
                   ),
                   SizedBox(height: 5.0),
                   Text(
+                    "Hours: ${venue.openTime} to ${venue.closeTime}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+
+                  SizedBox(height: 5.0),
+                  Text(
                     "Address: ${venue.address}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
@@ -448,21 +457,13 @@ class _VenueScreenState extends State<VenueScreen>
                     ),
                   ),
                   SizedBox(height: 5.0),
-                  Text(
-                    "Hours: ${venue.openTime} to ${venue.closeTime}",
-                    style: TextStyle(
-                      color: Colors.grey.shade900,
-                      fontSize: 12.0,
-                    ),
-                  ),
-                  SizedBox(height: 5.0),
-                  Text(
-                    "Phone: ${venue.openTime}",
-                    style: TextStyle(
-                      color: Colors.grey.shade900,
-                      fontSize: 12.0,
-                    ),
-                  ),
+                  // Text(
+                  //   "Phone: ${venue.openTime}",
+                  //   style: TextStyle(
+                  //     color: Colors.grey.shade900,
+                  //     fontSize: 12.0,
+                  //   ),
+                  // ),
                   SizedBox(height: 5.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,

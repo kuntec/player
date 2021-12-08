@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:player/constant/constants.dart';
 
 class OfferScreen extends StatefulWidget {
   const OfferScreen({Key? key}) : super(key: key);
@@ -14,7 +15,25 @@ class _OfferScreenState extends State<OfferScreen> {
       appBar: AppBar(
         title: Text("Offer"),
       ),
-      body: Container(),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              //decoration: kServiceBoxItem,
+              child: Text(
+                "Currently no offer is available",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 34,
+                    color: kBaseColor,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

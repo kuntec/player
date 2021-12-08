@@ -34,6 +34,7 @@ import 'package:player/screens/offer_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -89,6 +90,23 @@ class _HomeScreenState extends State<HomeScreen>
     disposePageAfter(20);
   }
 
+  // void initTarget() {
+  //   targets.add(
+  //     TargetFocus(
+  //       identify: "Target 0",
+  //       keyTarget: key1,
+  //       contents: [
+  //         TargetContent(
+  //           child: Container(
+  //             child: Column(
+  //               children: [Text("This is chat message")],
+  //             ),
+  //           ),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
   // _refresh() {
   //   setState(() {});
   // }
@@ -105,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen>
       if (conversationData.conversation != null) {
         conversations = conversationData.conversation!;
         conversations = conversations.reversed.toList();
-
+        _notificationCount = 0;
         for (Conversation c in conversations) {
           for (Reply r in c.reply!) {
             if (r.status == "0" &&

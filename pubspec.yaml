@@ -56,6 +56,7 @@ dependencies:
   badges: ^2.0.1
   getwidget: ^2.0.4
   url_launcher:
+  tutorial_coach_mark: ^1.2.0
 
 
 #  geolocator: ^7.7.1

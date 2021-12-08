@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:player/constant/constants.dart';
 
 class ItemRental extends StatefulWidget {
   dynamic serviceId;
@@ -24,7 +25,24 @@ class _ItemRentalState extends State<ItemRental> {
         ),
         title: Text("Item Rental"),
       ),
-      body: SingleChildScrollView(),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              //decoration: kServiceBoxItem,
+              child: Text(
+                "Coming Soon",
+                style: TextStyle(
+                    fontSize: 34,
+                    color: kBaseColor,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

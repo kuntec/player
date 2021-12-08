@@ -105,7 +105,11 @@ class _MyTrophySellerState extends State<MyTrophySeller> {
   Widget serviceItem(dynamic service) {
     return GestureDetector(
       onTap: () {
-        Utility.showToast(service.name.toString());
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    ServicePhotos(serviceDataId: service.id)));
       },
       child: Container(
         margin: EdgeInsets.only(bottom: 10.0),
