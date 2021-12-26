@@ -235,7 +235,7 @@ class _LoginScreenState extends State<LoginScreen> {
               margin: EdgeInsets.only(left: 20.0, right: 20.0),
               child: Center(
                 child: Text(
-                  "Enter the OTP sent to ${phoneNumber}",
+                  "Enter the OTP sent to $phoneNumber",
                   style: const TextStyle(
                     color: Colors.grey,
                     fontFamily: "Roboto",
@@ -517,9 +517,13 @@ class _LoginScreenState extends State<LoginScreen> {
         // print("Sport select $sportSelect");
         if (sportSelect != null) {
           if (sportSelect!) {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => MainNavigation()));
           } else {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MainNavigation(
+                          selectedIndex: 0,
+                        )));
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
@@ -562,7 +566,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (playerId != null) {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => MainNavigation()));
+          context,
+          MaterialPageRoute(
+              builder: (_) => MainNavigation(
+                    selectedIndex: 0,
+                  )));
     }
   }
 

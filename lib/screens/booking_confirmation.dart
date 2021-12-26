@@ -93,7 +93,10 @@ class _BookingConfirmationState extends State<BookingConfirmation> {
       onTap: () {
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => MainNavigation()),
+            MaterialPageRoute(
+                builder: (context) => MainNavigation(
+                      selectedIndex: 0,
+                    )),
             (route) => false);
       },
       child: Container(

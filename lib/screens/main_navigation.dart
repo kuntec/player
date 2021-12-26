@@ -8,7 +8,8 @@ import 'package:player/screens/tournament_screen.dart';
 import 'package:player/screens/venue_screen.dart';
 
 class MainNavigation extends StatefulWidget {
-  const MainNavigation({Key? key}) : super(key: key);
+  dynamic selectedIndex;
+  MainNavigation({required this.selectedIndex});
 
   @override
   _MainNavigationState createState() => _MainNavigationState();
@@ -19,7 +20,7 @@ class _MainNavigationState extends State<MainNavigation> {
   late List<Widget> _pages;
   late PageController _pageController;
 
-  int selectedIndex = 0;
+//  int selectedIndex = 0;
   final screens = [
     HomeScreen(),
     TournamentScreen(),
@@ -32,7 +33,7 @@ class _MainNavigationState extends State<MainNavigation> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _selectedPageIndex = 0;
+    _selectedPageIndex = widget.selectedIndex;
     _pages = [
       HomeScreen(),
       TournamentScreen(),
@@ -40,7 +41,6 @@ class _MainNavigationState extends State<MainNavigation> {
       ServiceScreen(),
       PlayerProfile()
     ];
-
     _pageController = PageController(initialPage: _selectedPageIndex);
   }
 
@@ -66,10 +66,10 @@ class _MainNavigationState extends State<MainNavigation> {
         showSelectedLabels: false,
         showUnselectedLabels: false,
         selectedItemColor: kBaseColor,
-        currentIndex: selectedIndex,
+        currentIndex: widget.selectedIndex,
         onTap: (index) {
           setState(() {
-            selectedIndex = index;
+            widget.selectedIndex = index;
             _selectedPageIndex = index;
             _pageController.jumpToPage(_selectedPageIndex);
           });
@@ -80,7 +80,8 @@ class _MainNavigationState extends State<MainNavigation> {
               height: 20,
               width: 20,
               child: SvgPicture.asset("assets/images/home.svg",
-                  color: selectedIndex == 0 ? kBaseColor : Colors.black87),
+                  color:
+                      widget.selectedIndex == 0 ? kBaseColor : Colors.black87),
             ),
             label: "Home",
           ),
@@ -89,7 +90,8 @@ class _MainNavigationState extends State<MainNavigation> {
               height: 20,
               width: 20,
               child: SvgPicture.asset("assets/images/tournament.svg",
-                  color: selectedIndex == 1 ? kBaseColor : Colors.black87),
+                  color:
+                      widget.selectedIndex == 1 ? kBaseColor : Colors.black87),
             ),
             label: "Tournament",
           ),
@@ -98,7 +100,9 @@ class _MainNavigationState extends State<MainNavigation> {
                 height: 20,
                 width: 20,
                 child: SvgPicture.asset("assets/images/ground.svg",
-                    color: selectedIndex == 2 ? kBaseColor : Colors.black87),
+                    color: widget.selectedIndex == 2
+                        ? kBaseColor
+                        : Colors.black87),
               ),
               label: "Venue"),
           BottomNavigationBarItem(
@@ -106,7 +110,9 @@ class _MainNavigationState extends State<MainNavigation> {
                 height: 20,
                 width: 20,
                 child: SvgPicture.asset("assets/images/service.svg",
-                    color: selectedIndex == 3 ? kBaseColor : Colors.black87),
+                    color: widget.selectedIndex == 3
+                        ? kBaseColor
+                        : Colors.black87),
               ),
               label: "Service"),
           BottomNavigationBarItem(
@@ -114,7 +120,9 @@ class _MainNavigationState extends State<MainNavigation> {
                 height: 20,
                 width: 20,
                 child: SvgPicture.asset("assets/images/profile.svg",
-                    color: selectedIndex == 4 ? kBaseColor : Colors.black87),
+                    color: widget.selectedIndex == 4
+                        ? kBaseColor
+                        : Colors.black87),
               ),
               label: "Profile"),
         ],

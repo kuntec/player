@@ -308,6 +308,13 @@ class _PlayerProfileState extends State<PlayerProfile>
               ],
             ),
           ),
+          Container(
+            child: Text("Incubated at"),
+          ),
+          Container(
+              height: 40,
+              width: 100,
+              child: Image.asset("assets/images/gusec.png")),
           GestureDetector(
             onTap: () {
               logout(context);
@@ -529,7 +536,7 @@ class _PlayerProfileState extends State<PlayerProfile>
                       ImageSource.gallery, playerId.toString());
 
                   if (!Utility.checkValidation(url)) {
-                    Utility.showToast(url);
+                    // Utility.showToast(url);
                     setState(() {
                       player!.image = url;
                     });

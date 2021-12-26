@@ -137,7 +137,11 @@ class _ChooseSportState extends State<ChooseSport> {
 
   goToHome() {
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (_) => MainNavigation()));
+        context,
+        MaterialPageRoute(
+            builder: (_) => MainNavigation(
+                  selectedIndex: 0,
+                )));
   }
 
   Future<List<Data>> getSports() async {

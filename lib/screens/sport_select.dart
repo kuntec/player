@@ -127,7 +127,11 @@ class _SportSelectState extends State<SportSelect> {
 
   goToHome() {
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (_) => MainNavigation()));
+        context,
+        MaterialPageRoute(
+            builder: (_) => MainNavigation(
+                  selectedIndex: 0,
+                )));
   }
 
   Future<List<Data>> getSports() async {
@@ -254,7 +258,11 @@ class _SportSelectState extends State<SportSelect> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setBool("sportSelection", true);
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => MainNavigation()));
+            context,
+            MaterialPageRoute(
+                builder: (context) => MainNavigation(
+                      selectedIndex: 0,
+                    )));
       }
 
       // PlayerData playerData =

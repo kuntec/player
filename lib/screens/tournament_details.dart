@@ -63,14 +63,17 @@ class _TournamentDetailsState extends State<TournamentDetails> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                height: 150.0,
-                width: MediaQuery.of(context).size.width,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0),
-                  child: Image.network(
-                    APIResources.IMAGE_URL + widget.tournament.image,
-                    fit: BoxFit.cover,
+              Center(
+                child: Container(
+                  height: 200.0,
+                  width: 200,
+                  // width: MediaQuery.of(context).size.width,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: Image.network(
+                      APIResources.IMAGE_URL + widget.tournament.image,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),

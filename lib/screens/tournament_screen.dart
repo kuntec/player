@@ -57,46 +57,54 @@ class _TournamentScreenState extends State<TournamentScreen>
     );
   }
 
+  Future<void> _refreshTournaments(BuildContext context) async {
+    setState(() {});
+  }
+
   Widget allTournaments() {
     return Container(
       height: 700,
       padding: EdgeInsets.all(10.0),
-      child: FutureBuilder(
-        future: getTournaments(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.data == null) {
-            return Center(
-              child: Container(
-                  child: CircularProgressIndicator(color: kBaseColor)),
-            );
-          }
-          if (snapshot.hasData) {
-            print("Has Data ${snapshot.data.length}");
-            if (snapshot.data.length == 0) {
+      child: RefreshIndicator(
+        onRefresh: () => _refreshTournaments(context),
+        color: kBaseColor,
+        child: FutureBuilder(
+          future: getTournaments(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.data == null) {
+              return Center(
+                child: Container(
+                    child: CircularProgressIndicator(color: kBaseColor)),
+              );
+            }
+            if (snapshot.hasData) {
+              print("Has Data ${snapshot.data.length}");
+              if (snapshot.data.length == 0) {
+                return Container(
+                  child: Center(
+                    child: Text('No Data'),
+                  ),
+                );
+              } else {
+                return ListView.builder(
+                  padding: EdgeInsets.only(bottom: 20),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return tournamentItem2(snapshot.data[index]);
+                  },
+                );
+              }
+            } else {
               return Container(
                 child: Center(
                   child: Text('No Data'),
                 ),
               );
-            } else {
-              return ListView.builder(
-                padding: EdgeInsets.only(bottom: 20),
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: snapshot.data.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return tournamentItem2(snapshot.data[index]);
-                },
-              );
             }
-          } else {
-            return Container(
-              child: Center(
-                child: Text('No Data'),
-              ),
-            );
-          }
-        },
+          },
+        ),
       ),
     );
   }

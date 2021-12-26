@@ -29,6 +29,7 @@ import 'package:player/screens/add_tournament.dart';
 import 'package:player/screens/booking_confirmation.dart';
 import 'package:player/screens/choose_sport.dart';
 import 'package:player/screens/location_select.dart';
+import 'package:player/screens/main_navigation.dart';
 import 'package:player/screens/notification_screen.dart';
 import 'package:player/screens/offer_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -399,9 +400,19 @@ class _HomeScreenState extends State<HomeScreen>
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => FriendScreen()));
           }, false, ""),
-          iconCard(Container(), "Host Tournament", 3, tournamentEndColor, () {
-            Navigator.push(context,
+          iconCard(Container(), "Host Tournament", 3, tournamentEndColor,
+              () async {
+            var result = await Navigator.push(context,
                 MaterialPageRoute(builder: (context) => AddTournament()));
+            //do something here. Go to Tournament from here.
+            Utility.showToast("Returning from Tournament");
+            //Navigator.pop(context);
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => MainNavigation(
+                          selectedIndex: 1,
+                        )));
           }, true, "tournament.svg"),
           iconCard(
               Icon(
@@ -661,6 +672,18 @@ class _HomeScreenState extends State<HomeScreen>
                         )
                       : SizedBox.shrink(),
                   SizedBox(height: 5.0),
+                  Container(
+                    margin: EdgeInsets.only(right: 7, bottom: 2),
+                    alignment: Alignment.bottomRight,
+                    child: Text(
+                      "Tap To Chat",
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 10.0,
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
