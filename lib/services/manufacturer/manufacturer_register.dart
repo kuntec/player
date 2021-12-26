@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+
 import 'package:player/api/api_call.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
@@ -10,6 +11,10 @@ import 'package:player/model/service_model.dart';
 import 'package:player/services/service_photos.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:player/model/sport_data.dart';
+import 'package:path/path.dart' as p;
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ManufacturerRegister extends StatefulWidget {
   dynamic serviceId;
@@ -119,13 +124,33 @@ class _ManufacturerRegisterState extends State<ManufacturerRegister> {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
       if (image == null) return;
 
-      final imageTemporary = File(image.path);
+      var file = await ImageCropper.cropImage(
+          sourcePath: image.path,
+          aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1));
+
+      if (file == null) return;
+
+      file = await compressImage(file.path, 35);
+
+      final imageTemporary = File(file.path);
       setState(() {
         this.image = imageTemporary;
       });
     } on PlatformException catch (e) {
       print("Failed to pick image : $e");
     }
+  }
+
+  Future<File> compressImage(String path, int quality) async {
+    final newPath = p.join((await getTemporaryDirectory()).path,
+        '${DateTime.now()}.${p.extension(path)}');
+
+    final result = await FlutterImageCompress.compressAndGetFile(
+      path,
+      newPath,
+      quality: quality,
+    );
+    return result!;
   }
 
   Widget addServiceForm() {

@@ -9,6 +9,10 @@ import 'package:player/constant/utility.dart';
 import 'package:player/model/service_model.dart';
 import 'package:player/model/sport_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path/path.dart' as p;
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:path_provider/path_provider.dart';
 
 class UmpireRegister extends StatefulWidget {
   dynamic serviceId;
@@ -69,13 +73,33 @@ class _UmpireRegisterState extends State<UmpireRegister> {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
       if (image == null) return;
 
-      final imageTemporary = File(image.path);
+      var file = await ImageCropper.cropImage(
+          sourcePath: image.path,
+          aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1));
+
+      if (file == null) return;
+
+      file = await compressImage(file.path, 35);
+
+      final imageTemporary = File(file.path);
       setState(() {
         this.image = imageTemporary;
       });
     } on PlatformException catch (e) {
       print("Failed to pick image : $e");
     }
+  }
+
+  Future<File> compressImage(String path, int quality) async {
+    final newPath = p.join((await getTemporaryDirectory()).path,
+        '${DateTime.now()}.${p.extension(path)}');
+
+    final result = await FlutterImageCompress.compressAndGetFile(
+      path,
+      newPath,
+      quality: quality,
+    );
+    return result!;
   }
 
   Widget addServiceForm() {
