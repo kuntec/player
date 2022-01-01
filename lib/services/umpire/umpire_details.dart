@@ -45,6 +45,7 @@ class _UmpireDetailState extends State<UmpireDetail> {
                   widget.service.feesPerDay.toString()),
               itemDetail(context, "Umpiring Experience",
                   widget.service.experience.toString()),
+              itemHelp(context),
             ],
           ),
         ),

@@ -46,6 +46,7 @@ class _PersonalCoachDetailState extends State<PersonalCoachDetail> {
                   ? SizedBox.shrink()
                   : itemDetail(context, "Additional Details",
                       widget.service.about.toString()),
+              itemHelp(context),
             ],
           ),
         ),

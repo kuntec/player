@@ -517,13 +517,13 @@ class _LoginScreenState extends State<LoginScreen> {
         // print("Sport select $sportSelect");
         if (sportSelect != null) {
           if (sportSelect!) {
-          } else {
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => MainNavigation(
+                    builder: (_) => MainNavigation(
                           selectedIndex: 0,
                         )));
+          } else {
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(

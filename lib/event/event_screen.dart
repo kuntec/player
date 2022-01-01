@@ -56,6 +56,10 @@ class _EventScreenState extends State<EventScreen> {
     setState(() {});
   }
 
+  Future<void> _refreshEvent(BuildContext context) async {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -141,53 +145,57 @@ class _EventScreenState extends State<EventScreen> {
   Widget myEvent() {
     return Container(
       height: 700,
-      child: FutureBuilder(
-        future: getEvents(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.data == null) {
-            return Container(
-              child: Center(
-                child: Text('Loading....'),
-              ),
-            );
-          }
-          if (snapshot.hasData) {
-            print("Has Data ${snapshot.data.length}");
-            if (snapshot.data.length == 0) {
+      child: RefreshIndicator(
+        onRefresh: () => _refreshEvent(context),
+        color: kBaseColor,
+        child: FutureBuilder(
+          future: getEvents(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.data == null) {
               return Container(
                 child: Center(
-                  child: Text('No Events'),
+                  child: Text('Loading....'),
                 ),
               );
+            }
+            if (snapshot.hasData) {
+              print("Has Data ${snapshot.data.length}");
+              if (snapshot.data.length == 0) {
+                return Container(
+                  child: Center(
+                    child: Text('No Events'),
+                  ),
+                );
+              } else {
+                return ListView.builder(
+                  padding: EdgeInsets.only(bottom: 20),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    // return eventItem(snapshot.data[index]);
+                    return snapshot.data[index].name
+                                .toString()
+                                .toLowerCase()
+                                .contains(searchString) ||
+                            snapshot.data[index].address
+                                .toString()
+                                .toLowerCase()
+                                .contains(searchString)
+                        ? eventItem(snapshot.data[index])
+                        : SizedBox.shrink();
+                  },
+                );
+              }
             } else {
-              return ListView.builder(
-                padding: EdgeInsets.only(bottom: 20),
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: snapshot.data.length,
-                itemBuilder: (BuildContext context, int index) {
-                  // return eventItem(snapshot.data[index]);
-                  return snapshot.data[index].name
-                              .toString()
-                              .toLowerCase()
-                              .contains(searchString) ||
-                          snapshot.data[index].address
-                              .toString()
-                              .toLowerCase()
-                              .contains(searchString)
-                      ? eventItem(snapshot.data[index])
-                      : SizedBox.shrink();
-                },
+              return Container(
+                child: Center(
+                  child: Text('No Data'),
+                ),
               );
             }
-          } else {
-            return Container(
-              child: Center(
-                child: Text('No Data'),
-              ),
-            );
-          }
-        },
+          },
+        ),
       ),
     );
   }

@@ -45,6 +45,7 @@ class _ScorerDetailState extends State<ScorerDetail> {
                   widget.service.feesPerDay.toString()),
               itemDetail(context, "Scoring Experience",
                   widget.service.experience.toString()),
+              itemHelp(context),
             ],
           ),
         ),

@@ -197,6 +197,10 @@ class _HomeScreenState extends State<HomeScreen>
   //   });
   // }
 
+  Future<void> _refreshActivities(BuildContext context) async {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final bannerMdl = Provider.of<BannerModel>(context);
@@ -252,9 +256,20 @@ class _HomeScreenState extends State<HomeScreen>
                 MaterialPageRoute(
                     builder: (context) =>
                         LocationSelectScreen(player: player)));
-            // if (result) {
-            getMyCity();
-            // }
+            if (result == null) {
+//              Utility.showToast("No Refresh");
+            } else {
+              if (result) {
+//                Utility.showToast("Refresh");
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => MainNavigation(
+                              selectedIndex: 0,
+                            )));
+                //getMyCity();
+              }
+            }
           },
           child: Row(
             children: [
@@ -326,43 +341,47 @@ class _HomeScreenState extends State<HomeScreen>
     return Container(
       height: 300,
       padding: EdgeInsets.all(10.0),
-      child: FutureBuilder(
-        future: getHostActivity(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.data == null) {
-            return Center(
-              child: Container(
-                  child: CircularProgressIndicator(color: kBaseColor)),
-            );
-          }
-          if (snapshot.hasData) {
-            print("Has Data ${snapshot.data.length}");
-            if (snapshot.data.length == 0) {
+      child: RefreshIndicator(
+        onRefresh: () => _refreshActivities(context),
+        color: kBaseColor,
+        child: FutureBuilder(
+          future: getHostActivity(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.data == null) {
+              return Center(
+                child: Container(
+                    child: CircularProgressIndicator(color: kBaseColor)),
+              );
+            }
+            if (snapshot.hasData) {
+              print("Has Data ${snapshot.data.length}");
+              if (snapshot.data.length == 0) {
+                return Container(
+                  child: Center(
+                    child: Text('No Data'),
+                  ),
+                );
+              } else {
+                return ListView.builder(
+                  padding: EdgeInsets.only(bottom: 20),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: snapshot.data.length,
+                  //reverse: true,
+                  itemBuilder: (BuildContext context, int index) {
+                    return hostActivityItem2(snapshot.data[index]);
+                  },
+                );
+              }
+            } else {
               return Container(
                 child: Center(
                   child: Text('No Data'),
                 ),
               );
-            } else {
-              return ListView.builder(
-                padding: EdgeInsets.only(bottom: 20),
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: snapshot.data.length,
-                //reverse: true,
-                itemBuilder: (BuildContext context, int index) {
-                  return hostActivityItem2(snapshot.data[index]);
-                },
-              );
             }
-          } else {
-            return Container(
-              child: Center(
-                child: Text('No Data'),
-              ),
-            );
-          }
-        },
+          },
+        ),
       ),
     );
   }
@@ -405,7 +424,7 @@ class _HomeScreenState extends State<HomeScreen>
             var result = await Navigator.push(context,
                 MaterialPageRoute(builder: (context) => AddTournament()));
             //do something here. Go to Tournament from here.
-            Utility.showToast("Returning from Tournament");
+//            Utility.showToast("Returning from Tournament");
             //Navigator.pop(context);
             Navigator.pushReplacement(
                 context,

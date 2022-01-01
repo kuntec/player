@@ -67,36 +67,37 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
                 },
               ),
       ),
-      body: SingleChildScrollView(
+      body: Container(
+        height: MediaQuery.of(context).size.height,
         child: Container(
-          margin: EdgeInsets.all(10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
-                decoration: kServiceBoxItem,
-                child: TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      searchString = value;
-                    });
-                  },
-                  controller: searchController,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Search",
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: kBaseColor,
+              Expanded(
+                flex: 1,
+                child: Container(
+                  decoration: kServiceBoxItem,
+                  margin: EdgeInsets.all(10),
+                  child: TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        searchString = value;
+                      });
+                    },
+                    controller: searchController,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Search",
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: kBaseColor,
+                      ),
                     ),
                   ),
                 ),
               ),
-              // locations != null
-              //     ? buildLocationData(locations!)
-              //     : Container(child: Text("Loading...")),
-              SizedBox(height: k20Margin),
-              myLocations(),
+              Expanded(flex: 9, child: myLocations()),
             ],
           ),
         ),
@@ -107,6 +108,7 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
   Widget myLocations() {
     return Container(
       height: 700,
+      margin: EdgeInsets.all(10),
       child: FutureBuilder(
         future: getLocation(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {

@@ -20,9 +20,11 @@ import 'package:player/screens/contact_us.dart';
 import 'package:player/screens/login.dart';
 import 'package:get/get.dart';
 import 'package:player/services/servicewidgets/ServiceWidget.dart';
+import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:player/controller/ProfileController.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PlayerProfile extends StatefulWidget {
   const PlayerProfile({Key? key}) : super(key: key);
@@ -294,10 +296,13 @@ class _PlayerProfileState extends State<PlayerProfile>
                   );
                 }),
                 horizontalLine(),
-                profileItem(
-                    "assets/images/share.svg", "Share with Friends", () {}),
+                profileItem("assets/images/share.svg", "Share with Friends",
+                    () {
+                  Share.share(
+                      "https://play.google.com/store/apps/details?id=com.player.player");
+                }),
                 horizontalLine(),
-                profileItem("assets/images/share.svg", "Contact Us", () {
+                profileItem("assets/images/phone.svg", "Contact Us", () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -312,9 +317,25 @@ class _PlayerProfileState extends State<PlayerProfile>
             child: Text("Incubated at"),
           ),
           Container(
-              height: 40,
+              height: 50,
               width: 100,
+              margin: EdgeInsets.only(top: 10),
               child: Image.asset("assets/images/gusec.png")),
+          GestureDetector(
+            onTap: () {
+              Utility.showToast("msg");
+              launch("https://gusec.edu.in/");
+            },
+            child: Container(
+              child: Text(
+                "gusec.edu.in",
+                style: TextStyle(
+                    decoration: TextDecoration.underline,
+                    color: Colors.blue,
+                    fontSize: 16.0),
+              ),
+            ),
+          ),
           GestureDetector(
             onTap: () {
               logout(context);

@@ -45,6 +45,7 @@ class _HelperDetailState extends State<HelperDetail> {
                   ? SizedBox.shrink()
                   : itemDetail(context, "Additional Details",
                       widget.service.about.toString()),
+              itemHelp(context),
             ],
           ),
         ),

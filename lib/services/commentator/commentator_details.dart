@@ -45,6 +45,7 @@ class _CommentatorDetailState extends State<CommentatorDetail> {
                   widget.service.feesPerDay.toString()),
               itemDetail(context, "Commentary Experience",
                   widget.service.experience.toString()),
+              itemHelp(context),
             ],
           ),
         ),

@@ -122,6 +122,7 @@ class _TrophySellerDetailState extends State<TrophySellerDetail> {
           widget.service.about == null
               ? SizedBox.shrink()
               : itemDetail(context, "About", widget.service.about.toString()),
+          itemHelp(context),
         ],
       ),
     );

@@ -44,17 +44,20 @@ class _VenueDetailsState extends State<VenueDetails> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                decoration: kServiceBoxItem.copyWith(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-                height: 140.0,
-                width: MediaQuery.of(context).size.width,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0),
-                  child: Image.network(
-                    APIResources.IMAGE_URL + widget.venue.image,
-                    fit: BoxFit.cover,
+              Center(
+                child: Container(
+                  decoration: kServiceBoxItem.copyWith(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  height: 200.0,
+                  width: 200.0,
+//                width: MediaQuery.of(context).size.width,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: Image.network(
+                      APIResources.IMAGE_URL + widget.venue.image,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
@@ -154,6 +157,7 @@ class _VenueDetailsState extends State<VenueDetails> {
                   context, "Facilities", widget.venue.facilities.toString()),
           itemDetail(context, "Price",
               "\u{20B9} ${widget.venue.onwards.toString()} onwards"),
+          itemHelp(context),
           SizedBox(height: k20Margin),
           RoundedButton(
               title: "Proceed To Book",

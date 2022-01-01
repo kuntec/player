@@ -103,6 +103,7 @@ class _EventDetailsState extends State<EventDetails> {
               widget.event.details == null || widget.event.details == "null"
                   ? SizedBox.shrink()
                   : itemDetail(context, "Details", widget.event.details),
+              itemHelp(context),
               SizedBox(height: 100),
               // widget.event.status.toString() == "0"
               //     ? Container(

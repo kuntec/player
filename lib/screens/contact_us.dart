@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/constant/utility.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContactUs extends StatefulWidget {
   const ContactUs({Key? key}) : super(key: key);
@@ -51,13 +53,25 @@ class _ContactUsState extends State<ContactUs> {
             style: TextStyle(fontSize: 24.0, color: kBaseColor),
           ),
           SizedBox(height: 10),
-          CircleAvatar(
-            backgroundColor: Colors.blue,
-            radius: 35,
-            child: Icon(
-              Icons.mail_outline,
-              color: Colors.white,
-              size: 30,
+          GestureDetector(
+            onTap: () {
+              final Uri emailLaunchUri = Uri(
+                scheme: 'mailto',
+                path: 'playerindia.in@gmail.com',
+                query: encodeQueryParameters(<String, String>{}),
+              );
+
+              launch(emailLaunchUri.toString());
+              Utility.showToast("Mail");
+            },
+            child: CircleAvatar(
+              backgroundColor: Colors.blue,
+              radius: 35,
+              child: Icon(
+                Icons.mail_outline,
+                color: Colors.white,
+                size: 30,
+              ),
             ),
           ),
           Container(
@@ -76,13 +90,18 @@ class _ContactUsState extends State<ContactUs> {
             style: TextStyle(fontSize: 24.0, color: kBaseColor),
           ),
           SizedBox(height: 10),
-          CircleAvatar(
-            backgroundColor: Colors.blue,
-            radius: 35,
-            child: Icon(
-              Icons.phone,
-              color: Colors.white,
-              size: 30,
+          GestureDetector(
+            onTap: () {
+              Utility.launchCall("+917698199502");
+            },
+            child: CircleAvatar(
+              backgroundColor: Colors.blue,
+              radius: 35,
+              child: Icon(
+                Icons.phone,
+                color: Colors.white,
+                size: 30,
+              ),
             ),
           ),
           Container(
@@ -102,13 +121,18 @@ class _ContactUsState extends State<ContactUs> {
             style: TextStyle(fontSize: 24.0, color: kBaseColor),
           ),
           SizedBox(height: 10),
-          CircleAvatar(
-            backgroundColor: Colors.green,
-            radius: 35,
-            child: Icon(
-              Icons.chat_bubble,
-              color: Colors.white,
-              size: 30,
+          GestureDetector(
+            onTap: () {
+              launchWhatsapp(number: "+917698199502", message: "");
+            },
+            child: CircleAvatar(
+              backgroundColor: Colors.green,
+              radius: 35,
+              child: Icon(
+                Icons.chat_bubble,
+                color: Colors.white,
+                size: 30,
+              ),
             ),
           ),
           Container(
@@ -129,5 +153,17 @@ class _ContactUsState extends State<ContactUs> {
         ],
       ),
     );
+  }
+
+  String? encodeQueryParameters(Map<String, String> params) {
+    return params.entries
+        .map((e) =>
+            '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+        .join('&');
+  }
+
+  void launchWhatsapp({@required number, @required message}) async {
+    String url = "whatsapp://send?phone=$number&text=$message";
+    await canLaunch(url) ? launch(url) : print("Can't Open Whatsapp");
   }
 }

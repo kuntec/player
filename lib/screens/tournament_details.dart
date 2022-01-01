@@ -134,6 +134,7 @@ class _TournamentDetailsState extends State<TournamentDetails> {
                   ? SizedBox.shrink()
                   : itemDetail(context, "Other Information",
                       widget.tournament.otherInfo),
+              itemHelp(context),
               SizedBox(height: 50),
               // widget.tournament.status.toString() == "0"
               //     ? Container(

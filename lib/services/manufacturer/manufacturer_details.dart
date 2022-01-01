@@ -123,6 +123,7 @@ class _ManufacturerDetailsState extends State<ManufacturerDetails> {
               ? SizedBox.shrink()
               : itemDetail(
                   context, "About Academy", widget.service.about.toString()),
+          itemHelp(context),
         ],
       ),
     );

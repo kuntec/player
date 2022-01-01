@@ -287,7 +287,15 @@ class _AddVenueState extends State<AddVenue> {
                   ),
                   SizedBox(height: 5.0),
                   Text(
-                    "Phone: ${venue.openTime}",
+                    "Open Time: ${venue.openTime}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Close Time: ${venue.closeTime}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 12.0,

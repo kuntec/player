@@ -130,6 +130,56 @@ Widget itemCallDetail(BuildContext context, String title, String value) {
   );
 }
 
+Widget itemHelp(BuildContext context) {
+  return Center(
+    child: Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: kMargin),
+          Text(
+            "Having an Issue? Contact Us.",
+            style: TextStyle(color: kBaseColor, fontSize: 16.0),
+          ),
+          SizedBox(height: kMargin),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                )
+              ],
+            ),
+            padding: EdgeInsets.all(5.0),
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "+91 7698199502",
+                  style: TextStyle(color: Colors.black, fontSize: 16.0),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Utility.launchCall("+91 7698199502");
+                  },
+                  child: Icon(
+                    Icons.call,
+                    color: kBaseColor,
+                    size: 25.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 Widget posterImage(BuildContext context, String url) {
   return Container(
     decoration: kServiceBoxItem.copyWith(

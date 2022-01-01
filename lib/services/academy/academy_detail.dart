@@ -128,6 +128,7 @@ class _AcademyDetailState extends State<AcademyDetail> {
               ? SizedBox.shrink()
               : itemDetail(
                   context, "About Academy", widget.service.about.toString()),
+          itemHelp(context),
         ],
       ),
     );

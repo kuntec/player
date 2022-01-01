@@ -283,55 +283,63 @@ class _VenueScreenState extends State<VenueScreen>
     );
   }
 
+  Future<void> _refreshVenue(BuildContext context) async {
+    setState(() {});
+  }
+
   allVenue() {
     return Container(
       height: 700,
       padding: EdgeInsets.all(10.0),
-      child: FutureBuilder(
-        future: getAllVenues(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.data == null) {
-            return Center(
-              child: Container(
-                  child: CircularProgressIndicator(color: kBaseColor)),
-            );
-          }
-          if (snapshot.hasData) {
-            print("Has Data ${snapshot.data.length}");
-            if (snapshot.data.length == 0) {
+      child: RefreshIndicator(
+        onRefresh: () => _refreshVenue(context),
+        color: kBaseColor,
+        child: FutureBuilder(
+          future: getAllVenues(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.data == null) {
+              return Center(
+                child: Container(
+                    child: CircularProgressIndicator(color: kBaseColor)),
+              );
+            }
+            if (snapshot.hasData) {
+              print("Has Data ${snapshot.data.length}");
+              if (snapshot.data.length == 0) {
+                return Container(
+                  child: Center(
+                    child: Text('No Data'),
+                  ),
+                );
+              } else {
+                return ListView.builder(
+                  padding: EdgeInsets.only(bottom: 20),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return snapshot.data[index].name
+                                .toString()
+                                .toLowerCase()
+                                .contains(searchString) ||
+                            snapshot.data[index].address
+                                .toString()
+                                .toLowerCase()
+                                .contains(searchString)
+                        ? venueItem2(snapshot.data[index])
+                        : SizedBox.shrink();
+                  },
+                );
+              }
+            } else {
               return Container(
                 child: Center(
                   child: Text('No Data'),
                 ),
               );
-            } else {
-              return ListView.builder(
-                padding: EdgeInsets.only(bottom: 20),
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: snapshot.data.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return snapshot.data[index].name
-                              .toString()
-                              .toLowerCase()
-                              .contains(searchString) ||
-                          snapshot.data[index].address
-                              .toString()
-                              .toLowerCase()
-                              .contains(searchString)
-                      ? venueItem2(snapshot.data[index])
-                      : SizedBox.shrink();
-                },
-              );
             }
-          } else {
-            return Container(
-              child: Center(
-                child: Text('No Data'),
-              ),
-            );
-          }
-        },
+          },
+        ),
       ),
     );
   }
@@ -447,7 +455,6 @@ class _VenueScreenState extends State<VenueScreen>
                       fontSize: 12.0,
                     ),
                   ),
-
                   SizedBox(height: 5.0),
                   Text(
                     "Address: ${venue.address}",
@@ -457,13 +464,21 @@ class _VenueScreenState extends State<VenueScreen>
                     ),
                   ),
                   SizedBox(height: 5.0),
-                  // Text(
-                  //   "Phone: ${venue.openTime}",
-                  //   style: TextStyle(
-                  //     color: Colors.grey.shade900,
-                  //     fontSize: 12.0,
-                  //   ),
-                  // ),
+                  Text(
+                    "Open Time: ${venue.openTime}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Close Time: ${venue.closeTime}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
                   SizedBox(height: 5.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -473,6 +488,7 @@ class _VenueScreenState extends State<VenueScreen>
                           color: kBaseColor,
                           borderRadius: BorderRadius.all(Radius.circular(5)),
                         ),
+                        margin: EdgeInsets.only(bottom: 10, right: 10),
                         padding: EdgeInsets.only(
                             top: 5.0, bottom: 5.0, right: 15.0, left: 15.0),
                         child: Text(

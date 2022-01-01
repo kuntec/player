@@ -49,6 +49,7 @@ class _SportMarketDetailState extends State<SportMarketDetail> {
                   ? SizedBox.shrink()
                   : itemDetail(context, "Details of Shop",
                       widget.service.about.toString()),
+              itemHelp(context),
             ],
           ),
         ),
