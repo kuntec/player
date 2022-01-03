@@ -26,80 +26,107 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         title: Text("Chat"),
       ),
-      body: SingleChildScrollView(
+      body: Container(
+        height: MediaQuery.of(context).size.height,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: k20Margin),
-            Container(
-              margin: EdgeInsets.only(left: 10, right: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isRequestSelected = false;
-                        });
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: kContainerTabLeftDecoration.copyWith(
-                            color:
-                                isRequestSelected! ? Colors.white : kBaseColor),
-                        child: Center(
-                          child: Text(
-                            "New Connection",
-                            style: TextStyle(
-                                color: isRequestSelected!
-                                    ? kBaseColor
-                                    : Colors.white,
-                                fontSize: 14.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isRequestSelected = true;
-                        });
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: kContainerTabRightDecoration.copyWith(
-                            color:
-                                isRequestSelected! ? kBaseColor : Colors.white),
-                        child: Center(
-                          child: Text(
-                            "Friends",
-                            style: TextStyle(
-                                color: isRequestSelected!
-                                    ? Colors.white
-                                    : kBaseColor,
-                                fontSize: 14.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            isRequestSelected! ? requestFriends() : findFriends()
-//             isRequestSelected!
-//                 ? requestFriends()
-//                 : Container(
-//                     child: Center(
-//                       child: Text("Coming Soon"),
-//                     ),
-//                   )
+            Expanded(flex: 1, child: topBar()),
+            Expanded(flex: 9, child: bottomBar()),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget bottomBar() {
+    return isRequestSelected! ? requestFriends() : findFriends();
+  }
+
+  Widget top() {
+    return Container(
+      color: kBaseColor,
+      width: MediaQuery.of(context).size.width,
+      child: Row(
+        children: [
+          Container(
+            color: Colors.white,
+            child: Center(
+              child: Text(
+                "New Connection",
+                style: TextStyle(color: kBaseColor, fontSize: 14.0),
+              ),
+            ),
+          ),
+          Container(),
+        ],
+      ),
+    );
+  }
+
+  Widget bottom() {
+    return Container(
+      color: Colors.red,
+      child: Text("Hello"),
+    );
+  }
+
+  Widget topBar() {
+    return Container(
+      margin: EdgeInsets.only(left: 10, right: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(
+            flex: 1,
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  isRequestSelected = false;
+                });
+              },
+              child: Container(
+                height: 40,
+                padding: EdgeInsets.all(10),
+                decoration: kContainerTabLeftDecoration.copyWith(
+                    color: isRequestSelected! ? Colors.white : kBaseColor),
+                child: Center(
+                  child: Text(
+                    "New Connection",
+                    style: TextStyle(
+                        color: isRequestSelected! ? kBaseColor : Colors.white,
+                        fontSize: 14.0),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  isRequestSelected = true;
+                });
+              },
+              child: Container(
+                height: 40,
+                padding: EdgeInsets.all(10),
+                decoration: kContainerTabRightDecoration.copyWith(
+                    color: isRequestSelected! ? kBaseColor : Colors.white),
+                child: Center(
+                  child: Text(
+                    "Friends",
+                    style: TextStyle(
+                        color: isRequestSelected! ? Colors.white : kBaseColor,
+                        fontSize: 14.0),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -158,7 +185,7 @@ class _ChatScreenState extends State<ChatScreen> {
               );
             } else {
               return ListView.builder(
-                padding: EdgeInsets.only(bottom: 200),
+                padding: EdgeInsets.only(bottom: 100),
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 itemCount: snapshot.data.length,
@@ -469,6 +496,10 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
+
+  // Widget item2(dynamic friend) {
+  //   return Container(child: Text("test"));
+  // }
 
   Widget friendItem(dynamic friend) {
     return friend.status == "1"
