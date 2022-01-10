@@ -115,6 +115,7 @@ class _EventScreenState extends State<EventScreen> {
             Expanded(
               flex: 1,
               child: Container(
+                height: 40,
                 decoration: kServiceBoxItem,
                 margin: EdgeInsets.all(10),
                 child: TextField(

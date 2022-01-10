@@ -624,7 +624,12 @@ class _PlayerProfileState extends State<PlayerProfile>
     if (connectivityStatus) {
       FriendData friendData = await apiCall.listFriend(player!.id.toString());
       if (friendData.friend != null) {
-        list = friendData.friend!;
+        for (Friends f in friendData.friend!) {
+          if (f.status == "1") {
+            list.add(f);
+          }
+        }
+//        list = friendData.friend!;
         friendCount = list.length;
       }
       if (friendData.status!) {

@@ -239,16 +239,8 @@ class _MyTournamentsState extends State<MyTournaments> {
                 children: [
                   Container(
                     margin: EdgeInsets.all(5.0),
-                    height: 85.0,
-                    width: 85.0,
-                    // child: SvgPicture.network(
-                    //   "https://www.svgrepo.com/show/2046/dog.svg",
-                    //   placeholderBuilder: (context) =>
-                    //       CircularProgressIndicator(),
-                    //   height: 110.0,
-                    //   width: 110,
-                    //   fit: BoxFit.cover,
-                    // ),
+                    height: 90.0,
+                    width: 90.0,
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                       child: Image.network(
@@ -284,26 +276,39 @@ class _MyTournamentsState extends State<MyTournaments> {
                   ),
                   SizedBox(height: 5.0),
                   Text(
+                    "Sport Name: ${participant.tournament!.sportName}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
                     "Location: ${participant.tournament!.address}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 12.0,
                     ),
                   ),
+                  SizedBox(height: 5.0),
                   Text(
-                    "Location: ${participant.tournament!.sportName}",
+                    "Entry Fees: \u{20B9} ${participant.tournament!.entryFees}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 12.0,
                     ),
                   ),
+                  SizedBox(height: 5.0),
                   Text(
-                    "\u{20B9} ${participant.tournament!.entryFees}",
+                    participant.paymentStatus == "2"
+                        ? "Payment : Not Done"
+                        : "Payment : Done",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 12.0,
                     ),
                   ),
+                  SizedBox(height: 5.0),
                   // Text(
                   //   "Time: ${tournament.startTime} to ${tournament.startTime}",
                   //   style: TextStyle(

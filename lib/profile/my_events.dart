@@ -225,8 +225,8 @@ class _MyEventsState extends State<MyEvents> {
                 children: [
                   Container(
                     margin: EdgeInsets.all(5.0),
-                    height: 80.0,
-                    width: 80.0,
+                    height: 90.0,
+                    width: 90.0,
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                       child: Image.network(
@@ -280,6 +280,16 @@ class _MyEventsState extends State<MyEvents> {
                   SizedBox(height: 5.0),
                   Text(
                     "Location: ${participant.event!.address}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    participant.paymentStatus == "2"
+                        ? "Payment : Not Done"
+                        : "Payment : Done",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 12.0,

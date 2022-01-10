@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/components/rounded_button.dart';
@@ -59,6 +60,46 @@ class _AddDetailsState extends State<AddDetails> {
       txtDateController.text = txtDate;
     });
   }
+
+  Widget buildDatePicker() => SizedBox(
+        height: 150,
+        child: CupertinoDatePicker(
+          minimumYear: 1950,
+          maximumYear: DateTime.now().year,
+          initialDateTime: DateTime.now(),
+          mode: CupertinoDatePickerMode.date,
+          onDateTimeChanged: (dateTime) => {
+            setState(() {
+              date = dateTime;
+              if (date == null) {
+                txtDate = "Select Date";
+              } else {
+                txtDate = "${date!.day}-${date!.month}-${date!.year}";
+              }
+              txtDateController.text = txtDate;
+            })
+          },
+        ),
+      );
+
+  static void showSheet(BuildContext context,
+          {required Widget child, required VoidCallback onClicked}) =>
+      {
+        showCupertinoModalPopup(
+            context: context,
+            builder: (context) => CupertinoActionSheet(
+                  actions: [
+                    child,
+                  ],
+                  cancelButton: CupertinoActionSheetAction(
+                    child: Text(
+                      "Done",
+                      style: TextStyle(color: kBaseColor),
+                    ),
+                    onPressed: onClicked,
+                  ),
+                ))
+      };
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +165,11 @@ class _AddDetailsState extends State<AddDetails> {
                         readOnly: true,
                         keyboardType: TextInputType.text,
                         onTap: () async {
-                          pickDate(context);
+                          //  pickDate(context);
+                          showSheet(context, child: buildDatePicker(),
+                              onClicked: () {
+                            Navigator.pop(context);
+                          });
                         },
                         style: TextStyle(
                           color: Colors.black,
@@ -243,6 +288,7 @@ class _AddDetailsState extends State<AddDetails> {
                                     selectedLocation!.name.toString());
                               },
                             ),
+                      //buildDatePicker()
                     ],
                   ),
                 ),

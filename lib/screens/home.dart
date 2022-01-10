@@ -32,6 +32,7 @@ import 'package:player/screens/location_select.dart';
 import 'package:player/screens/main_navigation.dart';
 import 'package:player/screens/notification_screen.dart';
 import 'package:player/screens/offer_screen.dart';
+import 'package:player/service/local_notification_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:getwidget/getwidget.dart';
@@ -87,8 +88,19 @@ class _HomeScreenState extends State<HomeScreen>
     getSports();
     getMyCity();
     getConversations();
-
     disposePageAfter(20);
+
+    FirebaseMessaging.onMessage.listen((message) {
+      if (message.notification != null) {
+        // setState(() {
+        //   _notificationCount = _notificationCount! + 1;
+        // });
+        getConversations();
+        // print(message.notification!.body);
+        // print(message.notification!.title);
+      }
+      LocalNotificationService.display(message);
+    });
   }
 
   // void initTarget() {

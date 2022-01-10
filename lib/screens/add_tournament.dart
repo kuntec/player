@@ -1016,7 +1016,7 @@ class _AddTournamentState extends State<AddTournament> {
                   ),
                   SizedBox(height: 5.0),
                   Text(
-                    "Location: ${tournament.address}",
+                    "Sport Name: ${tournament.sportName}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 12.0,
@@ -1024,7 +1024,7 @@ class _AddTournamentState extends State<AddTournament> {
                   ),
                   SizedBox(height: 5.0),
                   Text(
-                    "Location: ${tournament.sportName}",
+                    "Location: ${tournament.address}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 12.0,

@@ -44,33 +44,33 @@ class _ChatScreenState extends State<ChatScreen> {
     return isRequestSelected! ? requestFriends() : findFriends();
   }
 
-  Widget top() {
-    return Container(
-      color: kBaseColor,
-      width: MediaQuery.of(context).size.width,
-      child: Row(
-        children: [
-          Container(
-            color: Colors.white,
-            child: Center(
-              child: Text(
-                "New Connection",
-                style: TextStyle(color: kBaseColor, fontSize: 14.0),
-              ),
-            ),
-          ),
-          Container(),
-        ],
-      ),
-    );
-  }
+  // Widget top() {
+  //   return Container(
+  //     color: kBaseColor,
+  //     width: MediaQuery.of(context).size.width,
+  //     child: Row(
+  //       children: [
+  //         Container(
+  //           color: Colors.white,
+  //           child: Center(
+  //             child: Text(
+  //               "New Connection",
+  //               style: TextStyle(color: kBaseColor, fontSize: 14.0),
+  //             ),
+  //           ),
+  //         ),
+  //         Container(),
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  Widget bottom() {
-    return Container(
-      color: Colors.red,
-      child: Text("Hello"),
-    );
-  }
+  // Widget bottom() {
+  //   return Container(
+  //     color: Colors.red,
+  //     child: Text("Hello"),
+  //   );
+  // }
 
   Widget topBar() {
     return Container(
@@ -93,7 +93,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     color: isRequestSelected! ? Colors.white : kBaseColor),
                 child: Center(
                   child: Text(
-                    "New Connection",
+                    "Recent Chat",
                     style: TextStyle(
                         color: isRequestSelected! ? kBaseColor : Colors.white,
                         fontSize: 14.0),

@@ -279,6 +279,7 @@ class _TournamentScreenState extends State<TournamentScreen>
   Widget sportBarList() {
     return sports != null
         ? Container(
+            height: 60,
             margin: EdgeInsets.all(10.0),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -291,7 +292,6 @@ class _TournamentScreenState extends State<TournamentScreen>
                 )
               ],
             ),
-            height: 50,
             child: Center(
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
