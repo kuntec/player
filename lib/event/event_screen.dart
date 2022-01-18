@@ -320,7 +320,9 @@ class _EventScreenState extends State<EventScreen> {
                         padding: EdgeInsets.only(
                             top: 5.0, bottom: 5.0, right: 15.0, left: 15.0),
                         child: Text(
-                          "\u{20B9} ${event.entryFees}",
+                          event.entryFees == "0"
+                              ? "Free"
+                              : "\u{20B9} ${event.entryFees}",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12.0,

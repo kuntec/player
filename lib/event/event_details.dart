@@ -81,8 +81,12 @@ class _EventDetailsState extends State<EventDetails> {
                   "${widget.event.startDate} to ${widget.event.endDate}"),
               itemDetail(context, "Time",
                   "${widget.event.startTime} to ${widget.event.endTime}"),
-              itemDetail(context, "Entry Fees",
-                  "\u{20B9} ${widget.event.entryFees} / ${widget.event.members} person"),
+              itemDetail(
+                  context,
+                  "Entry Fees",
+                  widget.event.entryFees == "0"
+                      ? "Free"
+                      : "\u{20B9} ${widget.event.entryFees} / ${widget.event.members} person"),
               itemDetail(context, "Address", widget.event.address),
               widget.event.locationLink == null
                   ? SizedBox.shrink()

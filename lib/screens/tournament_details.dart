@@ -106,8 +106,12 @@ class _TournamentDetailsState extends State<TournamentDetails> {
                   context, "Tournament Name", widget.tournament.tournamentName),
               itemDetail(context, "Start Date", widget.tournament.startDate),
               itemDetail(context, "End Date", widget.tournament.endDate),
-              itemDetail(context, "Entry Fees",
-                  "\u{20B9} ${widget.tournament.entryFees}"),
+              itemDetail(
+                  context,
+                  "Entry Fees",
+                  widget.tournament.entryFees == "0"
+                      ? "Free"
+                      : "\u{20B9} ${widget.tournament.entryFees}"),
               itemDetail(context, "Start Time", widget.tournament.startTime),
               itemDetail(context, "End Time", widget.tournament.endTime),
               widget.tournament.noOfMembers == null
@@ -136,36 +140,6 @@ class _TournamentDetailsState extends State<TournamentDetails> {
                       widget.tournament.otherInfo),
               itemHelp(context),
               SizedBox(height: 50),
-              // widget.tournament.status.toString() == "0"
-              //     ? Container(
-              //         margin:
-              //             EdgeInsets.only(left: k20Margin, right: k20Margin),
-              //         child: RoundedButton(
-              //           title: "Booking Closed",
-              //           color: kBaseColor,
-              //           txtColor: Colors.white,
-              //           minWidth: MediaQuery.of(context).size.width,
-              //           onPressed: () {},
-              //         ),
-              //       )
-              //     : Container(
-              //         margin:
-              //             EdgeInsets.only(left: k20Margin, right: k20Margin),
-              //         child: RoundedButton(
-              //           title: "Proceed To Book",
-              //           color: kBaseColor,
-              //           txtColor: Colors.white,
-              //           minWidth: MediaQuery.of(context).size.width,
-              //           onPressed: () {
-              //             Navigator.push(
-              //                 context,
-              //                 MaterialPageRoute(
-              //                     builder: (context) => ParticipantSummary(
-              //                         event: widget.tournament,
-              //                         isEvent: false)));
-              //           },
-              //         ),
-              //       ),
             ],
           ),
         ),

@@ -258,7 +258,9 @@ class _TournamentScreenState extends State<TournamentScreen>
                         padding: EdgeInsets.only(
                             top: 5.0, bottom: 5.0, right: 15.0, left: 15.0),
                         child: Text(
-                          "\u{20B9}  ${tournament.entryFees}",
+                          tournament.entryFees == "0"
+                              ? "Free"
+                              : "\u{20B9}  ${tournament.entryFees}",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12.0,
