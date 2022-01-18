@@ -215,7 +215,10 @@ class _FriendScreenState extends State<FriendScreen> {
                   height: 40.0,
                   width: 40.0,
                   child: player.image == null
-                      ? FlutterLogo()
+                      ? CircleAvatar(
+                          backgroundImage:
+                              AssetImage('assets/images/no_user.jpg'),
+                        )
                       : ClipRRect(
                           borderRadius: BorderRadius.all(Radius.circular(5.0)),
                           child: Image.network(
@@ -501,7 +504,10 @@ class _FriendScreenState extends State<FriendScreen> {
                   height: 40.0,
                   width: 40.0,
                   child: friend.player.image == null
-                      ? FlutterLogo()
+                      ? CircleAvatar(
+                          backgroundImage:
+                              AssetImage('assets/images/no_user.jpg'),
+                        )
                       : ClipRRect(
                           borderRadius: BorderRadius.all(Radius.circular(5.0)),
                           child: Image.network(

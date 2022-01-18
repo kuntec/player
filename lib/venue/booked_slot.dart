@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:player/api/api_resources.dart';
+import 'package:player/components/custom_button.dart';
+import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/constant/utility.dart';
 
 class BookedSlot extends StatefulWidget {
   dynamic booking;
@@ -16,6 +19,26 @@ class _BookedSlotState extends State<BookedSlot> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Booked Slots"),
+      ),
+      bottomSheet: Container(
+        margin: EdgeInsets.only(left: k20Margin, right: k20Margin),
+        child: RoundedButton(
+            title: "Cancel Booking",
+            color: kBaseColor,
+            onPressed: () {
+//              Utility.showToast("Venue Booking Cancel");
+              _showDialog();
+            },
+            minWidth: MediaQuery.of(context).size.width,
+            txtColor: Colors.white),
+
+        // RoundedButton(
+        //   title: "Proceed To Book",
+        //   color: kBaseColor,
+        //   txtColor: Colors.white,
+        //   minWidth: MediaQuery.of(context).size.width,
+        //   onPressed: () {},
+        // ),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -88,5 +111,91 @@ class _BookedSlotState extends State<BookedSlot> {
         ],
       ),
     );
+  }
+
+  void _showDialog() async {
+    return await showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15.0),
+                  border: Border.all(color: kBaseColor),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey,
+                      offset: Offset(0, 2),
+                      blurRadius: 6.0,
+                    )
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 40),
+                    Text(
+                      "Cancel Booking",
+                      style: TextStyle(fontSize: 24.0, color: kBaseColor),
+                    ),
+                    SizedBox(height: 15),
+                    Container(
+                      margin: EdgeInsets.all(20),
+                      child: Center(
+                        child: Text(
+                          "For cancellation please contact the organizer",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 16.0, color: Colors.grey),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 40),
+                    Text(
+                      "Name ${widget.booking.owner.name}",
+                      style: TextStyle(fontSize: 16.0, color: Colors.black54),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      "Number ${widget.booking.owner.mobile}",
+                      style: TextStyle(fontSize: 16.0, color: Colors.black54),
+                    ),
+                    SizedBox(height: 20),
+                    GestureDetector(
+                      onTap: () {
+                        Utility.launchCall(widget.booking.owner.mobile);
+                      },
+                      child: CircleAvatar(
+                        backgroundColor: kBaseColor,
+                        radius: 35,
+                        child: Icon(
+                          Icons.call,
+                          color: Colors.white,
+                          size: 45,
+                        ),
+                      ),
+                    ),
+                    // SizedBox(height: 40),
+                  ],
+                ),
+              );
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+                onPressed: () {
+                  _dismissDialog();
+                },
+                child: Text('Close')),
+          ],
+        );
+      },
+    );
+  }
+
+  _dismissDialog() {
+    Navigator.pop(context);
   }
 }

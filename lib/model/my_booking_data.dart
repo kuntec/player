@@ -81,6 +81,7 @@ class Bookings {
     String? amount,
     List<Slots>? slots,
     Venue? venue,
+    Owner? owner,
   }) {
     _id = id;
     _name = name;
@@ -99,6 +100,7 @@ class Bookings {
     _amount = amount;
     _slots = slots;
     _venue = venue;
+    _owner = owner;
   }
 
   Bookings.fromJson(dynamic json) {
@@ -124,6 +126,7 @@ class Bookings {
       });
     }
     _venue = json['venue'] != null ? Venue.fromJson(json['venue']) : null;
+    _owner = json['owner'] != null ? Owner.fromJson(json['owner']) : null;
   }
   int? _id;
   String? _name;
@@ -142,6 +145,7 @@ class Bookings {
   String? _amount;
   List<Slots>? _slots;
   Venue? _venue;
+  Owner? _owner;
 
   int? get id => _id;
   String? get name => _name;
@@ -160,6 +164,7 @@ class Bookings {
   String? get amount => _amount;
   List<Slots>? get slots => _slots;
   Venue? get venue => _venue;
+  Owner? get owner => _owner;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -184,6 +189,10 @@ class Bookings {
     if (_venue != null) {
       map['venue'] = _venue?.toJson();
     }
+    if (_owner != null) {
+      map['owner'] = _owner?.toJson();
+    }
+
     return map;
   }
 }
@@ -203,7 +212,7 @@ class Bookings {
 /// facilities : "all kind"
 /// location_link : "mumbai google"
 /// sport_id : null
-//
+
 // class Venue {
 //   Venue({
 //     int? id,
@@ -238,7 +247,7 @@ class Bookings {
 //     _locationLink = locationLink;
 //     _sportId = sportId;
 //   }
-//
+
 //   Venue.fromJson(dynamic json) {
 //     _id = json['id'];
 //     _name = json['name'];
@@ -271,7 +280,7 @@ class Bookings {
 //   String? _facilities;
 //   String? _locationLink;
 //   dynamic _sportId;
-//
+
 //   int? get id => _id;
 //   String? get name => _name;
 //   String? get description => _description;
@@ -287,7 +296,7 @@ class Bookings {
 //   String? get facilities => _facilities;
 //   String? get locationLink => _locationLink;
 //   dynamic get sportId => _sportId;
-//
+
 //   Map<String, dynamic> toJson() {
 //     final map = <String, dynamic>{};
 //     map['id'] = _id;
@@ -318,6 +327,98 @@ class Bookings {
 /// created_at : null
 /// remaining_slots : null
 /// price : "1500"
+class Owner {
+  Owner({
+    int? id,
+    String? name,
+    String? dob,
+    String? gender,
+    String? image,
+    String? mobile,
+    String? email,
+    String? locationId,
+    String? city,
+    String? type,
+    String? fUid,
+    String? deviceToken,
+    String? createdAt,
+  }) {
+    _id = id;
+    _name = name;
+    _dob = dob;
+    _gender = gender;
+    _image = image;
+    _mobile = mobile;
+    _createdAt = createdAt;
+    _email = email;
+    _locationId = locationId;
+    _city = city;
+    _type = type;
+    _fUid = fUid;
+    _deviceToken = deviceToken;
+  }
+
+  Owner.fromJson(dynamic json) {
+    _id = json['id'];
+    _name = json['name'];
+    _dob = json['dob'];
+    _gender = json['gender'];
+    _image = json['image'];
+    _mobile = json['mobile'];
+    _createdAt = json['created_at'];
+    _email = json['email'];
+    _locationId = json['location_id'];
+    _city = json['city'];
+    _type = json['type'];
+    _fUid = json['f_uid'];
+    _deviceToken = json['device_token'];
+  }
+
+  int? _id;
+  String? _name;
+  String? _dob;
+  String? _gender;
+  String? _image;
+  String? _mobile;
+  String? _email;
+  String? _locationId;
+  String? _city;
+  String? _type;
+  String? _fUid;
+  String? _deviceToken;
+  String? _createdAt;
+
+  int? get id => _id;
+  String? get name => _name;
+  String? get dob => _dob;
+  String? get gender => _gender;
+  String? get image => _image;
+  String? get mobile => _mobile;
+  dynamic get createdAt => _createdAt;
+  dynamic get email => _email;
+  String? get locationId => _locationId;
+  String? get city => _city;
+  String? get type => _type;
+  String? get fUid => _fUid;
+  String? get deviceToken => _deviceToken;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['id'] = _id;
+    map['name'] = _name;
+    map['dob'] = _dob;
+    map['gender'] = _gender;
+    map['image'] = _image;
+    map['email'] = _email;
+    map['created_at'] = _createdAt;
+    map['city'] = _city;
+    map['location_id'] = _locationId;
+    map['type'] = _type;
+    map['f_uid'] = _fUid;
+    map['device_token'] = _deviceToken;
+    return map;
+  }
+}
 
 class Slots {
   Slots({

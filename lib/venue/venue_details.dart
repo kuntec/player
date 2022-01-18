@@ -37,6 +37,32 @@ class _VenueDetailsState extends State<VenueDetails> {
       appBar: AppBar(
         title: Text("Venue"),
       ),
+      bottomSheet: Container(
+        margin: EdgeInsets.only(left: k20Margin, right: k20Margin),
+        child: RoundedButton(
+            title: "Proceed To Book",
+            color: kBaseColor,
+            onPressed: () {
+              //Utility.showToast("Venue ${widget.venue.id}");
+
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => BookTimeSlot(
+                            venue: widget.venue,
+                          )));
+            },
+            minWidth: MediaQuery.of(context).size.width,
+            txtColor: Colors.white),
+
+        // RoundedButton(
+        //   title: "Proceed To Book",
+        //   color: kBaseColor,
+        //   txtColor: Colors.white,
+        //   minWidth: MediaQuery.of(context).size.width,
+        //   onPressed: () {},
+        // ),
+      ),
       body: SingleChildScrollView(
         child: Container(
           margin: EdgeInsets.all(10.0),
@@ -158,22 +184,22 @@ class _VenueDetailsState extends State<VenueDetails> {
           itemDetail(context, "Price",
               "\u{20B9} ${widget.venue.onwards.toString()} onwards"),
           itemHelp(context),
-          SizedBox(height: k20Margin),
-          RoundedButton(
-              title: "Proceed To Book",
-              color: kBaseColor,
-              onPressed: () {
-                //Utility.showToast("Venue ${widget.venue.id}");
-
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => BookTimeSlot(
-                              venue: widget.venue,
-                            )));
-              },
-              minWidth: 250,
-              txtColor: Colors.white),
+          SizedBox(height: 50),
+          // RoundedButton(
+          //     title: "Proceed To Book",
+          //     color: kBaseColor,
+          //     onPressed: () {
+          //       //Utility.showToast("Venue ${widget.venue.id}");
+          //
+          //       Navigator.push(
+          //           context,
+          //           MaterialPageRoute(
+          //               builder: (context) => BookTimeSlot(
+          //                     venue: widget.venue,
+          //                   )));
+          //     },
+          //     minWidth: 250,
+          //     txtColor: Colors.white),
         ],
       ),
     );

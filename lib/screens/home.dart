@@ -49,6 +49,9 @@ class _HomeScreenState extends State<HomeScreen>
     with AutomaticKeepAliveClientMixin<HomeScreen> {
   bool keepAlive = false;
 
+  ScrollController controller = ScrollController();
+  bool closeTopContainer = false;
+
   @override
   bool get wantKeepAlive => true;
   List<Sports> sports = [];
@@ -88,6 +91,7 @@ class _HomeScreenState extends State<HomeScreen>
     getSports();
     getMyCity();
     getConversations();
+    getHostActivity();
     disposePageAfter(20);
 
     FirebaseMessaging.onMessage.listen((message) {
@@ -100,6 +104,12 @@ class _HomeScreenState extends State<HomeScreen>
         // print(message.notification!.title);
       }
       LocalNotificationService.display(message);
+    });
+
+    controller.addListener(() {
+      setState(() {
+        closeTopContainer = controller.offset > 50;
+      });
     });
   }
 
@@ -210,7 +220,8 @@ class _HomeScreenState extends State<HomeScreen>
   // }
 
   Future<void> _refreshActivities(BuildContext context) async {
-    setState(() {});
+//    setState(() {});
+    getHostActivity();
   }
 
   @override
@@ -299,17 +310,56 @@ class _HomeScreenState extends State<HomeScreen>
       ),
       body: Container(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+//          mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            bannerMdl.loading == true
-                ? CircularProgressIndicator(
-                    color: kBaseColor,
-                  )
-                : banner(bannerMdl),
-            homeButtonBar(),
+            AnimatedOpacity(
+              duration: const Duration(milliseconds: 300),
+              opacity: closeTopContainer ? 0 : 1,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                width: MediaQuery.of(context).size.width,
+                alignment: Alignment.topCenter,
+                height: closeTopContainer
+                    ? 0
+                    : MediaQuery.of(context).size.width * 0.30,
+                child: bannerMdl.loading == true
+                    ? CircularProgressIndicator(
+                        color: kBaseColor,
+                      )
+                    : banner(bannerMdl),
+              ),
+            ),
+            AnimatedOpacity(
+              duration: const Duration(milliseconds: 300),
+              opacity: closeTopContainer ? 0 : 1,
+              child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  width: MediaQuery.of(context).size.width,
+                  alignment: Alignment.topCenter,
+                  height: closeTopContainer
+                      ? 0
+                      : MediaQuery.of(context).size.width * 0.30,
+                  child: homeButtonBar()),
+            ),
             sportBarList(),
-            hostActivity()
+            Expanded(
+              child: activities!.length == 0
+                  ? Container(
+                      child: Text("No Data"),
+                    )
+                  : RefreshIndicator(
+                      onRefresh: () => _refreshActivities(context),
+                      color: kBaseColor,
+                      child: ListView.builder(
+                          controller: controller,
+                          itemCount: activities!.length,
+                          itemBuilder: (context, index) {
+                            return hostActivityItem2(activities![index]);
+                          }),
+                    ),
+            )
+            // hostActivity()
           ],
         ),
       ),
@@ -375,9 +425,11 @@ class _HomeScreenState extends State<HomeScreen>
                 );
               } else {
                 return ListView.builder(
+                  controller: controller,
                   padding: EdgeInsets.only(bottom: 20),
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
+                  physics: BouncingScrollPhysics(),
                   itemCount: snapshot.data.length,
                   //reverse: true,
                   itemBuilder: (BuildContext context, int index) {
@@ -731,6 +783,7 @@ class _HomeScreenState extends State<HomeScreen>
   List<Activity>? activities;
 
   Future<List<Activity>?> getHostActivity() async {
+    // Utility.showToast("Getting Host Activity");
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
@@ -746,7 +799,7 @@ class _HomeScreenState extends State<HomeScreen>
         activities = hostActivity.activites!;
 
         activities = activities!.reversed.toList();
-        //setState(() {});
+        setState(() {});
       }
       if (hostActivity.status!) {
         //print(hostActivity.message!);
@@ -818,8 +871,7 @@ class _HomeScreenState extends State<HomeScreen>
         } else {
           selectedSportId = sport.sportId.toString();
         }
-
-        setState(() {});
+        getHostActivity();
       },
       child: Container(
         decoration: BoxDecoration(
