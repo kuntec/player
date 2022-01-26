@@ -12,6 +12,7 @@ import 'package:player/model/looking_for_data.dart';
 import 'package:player/model/sport_data.dart';
 import 'package:player/screens/edit_host_activity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 class AddHost extends StatefulWidget {
   const AddHost({Key? key}) : super(key: key);
@@ -611,6 +612,11 @@ class _AddHostState extends State<AddHost> {
                                     timing = txtTime;
                                     createdAt = DateTime.now().toString();
 
+                                    DateTime now = DateTime.now();
+                                    DateTime creationDate =
+                                        DateFormat("yyyy-MM-dd HH:mm")
+                                            .parse(now.toString());
+
                                     activity = new Activity();
                                     activity!.sportId = sportId.toString();
                                     activity!.sportName = sportName;
@@ -627,9 +633,13 @@ class _AddHostState extends State<AddHost> {
                                     activity!.playerName = playerName;
                                     activity!.locationId =
                                         locationId.toString();
-                                    activity!.createdAt = createdAt;
+                                    activity!.createdAt =
+                                        creationDate.toString();
                                     activity!.details = details;
+
                                     //_onLoading();
+                                    print("Created At :" +
+                                        creationDate.toString());
                                     addHostActivity();
                                   },
                                 ),

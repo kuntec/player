@@ -119,4 +119,6 @@ class APIResources {
   //Location
 
   static final String GET_LOCATION = BASE_URL + "getLocation";
+
+  static final String GET_NOTIFICATION = BASE_URL + "getNotifications";
 }

@@ -164,8 +164,9 @@ class _MyEventsState extends State<MyEvents> {
                         minWidth: 80,
                         onPressed: () async {
                           _dismissDialog();
-                          participant.status = "0";
-                          await updateParticipant(participant);
+                          _showCancelDialog(participant.event);
+                          // participant.status = "0";
+                          // await updateParticipant(participant);
                         }),
                   ),
                 ],
@@ -287,7 +288,7 @@ class _MyEventsState extends State<MyEvents> {
                   ),
                   SizedBox(height: 5.0),
                   Text(
-                    participant.paymentStatus == "2"
+                    participant.paymentStatus == "0"
                         ? "Payment : Not Done"
                         : "Payment : Done",
                     style: TextStyle(
@@ -321,6 +322,88 @@ class _MyEventsState extends State<MyEvents> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showCancelDialog(dynamic event) async {
+    return await showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15.0),
+                  border: Border.all(color: kBaseColor),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey,
+                      offset: Offset(0, 2),
+                      blurRadius: 6.0,
+                    )
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 40),
+                    Text(
+                      "Cancel Booking",
+                      style: TextStyle(fontSize: 24.0, color: kBaseColor),
+                    ),
+                    SizedBox(height: 15),
+                    Container(
+                      margin: EdgeInsets.all(20),
+                      child: Center(
+                        child: Text(
+                          "For cancellation please contact the organizer",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 16.0, color: Colors.grey),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 40),
+                    Text(
+                      "Name ${event.organizerName}",
+                      style: TextStyle(fontSize: 16.0, color: Colors.black54),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      "Number ${event.number}",
+                      style: TextStyle(fontSize: 16.0, color: Colors.black54),
+                    ),
+                    SizedBox(height: 20),
+                    GestureDetector(
+                      onTap: () {
+                        Utility.launchCall(event.number);
+                      },
+                      child: CircleAvatar(
+                        backgroundColor: kBaseColor,
+                        radius: 35,
+                        child: Icon(
+                          Icons.call,
+                          color: Colors.white,
+                          size: 45,
+                        ),
+                      ),
+                    ),
+                    // SizedBox(height: 40),
+                  ],
+                ),
+              );
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+                onPressed: () {
+                  _dismissDialog();
+                },
+                child: Text('Close')),
+          ],
+        );
+      },
     );
   }
 }

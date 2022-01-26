@@ -65,7 +65,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         txtColor: Colors.white,
                         minWidth: MediaQuery.of(context).size.width,
                         onPressed: () async {
-                          widget.participant.paymentStatus = "2";
+                          widget.participant.paymentStatus = "0";
                           addParticipant(widget.participant);
                         },
                       ),

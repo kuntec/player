@@ -6,7 +6,8 @@ import 'package:timeago/timeago.dart' as timeago;
 class TimeAgo {
   static String timeAgoSinceDate(String dateString,
       {bool numericDates = true}) {
-    DateTime notificationDate = DateFormat("yyyy-MM-dd h:mm").parse(dateString);
+    DateTime notificationDate =
+        DateFormat("yyyy-MM-dd HH:mm").parse(dateString);
 
     return timeago.format(notificationDate);
     //

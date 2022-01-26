@@ -16,6 +16,7 @@ import 'package:player/model/looking_for_data.dart';
 import 'package:player/model/my_booking_data.dart';
 import 'package:player/model/my_participant_data.dart';
 import 'package:player/model/my_sport.dart';
+import 'package:player/model/notification_data.dart';
 import 'package:player/model/participant_data.dart';
 import 'package:player/model/player_data.dart';
 import 'package:player/model/service_data.dart';
@@ -52,6 +53,14 @@ class APICall {
     http.Response response = await call.get(url);
     print("Response Body: " + response.body);
     return PlayerData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<NotificationData> getNotifications() async {
+    Uri url = Uri.parse(APIResources.GET_NOTIFICATION);
+    HttpCall call = new HttpCall();
+    http.Response response = await call.get(url);
+    print("Response Body: " + response.body);
+    return NotificationData.fromJson(jsonDecode(response.body));
   }
 
   Future<PlayerData> getChatPlayer(String id) async {

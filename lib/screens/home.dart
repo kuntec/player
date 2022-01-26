@@ -59,6 +59,7 @@ class _HomeScreenState extends State<HomeScreen>
   List<Banners> banners = [];
   List<Conversation> conversations = [];
   var city;
+  int? _chatCount = 0;
   int? _notificationCount = 0;
 
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
@@ -96,12 +97,12 @@ class _HomeScreenState extends State<HomeScreen>
 
     FirebaseMessaging.onMessage.listen((message) {
       if (message.notification != null) {
-        // setState(() {
-        //   _notificationCount = _notificationCount! + 1;
-        // });
+        setState(() {
+          _notificationCount = _notificationCount! + 1;
+        });
         getConversations();
-        // print(message.notification!.body);
-        // print(message.notification!.title);
+//        print(message.notification!.body);
+//        print(message.notification!.title);
       }
       LocalNotificationService.display(message);
     });
@@ -146,12 +147,12 @@ class _HomeScreenState extends State<HomeScreen>
       if (conversationData.conversation != null) {
         conversations = conversationData.conversation!;
         conversations = conversations.reversed.toList();
-        _notificationCount = 0;
+        _chatCount = 0;
         for (Conversation c in conversations) {
           for (Reply r in c.reply!) {
             if (r.status == "0" &&
                 r.playerId.toString() != playerId.toString()) {
-              _notificationCount = _notificationCount! + 1;
+              _chatCount = _chatCount! + 1;
             }
           }
         }
@@ -233,15 +234,30 @@ class _HomeScreenState extends State<HomeScreen>
         actions: [
           GestureDetector(
             onTap: () {
+              setState(() {
+                _notificationCount = 0;
+              });
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => NotificationScreen()));
             },
-            child: Icon(
-              Icons.notifications_active,
-              color: Colors.black,
-            ),
+            child: _notificationCount == 0
+                ? Icon(
+                    Icons.notifications_active,
+                    color: Colors.black,
+                  )
+                : Badge(
+                    position: BadgePosition.topStart(top: 5, start: 15),
+                    badgeContent: Text(
+                      '$_notificationCount',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    child: Icon(
+                      Icons.notifications_active,
+                      color: Colors.black,
+                    ),
+                  ),
           ),
           SizedBox(width: 20.0),
           GestureDetector(
@@ -253,7 +269,7 @@ class _HomeScreenState extends State<HomeScreen>
                   MaterialPageRoute(builder: (context) => ChatScreen()));
               getConversations();
             },
-            child: _notificationCount == 0
+            child: _chatCount == 0
                 ? Icon(
                     Icons.message,
                     color: Colors.black,
@@ -261,7 +277,7 @@ class _HomeScreenState extends State<HomeScreen>
                 : Badge(
                     position: BadgePosition.topStart(top: 5, start: 15),
                     badgeContent: Text(
-                      '$_notificationCount',
+                      '$_chatCount',
                       style: TextStyle(color: Colors.white),
                     ),
                     child: Icon(
@@ -313,6 +329,7 @@ class _HomeScreenState extends State<HomeScreen>
 //          mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            SizedBox(height: 5),
             AnimatedOpacity(
               duration: const Duration(milliseconds: 300),
               opacity: closeTopContainer ? 0 : 1,
@@ -330,6 +347,7 @@ class _HomeScreenState extends State<HomeScreen>
                     : banner(bannerMdl),
               ),
             ),
+            SizedBox(height: 10),
             AnimatedOpacity(
               duration: const Duration(milliseconds: 300),
               opacity: closeTopContainer ? 0 : 1,
@@ -342,22 +360,30 @@ class _HomeScreenState extends State<HomeScreen>
                       : MediaQuery.of(context).size.width * 0.30,
                   child: homeButtonBar()),
             ),
+            SizedBox(height: 10),
             sportBarList(),
             Expanded(
-              child: activities!.length == 0
-                  ? Container(
-                      child: Text("No Data"),
-                    )
-                  : RefreshIndicator(
-                      onRefresh: () => _refreshActivities(context),
-                      color: kBaseColor,
-                      child: ListView.builder(
+              child:
+                  // activities!.length == 0
+                  //     ? Container(
+                  //         child: Text("No Data"),
+                  //       )
+                  //     :
+                  Container(
+                padding: EdgeInsets.all(10.0),
+                child: RefreshIndicator(
+                  onRefresh: () => _refreshActivities(context),
+                  color: kBaseColor,
+                  child: activities == null
+                      ? SizedBox.shrink()
+                      : ListView.builder(
                           controller: controller,
                           itemCount: activities!.length,
                           itemBuilder: (context, index) {
                             return hostActivityItem2(activities![index]);
                           }),
-                    ),
+                ),
+              ),
             )
             // hostActivity()
           ],
@@ -468,7 +494,8 @@ class _HomeScreenState extends State<HomeScreen>
             var result = await Navigator.push(
                 context, MaterialPageRoute(builder: (context) => AddHost()));
             if (result == true) {
-              setState(() {});
+              //setState(() {});
+              _refreshActivities(context);
             }
           }, false, ""),
           iconCard(
