@@ -254,14 +254,6 @@ class _MyEventsState extends State<MyEvents> {
                         fontSize: 16.0,
                         fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 10.0),
-                  Text(
-                    participant.event!.address.toString(),
-                    style: TextStyle(
-                      color: Colors.grey.shade900,
-                      fontSize: 12.0,
-                    ),
-                  ),
                   SizedBox(height: 5.0),
                   Text(
                     "participant name: ${participant.name}",

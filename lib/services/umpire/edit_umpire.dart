@@ -59,7 +59,7 @@ class _EditUmpireState extends State<EditUmpire> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit Trophy Seller "),
+        title: Text("Edit Umpire"),
       ),
       body: SingleChildScrollView(
         child: Container(

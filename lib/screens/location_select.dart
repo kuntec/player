@@ -18,7 +18,7 @@ class LocationSelectScreen extends StatefulWidget {
 
 class _LocationSelectScreenState extends State<LocationSelectScreen> {
   bool isLoading = false;
-
+  bool isSearching = false;
   String searchString = "";
   TextEditingController searchController = new TextEditingController();
   @override
@@ -33,10 +33,48 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       appBar: AppBar(
-        title: Text("Select Location"),
+        title: !isSearching
+            ? Text("Location")
+            : Container(
+                decoration: kServiceBoxItem,
+                child: TextField(
+                  autofocus: true,
+                  onChanged: (value) {
+                    setState(() {
+                      searchString = value;
+                    });
+                  },
+                  controller: searchController,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "Search Location",
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: kBaseColor,
+                    ),
+                  ),
+                ),
+              ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              setState(() {
+                this.isSearching = !this.isSearching;
+              });
+            },
+            icon: !isSearching
+                ? Icon(
+                    Icons.search,
+                    color: kBaseColor,
+                  )
+                : Icon(
+                    Icons.cancel,
+                    color: kBaseColor,
+                  ),
+          )
+        ],
       ),
       bottomSheet: Container(
         margin: EdgeInsets.only(left: 30, right: 30),
@@ -74,36 +112,36 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Expanded(
-                flex: 1,
-                child: Container(
-                  height: 40,
-                  decoration: kServiceBoxItem,
-                  margin: EdgeInsets.all(10),
-                  child: TextField(
-                    onChanged: (value) {
-                      setState(() {
-                        searchString = value;
-                      });
-                    },
-                    controller: searchController,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "Search",
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: kBaseColor,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(flex: 9, child: myLocations()),
+              // Expanded(
+              //   flex: 1,
+              //   child: Container(
+              //     height: 40,
+              //     decoration: kServiceBoxItem,
+              //     margin: EdgeInsets.all(10),
+              //     child: TextField(
+              //       onChanged: (value) {
+              //         setState(() {
+              //           searchString = value;
+              //         });
+              //       },
+              //       controller: searchController,
+              //       decoration: InputDecoration(
+              //         border: InputBorder.none,
+              //         hintText: "Search",
+              //         prefixIcon: Icon(
+              //           Icons.search,
+              //           color: kBaseColor,
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              Expanded(child: myLocations()),
             ],
           ),
         ),
       ),
-    ));
+    );
   }
 
   Widget myLocations() {

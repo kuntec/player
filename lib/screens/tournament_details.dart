@@ -65,8 +65,8 @@ class _TournamentDetailsState extends State<TournamentDetails> {
             children: [
               Center(
                 child: Container(
-                  height: 200.0,
-                  width: 200,
+                  height: 150.0,
+                  width: 150,
                   // width: MediaQuery.of(context).size.width,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),

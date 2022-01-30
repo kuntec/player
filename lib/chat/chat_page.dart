@@ -188,9 +188,6 @@ class ChatPageState extends State<ChatPage> {
       // Add Conversation
 
       await addConversation(widget.player1, widget.player2, content);
-
-      await chatNotification(widget.player2,
-          "New Message Received From $currentPlayerName", content);
     } else {
       Utility.showToast("Nothing to send");
     }
@@ -447,6 +444,9 @@ class ChatPageState extends State<ChatPage> {
     if (connectivityStatus) {
       await apiCall.addConversation(player1, player2, message);
     }
+
+    await chatNotification(widget.player2,
+        "New Message Received From $currentPlayerName", message);
   }
 
   // Widget buildItem(int index, DocumentSnapshot? document) {

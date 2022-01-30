@@ -415,33 +415,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // sendOTP(String number) async {
-  //   if (Utility.checkValidation(number)) {
-  //     Utility.showToast("Please enter number");
-  //     print("Please enter number");
-  //     return;
-  //   }
-  //
-  //   // Fluttertoast.showToast(
-  //   //     msg: "This is Center Short Toast",
-  //   //     toastLength: Toast.LENGTH_SHORT,
-  //   //     gravity: ToastGravity.CENTER,
-  //   //     timeInSecForIosWeb: 1,
-  //   //     backgroundColor: Colors.red,
-  //   //     textColor: Colors.white,
-  //   //     fontSize: 16.0);
-  //
-  //   String sentOTP = await Utility.generateOTP();
-  //   print("Sent OTP: " + sentOTP);
-  //   Navigator.pushReplacement(
-  //       context,
-  //       MaterialPageRoute(
-  //           builder: (_) => OTPScreen(
-  //                 phoneNumber: number,
-  //                 sentOTP: sentOTP,
-  //               )));
-  // }
-
   signInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) async {
     setState(() {
       showLoading = true;
@@ -461,8 +434,8 @@ class _LoginScreenState extends State<LoginScreen> {
         prefs.setString("fuid", firebaseUser!.uid);
 
         bool status = await addFirebaseDocument(firebaseUser);
-        String? device_token = prefs.getString("device_token");
-        checkPlayer(phoneNumber, firebaseUser.uid, device_token!);
+        String? deviceToken = prefs.getString("device_token");
+        checkPlayer(phoneNumber, firebaseUser.uid, deviceToken!);
 
         // setState(() {
         //   showLoading = false;
@@ -482,7 +455,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  checkPlayer(String phoneNumber, String fuid, String device_token) async {
+  checkPlayer(String phoneNumber, String fUid, String deviceToken) async {
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
@@ -492,7 +465,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (playerData.status!) {
         print("Player Found");
-//        showToast("Player Found");
+
+        // Update player with device token and fuid
+
+        playerData = await apiCall.updatePlayerFirebase(
+            playerData.player!.id.toString(), deviceToken, fUid);
+
         SharedPreferences prefs = await SharedPreferences.getInstance();
         if (playerData.player != null) {
           int? playerId = playerData.player!.id;
@@ -543,8 +521,8 @@ class _LoginScreenState extends State<LoginScreen> {
             MaterialPageRoute(
                 builder: (context) => AddDetails(
                       phoneNumber: phoneNumber,
-                      fuid: fuid,
-                      deviceToken: device_token,
+                      fuid: fUid,
+                      deviceToken: deviceToken,
                     )));
 //        showToast(playerData.message!);
 //        print(playerData.message!);

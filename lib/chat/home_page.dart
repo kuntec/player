@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
   late AuthProvider authProvider;
   late HomeProvider homeProvider;
 
-  Debouncer searchDebouncer = Debouncer(milliseconds: 300);
+  //Debouncer searchDebouncer = Debouncer(milliseconds: 300);
   StreamController<bool> btnClearController = StreamController<bool>();
   TextEditingController searchBarTec = TextEditingController();
 

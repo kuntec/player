@@ -97,12 +97,17 @@ class _HomeScreenState extends State<HomeScreen>
 
     FirebaseMessaging.onMessage.listen((message) {
       if (message.notification != null) {
-        setState(() {
-          _notificationCount = _notificationCount! + 1;
-        });
-        getConversations();
-//        print(message.notification!.body);
-//        print(message.notification!.title);
+        //_notificationCount = _notificationCount! + 1;
+
+        // print(message.notification!.body);
+        print("Data Title ${message.data['title']}");
+        if (message.data['title'] == "1") {
+          setState(() {
+            _notificationCount = _notificationCount! + 1;
+          });
+        } else {
+          getConversations();
+        }
       }
       LocalNotificationService.display(message);
     });
@@ -114,29 +119,9 @@ class _HomeScreenState extends State<HomeScreen>
     });
   }
 
-  // void initTarget() {
-  //   targets.add(
-  //     TargetFocus(
-  //       identify: "Target 0",
-  //       keyTarget: key1,
-  //       contents: [
-  //         TargetContent(
-  //           child: Container(
-  //             child: Column(
-  //               children: [Text("This is chat message")],
-  //             ),
-  //           ),
-  //         )
-  //       ],
-  //     ),
-  //   );
-  // }
-  // _refresh() {
-  //   setState(() {});
-  // }
-
   Future<List<Conversation>> getConversations() async {
     APICall apiCall = new APICall();
+
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -146,16 +131,18 @@ class _HomeScreenState extends State<HomeScreen>
           await apiCall.getMyConversation(playerId.toString());
       if (conversationData.conversation != null) {
         conversations = conversationData.conversation!;
-        conversations = conversations.reversed.toList();
+        // conversations = conversations.reversed.toList();
         _chatCount = 0;
+        print("this is chat count before $_chatCount");
         for (Conversation c in conversations) {
           for (Reply r in c.reply!) {
-            if (r.status == "0" &&
-                r.playerId.toString() != playerId.toString()) {
+            // print("Reply Status : {$r.status}");
+            if (r.status == "0") {
               _chatCount = _chatCount! + 1;
             }
           }
         }
+        print("this is chat count after $_chatCount");
         setState(() {});
       }
     }
@@ -178,47 +165,6 @@ class _HomeScreenState extends State<HomeScreen>
     city = prefs.getString("city")!;
     setState(() {});
   }
-
-  // void registerNotification() {
-  //   firebaseMessaging.requestPermission();
-  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-  //     if (message.notification != null) {
-  //       //Show Notification
-  //     }
-  //     return;
-  //   });
-  //
-  //   firebaseMessaging.getToken().then((token) {
-  //     if (token != null) {
-  //       homeProvider.updateDataFirestore(FirestoreContants.pathUserCollection,
-  //           currentUserId, {'pushToken': token});
-  //     }
-  //   }).catchError((error) {
-  //     Utility.showToast("Error : ${error.message.toString()}");
-  //   });
-  // }
-
-  // void configureLocalNotification() {
-  //   AndroidInitializationSettings initializationAndroidSettings =
-  //       AndroidInitializationSettings("");
-  //   IOSInitializationSettings iosInitializationSettings =
-  //       IOSInitializationSettings();
-  //
-  //   InitializationSettings initializationSettings = InitializationSettings(
-  //       android: initializationAndroidSettings, iOS: iosInitializationSettings);
-  //
-  //   flutterLocalNotificationsPlugin.initialize(initializationSettings);
-  // }
-
-//  void showNotification
-
-  // Future _incrementCounter() async {
-  //   return Future.delayed(Duration(seconds: 2), () {
-  //     setState(() {
-  //       _notificationCount = _notificationCount! + 1;
-  //     });
-  //   });
-  // }
 
   Future<void> _refreshActivities(BuildContext context) async {
 //    setState(() {});
@@ -376,12 +322,18 @@ class _HomeScreenState extends State<HomeScreen>
                   color: kBaseColor,
                   child: activities == null
                       ? SizedBox.shrink()
-                      : ListView.builder(
-                          controller: controller,
-                          itemCount: activities!.length,
-                          itemBuilder: (context, index) {
-                            return hostActivityItem2(activities![index]);
-                          }),
+                      : activities!.length == 0
+                          ? Container(
+                              child: Center(
+                                child: Text('No Data'),
+                              ),
+                            )
+                          : ListView.builder(
+                              controller: controller,
+                              itemCount: activities!.length,
+                              itemBuilder: (context, index) {
+                                return hostActivityItem2(activities![index]);
+                              }),
                 ),
               ),
             )

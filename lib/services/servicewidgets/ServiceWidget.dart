@@ -181,17 +181,19 @@ Widget itemHelp(BuildContext context) {
 }
 
 Widget posterImage(BuildContext context, String url) {
-  return Container(
-    decoration: kServiceBoxItem.copyWith(
-      borderRadius: BorderRadius.circular(5.0),
-    ),
-    height: 100.0,
-    width: MediaQuery.of(context).size.width,
-    child: ClipRRect(
-      borderRadius: BorderRadius.circular(10.0),
-      child: Image.network(
-        APIResources.IMAGE_URL + url,
-        fit: BoxFit.cover,
+  return Center(
+    child: Container(
+      decoration: kServiceBoxItem.copyWith(
+        borderRadius: BorderRadius.circular(5.0),
+      ),
+      height: 150.0,
+      width: 150,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10.0),
+        child: Image.network(
+          APIResources.IMAGE_URL + url,
+          fit: BoxFit.cover,
+        ),
       ),
     ),
   );

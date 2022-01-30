@@ -693,17 +693,11 @@ class _AddTournamentState extends State<AddTournament> {
                     tournament!.status = "1";
                     tournament!.timing = "";
 
-//            Utility.showToast("Create Tournament");
                     if (this.image != null) {
                       addTournament(this.image!.path, tournament!);
-                      // Utility.showToast("File Selected Image");
                     } else {
                       Utility.showToast("Please Select Image");
                     }
-
-                    print("Create Tournament");
-                    //_load = false;
-                    //showLoadingIndicator("Loading....");
                   },
                 ),
         ],
@@ -712,55 +706,6 @@ class _AddTournamentState extends State<AddTournament> {
   }
 
   bool? isLoading = false;
-
-  // var _load;
-  // void showLoadingIndicator(String text) {
-  //   showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //             content: _load
-  //                 ? Container(
-  //                     padding: EdgeInsets.all(16),
-  //                     color: Colors.black.withOpacity(0.8),
-  //                     child: Column(
-  //                         mainAxisAlignment: MainAxisAlignment.center,
-  //                         mainAxisSize: MainAxisSize.min,
-  //                         children: [
-  //                           _getLoadingIndicator(),
-  //                           _getHeading(),
-  //                           _getText('Text')
-  //                         ]))
-  //                 : null);
-  //       });
-  // }
-  //
-  // Widget _getLoadingIndicator() {
-  //   return Padding(
-  //       child: Container(
-  //           child: CircularProgressIndicator(strokeWidth: 3),
-  //           width: 32,
-  //           height: 32),
-  //       padding: EdgeInsets.only(bottom: 16));
-  // }
-  //
-  // Widget _getHeading() {
-  //   return Padding(
-  //       child: Text(
-  //         'Please wait …',
-  //         style: TextStyle(color: Colors.white, fontSize: 16),
-  //         textAlign: TextAlign.center,
-  //       ),
-  //       padding: EdgeInsets.only(bottom: 4));
-  // }
-  //
-  // Widget _getText(String displayedText) {
-  //   return Text(
-  //     displayedText,
-  //     style: TextStyle(color: Colors.white, fontSize: 14),
-  //     textAlign: TextAlign.center,
-  //   );
-  // }
 
   Future pickDate(BuildContext context, bool isStart) async {
     final initialDate = DateTime.now();
@@ -974,14 +919,6 @@ class _AddTournamentState extends State<AddTournament> {
                     margin: EdgeInsets.all(5.0),
                     height: 85.0,
                     width: 85.0,
-                    // child: SvgPicture.network(
-                    //   "https://www.svgrepo.com/show/2046/dog.svg",
-                    //   placeholderBuilder: (context) =>
-                    //       CircularProgressIndicator(),
-                    //   height: 110.0,
-                    //   width: 110,
-                    //   fit: BoxFit.cover,
-                    // ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                       child: Image.network(
@@ -1047,14 +984,17 @@ class _AddTournamentState extends State<AddTournament> {
                       fontSize: 12.0,
                     ),
                   ),
-                  SizedBox(height: 10.0),
-                  // Text(
-                  //   "Time: ${tournament.startTime} to ${tournament.startTime}",
-                  //   style: TextStyle(
-                  //     color: Colors.grey.shade900,
-                  //     fontSize: 14.0,
-                  //   ),
-                  // ),
+                  SizedBox(height: 5.0),
+                  Container(
+                    alignment: Alignment.bottomRight,
+                    child: Text(
+                      "Tap for details",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 10.0,
+                      ),
+                    ),
+                  ),
                   // SizedBox(height: 5.0),
                 ],
               ),
@@ -1101,7 +1041,8 @@ class _AddTournamentState extends State<AddTournament> {
                   ? selectedTournament.status = "0"
                   : selectedTournament.status = "1";
               selectedTournament.timing = "";
-              await updateTournament(selectedTournament);
+              await updateTournament(
+                  selectedTournament.id, selectedTournament.status);
             },
           ),
           CupertinoDialogAction(
@@ -1126,138 +1067,24 @@ class _AddTournamentState extends State<AddTournament> {
         ],
       );
 
-  // void _showDialog(dynamic tournament) async {
-  //   return await showDialog<void>(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         content: StatefulBuilder(
-  //           builder: (BuildContext context, StateSetter setState) {
-  //             return Row(
-  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //               children: [
-  //                 Expanded(
-  //                   flex: 1,
-  //                   child: GestureDetector(
-  //                     onTap: () async {
-  //                       _dismissDialog();
-  //                       var result = await Navigator.push(
-  //                           context,
-  //                           MaterialPageRoute(
-  //                               builder: (context) => EditTournament(
-  //                                     tournament: tournament,
-  //                                   )));
-  //                       if (result == true) {
-  //                         _refresh();
-  //                       }
-  //                     },
-  //                     child: Container(
-  //                       height: 30,
-  //                       decoration: kServiceBoxItem.copyWith(color: kBaseColor),
-  //                       padding: EdgeInsets.all(5),
-  //                       child: Center(
-  //                         child: Text(
-  //                           "EDIT",
-  //                           style: TextStyle(
-  //                             color: Colors.white,
-  //                             fontSize: 12.0,
-  //                           ),
-  //                         ),
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 SizedBox(width: 10),
-  //                 Expanded(
-  //                   flex: 1,
-  //                   child: GestureDetector(
-  //                     onTap: () async {
-  //                       _dismissDialog();
-  //                       tournament.status == "1"
-  //                           ? tournament.status = "0"
-  //                           : tournament.status = "1";
-  //                       tournament.timing = "";
-  //                       await updateTournament(tournament);
-  //                     },
-  //                     child: Container(
-  //                       height: 40,
-  //                       decoration: kServiceBoxItem.copyWith(color: kBaseColor),
-  //                       padding: EdgeInsets.all(5),
-  //                       child: Center(
-  //                         child: Text(
-  //                           tournament.status == "1"
-  //                               ? "STOP BOOKING"
-  //                               : "RESTART BOOKING",
-  //                           style: TextStyle(
-  //                             color: Colors.white,
-  //                             fontSize: 12.0,
-  //                           ),
-  //                         ),
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 SizedBox(width: 10),
-  //                 Expanded(
-  //                   flex: 1,
-  //                   child: GestureDetector(
-  //                     onTap: () async {
-  //                       _dismissDialog();
-  //                     },
-  //                     child: Container(
-  //                       height: 30,
-  //                       decoration: kServiceBoxItem.copyWith(color: Colors.red),
-  //                       padding: EdgeInsets.all(5),
-  //                       child: Center(
-  //                         child: Text(
-  //                           "CLOSE",
-  //                           style: TextStyle(
-  //                             color: Colors.white,
-  //                             fontSize: 12.0,
-  //                           ),
-  //                         ),
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ],
-  //             );
-  //           },
-  //         ),
-  //         // actions: <Widget>[
-  //         //   TextButton(
-  //         //       onPressed: () {
-  //         //         _dismissDialog();
-  //         //       },
-  //         //       child: Text('Close')),
-  //         // ],
-  //       );
-  //     },
-  //   );
-  // }
-  //
-  // _dismissDialog() {
-  //   Navigator.pop(context);
-  // }
-
   _refresh() {
     setState(() {});
   }
 
-  updateTournament(Tournament tournament) async {
+  updateTournament(int id, String status) async {
     setState(() {
       isLoading = true;
     });
+    print("Tournament Updating...");
     APICall apiCall = new APICall();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
       TournamentData tournamentData =
-          await apiCall.updateTournament(tournament);
+          await apiCall.updateTournamentStatus(id, status);
       setState(() {
         isLoading = false;
       });
       if (tournamentData == null) {
-        print("Tournament null");
       } else {
         if (tournamentData.status!) {
           print("Tournament Success");

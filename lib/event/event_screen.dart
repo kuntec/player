@@ -18,6 +18,7 @@ class EventScreen extends StatefulWidget {
 class _EventScreenState extends State<EventScreen> {
   bool isEvent = false;
   String searchString = "";
+  bool isSearching = false;
   TextEditingController searchController = new TextEditingController();
   @override
   void initState() {
@@ -65,42 +66,82 @@ class _EventScreenState extends State<EventScreen> {
     return Scaffold(
       appBar: AppBar(
 //        leading: Icon(Icons.arrow_back),
-        title: Text("EVENTS"),
+        title: !isSearching
+            ? Text("EVENTS")
+            : Container(
+                decoration: kServiceBoxItem,
+                child: TextField(
+                  autofocus: true,
+                  onChanged: (value) {
+                    setState(() {
+                      searchString = value;
+                    });
+                  },
+                  controller: searchController,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "Search Event",
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: kBaseColor,
+                    ),
+                  ),
+                ),
+              ),
         actions: [
           Container(
             child: Row(
               children: [
-                GestureDetector(
-                  onTap: () async {
-                    var result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => EventRegister()));
-                    _refresh();
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      this.isSearching = !this.isSearching;
+                    });
                   },
-                  child: Container(
-                    margin: EdgeInsets.all(5),
-                    decoration: kServiceBoxItem.copyWith(
-                      color: kBaseColor,
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    padding: EdgeInsets.all(5),
-                    child: Row(
-                      children: [
-                        Icon(
-                          isEvent ? Icons.star : Icons.add,
-                          color: Colors.white,
-                          size: 15,
+                  icon: !isSearching
+                      ? Icon(
+                          Icons.search,
+                          color: kBaseColor,
+                        )
+                      : Icon(
+                          Icons.cancel,
+                          color: kBaseColor,
                         ),
-                        SizedBox(width: 5),
-                        Text(
-                          isEvent ? "My Events" : "Register",
-                          style: TextStyle(color: Colors.white, fontSize: 12.0),
-                        ),
-                      ],
-                    ),
-                  ),
                 ),
+                isSearching
+                    ? Container()
+                    : GestureDetector(
+                        onTap: () async {
+                          var result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EventRegister()));
+                          _refresh();
+                        },
+                        child: Container(
+                          margin: EdgeInsets.all(5),
+                          decoration: kServiceBoxItem.copyWith(
+                            color: kBaseColor,
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          padding: EdgeInsets.all(5),
+                          child: Row(
+                            children: [
+                              Icon(
+                                isEvent ? Icons.star : Icons.add,
+                                color: Colors.white,
+                                size: 15,
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                isEvent ? "My Events" : "Register",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 12.0),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
               ],
             ),
           ),
@@ -112,31 +153,31 @@ class _EventScreenState extends State<EventScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              flex: 1,
-              child: Container(
-                height: 40,
-                decoration: kServiceBoxItem,
-                margin: EdgeInsets.all(10),
-                child: TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      searchString = value;
-                    });
-                  },
-                  controller: searchController,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Search",
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: kBaseColor,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Expanded(flex: 9, child: myEvent()),
+            // Expanded(
+            //   flex: 1,
+            //   child: Container(
+            //     height: 40,
+            //     decoration: kServiceBoxItem,
+            //     margin: EdgeInsets.all(10),
+            //     child: TextField(
+            //       onChanged: (value) {
+            //         setState(() {
+            //           searchString = value;
+            //         });
+            //       },
+            //       controller: searchController,
+            //       decoration: InputDecoration(
+            //         border: InputBorder.none,
+            //         hintText: "Search",
+            //         prefixIcon: Icon(
+            //           Icons.search,
+            //           color: kBaseColor,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            Expanded(child: myEvent()),
           ],
         ),
       ),
@@ -294,7 +335,15 @@ class _EventScreenState extends State<EventScreen> {
                   ),
                   SizedBox(height: 5.0),
                   Text(
-                    "Time: ${event.startTime} - ${event.endTime}",
+                    "Start Time: ${event.startTime}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "End Time: ${event.endTime}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 12.0,

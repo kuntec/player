@@ -12,6 +12,8 @@ class APIResources {
   static final String ADD_PLAYER = BASE_URL + "addPlayer";
   static final String CHECK_PLAYER = BASE_URL + "checkPlayer";
   static final String UPDATE_PLAYER = BASE_URL + "updatePlayer";
+  static final String UPDATE_PLAYER_FIREBASE =
+      BASE_URL + "updatePlayerFirebase";
 
   static final String ADD_PLAYER_SPORT = BASE_URL + "addPlayerSport";
 
@@ -33,6 +35,8 @@ class APIResources {
   static final String GET_TOURNAMENT = BASE_URL + "getTournament";
   static final String ADD_TOURNAMENT = BASE_URL + "addTournament";
   static final String UPDATE_TOURNAMENT = BASE_URL + "updateTournament";
+  static final String UPDATE_TOURNAMENT_STATUS =
+      BASE_URL + "updateTournamentStatus";
   static final String UPDATE_TOURNAMENT_IMAGE =
       BASE_URL + "updateTournamentImage";
   static final String GET_MY_TOURNAMENT = BASE_URL + "getMyTournament";

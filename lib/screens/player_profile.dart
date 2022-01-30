@@ -9,6 +9,7 @@ import 'package:player/api/api_resources.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/friends/friend.dart';
 import 'package:player/model/friend_data.dart';
 import 'package:player/model/player_data.dart';
 import 'package:player/profile/edit_profile.dart';
@@ -205,16 +206,24 @@ class _PlayerProfileState extends State<PlayerProfile>
                           ),
                         ),
                         SizedBox(height: kMargin),
-                        Container(
-                          child: Text(
-                            friendCount == 0
-                                ? "No Friends"
-                                : friendCount == 1
-                                    ? "$friendCount Friend"
-                                    : "$friendCount Friends",
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Colors.white,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => FriendScreen()));
+                          },
+                          child: Container(
+                            child: Text(
+                              friendCount == 0
+                                  ? "No Friends"
+                                  : friendCount == 1
+                                      ? "$friendCount Friend"
+                                      : "$friendCount Friends",
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
@@ -223,9 +232,7 @@ class _PlayerProfileState extends State<PlayerProfile>
                   ),
                 ]),
           ),
-
           SizedBox(height: kMargin),
-
           Container(
             margin: EdgeInsets.all(kMargin),
             decoration: kServiceBoxItem.copyWith(
@@ -360,122 +367,6 @@ class _PlayerProfileState extends State<PlayerProfile>
               ),
             ),
           ),
-          // RoundedButton(
-          //     title: "Log Out",
-          //     color: kBaseColor,
-          //     onPressed: () {
-          //       logout(context);
-          //     },
-          //     minWidth: 200,
-          //     txtColor: Colors.white)
-          // GestureDetector(
-          //   onTap: () {},
-          //   child: Container(
-          //     margin: EdgeInsets.all(kMargin),
-          //     decoration: kServiceBoxItem.copyWith(
-          //       borderRadius: BorderRadius.circular(5.0),
-          //     ),
-          //     padding: EdgeInsets.all(10.0),
-          //     width: MediaQuery.of(context).size.width,
-          //     child: Center(
-          //       child: Text(
-          //         "My Profile",
-          //         style: TextStyle(color: kBaseColor, fontSize: 16.0),
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          // GestureDetector(
-          //   onTap: () {},
-          //   child: Container(
-          //     margin: EdgeInsets.all(kMargin),
-          //     decoration: kServiceBoxItem.copyWith(
-          //       borderRadius: BorderRadius.circular(5.0),
-          //     ),
-          //     padding: EdgeInsets.all(10.0),
-          //     width: MediaQuery.of(context).size.width,
-          //     child: Center(
-          //       child: Text(
-          //         "Favorite Sport",
-          //         style: TextStyle(color: kBaseColor, fontSize: 16.0),
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          // GestureDetector(
-          //   onTap: () {
-          //
-          //   },
-          //   child: Container(
-          //     margin: EdgeInsets.all(kMargin),
-          //     decoration: kServiceBoxItem.copyWith(
-          //       borderRadius: BorderRadius.circular(5.0),
-          //     ),
-          //     padding: EdgeInsets.all(10.0),
-          //     width: MediaQuery.of(context).size.width,
-          //     child: Center(
-          //       child: Text(
-          //         "My Tournaments",
-          //         style: TextStyle(color: kBaseColor, fontSize: 16.0),
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          // GestureDetector(
-          //   onTap: () {
-          //
-          //   },
-          //   child: Container(
-          //     margin: EdgeInsets.all(kMargin),
-          //     decoration: kServiceBoxItem.copyWith(
-          //       borderRadius: BorderRadius.circular(5.0),
-          //     ),
-          //     padding: EdgeInsets.all(10.0),
-          //     width: MediaQuery.of(context).size.width,
-          //     child: Center(
-          //       child: Text(
-          //         "My Events",
-          //         style: TextStyle(color: kBaseColor, fontSize: 16.0),
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          // GestureDetector(
-          //   onTap: () {},
-          //   child: Container(
-          //     margin: EdgeInsets.all(kMargin),
-          //     decoration: kServiceBoxItem.copyWith(
-          //       borderRadius: BorderRadius.circular(5.0),
-          //     ),
-          //     padding: EdgeInsets.all(10.0),
-          //     width: MediaQuery.of(context).size.width,
-          //     child: Center(
-          //       child: Text(
-          //         "My Bookings",
-          //         style: TextStyle(color: kBaseColor, fontSize: 16.0),
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          // GestureDetector(
-          //   onTap: () {
-          //     logout(context);
-          //   },
-          //   child: Container(
-          //     margin: EdgeInsets.all(kMargin),
-          //     decoration: kServiceBoxItem.copyWith(
-          //       borderRadius: BorderRadius.circular(5.0),
-          //     ),
-          //     padding: EdgeInsets.all(10.0),
-          //     width: MediaQuery.of(context).size.width,
-          //     child: Center(
-          //       child: Text(
-          //         "Logout",
-          //         style: TextStyle(color: Colors.red, fontSize: 16.0),
-          //       ),
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );

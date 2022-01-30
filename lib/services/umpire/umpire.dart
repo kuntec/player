@@ -288,15 +288,21 @@ class _UmpireState extends State<Umpire> {
           }
           if (snapshot.hasData) {
             print("Has Data ${snapshot.data.length}");
-            return ListView.builder(
-              padding: EdgeInsets.only(bottom: 200),
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: snapshot.data.length,
-              itemBuilder: (BuildContext context, int index) {
-                return serviceItem(snapshot.data[index]);
-              },
-            );
+            return snapshot.data.length == 0
+                ? Container(
+                    child: Center(
+                      child: Text('No Data'),
+                    ),
+                  )
+                : ListView.builder(
+                    padding: EdgeInsets.only(bottom: 200),
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return serviceItem(snapshot.data[index]);
+                    },
+                  );
           } else {
             return Container(
               child: Center(
@@ -433,14 +439,14 @@ class _UmpireState extends State<Umpire> {
                                   fontSize: 12.0,
                                 ),
                               ),
-                              SizedBox(height: 5.0),
-                              Text(
-                                "Address: ${service.address}",
-                                style: TextStyle(
-                                  color: Colors.grey.shade900,
-                                  fontSize: 12.0,
-                                ),
-                              ),
+                              // SizedBox(height: 5.0),
+                              // Text(
+                              //   "Address: ${service.address}",
+                              //   style: TextStyle(
+                              //     color: Colors.grey.shade900,
+                              //     fontSize: 12.0,
+                              //   ),
+                              // ),
                               SizedBox(height: 5.0),
                               Text(
                                 "City: ${service.city}",

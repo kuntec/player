@@ -64,14 +64,16 @@ class _EventDetailsState extends State<EventDetails> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                height: 150.0,
-                width: MediaQuery.of(context).size.width,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0),
-                  child: Image.network(
-                    APIResources.IMAGE_URL + widget.event.image,
-                    fit: BoxFit.cover,
+              Center(
+                child: Container(
+                  height: 150.0,
+                  width: 150.0,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: Image.network(
+                      APIResources.IMAGE_URL + widget.event.image,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),

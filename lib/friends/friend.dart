@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
@@ -20,11 +21,21 @@ class _FriendScreenState extends State<FriendScreen> {
   bool? isRequestSelected = false;
   var myPlayerId;
   var selectedPlayerId;
+  int counter = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("Init get friend");
+
+    getRequestFriend();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Friend"),
+        title: Text("Friends"),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -75,14 +86,60 @@ class _FriendScreenState extends State<FriendScreen> {
                             color:
                                 isRequestSelected! ? kBaseColor : Colors.white),
                         child: Center(
-                          child: Text(
-                            "Request Friends",
-                            style: TextStyle(
-                                color: isRequestSelected!
-                                    ? Colors.white
-                                    : kBaseColor,
-                                fontSize: 14.0),
-                          ),
+                          child: counter == 0
+                              ? Text(
+                                  'Request Friends',
+                                  style: TextStyle(
+                                      color: isRequestSelected!
+                                          ? Colors.white
+                                          : kBaseColor,
+                                      fontSize: 14.0),
+                                )
+                              : Badge(
+                                  shape: BadgeShape.square,
+                                  borderRadius: BorderRadius.circular(10),
+                                  position:
+                                      BadgePosition.topEnd(top: 0, end: -20),
+                                  padding: EdgeInsets.all(2),
+                                  badgeContent: Text(
+                                    '$counter',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  child: Text(
+                                    'Request Friends',
+                                    style: TextStyle(
+                                        color: isRequestSelected!
+                                            ? Colors.white
+                                            : kBaseColor,
+                                        fontSize: 14.0),
+                                  ),
+                                ),
+                          // child: Badge(
+                          //   position: BadgePosition.topStart(top: 0, start: 55),
+                          //   badgeContent: Text(
+                          //     '$counter',
+                          //     style: TextStyle(color: Colors.white),
+                          //   ),
+                          //   child: Text(
+                          //     "Request Friends",
+                          //     style: TextStyle(
+                          //         color: isRequestSelected!
+                          //             ? Colors.white
+                          //             : kBaseColor,
+                          //         fontSize: 14.0),
+                          //   ),
+                          // ),
+                          // child: Text(
+                          //   "Request Friends ${counter}",
+                          //   style: TextStyle(
+                          //       color: isRequestSelected!
+                          //           ? Colors.white
+                          //           : kBaseColor,
+                          //       fontSize: 14.0),
+                          // ),
                         ),
                       ),
                     ),
@@ -371,71 +428,6 @@ class _FriendScreenState extends State<FriendScreen> {
     );
   }
 
-//   Widget playerItem(dynamic player) {
-//     return GestureDetector(
-//       onTap: () async {
-//         // Utility.showToast(player.fuid.toString());
-//
-//         Navigator.push(
-//             context,
-//             MaterialPageRoute(
-//                 builder: (context) => ChatPage(
-//                     peerId: player.fuid.toString(),
-//                     peerAvatar: player.image.toString(),
-//                     peerNickname: player.name.toString())));
-//       },
-//       child: Container(
-//         margin: EdgeInsets.all(10.0),
-//         decoration: kServiceBoxItem,
-//         // height: 200,
-//         child: Stack(
-//           children: [
-//             Container(
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   Container(
-//                     margin: EdgeInsets.all(10.0),
-//                     height: 40.0,
-//                     width: 40.0,
-//                     child: player.image == null
-//                         ? FlutterLogo()
-//                         : ClipRRect(
-//                             borderRadius:
-//                                 BorderRadius.all(Radius.circular(5.0)),
-//                             child: Image.network(
-//                               APIResources.IMAGE_URL + player.image,
-//                               fit: BoxFit.fill,
-//                             ),
-//                           ),
-//                   ),
-// //                  Row(),
-//                 ],
-//               ),
-//             ),
-//             Container(
-//               margin: EdgeInsets.only(left: 70.0, right: 5.0),
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   SizedBox(height: 10.0),
-//                   Text(
-//                     player.name,
-//                     style: TextStyle(
-//                         color: Colors.black,
-//                         fontSize: 16.0,
-//                         fontWeight: FontWeight.bold),
-//                   ),
-//                   SizedBox(height: 5.0),
-//                 ],
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
   bool? isLoading = false;
 
   requestFriends() {
@@ -586,72 +578,6 @@ class _FriendScreenState extends State<FriendScreen> {
               ),
             ),
           ),
-          // Expanded(
-          //   flex: 3,
-          //   child: Column(
-          //     children: [
-          //       player.friend == null
-          //           ? GestureDetector(
-          //               onTap: () async {
-          //                 // Utility.showToast(
-          //                 //     "Send ${myPlayerId.toString()} to ${player.id}");
-          //                 setState(() {
-          //                   selectedPlayerId = player.id.toString();
-          //                 });
-          //                 addFriend(
-          //                     myPlayerId.toString(), player.id.toString());
-          //               },
-          //               child: isLoading == true &&
-          //                       selectedPlayerId == player.id.toString()
-          //                   ? CircularProgressIndicator(color: kBaseColor)
-          //                   : Container(
-          //                       color: kBaseColor,
-          //                       padding: EdgeInsets.all(5),
-          //                       child: Text(
-          //                         "Send Request",
-          //                         style: TextStyle(
-          //                           color: Colors.white,
-          //                           fontSize: 12.0,
-          //                         ),
-          //                       ),
-          //                     ),
-          //             )
-          //           : player.friend.status == "0"
-          //               ? Container(
-          //                   decoration: BoxDecoration(
-          //                     border: Border.all(
-          //                       color: kBaseColor,
-          //                       width: 0,
-          //                     ),
-          //                   ),
-          //                   padding: EdgeInsets.all(5),
-          //                   child: Text(
-          //                     "Requested",
-          //                     style: TextStyle(
-          //                       color: kBaseColor,
-          //                       fontSize: 12.0,
-          //                     ),
-          //                   ),
-          //                 )
-          //               : Container(
-          //                   decoration: BoxDecoration(
-          //                     border: Border.all(
-          //                       color: kBaseColor,
-          //                       width: 0,
-          //                     ),
-          //                   ),
-          //                   padding: EdgeInsets.all(5),
-          //                   child: Text(
-          //                     "Friend",
-          //                     style: TextStyle(
-          //                       color: kBaseColor,
-          //                       fontSize: 12.0,
-          //                     ),
-          //                   ),
-          //                 ),
-          //     ],
-          //   ),
-          // ),
         ],
       ),
     );
@@ -739,6 +665,9 @@ class _FriendScreenState extends State<FriendScreen> {
   Future<List<Friends>> getRequestFriend() async {
     List<Friends> list = [];
     APICall apiCall = new APICall();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? playerId = prefs.getInt("playerId");
+    myPlayerId = playerId.toString();
     bool connectivityStatus = await Utility.checkConnectivity();
     if (connectivityStatus) {
       FriendData friendData = await apiCall.getRequestFriend(myPlayerId);
@@ -750,6 +679,9 @@ class _FriendScreenState extends State<FriendScreen> {
       } else {
         print(friendData.message!);
       }
+      setState(() {
+        counter = list.length;
+      });
     }
     return list;
   }

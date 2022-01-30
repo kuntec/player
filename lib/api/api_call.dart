@@ -151,6 +151,20 @@ class APICall {
     return PlayerData.fromJson(jsonDecode(response.body));
   }
 
+  Future<PlayerData> updatePlayerFirebase(
+      String id, String deviceToken, String fuid) async {
+    Uri url = Uri.parse(APIResources.UPDATE_PLAYER_FIREBASE);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['id'] = id;
+    params['device_token'] = deviceToken;
+    params['f_uid'] = fuid;
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return PlayerData.fromJson(jsonDecode(response.body));
+  }
+
   Future<SportData> getSports() async {
     Uri url = Uri.parse(APIResources.GET_SPORT);
     HttpCall call = new HttpCall();
@@ -405,6 +419,23 @@ class APICall {
     params['no_of_overs'] = tournament.noOfOvers!;
     params['location_link'] = tournament.locationLink!;
     params['status'] = tournament.status!;
+
+    HttpCall call = new HttpCall();
+
+    http.Response response = await call.post(url, header, params);
+    log("Response Body: " + response.body);
+//    return response.body;
+    return TournamentData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<TournamentData> updateTournamentStatus(int id, String status) async {
+    Uri url = Uri.parse(APIResources.UPDATE_TOURNAMENT_STATUS);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+
+    params['id'] = id.toString();
+
+    params['status'] = status;
 
     HttpCall call = new HttpCall();
 

@@ -301,6 +301,14 @@ class _MyTournamentsState extends State<MyTournaments> {
                   ),
                   SizedBox(height: 5.0),
                   Text(
+                    "Participant Name: ${participant.name.toString()}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
                     participant.paymentStatus == "0"
                         ? "Payment : Not Done"
                         : "Payment : Done",
