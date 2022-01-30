@@ -12,7 +12,8 @@ import 'package:player/model/friend_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({Key? key}) : super(key: key);
+  bool? isFriend;
+  ChatScreen({required this.isFriend});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -20,6 +21,14 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   bool? isRequestSelected = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    isRequestSelected = widget.isFriend;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

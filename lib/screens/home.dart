@@ -137,7 +137,8 @@ class _HomeScreenState extends State<HomeScreen>
         for (Conversation c in conversations) {
           for (Reply r in c.reply!) {
             // print("Reply Status : {$r.status}");
-            if (r.status == "0") {
+            if (r.status == "0" &&
+                r.playerId.toString() != playerId.toString()) {
               _chatCount = _chatCount! + 1;
             }
           }
@@ -211,8 +212,12 @@ class _HomeScreenState extends State<HomeScreen>
               //DialogBuilder(context).showLoadingIndicator('Calculating + 1');
               // await _incrementCounter();
               //DialogBuilder(context).hideOpenDialog();
-              await Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ChatScreen()));
+              await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ChatScreen(
+                            isFriend: false,
+                          )));
               getConversations();
             },
             child: _chatCount == 0

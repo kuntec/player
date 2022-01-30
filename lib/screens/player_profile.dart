@@ -9,6 +9,7 @@ import 'package:player/api/api_resources.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
 import 'package:player/constant/utility.dart';
+import 'package:player/friends/chat_screen.dart';
 import 'package:player/friends/friend.dart';
 import 'package:player/model/friend_data.dart';
 import 'package:player/model/player_data.dart';
@@ -211,7 +212,9 @@ class _PlayerProfileState extends State<PlayerProfile>
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => FriendScreen()));
+                                    builder: (context) => ChatScreen(
+                                          isFriend: true,
+                                        )));
                           },
                           child: Container(
                             child: Text(

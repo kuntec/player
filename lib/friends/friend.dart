@@ -117,29 +117,6 @@ class _FriendScreenState extends State<FriendScreen> {
                                         fontSize: 14.0),
                                   ),
                                 ),
-                          // child: Badge(
-                          //   position: BadgePosition.topStart(top: 0, start: 55),
-                          //   badgeContent: Text(
-                          //     '$counter',
-                          //     style: TextStyle(color: Colors.white),
-                          //   ),
-                          //   child: Text(
-                          //     "Request Friends",
-                          //     style: TextStyle(
-                          //         color: isRequestSelected!
-                          //             ? Colors.white
-                          //             : kBaseColor,
-                          //         fontSize: 14.0),
-                          //   ),
-                          // ),
-                          // child: Text(
-                          //   "Request Friends ${counter}",
-                          //   style: TextStyle(
-                          //       color: isRequestSelected!
-                          //           ? Colors.white
-                          //           : kBaseColor,
-                          //       fontSize: 14.0),
-                          // ),
                         ),
                       ),
                     ),

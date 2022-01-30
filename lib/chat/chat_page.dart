@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,6 +17,7 @@ import 'package:player/constant/constants.dart';
 import 'package:player/constant/firestore_constants.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/friend_data.dart';
+import 'package:player/service/local_notification_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -79,6 +81,13 @@ class ChatPageState extends State<ChatPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    // FirebaseMessaging.onMessage.listen((message) {
+    //   if (message.notification != null) {
+    //     print("Do nothing");
+    //   }
+    // });
+
     chatProvider = context.read<ChatProvider>();
     // authProvider = context.read<AuthProvider>();
 
@@ -133,48 +142,6 @@ class ChatPageState extends State<ChatPage> {
       {FirestoreContants.chattingWith: peerId},
     );
   }
-
-  // Future getImage() async {
-  //   ImagePicker imagePicker = ImagePicker();
-  //   PickedFile? pickedFile;
-  //
-  //   pickedFile = await imagePicker.getImage(source: ImageSource.gallery);
-  //   if (pickedFile != null) {
-  //     imageFile = File(pickedFile.path);
-  //     if (imageFile != null) {
-  //       setState(() {
-  //         isLoading = true;
-  //       });
-  //       uploadFile();
-  //     }
-  //   }
-  // }
-
-  // void getSticker() {
-  //   focusNode.unfocus();
-  //   setState(() {
-  //     isShowSticker = !isShowSticker;
-  //   });
-  // }
-
-  // Future uploadFile() async {
-  //   String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-  //   UploadTask uploadTask = chatProvider.uploadTask(imageFile!, fileName);
-  //
-  //   try {
-  //     TaskSnapshot snapshot = await uploadTask;
-  //     imageUrl = await snapshot.ref.getDownloadURL();
-  //     setState(() {
-  //       isLoading = false;
-  //       onSendMessage(imageUrl, TypeMessage.image);
-  //     });
-  //   } on FirebaseException catch (e) {
-  //     setState(() {
-  //       isLoading = false;
-  //       Utility.showToast(e.message ?? e.toString());
-  //     });
-  //   }
-  // }
 
   void onSendMessage(String content, int type) async {
     if (content.trim().isNotEmpty) {
@@ -256,19 +223,26 @@ class ChatPageState extends State<ChatPage> {
               ),
             ),
             Container(
-                height: 40,
-                width: 40,
-                child: CachedNetworkImage(
-                  imageUrl: peerAvatar == ""
-                      ? APIResources.AVATAR_IMAGE
-                      : APIResources.IMAGE_URL + peerAvatar,
-                  fit: BoxFit.cover,
-                  imageBuilder: (context, imageProvider) => CircleAvatar(
-                    backgroundColor: Colors.white,
-                    backgroundImage: imageProvider,
+              height: 40,
+              width: 40,
+              child: CachedNetworkImage(
+                imageUrl: peerAvatar == ""
+                    ? APIResources.AVATAR_IMAGE
+                    : APIResources.IMAGE_URL + peerAvatar,
+                fit: BoxFit.cover,
+                imageBuilder: (context, imageProvider) => CircleAvatar(
+                  backgroundColor: Colors.white,
+                  backgroundImage: imageProvider,
+                ),
+                errorWidget: (context, url, error) => ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  child: Image.network(
+                    APIResources.AVATAR_IMAGE,
+                    fit: BoxFit.fill,
                   ),
-                  errorWidget: (context, url, error) => FlutterLogo(),
-                )),
+                ),
+              ),
+            ),
             Container(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
