@@ -6,7 +6,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:player/chat/login_page.dart';
 import 'package:player/chatprovider/auth_provider.dart';
 import 'package:player/chatprovider/chat_provider.dart';
 import 'package:player/chatprovider/home_provider.dart';

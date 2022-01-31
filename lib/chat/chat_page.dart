@@ -9,7 +9,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:player/allWidgets/loading_view.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
-import 'package:player/chat/login_page.dart';
 import 'package:player/chatmodels/message_chat.dart';
 import 'package:player/chatprovider/auth_provider.dart';
 import 'package:player/chatprovider/chat_provider.dart';
