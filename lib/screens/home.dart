@@ -23,6 +23,7 @@ import 'package:player/model/host_activity.dart';
 import 'package:player/model/my_sport.dart';
 import 'package:player/model/player_data.dart';
 import 'package:player/model/sport_data.dart';
+import 'package:player/model/unread_notification_data.dart';
 import 'package:player/providers/banner_model.dart';
 import 'package:player/screens/add_host_activity.dart';
 import 'package:player/screens/add_tournament.dart';
@@ -58,6 +59,7 @@ class _HomeScreenState extends State<HomeScreen>
   List<Data> allSports = [];
   List<Banners> banners = [];
   List<Conversation> conversations = [];
+  List<Unread> unread = [];
   var city;
   int? _chatCount = 0;
   int? _notificationCount = 0;
@@ -92,6 +94,7 @@ class _HomeScreenState extends State<HomeScreen>
     getSports();
     getMyCity();
     getConversations();
+    getUnreadNotifications();
     getHostActivity();
     disposePageAfter(20);
 
@@ -102,9 +105,7 @@ class _HomeScreenState extends State<HomeScreen>
         // print(message.notification!.body);
         print("Data Title ${message.data['title']}");
         if (message.data['title'] == "1") {
-          setState(() {
-            _notificationCount = _notificationCount! + 1;
-          });
+          getUnreadNotifications();
         } else {
           getConversations();
         }
@@ -117,6 +118,28 @@ class _HomeScreenState extends State<HomeScreen>
         closeTopContainer = controller.offset > 50;
       });
     });
+  }
+
+  Future<List<Unread>> getUnreadNotifications() async {
+    APICall apiCall = new APICall();
+
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      int? playerId = prefs.getInt("playerId");
+      print("Player id $playerId");
+      UnreadNotificationData unreadNotificationData =
+          await apiCall.getUnreadNotifications(playerId.toString());
+      if (unreadNotificationData.unread != null) {
+        unread = unreadNotificationData.unread!;
+        // conversations = conversations.reversed.toList();
+        print("this is chat count before $_notificationCount");
+        _notificationCount = unread.length;
+        print("this is chat count after $_chatCount");
+        setState(() {});
+      }
+    }
+    return unread;
   }
 
   Future<List<Conversation>> getConversations() async {
@@ -180,14 +203,15 @@ class _HomeScreenState extends State<HomeScreen>
         automaticallyImplyLeading: false,
         actions: [
           GestureDetector(
-            onTap: () {
+            onTap: () async {
               setState(() {
                 _notificationCount = 0;
               });
-              Navigator.push(
+              await Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => NotificationScreen()));
+              getUnreadNotifications();
             },
             child: _notificationCount == 0
                 ? Icon(

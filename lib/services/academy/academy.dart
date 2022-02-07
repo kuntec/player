@@ -456,14 +456,18 @@ class _AcademyState extends State<Academy> {
                                   fontSize: 12.0,
                                 ),
                               ),
-                              // SizedBox(height: 5.0),
-                              // Text(
-                              //   "City: ${service.city}",
-                              //   style: TextStyle(
-                              //     color: Colors.grey.shade900,
-                              //     fontSize: 12.0,
-                              //   ),
-                              // ),
+                              Container(
+                                margin: EdgeInsets.only(right: 7, bottom: 2),
+                                alignment: Alignment.bottomRight,
+                                child: Text(
+                                  "Tap for details",
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 10.0,
+                                  ),
+                                ),
+                              )
                             ],
                           ),
                         )),

@@ -225,35 +225,6 @@ class _CommentatorState extends State<Commentator> {
                     ),
                   ),
                 ),
-                // Center(
-                //   child: TextButton.icon(
-                //     onPressed: () {
-                //       if (isService) {
-                //         Navigator.push(
-                //             context,
-                //             MaterialPageRoute(
-                //                 builder: (context) => MyCommentator(
-                //                       serviceId: widget.serviceId,
-                //                     )));
-                //       } else {
-                //         Navigator.push(
-                //             context,
-                //             MaterialPageRoute(
-                //                 builder: (context) => CommentatorRegister(
-                //                       serviceId: widget.serviceId,
-                //                     )));
-                //       }
-                //     },
-                //     icon: Icon(
-                //       isService ? Icons.person : Icons.add,
-                //       color: Colors.white,
-                //     ),
-                //     label: Text(
-                //       isService ? "MyProfile" : "Register",
-                //       style: TextStyle(color: Colors.white),
-                //     ),
-                //   ),
-                // )
               ],
             ),
           ),
@@ -451,6 +422,18 @@ class _CommentatorState extends State<Commentator> {
                             ],
                           ),
                         )),
+                    Container(
+                      margin: EdgeInsets.only(right: 7, bottom: 2),
+                      alignment: Alignment.bottomRight,
+                      child: Text(
+                        "Tap for details",
+                        textAlign: TextAlign.right,
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 10.0,
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),

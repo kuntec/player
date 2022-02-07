@@ -243,26 +243,6 @@ class _VenueScreenState extends State<VenueScreen>
                       ),
                     ),
                   ),
-                  // TextButton.icon(
-                  //   onPressed: () async {
-                  //     // Navigator.push(
-                  //     //     context,
-                  //     //     MaterialPageRoute(
-                  //     //         builder: (context) => VenueRegister()));
-                  //
-                  //     await Navigator.push(context,
-                  //         MaterialPageRoute(builder: (context) => AddVenue()));
-                  //     _refresh();
-                  //   },
-                  //   icon: Icon(
-                  //     Icons.add,
-                  //     color: kBaseColor,
-                  //   ),
-                  //   label: Text(
-                  //     "Register",
-                  //     style: TextStyle(color: kBaseColor),
-                  //   ),
-                  // )
                 ],
               ),
             ),
@@ -360,8 +340,6 @@ class _VenueScreenState extends State<VenueScreen>
       }
 
       if (venueData.status!) {
-        //print(hostActivity.message!);
-        //  Navigator.pop(context);
       } else {
         print(venueData.message!);
       }

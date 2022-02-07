@@ -232,35 +232,6 @@ class _ManufacturerState extends State<Manufacturer> {
                     ),
                   ),
                 ),
-                // Center(
-                //   child: TextButton.icon(
-                //     onPressed: () {
-                //       if (isService) {
-                //         Navigator.push(
-                //             context,
-                //             MaterialPageRoute(
-                //                 builder: (context) => MyManufacturer(
-                //                       serviceId: widget.serviceId,
-                //                     )));
-                //       } else {
-                //         Navigator.push(
-                //             context,
-                //             MaterialPageRoute(
-                //                 builder: (context) => ManufacturerRegister(
-                //                       serviceId: widget.serviceId,
-                //                     )));
-                //       }
-                //     },
-                //     icon: Icon(
-                //       isService ? Icons.person : Icons.add,
-                //       color: Colors.white,
-                //     ),
-                //     label: Text(
-                //       isService ? "MyProfile" : "Register",
-                //       style: TextStyle(color: Colors.white),
-                //     ),
-                //   ),
-                // )
               ],
             ),
           ),
@@ -463,6 +434,18 @@ class _ManufacturerState extends State<Manufacturer> {
                                   fontSize: 12.0,
                                 ),
                               ),
+                              Container(
+                                margin: EdgeInsets.only(right: 7, bottom: 2),
+                                alignment: Alignment.bottomRight,
+                                child: Text(
+                                  "Tap for details",
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 10.0,
+                                  ),
+                                ),
+                              )
                             ],
                           ),
                         )),

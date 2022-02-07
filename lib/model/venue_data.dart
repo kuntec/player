@@ -84,6 +84,8 @@ class Venue {
     String? sportId,
     String? members,
     String? onwards,
+    String? ownerName,
+    String? ownerNumber,
     int? id,
   }) {
     _name = name;
@@ -102,6 +104,8 @@ class Venue {
     _sportId = sportId;
     _members = members;
     _onwards = onwards;
+    _ownerName = ownerName;
+    _ownerNumber = ownerNumber;
     _id = id;
   }
 
@@ -122,6 +126,8 @@ class Venue {
     _sportId = json['sport_id'];
     _members = json['members'];
     _onwards = json['onwards'];
+    _ownerName = json['owner_name'];
+    _ownerNumber = json['owner_number'];
     _id = json['id'];
   }
   String? _name;
@@ -140,6 +146,8 @@ class Venue {
   String? _sportId;
   String? _members;
   String? _onwards;
+  String? _ownerName;
+  String? _ownerNumber;
   int? _id;
 
   String? get name => _name;
@@ -158,6 +166,8 @@ class Venue {
   String? get sportId => _sportId;
   String? get members => _members;
   String? get onwards => _onwards;
+  String? get ownerName => _ownerName;
+  String? get ownerNumber => _ownerNumber;
   int? get id => _id;
 
   Map<String, dynamic> toJson() {
@@ -178,6 +188,9 @@ class Venue {
     map['sport_id'] = _sportId;
     map['members'] = _members;
     map['onwards'] = _onwards;
+    map['owner_name'] = _ownerName;
+    map['owner_number'] = _ownerNumber;
+
     map['id'] = _id;
     return map;
   }
@@ -186,181 +199,75 @@ class Venue {
     _onwards = value;
   }
 
-  set id(int? value) {
+  set id(value) {
     _id = value;
   }
 
-  set image(String? value) {
+  set image(value) {
     _image = value;
   }
 
-  set createdAt(String? value) {
+  set createdAt(value) {
     _createdAt = value;
   }
 
-  set locationLink(String? value) {
+  set locationLink(value) {
     _locationLink = value;
   }
 
-  set locationId(String? value) {
+  set locationId(value) {
     _locationId = value;
   }
 
-  set playerId(String? value) {
+  set playerId(value) {
     _playerId = value;
   }
 
-  set facilities(String? value) {
+  set facilities(value) {
     _facilities = value;
   }
 
-  set sport(String? value) {
+  set sport(value) {
     _sport = value;
   }
 
-  set city(String? value) {
+  set city(value) {
     _city = value;
   }
 
-  set closeTime(String? value) {
+  set closeTime(value) {
     _closeTime = value;
   }
 
-  set openTime(String? value) {
+  set openTime(value) {
     _openTime = value;
   }
 
-  set address(String? value) {
+  set address(value) {
     _address = value;
   }
 
-  set description(String? value) {
+  set description(value) {
     _description = value;
   }
 
-  set name(String? value) {
+  set name(value) {
     _name = value;
   }
 
-  set sportId(String? value) {
+  set sportId(value) {
     _sportId = value;
   }
 
-  set members(String? value) {
+  set members(value) {
     _members = value;
   }
-}
 
-/// id : 6
-/// name : "Akota Stadium"
-/// description : "large stadium"
-/// open_time : "09:00"
-/// close_time : "10:00"
-/// address : "akota"
-/// city : "vadodara"
-/// sport : "cricket, football"
-/// player_id : "9"
-/// location_id : "1"
-/// image : "venues/su1KxS0bKqOl9pSXIRbRpVOXJvub7uCOfK21MHAZ.jpg"
-/// created_at : "25/11/21"
-/// facilities : "gym, parking"
-/// location_link : "linktext"
-//
-// class Venues {
-//   Venues({
-//     int? id,
-//     String? name,
-//     String? description,
-//     String? openTime,
-//     String? closeTime,
-//     String? address,
-//     String? city,
-//     String? sport,
-//     String? playerId,
-//     String? locationId,
-//     String? image,
-//     String? createdAt,
-//     String? facilities,
-//     String? locationLink,
-//   }) {
-//     _id = id;
-//     _name = name;
-//     _description = description;
-//     _openTime = openTime;
-//     _closeTime = closeTime;
-//     _address = address;
-//     _city = city;
-//     _sport = sport;
-//     _playerId = playerId;
-//     _locationId = locationId;
-//     _image = image;
-//     _createdAt = createdAt;
-//     _facilities = facilities;
-//     _locationLink = locationLink;
-//   }
-//
-//   Venues.fromJson(dynamic json) {
-//     _id = json['id'];
-//     _name = json['name'];
-//     _description = json['description'];
-//     _openTime = json['open_time'];
-//     _closeTime = json['close_time'];
-//     _address = json['address'];
-//     _city = json['city'];
-//     _sport = json['sport'];
-//     _playerId = json['player_id'];
-//     _locationId = json['location_id'];
-//     _image = json['image'];
-//     _createdAt = json['created_at'];
-//     _facilities = json['facilities'];
-//     _locationLink = json['location_link'];
-//   }
-//   int? _id;
-//   String? _name;
-//   String? _description;
-//   String? _openTime;
-//   String? _closeTime;
-//   String? _address;
-//   String? _city;
-//   String? _sport;
-//   String? _playerId;
-//   String? _locationId;
-//   String? _image;
-//   String? _createdAt;
-//   String? _facilities;
-//   String? _locationLink;
-//
-//   int? get id => _id;
-//   String? get name => _name;
-//   String? get description => _description;
-//   String? get openTime => _openTime;
-//   String? get closeTime => _closeTime;
-//   String? get address => _address;
-//   String? get city => _city;
-//   String? get sport => _sport;
-//   String? get playerId => _playerId;
-//   String? get locationId => _locationId;
-//   String? get image => _image;
-//   String? get createdAt => _createdAt;
-//   String? get facilities => _facilities;
-//   String? get locationLink => _locationLink;
-//
-//   Map<String, dynamic> toJson() {
-//     final map = <String, dynamic>{};
-//     map['id'] = _id;
-//     map['name'] = _name;
-//     map['description'] = _description;
-//     map['open_time'] = _openTime;
-//     map['close_time'] = _closeTime;
-//     map['address'] = _address;
-//     map['city'] = _city;
-//     map['sport'] = _sport;
-//     map['player_id'] = _playerId;
-//     map['location_id'] = _locationId;
-//     map['image'] = _image;
-//     map['created_at'] = _createdAt;
-//     map['facilities'] = _facilities;
-//     map['location_link'] = _locationLink;
-//     return map;
-//   }
-// }
+  set ownerNumber(value) {
+    _ownerNumber = value;
+  }
+
+  set ownerName(value) {
+    _ownerName = value;
+  }
+}

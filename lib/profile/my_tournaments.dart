@@ -146,13 +146,6 @@ class _MyTournamentsState extends State<MyTournaments> {
               );
             },
           ),
-          // actions: <Widget>[
-          //   TextButton(
-          //       onPressed: () {
-          //         _dismissDialog();
-          //       },
-          //       child: Text('Close')),
-          // ],
         );
       },
     );
@@ -318,28 +311,6 @@ class _MyTournamentsState extends State<MyTournaments> {
                     ),
                   ),
                   SizedBox(height: 5.0),
-                  // Text(
-                  //   "Entry Fees: \u{20B9} ${participant.tournament!.organizerName}",
-                  //   style: TextStyle(
-                  //     color: Colors.grey.shade900,
-                  //     fontSize: 12.0,
-                  //   ),
-                  // ),
-                  // Text(
-                  //   "Entry Fees: \u{20B9} ${participant.tournament!.organizerNumber}",
-                  //   style: TextStyle(
-                  //     color: Colors.grey.shade900,
-                  //     fontSize: 12.0,
-                  //   ),
-                  // ),
-                  // Text(
-                  //   "Time: ${tournament.startTime} to ${tournament.startTime}",
-                  //   style: TextStyle(
-                  //     color: Colors.grey.shade900,
-                  //     fontSize: 14.0,
-                  //   ),
-                  // ),
-                  // SizedBox(height: 5.0),
                 ],
               ),
             ),

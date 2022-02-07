@@ -351,7 +351,11 @@ class _EditTshirtSellerState extends State<EditTshirtSeller> {
       });
       if (serviceModel.status!) {
         Utility.showToast("Service Updated Successfully");
-        Navigator.pop(context, true);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    ServicePhotos(serviceDataId: serviceModel.service!.id)));
       } else {
         Utility.showValidationToast("Something Went Wrong");
       }

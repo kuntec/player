@@ -20,26 +20,19 @@ class _BookedSlotState extends State<BookedSlot> {
       appBar: AppBar(
         title: Text("Booked Slots"),
       ),
-      bottomSheet: Container(
-        margin: EdgeInsets.only(left: k20Margin, right: k20Margin),
-        child: RoundedButton(
-            title: "Cancel Booking",
-            color: kBaseColor,
-            onPressed: () {
-//              Utility.showToast("Venue Booking Cancel");
-              _showDialog();
-            },
-            minWidth: MediaQuery.of(context).size.width,
-            txtColor: Colors.white),
-
-        // RoundedButton(
-        //   title: "Proceed To Book",
-        //   color: kBaseColor,
-        //   txtColor: Colors.white,
-        //   minWidth: MediaQuery.of(context).size.width,
-        //   onPressed: () {},
-        // ),
-      ),
+      // bottomSheet: Container(
+      //   margin: EdgeInsets.only(left: k20Margin, right: k20Margin),
+      //   child: RoundedButton(
+      //       title: "Cancel Booking",
+      //       color: kBaseColor,
+      //       onPressed: () {
+      //         _showDialog();
+      //       },
+      //       minWidth: MediaQuery.of(context).size.width,
+      //       txtColor: Colors.white),
+      //
+      //
+      // ),
       body: SingleChildScrollView(
         child: Container(
           margin: EdgeInsets.all(10.0),

@@ -448,6 +448,18 @@ class _ScorerState extends State<Scorer> {
                                   fontSize: 12.0,
                                 ),
                               ),
+                              Container(
+                                margin: EdgeInsets.only(right: 7, bottom: 2),
+                                alignment: Alignment.bottomRight,
+                                child: Text(
+                                  "Tap for details",
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 10.0,
+                                  ),
+                                ),
+                              )
                             ],
                           ),
                         )),

@@ -139,19 +139,6 @@ class _MyEventsState extends State<MyEvents> {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Expanded(
-                  //   flex: 1,
-                  //   child: CustomButton(
-                  //       height: 20,
-                  //       fontSize: 16.0,
-                  //       title: "Cancel Booking",
-                  //       color: kBaseColor,
-                  //       txtColor: Colors.white,
-                  //       minWidth: 80,
-                  //       onPressed: () async {
-                  //         _dismissDialog();
-                  //       }),
-                  // ),
                   SizedBox(width: 20),
                   Expanded(
                     flex: 1,
@@ -165,21 +152,12 @@ class _MyEventsState extends State<MyEvents> {
                         onPressed: () async {
                           _dismissDialog();
                           _showCancelDialog(participant.event);
-                          // participant.status = "0";
-                          // await updateParticipant(participant);
                         }),
                   ),
                 ],
               );
             },
           ),
-          // actions: <Widget>[
-          //   TextButton(
-          //       onPressed: () {
-          //         _dismissDialog();
-          //       },
-          //       child: Text('Close')),
-          // ],
         );
       },
     );

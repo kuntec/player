@@ -203,15 +203,15 @@ class _EditVenueDetailsState extends State<EditVenueDetails> {
               child: image != null
                   ? Image.file(
                       image!,
-                      width: 280,
-                      height: 150,
+                      width: 180,
+                      height: 180,
                       fit: BoxFit.fill,
                     )
                   : widget.venue.image != null
                       ? Image.network(
                           APIResources.IMAGE_URL + widget.venue.image,
-                          width: 280,
-                          height: 150,
+                          width: 180,
+                          height: 180,
                           fit: BoxFit.fill,
                         )
                       : FlutterLogo(size: 100),

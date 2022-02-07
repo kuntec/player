@@ -164,8 +164,8 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
               child: image != null
                   ? Image.file(
                       image!,
-                      width: 280,
-                      height: 150,
+                      width: 180,
+                      height: 180,
                       fit: BoxFit.fill,
                     )
                   : FlutterLogo(size: 100),
@@ -220,17 +220,16 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                   color: Colors.grey,
                 )),
           ),
-          TextField(
-            onChanged: (value) {
-              description = value;
-            },
-            decoration: InputDecoration(
-                labelText: "Venue Description",
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                )),
-          ),
-
+          // TextField(
+          //   onChanged: (value) {
+          //     description = value;
+          //   },
+          //   decoration: InputDecoration(
+          //       labelText: "Venue Description",
+          //       labelStyle: TextStyle(
+          //         color: Colors.grey,
+          //       )),
+          // ),
           TextField(
             // onChanged: (value) {
             //   facilities = value;
@@ -305,31 +304,6 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                       )),
                 ),
               ),
-              // Expanded(
-              //   flex: 1,
-              //   child: GestureDetector(
-              //     onTap: () {
-              //       pickTime(context, true);
-              //     },
-              //     child: Text(
-              //       txtOpenTime,
-              //     ),
-              //   ),
-              // ),
-              // SizedBox(
-              //   width: 20.0,
-              // ),
-              // Expanded(
-              //   flex: 1,
-              //   child: GestureDetector(
-              //     onTap: () {
-              //       pickTime(context, false);
-              //     },
-              //     child: Text(
-              //       txtCloseTime,
-              //     ),
-              //   ),
-              // ),
             ],
           )),
           SizedBox(
@@ -375,27 +349,33 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                   color: Colors.grey,
                 )),
           ),
-
-          // TextField(
-          //   onChanged: (value) {
-          //     prizeDetails = value;
-          //   },
-          //   decoration: InputDecoration(
-          //       labelText: "Prize Details",
-          //       labelStyle: TextStyle(
-          //         color: Colors.grey,
-          //       )),
-          // ),
-          // TextField(
-          //   onChanged: (value) {
-          //     otherInfo = value;
-          //   },
-          //   decoration: InputDecoration(
-          //       labelText: "Any Other Information",
-          //       labelStyle: TextStyle(
-          //         color: Colors.grey,
-          //       )),
-          // ),
+          TextField(
+            enabled: false,
+            decoration: InputDecoration(
+                labelText: "Venue Description",
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                )),
+          ),
+          TextFormField(
+              onChanged: (value) {
+                description = value;
+              },
+              minLines: 3,
+              maxLines: 5,
+              keyboardType: TextInputType.multiline,
+              textAlign: TextAlign.start,
+              decoration: InputDecoration(
+                labelText: "",
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(5.0),
+                  ),
+                ),
+              )),
           SizedBox(height: k20Margin),
           isLoading == true
               ? CircularProgressIndicator(

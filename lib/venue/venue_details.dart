@@ -54,14 +54,6 @@ class _VenueDetailsState extends State<VenueDetails> {
             },
             minWidth: MediaQuery.of(context).size.width,
             txtColor: Colors.white),
-
-        // RoundedButton(
-        //   title: "Proceed To Book",
-        //   color: kBaseColor,
-        //   txtColor: Colors.white,
-        //   minWidth: MediaQuery.of(context).size.width,
-        //   onPressed: () {},
-        // ),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -170,6 +162,10 @@ class _VenueDetailsState extends State<VenueDetails> {
           itemDetail(context, "Close Time", widget.venue.closeTime.toString()),
           itemDetail(
               context, "Max Person Allowed", widget.venue.members.toString()),
+          itemDetail(
+              context, "Venue Owner Name", widget.venue.ownerName.toString()),
+          itemDetail(context, "Venue Owner Number",
+              widget.venue.ownerNumber.toString()),
           itemDetail(context, "Venue Address", widget.venue.address.toString()),
           widget.venue.locationLink == null ||
                   widget.venue.locationLink == "null"
@@ -185,79 +181,10 @@ class _VenueDetailsState extends State<VenueDetails> {
               "\u{20B9} ${widget.venue.onwards.toString()} onwards"),
           itemHelp(context),
           SizedBox(height: 50),
-          // RoundedButton(
-          //     title: "Proceed To Book",
-          //     color: kBaseColor,
-          //     onPressed: () {
-          //       //Utility.showToast("Venue ${widget.venue.id}");
-          //
-          //       Navigator.push(
-          //           context,
-          //           MaterialPageRoute(
-          //               builder: (context) => BookTimeSlot(
-          //                     venue: widget.venue,
-          //                   )));
-          //     },
-          //     minWidth: 250,
-          //     txtColor: Colors.white),
         ],
       ),
     );
   }
-
-  // showFacilities() {
-  //   return Container(
-  //     height: 400,
-  //     child: ListView.builder(
-  //         padding: EdgeInsets.only(bottom: 100),
-  //         itemCount: selectedFacilities.length,
-  //         itemBuilder: (BuildContext context, int index) {
-  //           return facilityItem(selectedFacilities[index], index);
-  //           // return ListTile(
-  //           //     leading: Icon(Icons.list),
-  //           //     trailing: Text(
-  //           //       "GFG",
-  //           //       style: TextStyle(color: Colors.green, fontSize: 15),
-  //           //     ),
-  //           //     title: Text("List item $index"));
-  //         }),
-  //   );
-  // }
-  //
-  // facilityItem(String item, int index) {
-  //   return GestureDetector(
-  //     onTap: () {},
-  //     child: Container(
-  //       margin: EdgeInsets.all(10.0),
-  //       padding: EdgeInsets.all(10.0),
-  //       decoration: kContainerBoxDecoration.copyWith(color: Colors.white),
-  //       child: Row(
-  //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //         children: [
-  //           Expanded(
-  //               flex: 2,
-  //               child: Container(
-  //                   height: 30,
-  //                   width: 30,
-  //                   child: SvgPicture.asset(
-  //                       facilities.any((element) => element == item)
-  //                           ? "assets/images/${facilityIcons[facilities.indexOf(item)]}"
-  //                           : "",
-  //                       color: Colors.grey))),
-  //           Expanded(
-  //             flex: 8,
-  //             child: Container(
-  //               child: Text(
-  //                 item,
-  //                 style: TextStyle(color: Colors.grey),
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 
   Widget photoDetails() {
     return Container(
@@ -305,24 +232,7 @@ class _VenueDetailsState extends State<VenueDetails> {
                   itemBuilder: (BuildContext context, int index) {
                     return photoItem(snapshot.data[index]);
                   });
-              // return ListView.builder(
-              //   padding: EdgeInsets.only(bottom: 250),
-              //   scrollDirection: Axis.vertical,
-              //   shrinkWrap: true,
-              //   itemCount: snapshot.data.length,
-              //   itemBuilder: (BuildContext context, int index) {
-              //     return photoItem(snapshot.data[index]);
-              //   },
-              // );
             }
-
-            // return GridView.builder(
-            //     itemCount: snapshot.data!.length,
-            //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            //         crossAxisCount: 2),
-            //     itemBuilder: (context, index) {
-            //       return photoItem(snapshot.data![index]);
-            //     });
           } else {
             return Container(
               child: Center(
@@ -414,13 +324,6 @@ class _VenueDetailsState extends State<VenueDetails> {
               );
             },
           ),
-          // actions: <Widget>[
-          //   TextButton(
-          //       onPressed: () {
-          //         _dismissDialog();
-          //       },
-          //       child: Text('Close')),
-          // ],
         );
       },
     );

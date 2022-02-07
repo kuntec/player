@@ -27,6 +27,7 @@ import 'package:player/model/timeslot_data.dart';
 import 'dart:developer';
 
 import 'package:player/model/tournament_data.dart';
+import 'package:player/model/unread_notification_data.dart';
 import 'package:player/model/venue_data.dart';
 import 'package:player/model/venue_photo.dart';
 
@@ -61,6 +62,29 @@ class APICall {
     http.Response response = await call.get(url);
     print("Response Body: " + response.body);
     return NotificationData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<UnreadNotificationData> getUnreadNotifications(String playerId) async {
+    Uri url = Uri.parse(APIResources.GET_UNREAD_NOTIFICATION);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['player_id'] = playerId;
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return UnreadNotificationData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<UnreadNotificationData> updateUnreadNotifications(
+      String playerId) async {
+    Uri url = Uri.parse(APIResources.UPDATE_UNREAD_NOTIFICATION);
+    var header = new Map<String, String>();
+    var params = new Map<String, String>();
+    params['player_id'] = playerId;
+    HttpCall call = new HttpCall();
+    http.Response response = await call.post(url, header, params);
+    print("Response Body: " + response.body);
+    return UnreadNotificationData.fromJson(jsonDecode(response.body));
   }
 
   Future<PlayerData> getChatPlayer(String id) async {

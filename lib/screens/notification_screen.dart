@@ -4,6 +4,8 @@ import 'package:player/constant/constants.dart';
 import 'package:player/constant/time_ago.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/notification_data.dart';
+import 'package:player/model/unread_notification_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({Key? key}) : super(key: key);
@@ -14,6 +16,25 @@ class NotificationScreen extends StatefulWidget {
 
 class _NotificationScreenState extends State<NotificationScreen> {
   List<Notifications>? notifications = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    updateUnreadNotifications();
+  }
+
+  updateUnreadNotifications() async {
+    APICall apiCall = new APICall();
+    bool connectivityStatus = await Utility.checkConnectivity();
+    if (connectivityStatus) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      int? playerId = prefs.getInt("playerId");
+      print("Player id $playerId");
+      UnreadNotificationData unreadNotificationData =
+          await apiCall.updateUnreadNotifications(playerId.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
