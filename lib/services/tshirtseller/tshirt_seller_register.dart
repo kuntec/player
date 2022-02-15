@@ -41,8 +41,12 @@ class _TshirtSellerRegisterState extends State<TshirtSellerRegister> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-//        leading: Icon(Icons.arrow_back),
-        title: Text("T-shirt Seller Register"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "T-shirt Seller Register",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: SingleChildScrollView(
         child: Container(

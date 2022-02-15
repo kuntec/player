@@ -40,7 +40,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Notification"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Notification",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,

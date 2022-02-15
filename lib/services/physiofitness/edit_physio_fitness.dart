@@ -59,8 +59,12 @@ class _EditPhysioFitnessState extends State<EditPhysioFitness> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-//        leading: Icon(Icons.arrow_back),
-        title: Text("Edit Physio Fitness"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Edit Physio Fitness",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: SingleChildScrollView(
         child: Container(

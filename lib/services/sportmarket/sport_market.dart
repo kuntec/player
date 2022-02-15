@@ -38,8 +38,12 @@ class _SportMarketState extends State<SportMarket> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-//        leading: Icon(Icons.arrow_back),
-        title: Text("Sport Market"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Sport Market",
+          style: TextStyle(color: Colors.black),
+        ),
         actions: [
           Container(
             child: Row(

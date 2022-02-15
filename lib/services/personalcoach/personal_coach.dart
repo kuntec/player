@@ -177,8 +177,12 @@ class _PersonalCoachState extends State<PersonalCoach> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-//        leading: Icon(Icons.arrow_back),
-        title: Text("Personal Coach"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Personal Coach",
+          style: TextStyle(color: Colors.black),
+        ),
         actions: [
           Container(
             child: Row(

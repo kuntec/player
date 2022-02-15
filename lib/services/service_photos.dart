@@ -27,8 +27,12 @@ class _ServicePhotosState extends State<ServicePhotos> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-//        leading: Icon(Icons.arrow_back),
-        title: Text("Photos"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Photos",
+          style: TextStyle(color: Colors.black),
+        ),
         actions: [
           GestureDetector(
               onTap: () {

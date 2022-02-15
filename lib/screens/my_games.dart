@@ -14,8 +14,13 @@ class _MyGamesState extends State<MyGames> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.white,
+          iconTheme: IconThemeData(color: Colors.black),
           leading: Icon(Icons.arrow_back),
-          title: Text("MY GAMES"),
+          title: Text(
+            "MY GAMES",
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         body: SingleChildScrollView(
           child: Column(

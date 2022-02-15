@@ -40,8 +40,12 @@ class _TshirtSellerState extends State<TshirtSeller> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-//        leading: Icon(Icons.arrow_back),
-        title: Text("Tshirt Seller"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Tshirt Seller",
+          style: TextStyle(color: Colors.black),
+        ),
         actions: [
           Container(
             child: Row(

@@ -14,7 +14,12 @@ class _RegisterGroundState extends State<RegisterGround> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Register Your Ground"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Register Your Ground",
+          style: TextStyle(color: Colors.black),
+        ),
         leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);

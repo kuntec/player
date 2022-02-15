@@ -124,6 +124,8 @@ class _EditAcademyState extends State<EditAcademy> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
         leading: GestureDetector(
           onTap: () {
             Navigator.pop(context);
@@ -132,7 +134,10 @@ class _EditAcademyState extends State<EditAcademy> {
             Icons.arrow_back,
           ),
         ),
-        title: Text("Edit Academy"),
+        title: Text(
+          "Edit Academy",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: SingleChildScrollView(
         child: Container(

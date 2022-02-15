@@ -15,6 +15,8 @@ class _ItemRentalState extends State<ItemRental> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
         leading: GestureDetector(
           onTap: () {
             Navigator.pop(context);
@@ -23,7 +25,10 @@ class _ItemRentalState extends State<ItemRental> {
             Icons.arrow_back,
           ),
         ),
-        title: Text("Item Rental"),
+        title: Text(
+          "Item Rental",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: Center(
         child: Column(

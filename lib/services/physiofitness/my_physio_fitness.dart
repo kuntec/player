@@ -35,7 +35,12 @@ class _MyPhysioFitnessState extends State<MyPhysioFitness> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("My Physio Fitness"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "My Physio Fitness",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {

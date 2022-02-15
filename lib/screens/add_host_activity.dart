@@ -173,12 +173,18 @@ class _AddHostState extends State<AddHost> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
         leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
             },
             child: Icon(Icons.arrow_back_ios)),
-        title: Center(child: Text("Host Activity")),
+        title: Center(
+            child: Text(
+          "Host Activity",
+          style: TextStyle(color: Colors.black),
+        )),
         actions: [],
       ),
       body: SingleChildScrollView(

@@ -20,7 +20,13 @@ class _EventDetailsState extends State<EventDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Event")),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Center(
+            child: Text(
+          "Event",
+          style: TextStyle(color: Colors.black),
+        )),
         leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);

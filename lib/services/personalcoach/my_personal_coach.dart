@@ -33,7 +33,12 @@ class _MyPersonalCoachState extends State<MyPersonalCoach> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("My Personal Coach"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "My Personal Coach",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {

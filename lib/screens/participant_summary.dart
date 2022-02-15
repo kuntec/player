@@ -29,8 +29,18 @@ class _ParticipantSummaryState extends State<ParticipantSummary> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
         title: Center(
-          child: widget.isEvent == true ? Text("Event") : Text("Tournament"),
+          child: widget.isEvent == true
+              ? Text(
+                  "Event",
+                  style: TextStyle(color: Colors.black),
+                )
+              : Text(
+                  "Tournament",
+                  style: TextStyle(color: Colors.black),
+                ),
         ),
         leading: GestureDetector(
             onTap: () {

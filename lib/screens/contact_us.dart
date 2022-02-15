@@ -16,7 +16,12 @@ class _ContactUsState extends State<ContactUs> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        title: Text("Contact Us"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Contact Us",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(

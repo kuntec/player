@@ -41,8 +41,12 @@ class _PhysioFitnessState extends State<PhysioFitness> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-//        leading: Icon(Icons.arrow_back),
-        title: Text("Physio & Fitness"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Physio & Fitness",
+          style: TextStyle(color: Colors.black),
+        ),
         actions: [
           Container(
             margin: EdgeInsets.all(10.0),

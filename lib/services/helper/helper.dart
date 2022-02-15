@@ -38,8 +38,12 @@ class _HelperState extends State<Helper> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-//        leading: Icon(Icons.arrow_back),
-        title: Text("Helper"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Helper",
+          style: TextStyle(color: Colors.black),
+        ),
         actions: [
           Container(
             child: Row(

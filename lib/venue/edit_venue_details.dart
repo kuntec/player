@@ -49,6 +49,7 @@ class _EditVenueDetailsState extends State<EditVenueDetails> {
 
   TextEditingController sportCtrl = new TextEditingController();
   TextEditingController nameCtrl = new TextEditingController();
+  TextEditingController numberCtrl = new TextEditingController();
   TextEditingController descCtrl = new TextEditingController();
   TextEditingController facilityCtrl = new TextEditingController();
   TextEditingController memberCtrl = new TextEditingController();
@@ -265,14 +266,21 @@ class _EditVenueDetailsState extends State<EditVenueDetails> {
                 )),
           ),
           TextField(
-            controller: descCtrl,
+            controller: numberCtrl,
             decoration: InputDecoration(
-                labelText: "Venue Description",
+                labelText: "Venue Owner Number",
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 )),
           ),
-
+          // TextField(
+          //   controller: descCtrl,
+          //   decoration: InputDecoration(
+          //       labelText: "Venue Description",
+          //       labelStyle: TextStyle(
+          //         color: Colors.grey,
+          //       )),
+          // ),
           TextField(
             // onChanged: (value) {
             //   facilities = value;
@@ -347,31 +355,6 @@ class _EditVenueDetailsState extends State<EditVenueDetails> {
                       )),
                 ),
               ),
-              // Expanded(
-              //   flex: 1,
-              //   child: GestureDetector(
-              //     onTap: () {
-              //       pickTime(context, true);
-              //     },
-              //     child: Text(
-              //       txtOpenTime,
-              //     ),
-              //   ),
-              // ),
-              // SizedBox(
-              //   width: 20.0,
-              // ),
-              // Expanded(
-              //   flex: 1,
-              //   child: GestureDetector(
-              //     onTap: () {
-              //       pickTime(context, false);
-              //     },
-              //     child: Text(
-              //       txtCloseTime,
-              //     ),
-              //   ),
-              // ),
             ],
           )),
           SizedBox(
@@ -409,27 +392,23 @@ class _EditVenueDetailsState extends State<EditVenueDetails> {
                   color: Colors.grey,
                 )),
           ),
-
-          // TextField(
-          //   onChanged: (value) {
-          //     prizeDetails = value;
-          //   },
-          //   decoration: InputDecoration(
-          //       labelText: "Prize Details",
-          //       labelStyle: TextStyle(
-          //         color: Colors.grey,
-          //       )),
-          // ),
-          // TextField(
-          //   onChanged: (value) {
-          //     otherInfo = value;
-          //   },
-          //   decoration: InputDecoration(
-          //       labelText: "Any Other Information",
-          //       labelStyle: TextStyle(
-          //         color: Colors.grey,
-          //       )),
-          // ),
+          TextFormField(
+              controller: descCtrl,
+              minLines: 3,
+              maxLines: 5,
+              keyboardType: TextInputType.multiline,
+              textAlign: TextAlign.start,
+              decoration: InputDecoration(
+                labelText: "",
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(5.0),
+                  ),
+                ),
+              )),
           SizedBox(height: k20Margin),
           isLoading == true
               ? CircularProgressIndicator(
@@ -450,6 +429,11 @@ class _EditVenueDetailsState extends State<EditVenueDetails> {
                       return;
                     }
 
+                    if (Utility.checkValidation(numberCtrl.text.toString())) {
+                      Utility.showToast("Please Select Number");
+                      return;
+                    }
+
                     if (Utility.checkValidation(facilityCtrl.text.toString())) {
                       Utility.showToast("Please Select Facility");
                       return;
@@ -464,6 +448,7 @@ class _EditVenueDetailsState extends State<EditVenueDetails> {
 
                     venue!.playerId = playerId!.toString();
                     venue!.name = nameCtrl.text.toString();
+                    venue!.ownerNumber = numberCtrl.text.toString();
                     venue!.description = descCtrl.text.toString();
                     venue!.facilities = facilityCtrl.text;
                     venue!.openTime = openTimeController.text;

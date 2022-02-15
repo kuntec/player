@@ -205,6 +205,8 @@ class ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
         automaticallyImplyLeading: false,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -246,7 +248,7 @@ class ChatPageState extends State<ChatPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   peerNickname,
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 16, color: kBaseColor),
                 ))
           ],
         ),

@@ -19,7 +19,13 @@ class _TournamentDetailsState extends State<TournamentDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Tournament")),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Center(
+            child: Text(
+          "Tournament",
+          style: TextStyle(color: Colors.black),
+        )),
         leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);

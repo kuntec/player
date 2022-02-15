@@ -35,8 +35,13 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
         title: !isSearching
-            ? Text("Location")
+            ? Text(
+                "Location",
+                style: TextStyle(color: Colors.black),
+              )
             : Container(
                 decoration: kServiceBoxItem,
                 child: TextField(

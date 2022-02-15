@@ -175,8 +175,12 @@ class _CommentatorState extends State<Commentator> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-//        leading: Icon(Icons.arrow_back),
-        title: Text("Commentator"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Commentator",
+          style: TextStyle(color: Colors.black),
+        ),
         actions: [
           Container(
             child: Row(

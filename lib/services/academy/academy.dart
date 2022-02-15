@@ -173,6 +173,8 @@ class _AcademyState extends State<Academy> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
         leading: GestureDetector(
           onTap: () {
             Navigator.pop(context);
@@ -181,7 +183,10 @@ class _AcademyState extends State<Academy> {
             Icons.arrow_back,
           ),
         ),
-        title: Text("Academy"),
+        title: Text(
+          "Academy",
+          style: TextStyle(color: Colors.black),
+        ),
         actions: [
           Container(
             child: Row(

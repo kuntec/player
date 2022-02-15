@@ -330,7 +330,7 @@ class _VenueTimeSlotState extends State<VenueTimeSlot> {
               alignment: Alignment.bottomRight,
               margin: EdgeInsets.only(right: 5),
               child: Text(
-                "${data.noSlot} Left",
+                "${data.remainingSlot} Left",
                 style: TextStyle(
                     color: data.bookingStatus == '0' || data.status == '0'
                         ? Colors.white

@@ -174,8 +174,12 @@ class _UmpireState extends State<Umpire> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-//        leading: Icon(Icons.arrow_back),
-        title: Text("Umpire"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Umpire",
+          style: TextStyle(color: Colors.black),
+        ),
         actions: [
           Container(
             child: Row(

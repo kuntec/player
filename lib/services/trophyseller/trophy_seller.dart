@@ -39,8 +39,12 @@ class _TrophySellerState extends State<TrophySeller> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-//        leading: Icon(Icons.arrow_back),
-        title: Text("Trophy Seller"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Trophy Seller",
+          style: TextStyle(color: Colors.black),
+        ),
         actions: [
           Container(
             child: Row(

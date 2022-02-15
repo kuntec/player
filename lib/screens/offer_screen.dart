@@ -13,7 +13,12 @@ class _OfferScreenState extends State<OfferScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Offer"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Offer",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: Center(
         child: Column(

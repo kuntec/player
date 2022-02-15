@@ -553,6 +553,7 @@ class APICall {
         "facilities": venue.facilities,
         "player_id": venue.playerId,
         "members": venue.members,
+        "owner_number": venue.ownerNumber,
         "created_at": venue.createdAt,
         "image": await MultipartFile.fromFile(filePath, filename: "venue")
       });
@@ -586,7 +587,6 @@ class APICall {
     params['close_time'] = venue.closeTime!;
     params['address'] = venue.address!;
     params['city'] = venue.city!;
-
     params['sport'] = venue.sport!;
     params['sport_id'] = venue.sportId!;
     params['location_id'] = venue.locationId!;
@@ -594,6 +594,7 @@ class APICall {
     params['facilities'] = venue.facilities!;
     params['player_id'] = venue.playerId!;
     params['members'] = venue.members!;
+    params['owner_number'] = venue.ownerNumber!;
     params['created_at'] = venue.createdAt!;
 
     HttpCall call = new HttpCall();

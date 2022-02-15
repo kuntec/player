@@ -25,8 +25,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
         title: Center(
-          child: Text("Booking"),
+          child: Text(
+            "Booking",
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         leading: GestureDetector(
             onTap: () {

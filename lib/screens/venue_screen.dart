@@ -207,8 +207,12 @@ class _VenueScreenState extends State<VenueScreen>
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-//        leading: Icon(Icons.arrow_back),
-          title: Text("VENUES"),
+          backgroundColor: Colors.white,
+          iconTheme: IconThemeData(color: Colors.black),
+          title: Text(
+            "VENUES",
+            style: TextStyle(color: Colors.black),
+          ),
           actions: [
             Container(
               child: Row(

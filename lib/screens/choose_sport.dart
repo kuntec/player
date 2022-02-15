@@ -74,7 +74,13 @@ class _ChooseSportState extends State<ChooseSport> {
         ),
       ),
       appBar: AppBar(
-        title: Center(child: Text("Sport")),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Center(
+            child: Text(
+          "Sport",
+          style: TextStyle(color: Colors.black),
+        )),
         leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);

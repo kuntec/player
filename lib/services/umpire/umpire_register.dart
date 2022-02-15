@@ -46,6 +46,8 @@ class _UmpireRegisterState extends State<UmpireRegister> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
         leading: GestureDetector(
           onTap: () {
             Navigator.pop(context);
@@ -54,7 +56,10 @@ class _UmpireRegisterState extends State<UmpireRegister> {
             Icons.arrow_back,
           ),
         ),
-        title: Text("Umpire Register"),
+        title: Text(
+          "Umpire Register",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: SingleChildScrollView(
         child: Container(

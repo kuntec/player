@@ -33,7 +33,12 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Chat"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Chat",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,

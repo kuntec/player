@@ -63,8 +63,12 @@ class _ServiceScreenState extends State<ServiceScreen>
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-//        leading: Icon(Icons.arrow_back),
-          title: Text("SERVICES"),
+          backgroundColor: Colors.white,
+          iconTheme: IconThemeData(color: Colors.black),
+          title: Text(
+            "SERVICES",
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         body: SingleChildScrollView(
           child: Column(

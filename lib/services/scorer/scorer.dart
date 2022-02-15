@@ -175,8 +175,12 @@ class _ScorerState extends State<Scorer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-//        leading: Icon(Icons.arrow_back),
-        title: Text("Scorer"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Scorer",
+          style: TextStyle(color: Colors.black),
+        ),
         actions: [
           Container(
             child: Row(

@@ -60,7 +60,12 @@ class _PlayerProfileState extends State<PlayerProfile>
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        title: Text("PROFILE"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "PROFILE",
+          style: TextStyle(color: Colors.black),
+        ),
         actions: [
           // RoundedButton(
           //   title: "Logout",

@@ -36,6 +36,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
 
   Venue? venue;
   var name;
+  var ownerNumber;
   var description;
   var facilities;
   var address;
@@ -220,16 +221,17 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                   color: Colors.grey,
                 )),
           ),
-          // TextField(
-          //   onChanged: (value) {
-          //     description = value;
-          //   },
-          //   decoration: InputDecoration(
-          //       labelText: "Venue Description",
-          //       labelStyle: TextStyle(
-          //         color: Colors.grey,
-          //       )),
-          // ),
+          TextField(
+            keyboardType: TextInputType.phone,
+            onChanged: (value) {
+              ownerNumber = value;
+            },
+            decoration: InputDecoration(
+                labelText: "Venue Owner Number *",
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                )),
+          ),
           TextField(
             // onChanged: (value) {
             //   facilities = value;
@@ -396,6 +398,11 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                       return;
                     }
 
+                    if (Utility.checkValidation(ownerNumber.text.toString())) {
+                      Utility.showToast("Please Select Number");
+                      return;
+                    }
+
                     if (Utility.checkValidation(
                         textFacilityController.text.toString())) {
                       Utility.showValidationToast("Please Select Facility");
@@ -433,6 +440,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
 
                     venue!.playerId = playerId!.toString();
                     venue!.name = name.toString();
+                    venue!.ownerNumber = ownerNumber.toString();
                     venue!.description = description.toString();
                     venue!.facilities = textFacilityController.text;
                     venue!.openTime = textOpenTimeController.text;
@@ -463,28 +471,6 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
       ),
     );
   }
-
-  // void _onLoading() {
-  //   showDialog(
-  //     context: context,
-  //     barrierDismissible: false,
-  //     builder: (BuildContext context) {
-  //       return Dialog(
-  //         child: new Row(
-  //           mainAxisSize: MainAxisSize.min,
-  //           children: [
-  //             new CircularProgressIndicator(),
-  //             new Text("Loading"),
-  //           ],
-  //         ),
-  //       );
-  //     },
-  //   );
-  //   addVenue();
-  //   // new Future.delayed(new Duration(seconds: 3), () {
-  //   //   Navigator.pop(context); //pop dialog
-  //   // });
-  // }
 
   addVenue() async {
     setState(() {

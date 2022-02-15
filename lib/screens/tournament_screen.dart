@@ -40,7 +40,11 @@ class _TournamentScreenState extends State<TournamentScreen>
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("TOURNAMENTS"),
+          backgroundColor: Colors.white,
+          title: Text(
+            "TOURNAMENTS",
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         body: Container(
           height: MediaQuery.of(context).size.height,

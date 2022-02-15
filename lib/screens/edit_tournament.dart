@@ -276,7 +276,12 @@ class _EditTournamentState extends State<EditTournament> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        title: Text("Edit Tournament"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Edit Tournament",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(

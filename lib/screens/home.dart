@@ -200,6 +200,7 @@ class _HomeScreenState extends State<HomeScreen>
     final bannerMdl = Provider.of<BannerModel>(context);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         actions: [
           GestureDetector(

@@ -65,9 +65,14 @@ class _EventScreenState extends State<EventScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
 //        leading: Icon(Icons.arrow_back),
         title: !isSearching
-            ? Text("EVENTS")
+            ? Text(
+                "EVENTS",
+                style: TextStyle(color: Colors.black),
+              )
             : Container(
                 decoration: kServiceBoxItem,
                 child: TextField(

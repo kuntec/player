@@ -164,7 +164,7 @@ class _VenueDetailsState extends State<VenueDetails> {
               context, "Max Person Allowed", widget.venue.members.toString()),
           itemDetail(
               context, "Venue Owner Name", widget.venue.ownerName.toString()),
-          itemDetail(context, "Venue Owner Number",
+          itemCallDetail(context, "Venue Owner Number",
               widget.venue.ownerNumber.toString()),
           itemDetail(context, "Venue Address", widget.venue.address.toString()),
           widget.venue.locationLink == null ||

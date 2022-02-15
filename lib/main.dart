@@ -78,8 +78,14 @@ class MyApp extends StatelessWidget {
         title: 'Player',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          // appBarTheme: AppBarTheme(
+          //   iconTheme: IconThemeData(
+          //     color: Colors.black, //change your color here
+          //   ),
+          //   backgroundColor: Colors.white,
+          // ),
+          //appBarTheme: AppBarTheme(color: const Color(0xFFFFFFFF)),
           primaryColor: Colors.white,
-//        primarySwatch: kAppColor,
         ),
         // home: LoginPage(),
 //      home: AddDetails(phoneNumber: "9409394242"),

@@ -107,13 +107,18 @@ class _AddDetailsState extends State<AddDetails> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.white,
+          iconTheme: IconThemeData(color: Colors.black),
           // leading: GestureDetector(
           //   child: Icon(Icons.arrow_back),
           //   onTap: () {
           //     Navigator.pop(context);
           //   },
           // ),
-          title: Text("ADD DETAILS"),
+          title: Text(
+            "ADD DETAILS",
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         body: SingleChildScrollView(
           child: Padding(

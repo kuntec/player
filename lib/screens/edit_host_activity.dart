@@ -265,7 +265,12 @@ class _EditHostState extends State<EditHost> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        title: Text("Edit Host Activity"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Edit Host Activity",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(

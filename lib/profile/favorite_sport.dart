@@ -73,7 +73,12 @@ class _FavoriteSportState extends State<FavoriteSport> {
               ),
             ),
       appBar: AppBar(
-        title: Text("Choose Favorite Sport"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Choose Favorite Sport",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(

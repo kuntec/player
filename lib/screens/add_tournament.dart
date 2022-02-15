@@ -69,7 +69,11 @@ class _AddTournamentState extends State<AddTournament> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Host Tournament")),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Center(
+            child:
+                Text("Host Tournament", style: TextStyle(color: Colors.black))),
         leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
