@@ -70,7 +70,13 @@ class _VenueDaySlotState extends State<VenueDaySlot> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Venue")),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Center(
+            child: Text(
+          "Venue",
+          style: TextStyle(color: Colors.black),
+        )),
         leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);

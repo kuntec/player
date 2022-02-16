@@ -51,7 +51,12 @@ class _BookingInfoState extends State<BookingInfo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Booking Summary"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Booking Summary",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(

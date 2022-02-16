@@ -28,7 +28,13 @@ class _AddVenuePhotosState extends State<AddVenuePhotos> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Venue Photos")),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Center(
+            child: Text(
+          "Venue Photos",
+          style: TextStyle(color: Colors.black),
+        )),
         actions: [
           GestureDetector(
               onTap: () {

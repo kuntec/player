@@ -18,7 +18,12 @@ class _BookedSlotState extends State<BookedSlot> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Booked Slots"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Booked Slots",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       // bottomSheet: Container(
       //   margin: EdgeInsets.only(left: k20Margin, right: k20Margin),

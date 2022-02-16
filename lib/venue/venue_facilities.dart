@@ -75,7 +75,12 @@ class _VenueFacilitiesState extends State<VenueFacilities> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Select Venue Facilities"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Select Venue Facilities",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       bottomSheet: Container(
         width: MediaQuery.of(context).size.width,

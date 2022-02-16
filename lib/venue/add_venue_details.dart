@@ -67,7 +67,12 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Venue")),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Add Venue",
+          style: TextStyle(color: Colors.black),
+        ),
         leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
@@ -398,7 +403,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                       return;
                     }
 
-                    if (Utility.checkValidation(ownerNumber.text.toString())) {
+                    if (Utility.checkValidation(ownerNumber.toString())) {
                       Utility.showToast("Please Select Number");
                       return;
                     }

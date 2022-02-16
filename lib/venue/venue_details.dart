@@ -35,7 +35,12 @@ class _VenueDetailsState extends State<VenueDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Venue"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Venue",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       bottomSheet: Container(
         margin: EdgeInsets.only(left: k20Margin, right: k20Margin),

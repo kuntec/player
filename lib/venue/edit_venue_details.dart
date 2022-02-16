@@ -115,7 +115,12 @@ class _EditVenueDetailsState extends State<EditVenueDetails> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        title: Text("Edit Venue"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Edit Venue",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(

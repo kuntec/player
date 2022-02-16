@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/api/api_resources.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/constant/time_ago.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/my_booking_data.dart';
 import 'package:player/model/venue_data.dart';
@@ -26,7 +27,13 @@ class _AddVenueState extends State<AddVenue> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Venue")),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Center(
+            child: Text(
+          "Venue",
+          style: TextStyle(color: Colors.black),
+        )),
         leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
@@ -493,7 +500,7 @@ class _AddVenueState extends State<AddVenue> {
             ),
             SizedBox(height: 5),
             Text(
-              "Date: ${booking.createdAt}",
+              "Date: ${TimeAgo.simpleDate(booking.createdAt)}",
               style: TextStyle(
                 color: Colors.grey.shade900,
                 fontSize: 14.0,

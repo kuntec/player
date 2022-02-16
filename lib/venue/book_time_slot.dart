@@ -68,6 +68,10 @@ class _BookTimeSlotState extends State<BookTimeSlot> {
         textStartDateController.text =
             "${startDate!.day}-${startDate!.month}-${startDate!.year}";
         selectedDay = startDate!.weekday;
+        print("Selected Day $selectedDay");
+        if (selectedDay == 7) {
+          selectedDay = 0;
+        }
         if (selectedTimeslots != null) {
           selectedTimeslots!.clear();
           for (var t in timeslots!) {
@@ -91,7 +95,12 @@ class _BookTimeSlotState extends State<BookTimeSlot> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Venue TimeSlot"),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Venue TimeSlot",
+          style: TextStyle(color: Colors.black),
+        ),
         actions: [
           GestureDetector(
             onTap: () async {

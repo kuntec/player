@@ -40,6 +40,8 @@ class _VenueScreenState extends State<VenueScreen>
   void initState() {
     // TODO: implement initState
     super.initState();
+    print("Venue Init State");
+    getMyVenues();
     getMySports();
     getSports();
   }

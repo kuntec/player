@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:player/api/api_call.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/constant/time_ago.dart';
 import 'package:player/constant/utility.dart';
 import 'package:player/model/my_booking_data.dart';
 import 'package:player/venue/booked_slot.dart';
@@ -140,7 +141,7 @@ class _MyBookingsState extends State<MyBookings> {
             ),
             SizedBox(height: 5),
             Text(
-              "Date: ${booking.createdAt}",
+              "Date: ${TimeAgo.simpleDate(booking.createdAt)}",
               style: TextStyle(
                 color: Colors.grey.shade900,
                 fontSize: 14.0,

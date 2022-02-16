@@ -4,6 +4,13 @@ import 'package:timeago/timeago.dart' as timeago;
 //TimeAgo.timeAgoSinceDate(item.created_date), // In this example, 09-10-2020 08:29AM date format is getting passed, but you can pass it in any format.
 
 class TimeAgo {
+  static String simpleDate(String dateString) {
+    DateTime sampleDate = DateFormat("yyyy-MM-dd HH:mm").parse(dateString);
+    String simpleDate =
+        "${sampleDate.day}-${sampleDate.month}-${sampleDate.year}";
+    return simpleDate;
+  }
+
   static String timeAgoSinceDate(String dateString,
       {bool numericDates = true}) {
     DateTime notificationDate =
