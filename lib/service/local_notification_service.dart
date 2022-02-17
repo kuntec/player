@@ -19,7 +19,6 @@ class LocalNotificationService {
           android: AndroidNotificationDetails(
         "player",
         "player_channel",
-        "this is our channel",
         importance: Importance.max,
         priority: Priority.high,
       ));
