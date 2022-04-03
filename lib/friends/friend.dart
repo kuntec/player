@@ -27,7 +27,6 @@ class _FriendScreenState extends State<FriendScreen> {
     // TODO: implement initState
     super.initState();
     print("Init get friend");
-
     getRequestFriend();
   }
 
@@ -513,7 +512,7 @@ class _FriendScreenState extends State<FriendScreen> {
             child: GestureDetector(
               onTap: () async {
                 updateFriend(myPlayerId, friend.player.id.toString(), "1");
-                Utility.showToast("Confirm");
+                //Utility.showToast("Confirm");
               },
               child: Container(
                 margin: EdgeInsets.all(2),
@@ -537,7 +536,7 @@ class _FriendScreenState extends State<FriendScreen> {
             child: GestureDetector(
               onTap: () async {
                 removeFriend(myPlayerId, friend.player.id.toString());
-                Utility.showToast("Cancel");
+                // Utility.showToast("Cancel");
               },
               child: Container(
                 margin: EdgeInsets.all(2),

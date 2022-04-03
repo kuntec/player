@@ -61,6 +61,7 @@ class _EditTournamentState extends State<EditTournament> {
   TextEditingController ageCtrl = new TextEditingController();
   TextEditingController addressCtrl = new TextEditingController();
   TextEditingController linkCtrl = new TextEditingController();
+  TextEditingController scoreLinkCtrl = new TextEditingController();
   TextEditingController prizeCtrl = new TextEditingController();
   TextEditingController detailsCtrl = new TextEditingController();
 
@@ -563,6 +564,14 @@ class _EditTournamentState extends State<EditTournament> {
                 )),
           ),
           TextField(
+            controller: scoreLinkCtrl,
+            decoration: InputDecoration(
+                labelText: "Live Score Link",
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                )),
+          ),
+          TextField(
             readOnly: true,
             decoration: InputDecoration(
                 labelText: "Prize Details",
@@ -666,6 +675,7 @@ class _EditTournamentState extends State<EditTournament> {
                         tournamentCategoryValue.toString();
                     tournament!.noOfOvers = noOverCtrl.text;
                     tournament!.locationLink = linkCtrl.text;
+                    tournament!.liveScoreLink = scoreLinkCtrl.text;
                     tournament!.status = "1";
                     tournament!.timing = "";
                     updateTournament(tournament!);

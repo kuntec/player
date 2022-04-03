@@ -449,6 +449,14 @@ class _VenueScreenState extends State<VenueScreen>
                   ),
                   SizedBox(height: 5.0),
                   Text(
+                    "Sport: ${venue.sport}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
                     "Open Time: ${venue.openTime}",
                     style: TextStyle(
                       color: Colors.grey.shade900,

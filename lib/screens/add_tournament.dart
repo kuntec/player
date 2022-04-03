@@ -52,6 +52,7 @@ class _AddTournamentState extends State<AddTournament> {
   var ageLimit;
   var address;
   var locationLink;
+  var liveScoreLink;
   var prizeDetails;
   var otherInfo;
 
@@ -531,6 +532,16 @@ class _AddTournamentState extends State<AddTournament> {
                 )),
           ),
           TextField(
+            onChanged: (value) {
+              liveScoreLink = value;
+            },
+            decoration: InputDecoration(
+                labelText: "Live Score Link (optional)",
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                )),
+          ),
+          TextField(
             readOnly: true,
             decoration: InputDecoration(
                 labelText: "Prize Details (optional)",
@@ -694,6 +705,7 @@ class _AddTournamentState extends State<AddTournament> {
                         tournamentCategoryValue.toString();
                     tournament!.noOfOvers = noOfOvers.toString();
                     tournament!.locationLink = locationLink.toString();
+                    tournament!.liveScoreLink = liveScoreLink.toString();
                     tournament!.status = "1";
                     tournament!.timing = "";
 

@@ -278,7 +278,15 @@ class _AddVenueState extends State<AddVenue> {
                   ),
                   SizedBox(height: 10.0),
                   Text(
-                    venue.address,
+                    "Address: ${venue.address}",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Sport: ${venue.sport}",
                     style: TextStyle(
                       color: Colors.grey.shade900,
                       fontSize: 12.0,
@@ -308,6 +316,7 @@ class _AddVenueState extends State<AddVenue> {
                       fontSize: 12.0,
                     ),
                   ),
+                  SizedBox(height: 5.0),
                 ],
               ),
             ),
@@ -492,6 +501,14 @@ class _AddVenueState extends State<AddVenue> {
             ),
             SizedBox(height: 5),
             Text(
+              "Sport: ${booking.venue.sport}",
+              style: TextStyle(
+                color: Colors.grey.shade900,
+                fontSize: 14.0,
+              ),
+            ),
+            SizedBox(height: 5),
+            Text(
               "Person allowed: ${booking.venue.members}",
               style: TextStyle(
                 color: Colors.grey.shade900,
@@ -500,7 +517,7 @@ class _AddVenueState extends State<AddVenue> {
             ),
             SizedBox(height: 5),
             Text(
-              "Date: ${TimeAgo.simpleDate(booking.createdAt)}",
+              "Booking Date: ${TimeAgo.simpleDate(booking.createdAt)}",
               style: TextStyle(
                 color: Colors.grey.shade900,
                 fontSize: 14.0,

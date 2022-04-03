@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:badges/badges.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -99,6 +101,9 @@ class _HomeScreenState extends State<HomeScreen>
     disposePageAfter(20);
 
     FirebaseMessaging.onMessage.listen((message) {
+      // if (Platform.isIOS) {
+      //   message = _modifyNotificationJSON(message);
+      // }
       if (message.notification != null) {
         //_notificationCount = _notificationCount! + 1;
 
@@ -119,6 +124,11 @@ class _HomeScreenState extends State<HomeScreen>
       });
     });
   }
+
+  // Map _modifyNotificationJSON(Map<String, dynamic> message) {
+  //   message['data'] = Map.from(message ?? {});
+  //   return message;
+  // }
 
   Future<List<Unread>> getUnreadNotifications() async {
     APICall apiCall = new APICall();

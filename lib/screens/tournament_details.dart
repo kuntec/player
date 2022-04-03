@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:player/api/api_resources.dart';
 import 'package:player/components/rounded_button.dart';
 import 'package:player/constant/constants.dart';
+import 'package:player/constant/utility.dart';
 import 'package:player/screens/participant_summary.dart';
 import 'package:player/screens/payment_screen.dart';
 import 'package:player/services/servicewidgets/ServiceWidget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TournamentDetails extends StatefulWidget {
   dynamic tournament;
@@ -83,6 +85,44 @@ class _TournamentDetailsState extends State<TournamentDetails> {
                   ),
                 ),
               ),
+              widget.tournament.liveScoreLink == null
+                  ? SizedBox.shrink()
+                  : InkWell(
+                      onTap: () {
+                        //Utility.showToast("Live Score");
+                        launch(widget.tournament.liveScoreLink);
+                      },
+                      child: Center(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.red,
+                          ),
+                          margin: EdgeInsets.all(10),
+                          height: 30,
+                          width: 180,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.circle,
+                                color: Colors.white,
+                                size: 10,
+                              ),
+                              SizedBox(width: 10),
+                              Text(
+                                "WATCH LIVE SCORE",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+              // widget.tournament.liveScoreLink == null
+              //     ? SizedBox.shrink()
+              //     : itemLinkDetail(context, "Live Score Link",
+              //         widget.tournament.liveScoreLink),
               itemDetail(
                   context, "Sport", widget.tournament.sportName.toString()),
               widget.tournament.sportName.toString().toLowerCase() == "cricket"

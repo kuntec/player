@@ -388,6 +388,7 @@ class APICall {
         "tournament_category": tournament.tournamentCategory,
         "no_of_overs": tournament.noOfOvers,
         "location_link": tournament.locationLink,
+        "live_score_link": tournament.liveScoreLink,
         "status": tournament.status,
         "image": await MultipartFile.fromFile(filePath, filename: "tournament")
       });
@@ -442,6 +443,7 @@ class APICall {
     params['tournament_category'] = tournament.tournamentCategory!;
     params['no_of_overs'] = tournament.noOfOvers!;
     params['location_link'] = tournament.locationLink!;
+    params['live_score_link'] = tournament.liveScoreLink!;
     params['status'] = tournament.status!;
 
     HttpCall call = new HttpCall();

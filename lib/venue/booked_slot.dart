@@ -47,8 +47,8 @@ class _BookedSlotState extends State<BookedSlot> {
                 decoration: kServiceBoxItem.copyWith(
                   borderRadius: BorderRadius.circular(5.0),
                 ),
-                height: 140.0,
-                width: MediaQuery.of(context).size.width,
+                height: 160.0,
+                width: 160.0,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
                   child: Image.network(

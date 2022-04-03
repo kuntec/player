@@ -241,6 +241,7 @@ class Tournament {
     String? tournamentCategory,
     String? noOfOvers,
     String? locationLink,
+    String? liveScoreLink,
     String? image,
     String? status,
     int? id,
@@ -271,6 +272,7 @@ class Tournament {
     _tournamentCategory = tournamentCategory;
     _noOfOvers = noOfOvers;
     _locationLink = locationLink;
+    _liveScoreLink = liveScoreLink;
 
     _image = image;
     _status = status;
@@ -304,7 +306,7 @@ class Tournament {
     _tournamentCategory = json['tournament_category'];
     _noOfOvers = json['no_of_overs'];
     _locationLink = json['location_link'];
-
+    _liveScoreLink = json['live_score_link'];
     _image = json['image'];
     _status = json['status'];
     _id = json['id'];
@@ -335,7 +337,7 @@ class Tournament {
   String? _tournamentCategory;
   String? _noOfOvers;
   String? _locationLink;
-
+  String? _liveScoreLink;
   String? _image;
   String? _status;
   int? _id;
@@ -366,7 +368,7 @@ class Tournament {
   String? get tournamentCategory => _tournamentCategory;
   String? get noOfOvers => _noOfOvers;
   String? get locationLink => _locationLink;
-
+  String? get liveScoreLink => _liveScoreLink;
   String? get image => _image;
   String? get status => _status;
   int? get id => _id;
@@ -399,11 +401,15 @@ class Tournament {
     map['tournament_category'] = _tournamentCategory;
     map['no_of_overs'] = _noOfOvers;
     map['location_link'] = _locationLink;
-
+    map['live_score_link'] = _liveScoreLink;
     map['image'] = _image;
     map['status'] = _status;
     map['id'] = _id;
     return map;
+  }
+
+  set liveScoreLink(String? value) {
+    _liveScoreLink = value;
   }
 
   set status(String? value) {
