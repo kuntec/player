@@ -38,18 +38,30 @@ class _EventRegisterState extends State<EventRegister> {
 
   Event? event;
 
-  var organizerName;
-  var number;
-  var secondaryNumber;
+  // var organizerName;
+  // var number;
+  // var secondaryNumber;
+  //
+  // var eventName;
+  // var eventType;
+  // var description;
+  // var entryFees;
+  // var noOfMembers;
+  // var address;
+  // var locationLink;
+  // var otherInfo;
 
-  var eventName;
-  var eventType;
-  var description;
-  var entryFees;
-  var noOfMembers;
-  var address;
-  var locationLink;
-  var otherInfo;
+  TextEditingController organizerNameController = new TextEditingController();
+  TextEditingController numberController = new TextEditingController();
+  TextEditingController secondaryNumberController = new TextEditingController();
+  TextEditingController eventNameController = new TextEditingController();
+  TextEditingController eventTypeController = new TextEditingController();
+  TextEditingController descriptionController = new TextEditingController();
+  TextEditingController entryFeesController = new TextEditingController();
+  TextEditingController noOfMembersController = new TextEditingController();
+  TextEditingController addressController = new TextEditingController();
+  TextEditingController locationLinkController = new TextEditingController();
+  TextEditingController otherInfoController = new TextEditingController();
 
   TextEditingController textStartDateController = new TextEditingController();
   TextEditingController textEndDateController = new TextEditingController();
@@ -251,8 +263,8 @@ class _EventRegisterState extends State<EventRegister> {
               child: image != null
                   ? Image.file(
                       image!,
-                      width: 280,
-                      height: 150,
+                      width: 180,
+                      height: 180,
                       fit: BoxFit.fill,
                     )
                   : FlutterLogo(size: 100),
@@ -274,9 +286,7 @@ class _EventRegisterState extends State<EventRegister> {
             ),
           ),
           TextField(
-            onChanged: (value) {
-              eventName = value;
-            },
+            controller: eventNameController,
             decoration: InputDecoration(
                 labelText: "Event Name *",
                 labelStyle: TextStyle(
@@ -284,9 +294,7 @@ class _EventRegisterState extends State<EventRegister> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              eventType = value;
-            },
+            controller: eventTypeController,
             decoration: InputDecoration(
                 labelText: "Event Type *",
                 labelStyle: TextStyle(
@@ -294,9 +302,7 @@ class _EventRegisterState extends State<EventRegister> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              description = value;
-            },
+            controller: descriptionController,
             decoration: InputDecoration(
                 labelText: "Description",
                 labelStyle: TextStyle(
@@ -350,9 +356,7 @@ class _EventRegisterState extends State<EventRegister> {
                 Expanded(
                   flex: 1,
                   child: TextField(
-                    onChanged: (value) {
-                      entryFees = value;
-                    },
+                    controller: entryFeesController,
                     decoration: InputDecoration(
                         labelText: "Entry Fees *",
                         labelStyle: TextStyle(
@@ -400,9 +404,7 @@ class _EventRegisterState extends State<EventRegister> {
             ),
           ),
           TextField(
-            onChanged: (value) {
-              noOfMembers = value;
-            },
+            controller: noOfMembersController,
             decoration: InputDecoration(
                 labelText: "members allowed per entry fee *",
                 labelStyle: TextStyle(
@@ -410,9 +412,7 @@ class _EventRegisterState extends State<EventRegister> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              address = value;
-            },
+            controller: addressController,
             decoration: InputDecoration(
                 labelText: "Location (Address) *",
                 labelStyle: TextStyle(
@@ -420,9 +420,7 @@ class _EventRegisterState extends State<EventRegister> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              locationLink = value;
-            },
+            controller: locationLinkController,
             decoration: InputDecoration(
                 labelText: "Location Link (optional)",
                 labelStyle: TextStyle(
@@ -430,9 +428,7 @@ class _EventRegisterState extends State<EventRegister> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              organizerName = value;
-            },
+            controller: organizerNameController,
             decoration: InputDecoration(
                 labelText: "Organizer Name *",
                 labelStyle: TextStyle(
@@ -441,9 +437,7 @@ class _EventRegisterState extends State<EventRegister> {
           ),
           TextField(
             keyboardType: TextInputType.phone,
-            onChanged: (value) {
-              number = value;
-            },
+            controller: numberController,
             decoration: InputDecoration(
                 labelText: "Primary Number *",
                 labelStyle: TextStyle(
@@ -452,9 +446,7 @@ class _EventRegisterState extends State<EventRegister> {
           ),
           TextField(
             keyboardType: TextInputType.phone,
-            onChanged: (value) {
-              secondaryNumber = value;
-            },
+            controller: secondaryNumberController,
             decoration: InputDecoration(
                 labelText: "Secondary Number (optional)",
                 labelStyle: TextStyle(
@@ -470,9 +462,7 @@ class _EventRegisterState extends State<EventRegister> {
                 )),
           ),
           TextFormField(
-              onChanged: (value) {
-                otherInfo = value;
-              },
+              controller: otherInfoController,
               minLines: 3,
               maxLines: 5,
               keyboardType: TextInputType.multiline,
@@ -499,42 +489,44 @@ class _EventRegisterState extends State<EventRegister> {
                   txtColor: Colors.white,
                   minWidth: 250,
                   onPressed: () async {
-                    if (eventName == null ||
-                        Utility.checkValidation(eventName)) {
+                    if (Utility.checkValidation(
+                        eventNameController.text.toString())) {
                       Utility.showValidationToast("Please Enter Event Name");
                       return;
                     }
-                    if (eventType == null ||
-                        Utility.checkValidation(eventType)) {
+                    if (Utility.checkValidation(
+                        eventTypeController.text.toString())) {
                       Utility.showValidationToast("Please Enter Event Type");
                       return;
                     }
 
-                    if (address == null || Utility.checkValidation(address)) {
+                    if (Utility.checkValidation(
+                        addressController.text.toString())) {
                       Utility.showValidationToast("Please Enter Address");
                       return;
                     }
 
-                    if (entryFees == null ||
-                        Utility.checkValidation(entryFees)) {
+                    if (Utility.checkValidation(
+                        entryFeesController.text.toString())) {
                       Utility.showValidationToast("Please Enter Entry Fees");
                       return;
                     }
 
-                    if (noOfMembers == null ||
-                        Utility.checkValidation(noOfMembers)) {
+                    if (Utility.checkValidation(
+                        noOfMembersController.text.toString())) {
                       Utility.showValidationToast("Please Enter No of Members");
                       return;
                     }
 
-                    if (organizerName == null ||
-                        Utility.checkValidation(organizerName)) {
+                    if (Utility.checkValidation(
+                        organizerNameController.text.toString())) {
                       Utility.showValidationToast(
                           "Please Enter Organizer Name");
                       return;
                     }
 
-                    if (number == null || Utility.checkValidation(number)) {
+                    if (Utility.checkValidation(
+                        numberController.text.toString())) {
                       Utility.showValidationToast("Please Enter Number");
                       return;
                     }
@@ -566,27 +558,30 @@ class _EventRegisterState extends State<EventRegister> {
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     var playerId = prefs.get("playerId");
-                    if (locationLink == null) locationLink = "";
+                    // if (locationLink == null) locationLink = "";
 
                     event = new Event();
                     event!.playerId = playerId!.toString();
-                    event!.name = eventName.toString();
-                    event!.type = eventType.toString();
-                    event!.description = description.toString();
-                    event!.address = address.toString();
-                    event!.locationLink = locationLink.toString();
+                    event!.name = eventNameController.text.toString();
+                    event!.type = eventTypeController.text.toString();
+                    event!.description = descriptionController.text.toString();
+                    event!.address = addressController.text.toString();
+                    event!.locationLink =
+                        locationLinkController.text.toString();
                     event!.locationId = prefs.get("locationId").toString();
-                    event!.entryFees = entryFees.toString();
-                    event!.members = noOfMembers.toString();
+                    event!.entryFees = entryFeesController.text.toString();
+                    event!.members = noOfMembersController.text.toString();
                     event!.startDate = textStartDateController.text;
                     event!.endDate = textEndDateController.text;
                     event!.startTime = textStartTimeController.text;
                     event!.endTime = textEndTimeController.text;
-                    event!.details = otherInfo.toString();
+                    event!.details = otherInfoController.text.toString();
 
-                    event!.organizerName = organizerName.toString();
-                    event!.number = number.toString();
-                    event!.secondaryNumber = secondaryNumber.toString();
+                    event!.organizerName =
+                        organizerNameController.text.toString();
+                    event!.number = numberController.text.toString();
+                    event!.secondaryNumber =
+                        secondaryNumberController.text.toString();
                     event!.status = "1";
 
                     event!.createdAt = Utility.getCurrentDate();
@@ -701,6 +696,7 @@ class _EventRegisterState extends State<EventRegister> {
       EventData eventData = await apiCall.getMyEvent(playerId.toString());
       if (eventData.events != null) {
         events = eventData.events!;
+        events = events!.reversed.toList();
         //setState(() {});
       }
 

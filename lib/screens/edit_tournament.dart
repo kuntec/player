@@ -255,14 +255,20 @@ class _EditTournamentState extends State<EditTournament> {
     addressCtrl.text = widget.tournament.address;
     widget.tournament.locationLink == null ||
             widget.tournament.locationLink == "null"
-        ? secNumberCtrl.text = ""
+        ? linkCtrl.text = ""
         : linkCtrl.text = widget.tournament.locationLink;
+
+    widget.tournament.liveScoreLink == null ||
+            widget.tournament.liveScoreLink == "null"
+        ? scoreLinkCtrl.text = ""
+        : scoreLinkCtrl.text = widget.tournament.liveScoreLink;
+
     widget.tournament.prizeDetails == null ||
             widget.tournament.prizeDetails == "null"
-        ? secNumberCtrl.text = ""
+        ? prizeCtrl.text = ""
         : prizeCtrl.text = widget.tournament.prizeDetails;
     widget.tournament.otherInfo == null || widget.tournament.otherInfo == "null"
-        ? secNumberCtrl.text = ""
+        ? detailsCtrl.text = ""
         : detailsCtrl.text = widget.tournament.otherInfo;
     ballTypeValue = widget.tournament.ballType;
     tournamentCategoryValue = widget.tournament.tournamentCategory;
@@ -649,22 +655,79 @@ class _EditTournamentState extends State<EditTournament> {
                       linkCtrl.text = "";
                     }
 
+                    if (selectedSport == null) {
+                      Utility.showValidationToast("Please Select Sport");
+                      return;
+                    }
+                    if (Utility.checkValidation(orgNameCtrl.text.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Organizer Name");
+                      return;
+                    }
+                    if (Utility.checkValidation(
+                        primNumberCtrl.text.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Primary Number");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        tournamentNameCtrl.text.toString())) {
+                      Utility.showValidationToast(
+                          "Please Enter Tournament Name");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        textStartDateController.text.toString())) {
+                      Utility.showValidationToast("Please Enter Start Date");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        textEndDateController.text.toString())) {
+                      Utility.showValidationToast("Please Enter End Date");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        entryFeesCtrl.text.toString())) {
+                      Utility.showValidationToast("Please Enter Entry Fees");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        textStartTimeController.text.toString())) {
+                      Utility.showValidationToast("Please Enter Start Time");
+                      return;
+                    }
+
+                    if (Utility.checkValidation(
+                        textEndTimeController.text.toString())) {
+                      Utility.showValidationToast("Please Enter End Time");
+                      return;
+                    }
+
                     tournament = widget.tournament;
                     tournament!.playerId = playerId!.toString();
-                    tournament!.organizerName = orgNameCtrl.text;
-                    tournament!.organizerNumber = primNumberCtrl.text;
-                    tournament!.secondaryNumber = secNumberCtrl.text;
-                    tournament!.tournamentName = tournamentNameCtrl.text;
-                    tournament!.startDate = textStartDateController.text;
-                    tournament!.endDate = textEndDateController.text;
-                    tournament!.entryFees = entryFeesCtrl.text;
-                    tournament!.startTime = textStartTimeController.text;
-                    tournament!.endTime = textEndTimeController.text;
-                    tournament!.noOfMembers = noMemberCtrl.text;
-                    tournament!.ageLimit = ageCtrl.text;
-                    tournament!.address = addressCtrl.text;
-                    tournament!.prizeDetails = prizeCtrl.text;
-                    tournament!.otherInfo = detailsCtrl.text;
+                    tournament!.organizerName = orgNameCtrl.text.toString();
+                    tournament!.organizerNumber =
+                        primNumberCtrl.text.toString();
+                    tournament!.secondaryNumber = secNumberCtrl.text.toString();
+                    tournament!.tournamentName =
+                        tournamentNameCtrl.text.toString();
+                    tournament!.startDate =
+                        textStartDateController.text.toString();
+                    tournament!.endDate = textEndDateController.text.toString();
+                    tournament!.entryFees = entryFeesCtrl.text.toString();
+                    tournament!.startTime =
+                        textStartTimeController.text.toString();
+                    tournament!.endTime = textEndTimeController.text.toString();
+                    tournament!.noOfMembers = noMemberCtrl.text.toString();
+                    tournament!.ageLimit = ageCtrl.text.toString();
+                    tournament!.address = addressCtrl.text.toString();
+                    tournament!.prizeDetails = prizeCtrl.text.toString();
+                    tournament!.otherInfo = detailsCtrl.text.toString();
                     tournament!.playerName = prefs.getString("playerName");
                     tournament!.locationId = prefs.getString("locationId");
                     tournament!.sportId = selectedSport.id.toString();
@@ -673,9 +736,9 @@ class _EditTournamentState extends State<EditTournament> {
                     tournament!.ballType = ballTypeValue.toString();
                     tournament!.tournamentCategory =
                         tournamentCategoryValue.toString();
-                    tournament!.noOfOvers = noOverCtrl.text;
-                    tournament!.locationLink = linkCtrl.text;
-                    tournament!.liveScoreLink = scoreLinkCtrl.text;
+                    tournament!.noOfOvers = noOverCtrl.text.toString();
+                    tournament!.locationLink = linkCtrl.text.toString();
+                    tournament!.liveScoreLink = scoreLinkCtrl.text.toString();
                     tournament!.status = "1";
                     tournament!.timing = "";
                     updateTournament(tournament!);

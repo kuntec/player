@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -255,20 +257,30 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   Container(
                     margin: EdgeInsets.all(10.0),
-                    child: OTPTextField(
-                      length: 6,
-                      width: MediaQuery.of(context).size.width,
-                      fieldWidth: 30,
-                      style: TextStyle(fontSize: 14),
-                      textFieldAlignment: MainAxisAlignment.spaceAround,
-                      fieldStyle: FieldStyle.underline,
-                      obscureText: true,
-                      onChanged: (pin) {},
-                      onCompleted: (pin) {
-                        print("Completed: " + pin);
-                        otpController.text = pin;
-                      },
-                    ),
+                    child: Platform.isIOS
+                        ? TextField(
+                            controller: otpController,
+                            keyboardType: TextInputType.phone,
+                            decoration: InputDecoration(
+                                labelText: "Enter OTP",
+                                labelStyle: TextStyle(
+                                  color: Colors.grey,
+                                )),
+                          )
+                        : OTPTextField(
+                            length: 6,
+                            width: MediaQuery.of(context).size.width,
+                            fieldWidth: 30,
+                            style: TextStyle(fontSize: 14),
+                            textFieldAlignment: MainAxisAlignment.spaceAround,
+                            fieldStyle: FieldStyle.underline,
+                            obscureText: true,
+                            onChanged: (pin) {},
+                            onCompleted: (pin) {
+                              print("Completed: " + pin);
+                              otpController.text = pin;
+                            },
+                          ),
                   ),
                   // TextField(
                   //   controller: otpController,

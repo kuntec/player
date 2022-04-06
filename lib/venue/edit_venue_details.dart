@@ -455,9 +455,9 @@ class _EditVenueDetailsState extends State<EditVenueDetails> {
                     venue!.name = nameCtrl.text.toString();
                     venue!.ownerNumber = numberCtrl.text.toString();
                     venue!.description = descCtrl.text.toString();
-                    venue!.facilities = facilityCtrl.text;
-                    venue!.openTime = openTimeController.text;
-                    venue!.closeTime = closeTimeController.text;
+                    venue!.facilities = facilityCtrl.text.toString();
+                    venue!.openTime = openTimeController.text.toString();
+                    venue!.closeTime = closeTimeController.text.toString();
                     venue!.address = addressCtrl.text.toString();
                     venue!.locationLink = linkCtrl.text.toString();
                     venue!.locationId = prefs.getString("locationId");

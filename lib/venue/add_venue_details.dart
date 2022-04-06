@@ -35,15 +35,23 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
   // var txtCloseTime = "Close Time";
 
   Venue? venue;
-  var name;
-  var ownerNumber;
-  var description;
-  var facilities;
-  var address;
-  var members;
-  var locationLink;
-  var city;
-  var sport;
+//  var name;
+//  var ownerNumber;
+//  var description;
+//  var facilities;
+//  var address;
+//  var members;
+//  var locationLink;
+//  var city;
+//  var sport;
+
+  TextEditingController nameController = new TextEditingController();
+  TextEditingController ownerNumberController = new TextEditingController();
+  TextEditingController descriptionController = new TextEditingController();
+  TextEditingController addressController = new TextEditingController();
+  TextEditingController membersController = new TextEditingController();
+  TextEditingController locationLinkController = new TextEditingController();
+  TextEditingController cityController = new TextEditingController();
 
   List selectedFacilities = [];
   var selectedSport;
@@ -217,9 +225,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              name = value;
-            },
+            controller: nameController,
             decoration: InputDecoration(
                 labelText: "Venue Name *",
                 labelStyle: TextStyle(
@@ -228,9 +234,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
           ),
           TextField(
             keyboardType: TextInputType.phone,
-            onChanged: (value) {
-              ownerNumber = value;
-            },
+            controller: ownerNumberController,
             decoration: InputDecoration(
                 labelText: "Venue Owner Number *",
                 labelStyle: TextStyle(
@@ -317,9 +321,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
             height: k20Margin,
           ),
           TextField(
-            onChanged: (value) {
-              members = value;
-            },
+            controller: membersController,
             decoration: InputDecoration(
                 labelText: "Max Person Allowed (optional)",
                 labelStyle: TextStyle(
@@ -327,9 +329,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              address = value;
-            },
+            controller: addressController,
             decoration: InputDecoration(
                 labelText: "Venue Address *",
                 labelStyle: TextStyle(
@@ -337,9 +337,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              locationLink = value;
-            },
+            controller: locationLinkController,
             decoration: InputDecoration(
                 labelText: "Location Link (optional)",
                 labelStyle: TextStyle(
@@ -347,9 +345,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              city = value;
-            },
+            controller: cityController,
             decoration: InputDecoration(
                 labelText: "Venue City *",
                 labelStyle: TextStyle(
@@ -365,9 +361,7 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                 )),
           ),
           TextFormField(
-              onChanged: (value) {
-                description = value;
-              },
+              controller: descriptionController,
               minLines: 3,
               maxLines: 5,
               keyboardType: TextInputType.multiline,
@@ -398,12 +392,14 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                         await SharedPreferences.getInstance();
                     var playerId = prefs.get("playerId");
 
-                    if (Utility.checkValidation(name.toString())) {
+                    if (Utility.checkValidation(
+                        nameController.text.toString())) {
                       Utility.showValidationToast("Please Enter Name");
                       return;
                     }
 
-                    if (Utility.checkValidation(ownerNumber.toString())) {
+                    if (Utility.checkValidation(
+                        ownerNumberController.text.toString())) {
                       Utility.showToast("Please Select Number");
                       return;
                     }
@@ -431,12 +427,14 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                       return;
                     }
 
-                    if (Utility.checkValidation(address.toString())) {
+                    if (Utility.checkValidation(
+                        addressController.text.toString())) {
                       Utility.showValidationToast("Please Enter Address");
                       return;
                     }
 
-                    if (Utility.checkValidation(city.toString())) {
+                    if (Utility.checkValidation(
+                        cityController.text.toString())) {
                       Utility.showValidationToast("Please Enter City");
                       return;
                     }
@@ -444,17 +442,18 @@ class _AddVenueDetailsState extends State<AddVenueDetails> {
                     venue = new Venue();
 
                     venue!.playerId = playerId!.toString();
-                    venue!.name = name.toString();
-                    venue!.ownerNumber = ownerNumber.toString();
-                    venue!.description = description.toString();
-                    venue!.facilities = textFacilityController.text;
-                    venue!.openTime = textOpenTimeController.text;
-                    venue!.closeTime = textCloseTimeController.text;
-                    venue!.address = address.toString();
-                    venue!.locationLink = locationLink;
+                    venue!.name = nameController.text.toString();
+                    venue!.ownerNumber = ownerNumberController.text.toString();
+                    venue!.description = descriptionController.text.toString();
+                    venue!.facilities = textFacilityController.text.toString();
+                    venue!.openTime = textOpenTimeController.text.toString();
+                    venue!.closeTime = textCloseTimeController.text.toString();
+                    venue!.address = addressController.text.toString();
+                    venue!.locationLink =
+                        locationLinkController.text.toString();
                     venue!.locationId = prefs.getString("locationId");
-                    venue!.members = members.toString();
-                    venue!.city = city.toString();
+                    venue!.members = membersController.text.toString();
+                    venue!.city = cityController.text.toString();
                     venue!.sport = selectedSport.sportName.toString();
                     venue!.sportId = selectedSport.id.toString();
                     venue!.createdAt = Utility.getCurrentDate();

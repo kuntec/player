@@ -42,21 +42,37 @@ class _AddTournamentState extends State<AddTournament> {
 
   Tournament? tournament;
 
-  var organizerName;
-  var primaryNumber;
-  var secondaryNumber;
-  var tournamentName;
-  var entryFees;
-  var noOfMembers;
-  var noOfOvers;
-  var ageLimit;
-  var address;
-  var locationLink;
-  var liveScoreLink;
-  var prizeDetails;
-  var otherInfo;
+  // var organizerName;
+  // var primaryNumber;
+  // var secondaryNumber;
+  // var tournamentName;
+  // var entryFees;
+  // var noOfMembers;
+  // var noOfOvers;
+  // var ageLimit;
+  // var address;
+  // var locationLink;
+  // var liveScoreLink;
+  // var prizeDetails;
+  // var otherInfo;
+
+  TextEditingController organizerNameController = new TextEditingController();
+  TextEditingController primaryNumberController = new TextEditingController();
+  TextEditingController secondaryNumberController = new TextEditingController();
+  TextEditingController tournamentNameController = new TextEditingController();
+  TextEditingController entryFeesController = new TextEditingController();
+  TextEditingController noOfMembersController = new TextEditingController();
+
+  TextEditingController noOfOversController = new TextEditingController();
+  TextEditingController ageLimitController = new TextEditingController();
+  TextEditingController addressController = new TextEditingController();
+  TextEditingController locationLinkController = new TextEditingController();
+  TextEditingController liveScoreLinkController = new TextEditingController();
+  TextEditingController prizeDetailsController = new TextEditingController();
+  TextEditingController otherInfoController = new TextEditingController();
 
   TextEditingController textSportController = new TextEditingController();
+
   var selectedSport;
   bool isCricket = false;
   bool isBoxCricket = false;
@@ -335,9 +351,7 @@ class _AddTournamentState extends State<AddTournament> {
           isCricket ? buildTournamentCategory() : SizedBox(height: 1.0),
           isCricket || isBoxCricket
               ? TextField(
-                  onChanged: (value) {
-                    noOfOvers = value;
-                  },
+                  controller: noOfOversController,
                   decoration: InputDecoration(
                       labelText: "Number of Overs",
                       labelStyle: TextStyle(
@@ -346,9 +360,7 @@ class _AddTournamentState extends State<AddTournament> {
                 )
               : SizedBox(height: 1.0),
           TextField(
-            onChanged: (value) {
-              organizerName = value;
-            },
+            controller: organizerNameController,
             decoration: InputDecoration(
                 labelText: "Organizer Name *",
                 labelStyle: TextStyle(
@@ -357,9 +369,7 @@ class _AddTournamentState extends State<AddTournament> {
           ),
           TextField(
             keyboardType: TextInputType.phone,
-            onChanged: (value) {
-              primaryNumber = value;
-            },
+            controller: primaryNumberController,
             decoration: InputDecoration(
                 labelText: "Primary Number *",
                 labelStyle: TextStyle(
@@ -368,9 +378,7 @@ class _AddTournamentState extends State<AddTournament> {
           ),
           TextField(
             keyboardType: TextInputType.phone,
-            onChanged: (value) {
-              secondaryNumber = value;
-            },
+            controller: secondaryNumberController,
             decoration: InputDecoration(
                 labelText: "Secondary Number (optional)",
                 labelStyle: TextStyle(
@@ -378,9 +386,7 @@ class _AddTournamentState extends State<AddTournament> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              tournamentName = value;
-            },
+            controller: tournamentNameController,
             decoration: InputDecoration(
                 labelText: "Tournament Name *",
                 labelStyle: TextStyle(
@@ -442,9 +448,7 @@ class _AddTournamentState extends State<AddTournament> {
                 Expanded(
                   flex: 1,
                   child: TextField(
-                    onChanged: (value) {
-                      entryFees = value;
-                    },
+                    controller: entryFeesController,
                     decoration: InputDecoration(
                         labelText: "Entry Fees *",
                         labelStyle: TextStyle(
@@ -492,9 +496,7 @@ class _AddTournamentState extends State<AddTournament> {
             ),
           ),
           TextField(
-            onChanged: (value) {
-              noOfMembers = value;
-            },
+            controller: noOfMembersController,
             decoration: InputDecoration(
                 labelText: "Number of team members",
                 labelStyle: TextStyle(
@@ -502,9 +504,7 @@ class _AddTournamentState extends State<AddTournament> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              ageLimit = value;
-            },
+            controller: ageLimitController,
             decoration: InputDecoration(
                 labelText: "Any Age Requirement",
                 labelStyle: TextStyle(
@@ -512,9 +512,7 @@ class _AddTournamentState extends State<AddTournament> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              address = value;
-            },
+            controller: addressController,
             decoration: InputDecoration(
                 labelText: "Tournament Location (Address)  *",
                 labelStyle: TextStyle(
@@ -522,9 +520,7 @@ class _AddTournamentState extends State<AddTournament> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              locationLink = value;
-            },
+            controller: locationLinkController,
             decoration: InputDecoration(
                 labelText: "Location Link (optional)",
                 labelStyle: TextStyle(
@@ -532,9 +528,7 @@ class _AddTournamentState extends State<AddTournament> {
                 )),
           ),
           TextField(
-            onChanged: (value) {
-              liveScoreLink = value;
-            },
+            controller: liveScoreLinkController,
             decoration: InputDecoration(
                 labelText: "Live Score Link (optional)",
                 labelStyle: TextStyle(
@@ -550,9 +544,7 @@ class _AddTournamentState extends State<AddTournament> {
                 )),
           ),
           TextFormField(
-              onChanged: (value) {
-                prizeDetails = value;
-              },
+              controller: prizeDetailsController,
               minLines: 3,
               maxLines: 5,
               keyboardType: TextInputType.multiline,
@@ -577,9 +569,7 @@ class _AddTournamentState extends State<AddTournament> {
                 )),
           ),
           TextFormField(
-              onChanged: (value) {
-                otherInfo = value;
-              },
+              controller: otherInfoController,
               minLines: 3,
               maxLines: 5,
               keyboardType: TextInputType.multiline,
@@ -616,34 +606,34 @@ class _AddTournamentState extends State<AddTournament> {
                     if (tournamentCategoryValue == null) {
                       tournamentCategoryValue = "";
                     }
-                    if (noOfOvers == null) {
-                      noOfOvers = "";
+                    if (Utility.checkValidation(
+                        noOfOversController.text.toString())) {
+                      noOfOversController.text = "";
                     }
-                    if (locationLink == null) {
-                      locationLink = "";
+                    if (Utility.checkValidation(
+                        locationLinkController.text.toString())) {
+                      locationLinkController.text = "";
                     }
 
                     if (selectedSport == null) {
                       Utility.showValidationToast("Please Select Sport");
                       return;
                     }
-
-                    if (organizerName == null ||
-                        Utility.checkValidation(organizerName.toString())) {
+                    if (Utility.checkValidation(
+                        organizerNameController.text.toString())) {
                       Utility.showValidationToast(
                           "Please Enter Organizer Name");
                       return;
                     }
-
-                    if (primaryNumber == null ||
-                        Utility.checkValidation(primaryNumber.toString())) {
+                    if (Utility.checkValidation(
+                        primaryNumberController.text.toString())) {
                       Utility.showValidationToast(
                           "Please Enter Primary Number");
                       return;
                     }
 
-                    if (tournamentName == null ||
-                        Utility.checkValidation(tournamentName.toString())) {
+                    if (Utility.checkValidation(
+                        tournamentNameController.text.toString())) {
                       Utility.showValidationToast(
                           "Please Enter Tournament Name");
                       return;
@@ -661,7 +651,8 @@ class _AddTournamentState extends State<AddTournament> {
                       return;
                     }
 
-                    if (Utility.checkValidation(entryFees.toString())) {
+                    if (Utility.checkValidation(
+                        entryFeesController.text.toString())) {
                       Utility.showValidationToast("Please Enter Entry Fees");
                       return;
                     }
@@ -680,20 +671,26 @@ class _AddTournamentState extends State<AddTournament> {
 
                     tournament = new Tournament();
                     tournament!.playerId = playerId!.toString();
-                    tournament!.organizerName = organizerName.toString();
-                    tournament!.organizerNumber = primaryNumber.toString();
-                    tournament!.secondaryNumber = secondaryNumber.toString();
-                    tournament!.tournamentName = tournamentName.toString();
+                    tournament!.organizerName =
+                        organizerNameController.text.toString();
+                    tournament!.organizerNumber =
+                        primaryNumberController.text.toString();
+                    tournament!.secondaryNumber =
+                        secondaryNumberController.text.toString();
+                    tournament!.tournamentName =
+                        tournamentNameController.text.toString();
                     tournament!.startDate = textStartDateController.text;
                     tournament!.endDate = textEndDateController.text;
-                    tournament!.entryFees = entryFees.toString();
+                    tournament!.entryFees = entryFeesController.text.toString();
                     tournament!.startTime = textStartTimeController.text;
                     tournament!.endTime = textEndTimeController.text;
-                    tournament!.noOfMembers = noOfMembers.toString();
-                    tournament!.ageLimit = ageLimit.toString();
-                    tournament!.address = address.toString();
-                    tournament!.prizeDetails = prizeDetails.toString();
-                    tournament!.otherInfo = otherInfo.toString();
+                    tournament!.noOfMembers =
+                        noOfMembersController.text.toString();
+                    tournament!.ageLimit = ageLimitController.text.toString();
+                    tournament!.address = addressController.text.toString();
+                    tournament!.prizeDetails =
+                        prizeDetailsController.text.toString();
+                    tournament!.otherInfo = otherInfoController.text.toString();
                     tournament!.playerName = prefs.getString("playerName");
                     tournament!.locationId = prefs.getString("locationId");
                     tournament!.sportId = selectedSport.id.toString();
@@ -703,9 +700,11 @@ class _AddTournamentState extends State<AddTournament> {
                     tournament!.ballType = ballTypeValue.toString();
                     tournament!.tournamentCategory =
                         tournamentCategoryValue.toString();
-                    tournament!.noOfOvers = noOfOvers.toString();
-                    tournament!.locationLink = locationLink.toString();
-                    tournament!.liveScoreLink = liveScoreLink.toString();
+                    tournament!.noOfOvers = noOfOversController.text.toString();
+                    tournament!.locationLink =
+                        locationLinkController.text.toString();
+                    tournament!.liveScoreLink =
+                        liveScoreLinkController.text.toString();
                     tournament!.status = "1";
                     tournament!.timing = "";
 

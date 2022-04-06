@@ -39,6 +39,10 @@ class _AddHostState extends State<AddHost> {
 
   bool? isMyGameSelected = false;
 
+  TextEditingController areaController = new TextEditingController();
+  TextEditingController roleOfPlayerController = new TextEditingController();
+  TextEditingController txtDetailsController = new TextEditingController();
+
   TextEditingController txtDateController = new TextEditingController();
   TextEditingController txtTimeController = new TextEditingController();
 
@@ -374,9 +378,10 @@ class _AddHostState extends State<AddHost> {
                                           "a player to join my team"
                                   ? TextField(
                                       keyboardType: TextInputType.text,
-                                      onChanged: (value) {
-                                        roleOfPlayer = value;
-                                      },
+                                      // onChanged: (value) {
+                                      //   roleOfPlayer = value;
+                                      // },
+                                      controller: roleOfPlayerController,
                                       style: TextStyle(
                                         color: Colors.black,
                                       ),
@@ -390,9 +395,10 @@ class _AddHostState extends State<AddHost> {
                               : SizedBox.shrink(),
                           TextField(
                             keyboardType: TextInputType.text,
-                            onChanged: (value) {
-                              area = value;
-                            },
+                            // onChanged: (value) {
+                            //   area = value;
+                            // },
+                            controller: areaController,
                             style: TextStyle(
                               color: Colors.black,
                             ),
@@ -489,9 +495,10 @@ class _AddHostState extends State<AddHost> {
                                               .toLowerCase() ==
                                           "running"
                                   ? TextFormField(
-                                      onChanged: (value) {
-                                        details = value;
-                                      },
+                                      // onChanged: (value) {
+                                      //   details = value;
+                                      // },
+                                      controller: txtDetailsController,
                                       minLines: 3,
                                       maxLines: 5,
                                       keyboardType: TextInputType.multiline,
@@ -542,8 +549,8 @@ class _AddHostState extends State<AddHost> {
                                       }
                                     }
 
-                                    if (area == null ||
-                                        area.toString().trim() == "") {
+                                    if (Utility.checkValidation(
+                                        areaController.text.toString())) {
                                       Utility.showValidationToast(
                                           "Please Select Area");
                                       return;
@@ -560,13 +567,17 @@ class _AddHostState extends State<AddHost> {
                                       return;
                                     }
 
-                                    if (roleOfPlayer == null) {
-                                      roleOfPlayer = "";
+                                    if (roleOfPlayerController.text.isEmpty) {
+                                      roleOfPlayerController.text = "";
                                     }
 
-                                    if (details == null) {
-                                      details = "";
+                                    if (txtDetailsController.text.isEmpty) {
+                                      txtDetailsController.text = "";
                                     }
+
+                                    // if (details == null) {
+                                    //   details = "";
+                                    // }
 
                                     if (this
                                                 .selectedSport!
@@ -630,8 +641,10 @@ class _AddHostState extends State<AddHost> {
                                         lookingForId.toString();
                                     activity!.lookingFor = lookingFor;
                                     activity!.lookingForValue = lookingForValue;
-                                    activity!.area = area;
-                                    activity!.roleOfPlayer = roleOfPlayer;
+                                    activity!.area =
+                                        areaController.text.toString();
+                                    activity!.roleOfPlayer =
+                                        roleOfPlayerController.text.toString();
                                     activity!.startDate = startDate;
                                     activity!.timing = timing;
                                     activity!.ballType = ballType;
@@ -641,7 +654,8 @@ class _AddHostState extends State<AddHost> {
                                         locationId.toString();
                                     activity!.createdAt =
                                         creationDate.toString();
-                                    activity!.details = details;
+                                    activity!.details =
+                                        txtDetailsController.text.toString();
 
                                     //_onLoading();
                                     print("Created At :" +
@@ -665,9 +679,9 @@ class _AddHostState extends State<AddHost> {
   var lookingForId;
   var lookingFor;
   var lookingForValue;
-  var area;
-  var details;
-  var roleOfPlayer;
+//  var area;
+//  var details;
+//  var roleOfPlayer;
   var startDate;
   var timing;
   var ballType;

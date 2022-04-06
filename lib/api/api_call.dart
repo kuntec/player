@@ -1064,7 +1064,7 @@ class APICall {
     params['player_id'] = event.playerId!;
     params['name'] = event.name!;
     params['type'] = event.type!;
-    params['description'] = event.description!;
+    params['description'] = event.description.toString();
     params['status'] = event.status!;
 
     params['start_date'] = event.startDate!;
@@ -1076,14 +1076,14 @@ class APICall {
     params['members'] = event.members!;
     params['address'] = event.address!;
     params['location_id'] = event.locationId!;
-    params['location_link'] = event.locationLink!;
-    params['details'] = event.details!;
+    params['location_link'] = event.locationLink.toString();
+    params['details'] = event.details.toString();
 
     params['organizer_name'] = event.organizerName!;
     params['number'] = event.number!;
-    params['secondary_number'] = event.secondaryNumber!;
+    params['secondary_number'] = event.secondaryNumber.toString();
 
-    params['created_at'] = event.createdAt!;
+    params['created_at'] = event.createdAt.toString();
 
     HttpCall call = new HttpCall();
 

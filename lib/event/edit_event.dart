@@ -62,7 +62,12 @@ class _EditEventState extends State<EditEvent> {
   initForm() {
     eventNameController.text = widget.event.name;
     eventTypeController.text = widget.event.type;
-    descriptionController.text = widget.event.description;
+
+    widget.event.description == null || widget.event.description == "null"
+        ? descriptionController.text = ""
+        : descriptionController.text = widget.event.description;
+//    descriptionController.text = widget.event.description;
+
     entryFeesController.text = widget.event.entryFees;
     textStartDateController.text = widget.event.startDate;
     textEndDateController.text = widget.event.endDate;
@@ -70,11 +75,26 @@ class _EditEventState extends State<EditEvent> {
     textEndTimeController.text = widget.event.endTime;
     noOfMembersController.text = widget.event.members;
     addressController.text = widget.event.address;
-    locationLinkController.text = widget.event.locationLink;
-    otherInfoController.text = widget.event.details;
+
+    //locationLinkController.text = widget.event.locationLink;
+    widget.event.locationLink == null || widget.event.locationLink == "null"
+        ? locationLinkController.text = ""
+        : locationLinkController.text = widget.event.locationLink;
+
+    //otherInfoController.text = widget.event.details;
+    widget.event.details == null || widget.event.details == "null"
+        ? otherInfoController.text = ""
+        : otherInfoController.text = widget.event.details;
+
     organizerNameController.text = widget.event.organizerName;
     numberController.text = widget.event.number;
-    secondaryNumberController.text = widget.event.secondaryNumber;
+
+    widget.event.secondaryNumber == null ||
+            widget.event.secondaryNumber == "null"
+        ? secondaryNumberController.text = ""
+        : secondaryNumberController.text = widget.event.secondaryNumber;
+
+//    secondaryNumberController.text = widget.event.secondaryNumber;
   }
 
   @override
@@ -508,23 +528,26 @@ class _EditEventState extends State<EditEvent> {
 
                     event = widget.event;
                     event!.playerId = playerId!.toString();
-                    event!.name = eventNameController.text;
-                    event!.type = eventTypeController.text;
-                    event!.description = descriptionController.text;
-                    event!.address = addressController.text;
-                    event!.locationLink = locationLinkController.text;
+                    event!.name = eventNameController.text.toString();
+                    event!.type = eventTypeController.text.toString();
+                    event!.description = descriptionController.text.toString();
+                    event!.address = addressController.text.toString();
+                    event!.locationLink =
+                        locationLinkController.text.toString();
                     event!.locationId = prefs.get("locationId").toString();
-                    event!.entryFees = entryFeesController.text;
-                    event!.members = noOfMembersController.text;
-                    event!.startDate = textStartDateController.text;
-                    event!.endDate = textEndDateController.text;
-                    event!.startTime = textStartTimeController.text;
-                    event!.endTime = textEndTimeController.text;
-                    event!.details = otherInfoController.text;
+                    event!.entryFees = entryFeesController.text.toString();
+                    event!.members = noOfMembersController.text.toString();
+                    event!.startDate = textStartDateController.text.toString();
+                    event!.endDate = textEndDateController.text.toString();
+                    event!.startTime = textStartTimeController.text.toString();
+                    event!.endTime = textEndTimeController.text.toString();
+                    event!.details = otherInfoController.text.toString();
 
-                    event!.organizerName = organizerNameController.text;
-                    event!.number = numberController.text;
-                    event!.secondaryNumber = secondaryNumberController.text;
+                    event!.organizerName =
+                        organizerNameController.text.toString();
+                    event!.number = numberController.text.toString();
+                    event!.secondaryNumber =
+                        secondaryNumberController.text.toString();
 
                     event!.createdAt = Utility.getCurrentDate();
                     updateEvent(event!);
